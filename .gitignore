@@ -1,0 +1,11 @@
+.vs/
+bin/
+cake/
+obj/
+packages/
+release/
+
+*.cache
+*.ncrunchproject
+*.ncrunchsolution
+*.user

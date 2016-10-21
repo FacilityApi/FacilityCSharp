@@ -1,2 +1,3 @@
-# FacilityCSharp
-C# support for the Facility API Framework.
+# Facility C#
+
+C# support for the [Facility API Framework](https://github.com/FacilityApi/Facility).
