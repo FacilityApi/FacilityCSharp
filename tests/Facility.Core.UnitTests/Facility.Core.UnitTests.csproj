@@ -41,6 +41,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceDataUtilityTests.cs" />
     <Compile Include="ServiceJsonUtilityTests.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
