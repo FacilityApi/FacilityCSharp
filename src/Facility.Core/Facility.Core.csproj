@@ -52,10 +52,6 @@
     <Compile Include="ServiceResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Faithlife.Parsing.1.0.0\lib\portable-net45+netcore45+wpa81\Faithlife.Parsing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>

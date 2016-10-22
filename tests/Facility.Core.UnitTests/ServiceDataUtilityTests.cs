@@ -21,7 +21,6 @@ namespace Facility.Core.UnitTests
 			string json = "{\"value\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
 
 			ServiceJsonUtility.ToJson(dto).ShouldBe(json);
-			JsonConvert.DeserializeObject<ValueDto<IReadOnlyList<ServiceErrorDto>>>(json);
 			ServiceJsonUtility.FromJson(json, dto.GetType()).ShouldBe(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
@@ -34,20 +33,15 @@ namespace Facility.Core.UnitTests
 		{
 			var invalidRequest = new ServiceErrorDto { Code = ServiceErrors.InvalidRequest };
 			var invalidResponse = new ServiceErrorDto { Code = ServiceErrors.InvalidResponse };
-			var dto = new DictionaryDto
+			var dto = CreateValueDto((IReadOnlyDictionary<string, ServiceErrorDto>) new Dictionary<string, ServiceErrorDto>
 			{
-				Value = new Dictionary<string, ServiceErrorDto>
-				{
-					["request"] = invalidRequest,
-					["response"] = invalidResponse,
-				}
-			};
+				["request"] = invalidRequest,
+				["response"] = invalidResponse,
+			});
 
 			string json = "{\"value\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
 
 			ServiceJsonUtility.ToJson(dto).ShouldBe(json);
-			JsonConvert.DeserializeObject<DictionaryDto>(json);
-			JsonConvert.DeserializeObject(json, dto.GetType());
 			ServiceJsonUtility.FromJson(json, dto.GetType()).ShouldBe(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
@@ -68,11 +62,6 @@ namespace Facility.Core.UnitTests
 			{
 				return ToString() == other?.ToString();
 			}
-		}
-
-		private sealed class DictionaryDto
-		{
-			public Dictionary<string, ServiceErrorDto> Value { get; set; }
 		}
 	}
 }
