@@ -16,49 +16,51 @@ namespace Facility.ExampleApi
 		[JsonProperty("boolean")]
 		public bool? IsBoolean { get; set; }
 
-		public List<bool> Booleans { get; set; }
+		public IReadOnlyList<bool> Booleans { get; set; }
 
 		public double? Double { get; set; }
 
-		public List<double> Doubles { get; set; }
+		public IReadOnlyList<double> Doubles { get; set; }
 
 		public int? Integer { get; set; }
 
-		public List<int> Integers { get; set; }
+		public IReadOnlyList<int> Integers { get; set; }
 
 		public string String { get; set; }
 
-		public List<string> Strings { get; set; }
+		public IReadOnlyList<string> Strings { get; set; }
 
 		public byte[] Bytes { get; set; }
 
-		public List<byte[]> Byteses { get; set; }
+		public IReadOnlyList<byte[]> Byteses { get; set; }
 
 		public WidgetField? WidgetField { get; set; }
 
-		public List<WidgetField> WidgetFields { get; set; }
+		public IReadOnlyList<WidgetField> WidgetFields { get; set; }
 
 		public WidgetDto Widget { get; set; }
 
-		public List<WidgetDto> Widgets { get; set; }
+		public IReadOnlyList<WidgetDto> Widgets { get; set; }
 
 		public ServiceResult<WidgetDto> Result { get; set; }
 
-		public List<ServiceResult<WidgetDto>> Results { get; set; }
+		public IReadOnlyList<ServiceResult<WidgetDto>> Results { get; set; }
 
 		public long? BigInteger { get; set; }
 
-		public List<long> BigIntegers { get; set; }
+		public IReadOnlyList<long> BigIntegers { get; set; }
 
 		public ServiceErrorDto Error { get; set; }
 
-		public List<ServiceErrorDto> Errors { get; set; }
+		public IReadOnlyList<ServiceErrorDto> Errors { get; set; }
 
 		public JObject Object { get; set; }
 
-		public List<JObject> Objects { get; set; }
+		public IReadOnlyList<JObject> Objects { get; set; }
 
-		public Dictionary<string, string> Map { get; set; }
+		public IReadOnlyDictionary<string, string> NamedStrings { get; set; }
+
+		public IReadOnlyDictionary<string, WidgetDto> NamedWidgets { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
@@ -88,7 +90,8 @@ namespace Facility.ExampleApi
 				ServiceDataUtility.AreEquivalent(Errors, other.Errors) &&
 				ServiceDataUtility.AreEquivalent(Object, other.Object) &&
 				ServiceDataUtility.AreEquivalent(Objects, other.Objects) &&
-				ServiceDataUtility.AreEquivalent(Map, other.Map);
+				ServiceDataUtility.AreEquivalent(NamedStrings, other.NamedStrings) &&
+				ServiceDataUtility.AreEquivalent(NamedWidgets, other.NamedWidgets);
 		}
 	}
 }

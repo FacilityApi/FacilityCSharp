@@ -16,7 +16,7 @@ namespace Facility.ExampleApi
 		/// <summary>
 		/// The widget results.
 		/// </summary>
-		public List<ServiceResult<WidgetDto>> Results { get; set; }
+		public IReadOnlyList<ServiceResult<WidgetDto>> Results { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

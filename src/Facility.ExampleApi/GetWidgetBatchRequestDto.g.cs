@@ -16,7 +16,7 @@ namespace Facility.ExampleApi
 		/// <summary>
 		/// The IDs of the widgets to return.
 		/// </summary>
-		public List<string> Ids { get; set; }
+		public IReadOnlyList<string> Ids { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

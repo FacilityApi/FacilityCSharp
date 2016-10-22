@@ -326,7 +326,7 @@ namespace Facility.CSharp
 				var code = new CodeWriter(stringWriter);
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
-				List<string> usings = new List<string>
+				var usings = new List<string>
 				{
 					"System",
 					"System.Threading",
@@ -395,9 +395,9 @@ namespace Facility.CSharp
 			case ServiceTypeKind.Result:
 				return $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType)}>";
 			case ServiceTypeKind.Array:
-				return $"List<{RenderNonNullableFieldType(fieldType.ValueType)}>";
+				return $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType)}>";
 			case ServiceTypeKind.Map:
-				return $"Dictionary<string, {RenderNonNullableFieldType(fieldType.ValueType)}>";
+				return $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType)}>";
 			default:
 				throw new NotSupportedException("Unknown field type " + fieldType.Kind);
 			}

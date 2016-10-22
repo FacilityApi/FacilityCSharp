@@ -18,7 +18,7 @@ namespace Facility.ExampleApi
 		/// <summary>
 		/// The widgets.
 		/// </summary>
-		public List<WidgetDto> Widgets { get; set; }
+		public IReadOnlyList<WidgetDto> Widgets { get; set; }
 
 		/// <summary>
 		/// The total number of widgets.

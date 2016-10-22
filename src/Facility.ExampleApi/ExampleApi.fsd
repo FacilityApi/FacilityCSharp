@@ -255,7 +255,9 @@ service ExampleApi
 
 		objects: object[];
 
-		map: map<string>;
+		namedStrings: map<string>;
+
+		namedWidgets: map<Widget>;
 	}
 
 	/// Identifies a widget field.

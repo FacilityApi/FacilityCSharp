@@ -23,7 +23,7 @@ namespace Facility.ExampleApi
 		/// <summary>
 		/// The operations.
 		/// </summary>
-		public List<JObject> Ops { get; set; }
+		public IReadOnlyList<JObject> Ops { get; set; }
 
 		/// <summary>
 		/// The new weight.
