@@ -47,11 +47,11 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetWidgetsRequestDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Query, other.Query) &&
-				ServiceDataUtility.AreEquivalent(Limit, other.Limit) &&
-				ServiceDataUtility.AreEquivalent(Sort, other.Sort) &&
-				ServiceDataUtility.AreEquivalent(Desc, other.Desc) &&
-				ServiceDataUtility.AreEquivalent(MaxWeight, other.MaxWeight);
+				Query == other.Query &&
+				Limit == other.Limit &&
+				Sort == other.Sort &&
+				Desc == other.Desc &&
+				MaxWeight == other.MaxWeight;
 		}
 	}
 }

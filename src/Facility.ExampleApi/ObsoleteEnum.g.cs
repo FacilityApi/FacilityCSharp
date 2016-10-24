@@ -11,7 +11,7 @@ namespace Facility.ExampleApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Obsolete]
 	[JsonConverter(typeof(ObsoleteEnumJsonConverter))]
-	public struct ObsoleteEnum
+	public struct ObsoleteEnum : IEquatable<ObsoleteEnum>
 	{
 		public static readonly ObsoleteEnum Unused = new ObsoleteEnum("unused");
 

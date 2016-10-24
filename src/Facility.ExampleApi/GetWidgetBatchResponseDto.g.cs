@@ -24,7 +24,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetWidgetBatchResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Results, other.Results);
+				ServiceDataUtility.AreEquivalentArrays(Results, other.Results, ServiceDataUtility.AreEquivalentResults);
 		}
 	}
 }

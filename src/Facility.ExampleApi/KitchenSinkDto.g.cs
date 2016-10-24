@@ -21,7 +21,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(KitchenSinkDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(OldField, other.OldField);
+				OldField == other.OldField;
 		}
 	}
 }

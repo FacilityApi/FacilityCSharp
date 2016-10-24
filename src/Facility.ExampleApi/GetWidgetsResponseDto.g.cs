@@ -42,10 +42,10 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetWidgetsResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Widgets, other.Widgets) &&
-				ServiceDataUtility.AreEquivalent(Total, other.Total) &&
-				ServiceDataUtility.AreEquivalent(TotalWeight, other.TotalWeight) &&
-				ServiceDataUtility.AreEquivalent(Job, other.Job);
+				ServiceDataUtility.AreEquivalentArrays(Widgets, other.Widgets, ServiceDataUtility.AreEquivalentDtos) &&
+				Total == other.Total &&
+				TotalWeight == other.TotalWeight &&
+				ServiceDataUtility.AreEquivalentDtos(Job, other.Job);
 		}
 	}
 }

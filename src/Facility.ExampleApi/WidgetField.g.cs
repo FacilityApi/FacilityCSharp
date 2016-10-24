@@ -12,7 +12,7 @@ namespace Facility.ExampleApi
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[JsonConverter(typeof(WidgetFieldJsonConverter))]
-	public struct WidgetField
+	public struct WidgetField : IEquatable<WidgetField>
 	{
 		/// <summary>
 		/// The 'id' field.

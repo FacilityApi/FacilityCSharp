@@ -1,8 +1,9 @@
 ﻿using System;
+using Facility.Core;
 using Newtonsoft.Json.Linq;
 using Shouldly;
 
-namespace Facility.Core.UnitTests
+namespace Facility.ExampleApi.UnitTests
 {
 	internal static class TestUtility
 	{

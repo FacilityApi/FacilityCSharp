@@ -38,10 +38,10 @@ namespace Facility.Core
 		public override bool IsEquivalentTo(ServiceErrorDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Code, other.Code) &&
-				ServiceDataUtility.AreEquivalent(Message, other.Message) &&
-				ServiceDataUtility.AreEquivalent(Details, other.Details) &&
-				ServiceDataUtility.AreEquivalent(InnerError, other.InnerError);
+				Code == other.Code &&
+				Message == other.Message &&
+				ServiceDataUtility.AreEquivalentObjects(Details, other.Details) &&
+				ServiceDataUtility.AreEquivalentDtos(InnerError, other.InnerError);
 		}
 	}
 }

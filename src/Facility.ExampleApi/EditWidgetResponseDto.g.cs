@@ -29,8 +29,8 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(EditWidgetResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Widget, other.Widget) &&
-				ServiceDataUtility.AreEquivalent(Job, other.Job);
+				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
+				ServiceDataUtility.AreEquivalentDtos(Job, other.Job);
 		}
 	}
 }

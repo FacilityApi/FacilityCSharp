@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Base class for data objects used by services.
 	/// </summary>
-	public abstract class ServiceDto : IServiceData<ServiceDto>
+	public abstract class ServiceDto
 	{
 		/// <summary>
 		/// Returns the DTO as JSON.
@@ -17,20 +17,12 @@
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public abstract bool IsEquivalentTo(ServiceDto other);
-
-		/// <summary>
-		/// True if the data is equivalent.
-		/// </summary>
-		bool IServiceData.IsEquivalentTo(IServiceData other)
-		{
-			return IsEquivalentTo(other as ServiceDto);
-		}
 	}
 
 	/// <summary>
 	/// Base class for data objects used by services.
 	/// </summary>
-	public abstract class ServiceDto<T> : ServiceDto, IServiceData<T>
+	public abstract class ServiceDto<T> : ServiceDto
 		where T : ServiceDto<T>
 	{
 		/// <summary>

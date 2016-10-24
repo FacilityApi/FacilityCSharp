@@ -77,12 +77,12 @@ namespace Facility.CSharp
 			return CodeGenUtility.Capitalize(dtoInfo.Name) + "Dto";
 		}
 
-		public static string GetRequestName(ServiceMethodInfo methodInfo)
+		public static string GetRequestDtoName(ServiceMethodInfo methodInfo)
 		{
 			return CodeGenUtility.Capitalize(methodInfo.Name) + "RequestDto";
 		}
 
-		public static string GetResponseName(ServiceMethodInfo methodInfo)
+		public static string GetResponseDtoName(ServiceMethodInfo methodInfo)
 		{
 			return CodeGenUtility.Capitalize(methodInfo.Name) + "ResponseDto";
 		}

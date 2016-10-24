@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ namespace Facility.Core
 	/// A service result success or error.
 	/// </summary>
 	[JsonConverter(typeof(ServiceResultJsonConverter))]
-	public class ServiceResult : IServiceData<ServiceResult>
+	public class ServiceResult
 	{
 		/// <summary>
 		/// Creates a successful result.
@@ -93,21 +94,13 @@ namespace Facility.Core
 				return false;
 
 			if (IsFailure)
-				return other.IsFailure && ServiceDataUtility.AreEquivalent(m_error, other.m_error);
+				return other.IsFailure && ServiceDataUtility.AreEquivalentDtos(m_error, other.m_error);
 
 			Type valueType = InternalValueType;
 			if (valueType == null)
 				return other.InternalValueType == null;
 
 			return IsInternalValueEquivalent(other);
-		}
-
-		/// <summary>
-		/// True if the data is equivalent.
-		/// </summary>
-		bool IServiceData.IsEquivalentTo(IServiceData other)
-		{
-			return IsEquivalentTo(other as ServiceResult);
 		}
 
 		/// <summary>
@@ -242,7 +235,7 @@ namespace Facility.Core
 	/// <summary>
 	/// A service result value or error.
 	/// </summary>
-	public sealed class ServiceResult<T> : ServiceResult, IServiceData<ServiceResult<T>>
+	public sealed class ServiceResult<T> : ServiceResult
 	{
 		/// <summary>
 		/// Implicitly create a failed result from an error.
@@ -326,7 +319,11 @@ namespace Facility.Core
 			if (otherOfT == null)
 				return false;
 
-			return ServiceDataUtility.AreEquivalent(m_value, otherOfT.m_value);
+			var dto = m_value as ServiceDto;
+			if (dto != null)
+				return dto.IsEquivalentTo(otherOfT.m_value as ServiceDto);
+
+			return EqualityComparer<T>.Default.Equals(m_value, otherOfT.m_value);
 		}
 
 		private ServiceResult(ServiceErrorDto error)
@@ -340,7 +337,7 @@ namespace Facility.Core
 	/// <summary>
 	/// A failed service result.
 	/// </summary>
-	public sealed class ServiceResultFailure : ServiceResult, IServiceData<ServiceResultFailure>
+	public sealed class ServiceResultFailure : ServiceResult
 	{
 		internal ServiceResultFailure(ServiceErrorDto error)
 			: base(error)

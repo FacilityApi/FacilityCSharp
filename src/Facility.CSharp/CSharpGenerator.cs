@@ -138,7 +138,7 @@ namespace Facility.CSharp
 					CSharpUtility.WriteObsoleteAttribute(code, enumInfo);
 
 					code.WriteLine($"[JsonConverter(typeof({enumName}JsonConverter))]");
-					code.WriteLine($"public struct {enumName}");
+					code.WriteLine($"public struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
 						foreach (var enumValue in enumInfo.Values)
@@ -269,7 +269,22 @@ namespace Facility.CSharp
 									{
 										var fieldInfo = fieldInfos[fieldIndex];
 										string propertyName = CSharpUtility.GetFieldPropertyName(fieldInfo);
-										code.Write($"ServiceDataUtility.AreEquivalent({propertyName}, other.{propertyName})");
+										var fieldType = context.Service.GetFieldType(fieldInfo);
+										if (fieldType.Kind == ServiceTypeKind.Array || fieldType.Kind == ServiceTypeKind.Map)
+										{
+											string outerAreEquivalentMethodName = fieldType.Kind == ServiceTypeKind.Map ? "AreEquivalentMaps" : "AreEquivalentArrays";
+											string innerAreEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.ValueType.Kind);
+											code.Write(innerAreEquivalentMethodName != null ?
+												$"ServiceDataUtility.{outerAreEquivalentMethodName}({propertyName}, other.{propertyName}, ServiceDataUtility.{innerAreEquivalentMethodName})" :
+												$"ServiceDataUtility.{outerAreEquivalentMethodName}({propertyName}, other.{propertyName})");
+										}
+										else
+										{
+											string areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
+											code.Write(areEquivalentMethodName != null ?
+												$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
+												$"{propertyName} == other.{propertyName}");
+										}
 										code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
 									}
 								}
@@ -282,21 +297,40 @@ namespace Facility.CSharp
 			}
 		}
 
+		private static string TryGetAreEquivalentMethodName(ServiceTypeKind kind)
+		{
+			switch (kind)
+			{
+			case ServiceTypeKind.Bytes:
+				return "AreEquivalentBytes";
+			case ServiceTypeKind.Object:
+				return "AreEquivalentObjects";
+			case ServiceTypeKind.Error:
+			case ServiceTypeKind.Dto:
+				return "AreEquivalentDtos";
+			case ServiceTypeKind.Result:
+				return "AreEquivalentResults";
+			case ServiceTypeKind.Array:
+			case ServiceTypeKind.Map:
+				throw new InvalidOperationException("Collections of collections not supported.");
+			default:
+				return null;
+			}
+		}
+
 		private IEnumerable<ServiceTextSource> GenerateMethodDtos(ServiceMethodInfo methodInfo, Context context)
 		{
 			yield return GenerateDto(new ServiceDtoInfo(
 				name: $"{CodeGenUtility.Capitalize(methodInfo.Name)}Request",
 				fields: methodInfo.RequestFields,
 				summary: $"Request for {CodeGenUtility.Capitalize(methodInfo.Name)}.",
-				position: methodInfo.Position),
-				context);
+				position: methodInfo.Position), context);
 
 			yield return GenerateDto(new ServiceDtoInfo(
 				name: $"{CodeGenUtility.Capitalize(methodInfo.Name)}Response",
 				fields: methodInfo.ResponseFields,
 				summary: $"Response for {CodeGenUtility.Capitalize(methodInfo.Name)}.",
-				position: methodInfo.Position),
-				context);
+				position: methodInfo.Position), context);
 		}
 
 		private void GenerateFieldProperties(CodeWriter code, IEnumerable<ServiceFieldInfo> fieldInfos, Context context)
@@ -319,7 +353,7 @@ namespace Facility.CSharp
 
 		private ServiceTextSource GenerateInterface(ServiceInfo serviceInfo, Context context)
 		{
-			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+			string interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 
 			using (var stringWriter = new StringWriter())
 			{
@@ -331,7 +365,7 @@ namespace Facility.CSharp
 					"System",
 					"System.Threading",
 					"System.Threading.Tasks",
-					"Facility.Core"
+					"Facility.Core",
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
@@ -342,24 +376,21 @@ namespace Facility.CSharp
 					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
 
-					code.WriteLine($"public partial interface {fullInterfaceName}");
+					code.WriteLine($"public partial interface {interfaceName}");
 					using (code.Block())
 					{
 						foreach (ServiceMethodInfo methodInfo in serviceInfo.Methods)
 						{
-							string fullMethodName = CSharpUtility.GetMethodName(methodInfo);
-							string requestTypeName = CSharpUtility.GetRequestName(methodInfo);
-							string responseTypeName = CSharpUtility.GetResponseName(methodInfo);
-
 							code.WriteLineSkipOnce();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"Task<ServiceResult<{responseTypeName}>> {fullMethodName}Async({requestTypeName} request, CancellationToken cancellationToken);");
+							code.WriteLine($"Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async(" +
+								$"{CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken);");
 						}
 					}
 				}
 
-				return new ServiceTextSource(name: fullInterfaceName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+				return new ServiceTextSource(name: interfaceName + CSharpUtility.FileExtension, text: stringWriter.ToString());
 			}
 		}
 
@@ -406,7 +437,9 @@ namespace Facility.CSharp
 		private sealed class Context
 		{
 			public string GeneratorName { get; set; }
+
 			public string NamespaceName { get; set; }
+
 			public ServiceInfo Service { get; set; }
 		}
 	}

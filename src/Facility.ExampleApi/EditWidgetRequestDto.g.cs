@@ -37,9 +37,9 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(EditWidgetRequestDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Id, other.Id) &&
-				ServiceDataUtility.AreEquivalent(Ops, other.Ops) &&
-				ServiceDataUtility.AreEquivalent(Weight, other.Weight);
+				Id == other.Id &&
+				ServiceDataUtility.AreEquivalentArrays(Ops, other.Ops, ServiceDataUtility.AreEquivalentObjects) &&
+				Weight == other.Weight;
 		}
 	}
 }

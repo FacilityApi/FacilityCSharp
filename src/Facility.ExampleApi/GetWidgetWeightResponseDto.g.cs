@@ -24,7 +24,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetWidgetWeightResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Value, other.Value);
+				Value == other.Value;
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(KitchenRequestDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Sink, other.Sink);
+				ServiceDataUtility.AreEquivalentDtos(Sink, other.Sink);
 		}
 	}
 }

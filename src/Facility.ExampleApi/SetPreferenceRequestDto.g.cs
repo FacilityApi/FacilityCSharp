@@ -29,8 +29,8 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(SetPreferenceRequestDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Key, other.Key) &&
-				ServiceDataUtility.AreEquivalent(Value, other.Value);
+				Key == other.Key &&
+				ServiceDataUtility.AreEquivalentDtos(Value, other.Value);
 		}
 	}
 }

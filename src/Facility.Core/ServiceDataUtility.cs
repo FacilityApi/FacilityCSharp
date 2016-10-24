@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
 {
@@ -12,19 +10,97 @@ namespace Facility.Core
 	public static class ServiceDataUtility
 	{
 		/// <summary>
-		/// True if the data elements are equal.
+		/// True if the DTOs are equivalent.
 		/// </summary>
-		public static bool AreEquivalent<T>(T x, T y)
+		public static bool AreEquivalentDtos(ServiceDto first, ServiceDto second)
 		{
-			return GetEquivalenceComparer<T>().Equals(x, y);
+			return first == second || first != null && first.IsEquivalentTo(second);
 		}
 
 		/// <summary>
-		/// Gets an IEqualityComparer for data elements.
+		/// True if the results are equivalent.
 		/// </summary>
-		public static IEqualityComparer<T> GetEquivalenceComparer<T>()
+		public static bool AreEquivalentResults(ServiceResult first, ServiceResult second)
 		{
-			return EquivalenceComparerCache<T>.Instance;
+			return first == second || first != null && first.IsEquivalentTo(second);
+		}
+
+		/// <summary>
+		/// True if the objects are equivalent.
+		/// </summary>
+		public static bool AreEquivalentObjects(JObject first, JObject second)
+		{
+			return JToken.DeepEquals(first, second);
+		}
+
+		/// <summary>
+		/// True if the bytes are equivalent.
+		/// </summary>
+		public static bool AreEquivalentBytes(byte[] first, byte[] second)
+		{
+			if (first == null)
+				return second == null;
+			if (second == null)
+				return false;
+			if (first.Length != second.Length)
+				return false;
+			for (int i = 0; i < first.Length; i++)
+			{
+				if (first[i] != second[i])
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// True if the arrays are equivalent.
+		/// </summary>
+		public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second)
+		{
+			return AreEquivalentArrays(first, second, EqualityComparer<T>.Default.Equals);
+		}
+
+		/// <summary>
+		/// True if the arrays are equivalent.
+		/// </summary>
+		public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second, Func<T, T, bool> areEquivalent)
+		{
+			if (ReferenceEquals(first, second))
+				return true;
+			if (first == null || second == null || first.Count != second.Count)
+				return false;
+			for (int i = 0; i < first.Count; i++)
+			{
+				if (!areEquivalent(first[i], second[i]))
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// True if the maps are equivalent.
+		/// </summary>
+		public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T> first, IReadOnlyDictionary<string, T> second)
+		{
+			return AreEquivalentMaps(first, second, EqualityComparer<T>.Default.Equals);
+		}
+
+		/// <summary>
+		/// True if the maps are equivalent.
+		/// </summary>
+		public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T> first, IReadOnlyDictionary<string, T> second, Func<T, T, bool> areEquivalent)
+		{
+			if (ReferenceEquals(first, second))
+				return true;
+			if (first == null || second == null || first.Count != second.Count)
+				return false;
+			foreach (var pair in first)
+			{
+				T value;
+				if (!second.TryGetValue(pair.Key, out value) || !areEquivalent(pair.Value, value))
+					return false;
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -33,127 +109,6 @@ namespace Facility.Core
 		public static T Clone<T>(T value)
 		{
 			return value == null ? default(T) : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
-		}
-
-		private static bool AreDictionariesEquivalent<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> left, IReadOnlyDictionary<TKey, TValue> right)
-		{
-			if (left == right)
-				return true;
-
-			if (left == null || right == null || left.Count != right.Count)
-				return false;
-
-			foreach (var pair in left)
-			{
-				TValue value;
-				if (!right.TryGetValue(pair.Key, out value) || !AreEquivalent(pair.Value, value))
-					return false;
-			}
-
-			return true;
-		}
-
-		private static class EquivalenceComparerCache<T>
-		{
-			public static readonly IEqualityComparer<T> Instance = CreateInstance();
-
-			private static IEqualityComparer<T> CreateInstance()
-			{
-				var type = typeof(T);
-				var typeInfo = type.GetTypeInfo();
-
-				if (typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return EqualityComparer<T>.Default;
-
-				if (typeof(IServiceData<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceDataEquivalenceComparer<>).MakeGenericType(type));
-
-				var dictionaryInterfaces = typeInfo.ImplementedInterfaces
-					.Where(x => x.IsConstructedGenericType && x.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>)).ToList();
-				if (dictionaryInterfaces.Count == 1)
-				{
-					var genericTypeArguments = dictionaryInterfaces[0].GetTypeInfo().GenericTypeArguments;
-					var keyType = genericTypeArguments[0];
-					var valueType = genericTypeArguments[1];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(DictionaryEquivalenceComparer<,,>).MakeGenericType(type, keyType, valueType));
-				}
-
-				var enumerableInterfaces = typeInfo.ImplementedInterfaces
-					.Where(x => x.IsConstructedGenericType && x.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToList();
-				if (enumerableInterfaces.Count == 1)
-				{
-					var itemType = enumerableInterfaces[0].GetTypeInfo().GenericTypeArguments[0];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(EnumerableEquivalenceComparer<,>).MakeGenericType(type, itemType));
-				}
-
-				return new ObjectEquivalenceComparer<T>();
-			}
-		}
-
-		private abstract class NoHashCodeEqualityComparer<T> : EqualityComparer<T>
-		{
-			public sealed override int GetHashCode(T obj)
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		private sealed class EnumerableEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
-			where T : IEnumerable<TItem>
-		{
-			public override bool Equals(T x, T y)
-			{
-				return x == null ? y == null : x.SequenceEqual(y, GetEquivalenceComparer<TItem>());
-			}
-		}
-
-		private sealed class DictionaryEquivalenceComparer<T, TKey, TValue> : NoHashCodeEqualityComparer<T>
-			where T : IReadOnlyDictionary<TKey, TValue>
-		{
-			public override bool Equals(T x, T y)
-			{
-				return AreDictionariesEquivalent(x, y);
-			}
-		}
-
-		private sealed class ServiceDataEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
-			where T : IServiceData<T>
-		{
-			public override bool Equals(T x, T y)
-			{
-				return x == null ? y == null : x.IsEquivalentTo(y);
-			}
-		}
-
-		private sealed class ObjectEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
-		{
-			public override bool Equals(T x, T y)
-			{
-				if (x == null)
-					return y == null;
-				if (y == null)
-					return false;
-
-				var leftAsString = x as string;
-				if (leftAsString != null)
-					return leftAsString == y as string;
-
-				var xAsData = x as IServiceData;
-				if (xAsData != null)
-				{
-					var yAsData = y as IServiceData;
-					return yAsData != null && xAsData.IsEquivalentTo(yAsData);
-				}
-
-				var xAsEnumerable = x as IEnumerable;
-				if (xAsEnumerable != null)
-				{
-					var yAsEnumerable = y as IEnumerable;
-					return yAsEnumerable != null && xAsEnumerable.Cast<object>().SequenceEqual(yAsEnumerable.Cast<object>(), GetEquivalenceComparer<object>());
-				}
-
-				return Default.Equals(x, y);
-			}
 		}
 	}
 }

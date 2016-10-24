@@ -24,7 +24,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetPreferenceRequestDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Key, other.Key);
+				Key == other.Key;
 		}
 	}
 }

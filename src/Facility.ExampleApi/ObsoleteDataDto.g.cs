@@ -22,7 +22,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(ObsoleteDataDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalent(Unused, other.Unused);
+				Unused == other.Unused;
 		}
 	}
 }
