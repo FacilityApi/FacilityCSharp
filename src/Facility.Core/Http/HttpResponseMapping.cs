@@ -53,16 +53,34 @@ namespace Facility.Core.Http
 		/// </summary>
 		public sealed class Builder
 		{
+			/// <summary>
+			/// The status code used by this mapping.
+			/// </summary>
 			public HttpStatusCode StatusCode { get; set; }
 
+			/// <summary>
+			/// True if the response should result in this status code and body.
+			/// </summary>
 			public Func<TResponse, bool> MatchesResponse { get; set; }
 
+			/// <summary>
+			/// The type of the response body, if any.
+			/// </summary>
 			public Type ResponseBodyType { get; set; }
 
+			/// <summary>
+			/// Extracts the HTTP response content body from the response.
+			/// </summary>
 			public Func<TResponse, ServiceDto> GetResponseBody { get; set; }
 
+			/// <summary>
+			/// Creates a response with an optional body.
+			/// </summary>
 			public Func<ServiceDto, TResponse> CreateResponse { get; set; }
 
+			/// <summary>
+			/// Builds the mapping.
+			/// </summary>
 			public HttpResponseMapping<TResponse> Build()
 			{
 				return new HttpResponseMapping<TResponse>(this);

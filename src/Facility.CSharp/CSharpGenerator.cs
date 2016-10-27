@@ -10,12 +10,24 @@ using Facility.Definition.Http;
 
 namespace Facility.CSharp
 {
+	/// <summary>
+	/// Generates C#.
+	/// </summary>
 	public sealed class CSharpGenerator
 	{
+		/// <summary>
+		/// The name of the generator for comments.
+		/// </summary>
 		public string GeneratorName { get; set; }
 
+		/// <summary>
+		/// The name of the namespace (optional).
+		/// </summary>
 		public string NamespaceName { get; set; }
 
+		/// <summary>
+		/// Generates the C# output.
+		/// </summary>
 		public IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceDefinitionInfo definition)
 		{
 			var outputFiles = new List<ServiceTextSource>();

@@ -115,32 +115,74 @@ namespace Facility.Core.Http
 		/// </summary>
 		public sealed class Builder
 		{
+			/// <summary>
+			/// The HTTP method.
+			/// </summary>
 			public HttpMethod HttpMethod { get; set; }
 
+			/// <summary>
+			/// The path.
+			/// </summary>
 			public string Path { get; set; }
 
+			/// <summary>
+			/// Returns an error if the request is invalid.
+			/// </summary>
 			public Func<TRequest, ServiceResult> ValidateRequest { get; set; }
 
+			/// <summary>
+			/// Extracts the path and query parameters from the request.
+			/// </summary>
 			public Func<TRequest, IReadOnlyDictionary<string, string>> GetUriParameters { get; set; }
 
+			/// <summary>
+			/// Writes the path and query parameters to the request.
+			/// </summary>
 			public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> SetUriParameters { get; set; }
 
+			/// <summary>
+			/// The type of the request body, if any.
+			/// </summary>
 			public Type RequestBodyType { get; set; }
 
+			/// <summary>
+			/// Extracts the HTTP request content body from the request.
+			/// </summary>
 			public Func<TRequest, ServiceDto> GetRequestBody { get; set; }
 
+			/// <summary>
+			/// Extracts the headers from the request.
+			/// </summary>
 			public Func<TRequest, IReadOnlyDictionary<string, string>> GetRequestHeaders { get; set; }
 
+			/// <summary>
+			/// Writes the headers to the request.
+			/// </summary>
 			public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> SetRequestHeaders { get; set; }
 
+			/// <summary>
+			/// Creates a request with an optional body.
+			/// </summary>
 			public Func<ServiceDto, TRequest> CreateRequest { get; set; }
 
+			/// <summary>
+			/// The response mappings.
+			/// </summary>
 			public Collection<HttpResponseMapping<TResponse>> ResponseMappings { get; } = new Collection<HttpResponseMapping<TResponse>>();
 
+			/// <summary>
+			/// Extracts the headers from the response.
+			/// </summary>
 			public Func<TResponse, IReadOnlyDictionary<string, string>> GetResponseHeaders { get; set; }
 
+			/// <summary>
+			/// Writes the headers to the response.
+			/// </summary>
 			public Func<TResponse, IReadOnlyDictionary<string, string>, TResponse> SetResponseHeaders { get; set; }
 
+			/// <summary>
+			/// Builds the mapping.
+			/// </summary>
 			public HttpMethodMapping<TRequest, TResponse> Build()
 			{
 				return new HttpMethodMapping<TRequest, TResponse>(this);

@@ -8,7 +8,7 @@ using Facility.Definition.CodeGen;
 
 namespace Facility.CSharp
 {
-	public static class CSharpUtility
+	internal static class CSharpUtility
 	{
 		public static void WriteFileHeader(CodeWriter code, string generatorName)
 		{

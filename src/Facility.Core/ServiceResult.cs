@@ -116,11 +116,17 @@ namespace Facility.Core
 		/// </summary>
 		public sealed class ServiceResultJsonConverter : JsonConverter
 		{
+			/// <summary>
+			/// Determines whether this instance can convert the specified object type.
+			/// </summary>
 			public override bool CanConvert(Type objectType)
 			{
 				return objectType.GetTypeInfo().IsAssignableFrom(typeof(ServiceResult).GetTypeInfo());
 			}
 
+			/// <summary>
+			/// Reads the JSON representation of the object.
+			/// </summary>
 			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 			{
 				if (reader.TokenType == JsonToken.Null)
@@ -174,6 +180,9 @@ namespace Facility.Core
 				}
 			}
 
+			/// <summary>
+			/// Writes the JSON representation of the object.
+			/// </summary>
 			public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 			{
 				ServiceResult serviceResult = (ServiceResult) value;

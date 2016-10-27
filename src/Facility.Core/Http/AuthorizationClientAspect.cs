@@ -18,6 +18,9 @@ namespace Facility.Core.Http
 			m_authorizationHeader = authorizationHeader;
 		}
 
+		/// <summary>
+		/// Called right before the request is sent.
+		/// </summary>
 		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
 			if (!string.IsNullOrWhiteSpace(m_authorizationHeader))

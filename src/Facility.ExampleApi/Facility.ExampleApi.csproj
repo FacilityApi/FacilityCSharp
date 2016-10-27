@@ -26,6 +26,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Facility.ExampleApi.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Facility.ExampleApi.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
