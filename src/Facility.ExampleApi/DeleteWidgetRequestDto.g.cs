@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class DeleteWidgetRequestDto : ServiceDto<DeleteWidgetRequestDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public DeleteWidgetRequestDto()
+		{
+		}
+
+		/// <summary>
 		/// The widget ID.
 		/// </summary>
 		public string Id { get; set; }

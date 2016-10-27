@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class GetWidgetWeightResponseDto : ServiceDto<GetWidgetWeightResponseDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public GetWidgetWeightResponseDto()
+		{
+		}
+
+		/// <summary>
 		/// The widget weight.
 		/// </summary>
 		public double? Value { get; set; }

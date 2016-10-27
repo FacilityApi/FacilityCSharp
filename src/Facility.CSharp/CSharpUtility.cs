@@ -15,14 +15,14 @@ namespace Facility.CSharp
 			code.WriteLine("// " + CodeGenUtility.GetCodeGenComment(generatorName));
 		}
 
-		public static void WriteObsoletePragma(CodeWriter code)
-		{
-			code.WriteLine("#pragma warning disable 612 // member is obsolete");
-		}
-
 		public static void WriteCodeGenAttribute(CodeWriter code, string generatorName)
 		{
 			code.WriteLine($"[System.CodeDom.Compiler.GeneratedCode(\"{generatorName}\", \"\")]");
+		}
+
+		public static void WriteObsoletePragma(CodeWriter code)
+		{
+			code.WriteLine("#pragma warning disable 612 // member is obsolete");
 		}
 
 		public static void WriteObsoleteAttribute(CodeWriter code, IServiceElementInfo element)
@@ -33,7 +33,7 @@ namespace Facility.CSharp
 
 		public static void WriteUsings(CodeWriter code, IEnumerable<string> namespaceNames, string namespaceName)
 		{
-			List<string> sortedNamespaceNames = namespaceNames.Distinct().Where(x => namespaceName != x && !namespaceName.StartsWith(x + ".", StringComparison.Ordinal)).ToList();
+			var sortedNamespaceNames = namespaceNames.Distinct().Where(x => namespaceName != x && !namespaceName.StartsWith(x + ".", StringComparison.Ordinal)).ToList();
 			sortedNamespaceNames.Sort(CompareUsings);
 			if (sortedNamespaceNames.Count != 0)
 			{
@@ -55,11 +55,11 @@ namespace Facility.CSharp
 
 		public const string FileExtension = ".g.cs";
 
-		public const string CommonNamespace = "Common";
+		public const string HttpDirectoryName = "Http";
 
 		public static string GetNamespaceName(ServiceInfo serviceInfo)
 		{
-			return CodeGenUtility.Capitalize(serviceInfo.Name);
+			return serviceInfo.TryGetAttribute("csharp")?.TryGetParameterValue("namespace") ?? CodeGenUtility.Capitalize(serviceInfo.Name);
 		}
 
 		public static string GetInterfaceName(ServiceInfo serviceInfo)

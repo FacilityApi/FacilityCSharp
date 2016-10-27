@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
+using Facility.Definition.Http;
 
 namespace Facility.CSharp
 {
@@ -43,6 +46,19 @@ namespace Facility.CSharp
 					outputFiles.AddRange(GenerateMethodDtos(methodInfo, context));
 			}
 
+			var httpServiceInfo = new HttpServiceInfo(serviceInfo);
+
+			foreach (var httpErrorSetInfo in httpServiceInfo.ErrorSets)
+				outputFiles.Add(GenerateHttpErrors(httpErrorSetInfo, context));
+
+			if (httpServiceInfo.Methods.Count != 0)
+			{
+				outputFiles.Add(GenerateHttpMapping(httpServiceInfo, context));
+				outputFiles.Add(GenerateHttpClient(httpServiceInfo, context));
+				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
+			}
+
+
 			return outputFiles;
 		}
 
@@ -60,7 +76,7 @@ namespace Facility.CSharp
 				{
 					"Facility.Core",
 				};
-				CSharpUtility.WriteUsings(code, usings, context.GeneratorName);
+				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!errorSetInfo.IsObsolete() && errorSetInfo.Errors.Any(x => x.IsObsolete()))
 				{
@@ -248,10 +264,14 @@ namespace Facility.CSharp
 					code.WriteLine($"public sealed partial class {fullDtoName} : ServiceDto<{fullDtoName}>");
 					using (code.Block())
 					{
+						CSharpUtility.WriteSummary(code, "Creates an instance.");
+						code.WriteLine($"public {fullDtoName}()");
+						code.Block().Dispose();
+
 						var fieldInfos = dtoInfo.Fields;
 						GenerateFieldProperties(code, fieldInfos, context);
 
-						code.WriteLineSkipOnce();
+						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
 						code.WriteLine($"public override bool IsEquivalentTo({fullDtoName} other)");
 						using (code.Block())
@@ -294,6 +314,717 @@ namespace Facility.CSharp
 				}
 
 				return new ServiceTextSource(name: fullDtoName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+			}
+		}
+
+		private ServiceTextSource GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
+		{
+			var errorSetInfo = httpErrorSetInfo.ServiceErrorSet;
+
+			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string className = "Http" + errorSetInfo.Name;
+
+			var namesAndStatusCodes = httpErrorSetInfo.Errors
+				.Select(x => new { x.ServiceError.Name, x.StatusCode })
+				.ToList();
+
+			using (var stringWriter = new StringWriter())
+			{
+				var code = new CodeWriter(stringWriter);
+
+				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+
+				var usings = new List<string>
+				{
+					"System",
+					"System.Collections.Generic",
+					"System.Net",
+				};
+				CSharpUtility.WriteUsings(code, usings, namespaceName);
+
+				code.WriteLine($"namespace {namespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, errorSetInfo.Summary);
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, errorSetInfo);
+
+					code.WriteLine($"public static partial class {className}");
+					using (code.Block())
+					{
+						CSharpUtility.WriteSummary(code, "Gets the HTTP status code that corresponds to the specified error code.");
+						code.WriteLine("public static HttpStatusCode? TryGetHttpStatusCode(string errorCode)");
+						using (code.Block())
+						{
+							code.WriteLine("int statusCode;");
+							code.WriteLine("return s_errorToStatus.TryGetValue(errorCode, out statusCode) ? (HttpStatusCode?) statusCode : null;");
+						}
+
+						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Gets the error code that corresponds to the specified HTTP status code.");
+						code.WriteLine("public static string TryGetErrorCode(HttpStatusCode statusCode)");
+						using (code.Block())
+						{
+							code.WriteLine("switch ((int) statusCode)");
+							using (code.Block())
+							{
+								foreach (var nameAndCodeGroup in namesAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
+								{
+									string statusCode = nameAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
+									string errorCode = nameAndCodeGroup.Select(x => x.Name).First();
+									code.WriteLine($"case {statusCode}: return \"{errorCode}\";");
+								}
+
+								code.WriteLine("default: return null;");
+							}
+						}
+
+						code.WriteLine();
+						code.WriteLine("static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)");
+						using (code.Block("{", "};"))
+						{
+							foreach (var nameAndCode in namesAndStatusCodes)
+							{
+								string errorCode = nameAndCode.Name;
+								string statusCode = ((int) nameAndCode.StatusCode).ToString(CultureInfo.InvariantCulture);
+								code.WriteLine($"[\"{errorCode}\"] = {statusCode},");
+							}
+						}
+					}
+				}
+
+				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+			}
+		}
+
+		private ServiceTextSource GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
+		{
+			var serviceInfo = httpServiceInfo.Service;
+
+			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string httpMappingName = $"{serviceInfo.Name}HttpMapping";
+
+			using (var stringWriter = new StringWriter())
+			{
+				var code = new CodeWriter(stringWriter);
+
+				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+
+				List<string> usings = new List<string>
+				{
+					"System",
+					"System.Collections.Generic",
+					"System.Globalization",
+					"System.Net",
+					"System.Net.Http",
+					"Facility.Core",
+					"Facility.Core.Http",
+				};
+				CSharpUtility.WriteUsings(code, usings, namespaceName);
+
+				CSharpUtility.WriteObsoletePragma(code);
+				code.WriteLine();
+
+				code.WriteLine($"namespace {namespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, serviceInfo.Summary);
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+					code.WriteLine($"public static partial class {httpMappingName}");
+					using (code.Block())
+					{
+						foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+						{
+							var methodInfo = httpMethodInfo.ServiceMethod;
+							string methodName = CSharpUtility.GetMethodName(methodInfo);
+							string requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
+							string responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
+							string httpPath = httpMethodInfo.Path;
+
+							code.WriteLineSkipOnce();
+							CSharpUtility.WriteSummary(code, methodInfo.Summary);
+							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
+							code.WriteLine($"public static readonly HttpMethodMapping<{requestTypeName}, {responseTypeName}> {methodName}Mapping =");
+							using (code.Indent())
+							{
+								code.WriteLine($"new HttpMethodMapping<{requestTypeName}, {responseTypeName}>.Builder");
+								code.WriteLine("{");
+								using (code.Indent())
+								{
+									if (httpMethodInfo.Method == HttpMethod.Delete || httpMethodInfo.Method == HttpMethod.Get || httpMethodInfo.Method == HttpMethod.Head || httpMethodInfo.Method == HttpMethod.Options ||
+										httpMethodInfo.Method == HttpMethod.Post || httpMethodInfo.Method == HttpMethod.Put || httpMethodInfo.Method == HttpMethod.Trace)
+									{
+										string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
+										code.WriteLine($"HttpMethod = HttpMethod.{httpMethodName},");
+									}
+									else
+									{
+										string httpMethodName = httpMethodInfo.Method.ToString();
+										code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethodName}\"),");
+									}
+
+									code.WriteLine($"Path = \"{httpPath}\",");
+
+									if (httpMethodInfo.PathFields.Count != 0)
+									{
+										code.WriteLine("ValidateRequest = request =>");
+										code.WriteLine("{");
+										using (code.Indent())
+										{
+											foreach (var pathField in httpMethodInfo.PathFields)
+											{
+												string fieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
+												code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
+												using (code.Indent())
+													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{pathField.ServiceField.Name}\"));");
+											}
+											code.WriteLine("return ServiceResult.Success();");
+										}
+										code.WriteLine("},");
+									}
+
+									if (httpMethodInfo.PathFields.Count != 0 || httpMethodInfo.QueryFields.Count != 0)
+									{
+										code.WriteLine("GetUriParameters = request =>");
+										using (code.Indent())
+										{
+											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine("{");
+											using (code.Indent())
+											{
+												foreach (var pathField in httpMethodInfo.PathFields)
+												{
+													string fieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
+													code.WriteLine($"{{ \"{pathField.ServiceField.Name}\", {fieldValue} }},");
+												}
+												foreach (var queryField in httpMethodInfo.QueryFields)
+												{
+													string fieldName = CSharpUtility.GetFieldPropertyName(queryField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
+													code.WriteLine($"{{ \"{queryField.Name}\", {fieldValue} }},");
+												}
+											}
+											code.WriteLine("},");
+										}
+
+										code.WriteLine("SetUriParameters = (request, parameters) =>");
+										code.WriteLine("{");
+										using (code.Indent())
+										{
+											foreach (var queryField in httpMethodInfo.QueryFields)
+											{
+												string dtoFieldName = CSharpUtility.GetFieldPropertyName(queryField.ServiceField);
+												string queryParameterName = $"queryParameter{dtoFieldName}";
+												code.WriteLine($"string {queryParameterName};");
+												code.WriteLine($"parameters.TryGetValue(\"{queryField.Name}\", out {queryParameterName});");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(queryField.ServiceField), queryParameterName)};");
+											}
+
+											foreach (var pathField in httpMethodInfo.PathFields)
+											{
+												string dtoFieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
+												string queryParameterName = $"queryParameter{dtoFieldName}";
+												code.WriteLine($"string {queryParameterName};");
+												code.WriteLine($"parameters.TryGetValue(\"{pathField.ServiceField.Name}\", out {queryParameterName});");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(pathField.ServiceField), queryParameterName)};");
+											}
+
+											code.WriteLine("return request;");
+										}
+										code.WriteLine("},");
+									}
+
+									if (httpMethodInfo.RequestHeaderFields.Count != 0)
+									{
+										code.WriteLine("GetRequestHeaders = request =>");
+										using (code.Indent())
+										{
+											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine("{");
+											using (code.Indent())
+											{
+												foreach (var headerField in httpMethodInfo.RequestHeaderFields)
+												{
+													string fieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
+													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
+												}
+											}
+											code.WriteLine("},");
+										}
+
+										code.WriteLine("SetRequestHeaders = (request, headers) =>");
+										code.WriteLine("{");
+										using (code.Indent())
+										{
+											foreach (var headerField in httpMethodInfo.RequestHeaderFields)
+											{
+												string dtoFieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+												string headerVariableName = $"header{dtoFieldName}";
+												code.WriteLine($"string {headerVariableName};");
+												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(headerField.ServiceField), headerVariableName)};");
+											}
+
+											code.WriteLine("return request;");
+										}
+										code.WriteLine("},");
+									}
+
+									if (httpMethodInfo.RequestBodyField != null)
+									{
+										string requestBodyFieldName = CSharpUtility.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
+										string requestBodyFieldTypeName = CSharpUtility.GetDtoName(context.Service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField).Dto);
+
+										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
+										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
+										code.WriteLine($"CreateRequest = body => new {requestTypeName}{{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
+									}
+									else if (httpMethodInfo.RequestNormalFields.Any())
+									{
+										code.WriteLine($"RequestBodyType = typeof({requestTypeName}),");
+
+										// copy fields if necessary; full request is the default
+										if (httpMethodInfo.ServiceMethod.RequestFields.Count != httpMethodInfo.RequestNormalFields.Count)
+										{
+											code.WriteLine("GetRequestBody = request =>");
+											using (code.Indent())
+											{
+												code.WriteLine($"new {requestTypeName}");
+												code.WriteLine("{");
+												using (code.Indent())
+												{
+													foreach (var field in httpMethodInfo.RequestNormalFields)
+													{
+														string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+														code.WriteLine($"{fieldName} = request.{fieldName},");
+													}
+												}
+												code.WriteLine($"}},");
+											}
+
+											code.WriteLine("CreateRequest = body =>");
+											using (code.Indent())
+											{
+												code.WriteLine($"new {requestTypeName}");
+												code.WriteLine("{");
+												using (code.Indent())
+												{
+													foreach (var field in httpMethodInfo.RequestNormalFields)
+													{
+														string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+														code.WriteLine($"{fieldName} = (({requestTypeName}) body).{fieldName},");
+													}
+												}
+												code.WriteLine($"}},");
+											}
+										}
+									}
+
+									code.WriteLine("ResponseMappings =");
+									code.WriteLine("{");
+									using (code.Indent())
+									{
+										foreach (var validResponse in httpMethodInfo.ValidResponses)
+										{
+											code.WriteLine($"new HttpResponseMapping<{responseTypeName}>.Builder");
+											code.WriteLine("{");
+
+											using (code.Indent())
+											{
+												string statusCode = ((int) validResponse.StatusCode).ToString(CultureInfo.InvariantCulture);
+												code.WriteLine($"StatusCode = (HttpStatusCode) {statusCode},");
+
+												if (validResponse.ResponseBodyField != null)
+												{
+													string responseBodyFieldName = CSharpUtility.GetFieldPropertyName(validResponse.ResponseBodyField.ServiceField);
+
+													if (context.Service.GetFieldType(validResponse.ResponseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean)
+													{
+														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName}.GetValueOrDefault(),");
+														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = true }},");
+													}
+													else
+													{
+														string responseBodyFieldTypeName = CSharpUtility.GetDtoName(context.Service.GetFieldType(validResponse.ResponseBodyField.ServiceField).Dto);
+
+														if (validResponse.HasResponseFields)
+														{
+															code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
+															code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
+															code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
+															code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
+														}
+														else
+														{
+															code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
+															code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = new {responseBodyFieldTypeName}() }},");
+														}
+													}
+												}
+												else if (validResponse.HasResponseFields)
+												{
+													code.WriteLine($"ResponseBodyType = typeof({responseTypeName}),");
+
+													// copy fields if necessary; full response is the default
+													if (httpMethodInfo.ServiceMethod.ResponseFields.Count != httpMethodInfo.ResponseNormalFields.Count)
+													{
+														code.WriteLine("GetResponseBody = response =>");
+														using (code.Indent())
+														{
+															code.WriteLine($"new {responseTypeName}");
+															code.WriteLine("{");
+															using (code.Indent())
+															{
+																foreach (var field in httpMethodInfo.ResponseNormalFields)
+																{
+																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+																	code.WriteLine($"{fieldName} = response.{fieldName},");
+																}
+															}
+															code.WriteLine($"}},");
+														}
+
+														code.WriteLine("CreateResponse = body =>");
+														using (code.Indent())
+														{
+															code.WriteLine($"new {responseTypeName}");
+															code.WriteLine("{");
+															using (code.Indent())
+															{
+																foreach (var field in httpMethodInfo.ResponseNormalFields)
+																{
+																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+																	code.WriteLine($"{fieldName} = (({responseTypeName}) body).{fieldName},");
+																}
+															}
+															code.WriteLine($"}},");
+														}
+													}
+												}
+											}
+
+											code.WriteLine("}.Build(),");
+										}
+									}
+									code.WriteLine("},");
+
+									if (httpMethodInfo.ResponseHeaderFields.Count != 0)
+									{
+										code.WriteLine("GetResponseHeaders = response =>");
+										using (code.Indent())
+										{
+											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine("{");
+											using (code.Indent())
+											{
+												foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
+												{
+													string fieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
+													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
+												}
+											}
+											code.WriteLine("},");
+										}
+
+										code.WriteLine("SetResponseHeaders = (response, headers) =>");
+										code.WriteLine("{");
+										using (code.Indent())
+										{
+											foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
+											{
+												string dtoFieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+												string headerVariableName = $"header{dtoFieldName}";
+												code.WriteLine($"string {headerVariableName};");
+												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
+												code.WriteLine($"response.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(headerField.ServiceField), headerVariableName)};");
+											}
+
+											code.WriteLine("return response;");
+										}
+										code.WriteLine("},");
+									}
+								}
+								code.WriteLine("}.Build();");
+							}
+						}
+					}
+				}
+
+				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+			}
+		}
+
+		private string GenerateFieldToStringCode(ServiceTypeInfo serviceType, string fieldCode)
+		{
+			switch (serviceType.Kind)
+			{
+			case ServiceTypeKind.Enum:
+			case ServiceTypeKind.Boolean:
+				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
+			case ServiceTypeKind.Double:
+			case ServiceTypeKind.Int32:
+			case ServiceTypeKind.Int64:
+				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString(CultureInfo.InvariantCulture)";
+			case ServiceTypeKind.String:
+				return fieldCode;
+			default:
+				throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
+			}
+		}
+
+		private string GenerateStringToFieldCode(ServiceTypeInfo serviceType, string fieldCode)
+		{
+			switch (serviceType.Kind)
+			{
+			case ServiceTypeKind.Enum:
+				string enumName = CSharpUtility.GetEnumName(serviceType.Enum);
+				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
+			case ServiceTypeKind.Boolean:
+				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
+			case ServiceTypeKind.Double:
+				return $"ServiceDataUtility.TryParseDouble({fieldCode})";
+			case ServiceTypeKind.Int32:
+				return $"ServiceDataUtility.TryParseInt32({fieldCode})";
+			case ServiceTypeKind.Int64:
+				return $"ServiceDataUtility.TryParseInt64({fieldCode})";
+			case ServiceTypeKind.String:
+				return fieldCode;
+			default:
+				throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
+			}
+		}
+
+		private ServiceTextSource GenerateHttpClient(HttpServiceInfo httpServiceInfo, Context context)
+		{
+			var serviceInfo = httpServiceInfo.Service;
+
+			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string fullServiceName = serviceInfo.Name;
+			string fullHttpClientName = fullServiceName + "HttpClient";
+			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+			string httpMappingName = serviceInfo.Name + "HttpMapping";
+
+			using (var stringWriter = new StringWriter())
+			{
+				var code = new CodeWriter(stringWriter);
+
+				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+
+				List<string> usings = new List<string>
+				{
+					"System",
+					"System.Threading",
+					"System.Threading.Tasks",
+					"Facility.Core",
+					"Facility.Core.Http",
+				};
+				CSharpUtility.WriteUsings(code, usings, namespaceName);
+
+				code.WriteLine($"namespace {namespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, serviceInfo.Summary);
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+					code.WriteLine($"public sealed partial class {fullHttpClientName} : {fullInterfaceName}");
+					using (code.Block())
+					{
+						string defaultUrl = httpServiceInfo.Url;
+
+						if (defaultUrl != null)
+						{
+							CSharpUtility.WriteSummary(code, "Creates the service.");
+							code.WriteLine($"public {fullHttpClientName}()");
+							using (code.Indent())
+								code.WriteLine(": this(null)");
+							using (code.Block())
+							{
+							}
+							code.WriteLine();
+						}
+
+						CSharpUtility.WriteSummary(code, "Creates the service.");
+						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings)");
+						using (code.Block())
+						{
+							if (defaultUrl != null)
+								code.WriteLine($"m_httpClientService = new HttpClientService(settings, defaultBaseUri: new Uri(\"{defaultUrl}\"));");
+							else
+								code.WriteLine("m_httpClientService = new HttpClientService(settings);");
+						}
+
+						foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+						{
+							var methodInfo = httpMethodInfo.ServiceMethod;
+							string methodName = CSharpUtility.GetMethodName(methodInfo);
+							string requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
+							string responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
+
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, methodInfo.Summary);
+							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
+							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken)");
+							using (code.Block())
+								code.WriteLine($"return m_httpClientService.TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+						}
+
+						code.WriteLine();
+						code.WriteLine("readonly HttpClientService m_httpClientService;");
+					}
+				}
+
+				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+			}
+		}
+
+		private ServiceTextSource GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
+		{
+			var serviceInfo = httpServiceInfo.Service;
+
+			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string fullServiceName = serviceInfo.Name;
+			string fullHttpHandlerName = fullServiceName + "HttpHandler";
+			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+			string httpMappingName = serviceInfo.Name + "HttpMapping";
+
+			using (var stringWriter = new StringWriter())
+			{
+				var code = new CodeWriter(stringWriter);
+
+				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+
+				List<string> usings = new List<string>
+				{
+					"System",
+					"System.Net",
+					"System.Net.Http",
+					"System.Threading",
+					"System.Threading.Tasks",
+					"Facility.Core.Http",
+				};
+				CSharpUtility.WriteUsings(code, usings, namespaceName);
+
+				if (serviceInfo.Methods.Any(x => x.IsObsolete()))
+				{
+					CSharpUtility.WriteObsoletePragma(code);
+					code.WriteLine();
+				}
+
+				code.WriteLine($"namespace {namespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, serviceInfo.Summary);
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+					code.WriteLine($"public sealed partial class {fullHttpHandlerName} : ServiceHttpHandler");
+					using (code.Block())
+					{
+						CSharpUtility.WriteSummary(code, "Creates the handler.");
+						code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings settings)");
+						using (code.Indent())
+							code.WriteLine(": base(settings)");
+						using (code.Block())
+						{
+							code.WriteLine("if (service == null)");
+							using (code.Indent())
+								code.WriteLine("throw new ArgumentNullException(\"service\");");
+
+							code.WriteLine();
+							code.WriteLine("m_service = service;");
+						}
+
+						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Attempts to handle the HTTP request.");
+						code.WriteLine("public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
+						using (code.Block())
+						{
+							// check 'widgets/get' before 'widgets/{id}'
+							var httpServiceMethods = httpServiceInfo.Methods.ToList();
+							httpServiceMethods.Sort(
+								(left, right) =>
+								{
+									using (var leftIterator = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().GetEnumerator())
+									using (var rightIterator = right.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().GetEnumerator())
+									{
+										while (true)
+										{
+											string leftPart = leftIterator.MoveNext() ? leftIterator.Current : null;
+											string rightPart = rightIterator.MoveNext() ? rightIterator.Current : null;
+											if (leftPart == null && rightPart == null)
+												break;
+											if (leftPart == null)
+												return -1;
+											if (rightPart == null)
+												return 1;
+
+											bool leftPlaceholder = leftPart[0] == '{';
+											bool rightPlaceholder = rightPart[0] == '{';
+											if (!leftPlaceholder || !rightPlaceholder)
+											{
+												if (leftPlaceholder || rightPlaceholder)
+													return leftPlaceholder ? 1 : -1;
+
+												int partCompare = string.CompareOrdinal(leftPart, rightPart);
+												if (partCompare != 0)
+													return partCompare;
+											}
+										}
+									}
+
+									return string.CompareOrdinal(left.Method.ToString(), right.Method.ToString());
+								});
+
+							IDisposable indent = null;
+							int methodCount = httpServiceMethods.Count;
+							for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+							{
+								var methodInfo = httpServiceMethods[methodIndex].ServiceMethod;
+								string methodName = CSharpUtility.GetMethodName(methodInfo);
+								code.WriteLine($"{(methodIndex == 0 ? "return " : "")}await AdaptTask(TryHandle{methodName}Async(httpRequest, cancellationToken)).ConfigureAwait(true){(methodIndex == methodCount - 1 ? ";" : " ??")}");
+								if (indent == null)
+									indent = code.Indent();
+							}
+							indent?.Dispose();
+						}
+
+						foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+						{
+							var methodInfo = httpMethodInfo.ServiceMethod;
+							string methodName = CSharpUtility.GetMethodName(methodInfo);
+
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, methodInfo.Summary);
+							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
+							code.WriteLine($"public Task<HttpResponseMessage> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
+							using (code.Block())
+								code.WriteLine($"return TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, m_service.{methodName}Async, cancellationToken);");
+						}
+
+						if (httpServiceInfo.ErrorSets.Count != 0)
+						{
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, "Returns the HTTP status code for a custom error code.");
+							code.WriteLine("protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode)");
+							using (code.Block())
+							{
+								string tryGetCustomHttpStatusCode = string.Join(" ?? ", httpServiceInfo.ErrorSets.Select(x => $"Http{x.ServiceErrorSet.Name}.TryGetHttpStatusCode(errorCode)"));
+								code.WriteLine($"return {tryGetCustomHttpStatusCode};");
+							}
+						}
+
+						code.WriteLine();
+						code.WriteLine($"readonly {fullInterfaceName} m_service;");
+					}
+				}
+
+				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
 			}
 		}
 
@@ -341,7 +1072,7 @@ namespace Facility.CSharp
 				string normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
 				string nullableFieldType = RenderNullableFieldType(context.Service.GetFieldType(fieldInfo));
 
-				code.WriteLineSkipOnce();
+				code.WriteLine();
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
 				if (fieldInfo.IsObsolete())
 					code.WriteLine("[Obsolete]");

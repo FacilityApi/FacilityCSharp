@@ -16,6 +16,13 @@ namespace Facility.ExampleApi
 	public sealed partial class WidgetDto : ServiceDto<WidgetDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public WidgetDto()
+		{
+		}
+
+		/// <summary>
 		/// A unique identifier for the widget.
 		/// </summary>
 		public string Id { get; set; }

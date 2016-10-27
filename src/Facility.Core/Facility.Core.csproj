@@ -37,6 +37,20 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Http\AuthorizationClientAspect.cs" />
+    <Compile Include="Http\HttpClientService.cs" />
+    <Compile Include="Http\HttpClientServiceAspect.cs" />
+    <Compile Include="Http\HttpClientServiceSettings.cs" />
+    <Compile Include="Http\HttpMethodMapping.cs" />
+    <Compile Include="Http\HttpResponseMapping.cs" />
+    <Compile Include="Http\HttpServiceErrors.cs" />
+    <Compile Include="Http\HttpServiceErrors.g.cs" />
+    <Compile Include="Http\HttpServiceUtility.cs" />
+    <Compile Include="Http\ServiceHttpContext.cs" />
+    <Compile Include="Http\ServiceHttpHandler.cs" />
+    <Compile Include="Http\ServiceHttpHandlerAspect.cs" />
+    <Compile Include="Http\ServiceHttpHandlerSettings.cs" />
+    <Compile Include="Http\UserAgentClientAspect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDataUtility.cs" />
     <Compile Include="ServiceDto.cs" />
@@ -45,6 +59,7 @@
     <Compile Include="ServiceErrorDto.g.cs" />
     <Compile Include="ServiceErrors.cs" />
     <Compile Include="ServiceErrors.g.cs" />
+    <Compile Include="ServiceErrorUtility.cs" />
     <Compile Include="ServiceException.cs" />
     <Compile Include="ServiceJsonConverterBase.cs" />
     <Compile Include="ServiceJsonUtility.cs" />

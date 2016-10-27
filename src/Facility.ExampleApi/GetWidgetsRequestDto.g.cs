@@ -16,6 +16,13 @@ namespace Facility.ExampleApi
 	public sealed partial class GetWidgetsRequestDto : ServiceDto<GetWidgetsRequestDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public GetWidgetsRequestDto()
+		{
+		}
+
+		/// <summary>
 		/// The query.
 		/// </summary>
 		public string Query { get; set; }

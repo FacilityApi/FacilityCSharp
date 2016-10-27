@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class NotRestfulRequestDto : ServiceDto<NotRestfulRequestDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public NotRestfulRequestDto()
+		{
+		}
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(NotRestfulRequestDto other)

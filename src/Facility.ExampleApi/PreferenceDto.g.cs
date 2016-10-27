@@ -13,6 +13,13 @@ namespace Facility.ExampleApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public sealed partial class PreferenceDto : ServiceDto<PreferenceDto>
 	{
+		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public PreferenceDto()
+		{
+		}
+
 		[JsonProperty("boolean")]
 		public bool? IsBoolean { get; set; }
 

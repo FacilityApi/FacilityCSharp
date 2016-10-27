@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -109,6 +110,42 @@ namespace Facility.Core
 		public static T Clone<T>(T value)
 		{
 			return value == null ? default(T) : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
+		}
+
+		/// <summary>
+		/// Attempts to parse a Boolean.
+		/// </summary>
+		public static bool? TryParseBoolean(string text)
+		{
+			bool value;
+			return bool.TryParse(text, out value) ? value : default(bool?);
+		}
+
+		/// <summary>
+		/// Attempts to parse an Int32.
+		/// </summary>
+		public static int? TryParseInt32(string text)
+		{
+			int value;
+			return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value) ? value : default(int?);
+		}
+
+		/// <summary>
+		/// Attempts to parse an Int64.
+		/// </summary>
+		public static long? TryParseInt64(string text)
+		{
+			long value;
+			return long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value) ? value : default(long?);
+		}
+
+		/// <summary>
+		/// Attempts to parse a Double.
+		/// </summary>
+		public static double? TryParseDouble(string text)
+		{
+			double value;
+			return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(double?);
 		}
 	}
 }

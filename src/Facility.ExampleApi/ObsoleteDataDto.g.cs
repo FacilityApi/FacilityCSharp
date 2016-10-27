@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	[Obsolete]
 	public sealed partial class ObsoleteDataDto : ServiceDto<ObsoleteDataDto>
 	{
+		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public ObsoleteDataDto()
+		{
+		}
+
 		public bool? Unused { get; set; }
 
 		/// <summary>

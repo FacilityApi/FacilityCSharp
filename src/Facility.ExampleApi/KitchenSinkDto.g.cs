@@ -12,6 +12,13 @@ namespace Facility.ExampleApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public sealed partial class KitchenSinkDto : ServiceDto<KitchenSinkDto>
 	{
+		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public KitchenSinkDto()
+		{
+		}
+
 		[Obsolete]
 		public string OldField { get; set; }
 

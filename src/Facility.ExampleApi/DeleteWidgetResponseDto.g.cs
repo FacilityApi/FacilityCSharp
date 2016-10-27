@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class DeleteWidgetResponseDto : ServiceDto<DeleteWidgetResponseDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public DeleteWidgetResponseDto()
+		{
+		}
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(DeleteWidgetResponseDto other)

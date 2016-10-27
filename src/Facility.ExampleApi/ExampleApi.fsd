@@ -1,5 +1,6 @@
 /// Example service for widgets.
-[http(url: "http://local.example.com/v1", path: "/widgets", version: "0.3")]
+[http(url: "http://local.example.com/v1")]
+[csharp(namespace: Facility.ExampleApi)]
 service ExampleApi
 {
 	/// Gets widgets.

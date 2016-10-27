@@ -16,6 +16,13 @@ namespace Facility.ExampleApi
 	public sealed partial class EditWidgetRequestDto : ServiceDto<EditWidgetRequestDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public EditWidgetRequestDto()
+		{
+		}
+
+		/// <summary>
 		/// The widget ID.
 		/// </summary>
 		public string Id { get; set; }

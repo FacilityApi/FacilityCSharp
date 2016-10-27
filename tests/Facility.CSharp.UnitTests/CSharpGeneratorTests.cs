@@ -20,7 +20,6 @@ namespace Facility.CSharp.UnitTests
 			var generator = new CSharpGenerator
 			{
 				GeneratorName = "CSharpGeneratorTests",
-				NamespaceName = "Facility.ExampleApi"
 			};
 			generator.GenerateOutput(definition);
 		}

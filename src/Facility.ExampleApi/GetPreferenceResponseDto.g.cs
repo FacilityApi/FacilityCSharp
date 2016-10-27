@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class GetPreferenceResponseDto : ServiceDto<GetPreferenceResponseDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public GetPreferenceResponseDto()
+		{
+		}
+
+		/// <summary>
 		/// The preference value.
 		/// </summary>
 		public PreferenceDto Value { get; set; }

@@ -87,7 +87,15 @@ namespace fsdgencsharp
 				Directory.CreateDirectory(outputPath);
 
 			foreach (var output in outputs)
-				File.WriteAllText(Path.Combine(outputPath, output.Name), output.Text);
+			{
+				string outputFile = Path.Combine(outputPath, output.Name);
+
+				string outputFileDirectory = Path.GetDirectoryName(outputFile);
+				if (outputFileDirectory != null && outputFileDirectory != outputPath && !Directory.Exists(outputFileDirectory))
+					Directory.CreateDirectory(outputFileDirectory);
+
+				File.WriteAllText(outputFile, output.Text);
+			}
 
 			return 0;
 		}

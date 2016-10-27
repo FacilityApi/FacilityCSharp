@@ -14,6 +14,13 @@ namespace Facility.ExampleApi
 	public sealed partial class KitchenResponseDto : ServiceDto<KitchenResponseDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public KitchenResponseDto()
+		{
+		}
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(KitchenResponseDto other)

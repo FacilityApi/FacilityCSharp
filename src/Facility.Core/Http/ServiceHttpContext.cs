@@ -1,0 +1,37 @@
+﻿using System.Net.Http;
+
+namespace Facility.Core.Http
+{
+	/// <summary>
+	/// The context for service HTTP handlers.
+	/// </summary>
+	public sealed class ServiceHttpContext
+	{
+		/// <summary>
+		/// The current service request.
+		/// </summary>
+		public ServiceDto Request { get; internal set; }
+
+		/// <summary>
+		/// The current service result.
+		/// </summary>
+		public ServiceResult<ServiceDto> Result { get; internal set; }
+
+		/// <summary>
+		/// Attempts to get the context from the specified HTTP request.
+		/// </summary>
+		public static ServiceHttpContext TryGetContext(HttpRequestMessage httpRequest)
+		{
+			object context;
+			httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out context);
+			return context as ServiceHttpContext;
+		}
+
+		internal static void SetContext(HttpRequestMessage httpRequest, ServiceHttpContext context)
+		{
+			httpRequest.Properties[c_requestPropertyContextKey] = context;
+		}
+
+		const string c_requestPropertyContextKey = "FSDF_Context";
+	}
+}

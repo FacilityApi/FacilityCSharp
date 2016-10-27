@@ -13,6 +13,13 @@ namespace Facility.ExampleApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public sealed partial class KitchenRequestDto : ServiceDto<KitchenRequestDto>
 	{
+		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public KitchenRequestDto()
+		{
+		}
+
 		public KitchenSinkDto Sink { get; set; }
 
 		/// <summary>
