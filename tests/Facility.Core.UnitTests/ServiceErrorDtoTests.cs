@@ -1,18 +1,18 @@
 ﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public class ServiceErrorDtoTests
 	{
-		[Fact]
+		[Test]
 		public void ToStringUsesJson()
 		{
 			s_error.ToString().ShouldBe(@"{""code"":""Test"",""message"":""Message."",""details"":{""Some"":""details.""},""innerError"":{""code"":""Inner""}}");
 		}
 
-		[Fact]
+		[Test]
 		public void BasicEquivalence()
 		{
 			var empty = new ServiceErrorDto();

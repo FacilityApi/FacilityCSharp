@@ -1,13 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public class ServiceResultTests
 	{
-		[Fact]
+		[Test]
 		public void VoidSuccess()
 		{
 			var result = ServiceResult.Success();
@@ -17,7 +17,7 @@ namespace Facility.Core.UnitTests
 			result.Verify();
 		}
 
-		[Fact]
+		[Test]
 		public void Int32Success()
 		{
 			var result = ServiceResult.Success(1);
@@ -29,7 +29,7 @@ namespace Facility.Core.UnitTests
 			result.GetValueOrDefault().ShouldBe(1);
 		}
 
-		[Fact]
+		[Test]
 		public void NullSuccess()
 		{
 			var result = ServiceResult.Success((string) null);
@@ -41,13 +41,13 @@ namespace Facility.Core.UnitTests
 			result.GetValueOrDefault().ShouldBe(null);
 		}
 
-		[Fact]
+		[Test]
 		public void FailureErrorMustNotBeNull()
 		{
 			Assert.Throws<ArgumentNullException>(() => ServiceResult.Failure(null));
 		}
 
-		[Fact]
+		[Test]
 		public void EmptyFailure()
 		{
 			var result = ServiceResult.Failure(new ServiceErrorDto());
@@ -65,7 +65,7 @@ namespace Facility.Core.UnitTests
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void Int32Failure()
 		{
 			ServiceResult<int> result = ServiceResult.Failure(new ServiceErrorDto("Int32Failure"));
@@ -92,7 +92,7 @@ namespace Facility.Core.UnitTests
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void AlwaysCastFailure()
 		{
 			ServiceResultFailure failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
@@ -103,7 +103,7 @@ namespace Facility.Core.UnitTests
 			stringValue.Cast<int>().Error.ShouldBeEquivalent(new ServiceErrorDto("StringValue"));
 		}
 
-		[Fact]
+		[Test]
 		public void ReferenceCasts()
 		{
 			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(new ArgumentNullException());
@@ -115,7 +115,7 @@ namespace Facility.Core.UnitTests
 			Assert.Throws<InvalidCastException>(() => result.Cast<InvalidOperationException>().Value.GetType().ShouldBe(typeof(ArgumentNullException)));
 		}
 
-		[Fact]
+		[Test]
 		public void ValueCasts()
 		{
 			ServiceResult<long> result = ServiceResult.Success(1L);
@@ -124,7 +124,7 @@ namespace Facility.Core.UnitTests
 			Assert.Throws<InvalidCastException>(() => result.Cast<int>().Value.ShouldBe(1));
 		}
 
-		[Fact]
+		[Test]
 		public void NullCasts()
 		{
 			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(null);
@@ -132,14 +132,14 @@ namespace Facility.Core.UnitTests
 			result.Cast<long?>().Value.ShouldBe(null);
 		}
 
-		[Fact]
+		[Test]
 		public void NoValueCasts()
 		{
 			ServiceResult result = ServiceResult.Success();
 			Assert.Throws<InvalidCastException>(() => result.Cast<object>());
 		}
 
-		[Fact]
+		[Test]
 		public void FailureAsFailure()
 		{
 			var error = new ServiceErrorDto("Error");
@@ -151,7 +151,7 @@ namespace Facility.Core.UnitTests
 			failedValue.AsFailure().Error.ShouldBe(error);
 		}
 
-		[Fact]
+		[Test]
 		public void SuccessAsFailure()
 		{
 			ServiceResult successResult = ServiceResult.Success();
@@ -160,7 +160,7 @@ namespace Facility.Core.UnitTests
 			successValue.AsFailure().ShouldBe(null);
 		}
 
-		[Fact]
+		[Test]
 		public void MapFailure()
 		{
 			var error = new ServiceErrorDto("Error");
@@ -168,14 +168,14 @@ namespace Facility.Core.UnitTests
 			failedValue.Map(x => x.ToString()).Error.ShouldBe(error);
 		}
 
-		[Fact]
+		[Test]
 		public void MapSuccess()
 		{
 			ServiceResult<int> successValue = ServiceResult.Success(1);
 			successValue.Map(x => x.ToString()).Value.ShouldBe("1");
 		}
 
-		[Fact]
+		[Test]
 		public void NoValueSuccessJson()
 		{
 			var before = ServiceResult.Success();
@@ -185,7 +185,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void NoValueEmptyFailureJson()
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto());
@@ -195,7 +195,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void NoValueFailureJson()
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
@@ -205,7 +205,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void IntegerSuccessJson()
 		{
 			var before = ServiceResult.Success(1337);
@@ -215,7 +215,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void IntegerEmptyFailureJson()
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto());
@@ -225,7 +225,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void IntegerFailureJson()
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
@@ -235,7 +235,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void NullIntegerSuccessJson()
 		{
 			var before = ServiceResult.Success(default(int?));
@@ -245,7 +245,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void MissingValueIntegerSuccessJson()
 		{
 			var before = ServiceResult.Success(default(int?));
@@ -254,14 +254,14 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void ValueAndErrorThrows()
 		{
 			const string json = "{\"value\":1337,\"error\":{}}";
 			Assert.Throws<JsonSerializationException>(() => ServiceJsonUtility.FromJson<ServiceResult<int?>>(json));
 		}
 
-		[Fact]
+		[Test]
 		public void ExtraFieldSuccessJson()
 		{
 			var before = ServiceResult.Success(1337);
@@ -270,7 +270,7 @@ namespace Facility.Core.UnitTests
 			after.ShouldBeEquivalent(before);
 		}
 
-		[Fact]
+		[Test]
 		public void ExtraFieldFailureJson()
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto());

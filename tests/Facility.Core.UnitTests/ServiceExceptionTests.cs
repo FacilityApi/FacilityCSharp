@@ -1,12 +1,12 @@
 ﻿using System;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public class ServiceExceptionTests
 	{
-		[Fact]
+		[Test]
 		public void BasicTests()
 		{
 			const string code = "Error";
@@ -36,11 +36,11 @@ namespace Facility.Core.UnitTests
 			}
 		}
 
-		[Fact]
+		[Test]
 		public void RequireError()
 		{
-			Assert.Throws<ArgumentNullException>((Action) (() => { throw new ServiceException(null); }));
-			Assert.Throws<ArgumentNullException>((Action) (() => { throw new ServiceException(null, new ArgumentException()); }));
+			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null); });
+			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null, new ArgumentException()); });
 		}
 	}
 }

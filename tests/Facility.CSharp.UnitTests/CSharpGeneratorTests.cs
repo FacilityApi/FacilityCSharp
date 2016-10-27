@@ -2,13 +2,13 @@
 using System.Reflection;
 using Facility.Definition;
 using Facility.Definition.Fsd;
-using Xunit;
+using NUnit.Framework;
 
 namespace Facility.CSharp.UnitTests
 {
 	public sealed class CSharpGeneratorTests
 	{
-		[Fact]
+		[Test]
 		public void GenerateExampleApiSuccess()
 		{
 			ServiceDefinitionInfo definition;

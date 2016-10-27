@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public sealed class ServiceDataUtilityTests
 	{
-		[Fact]
+		[Test]
 		public void DictionaryClone()
 		{
 			var invalidRequest = new ServiceErrorDto { Code = ServiceErrors.InvalidRequest };

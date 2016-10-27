@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public class ServiceDtoTests
 	{
-		[Fact]
+		[Test]
 		public void ToStringUsesJson()
 		{
 			var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
 			dto.ToString().ShouldBe(@"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}");
 		}
 
-		[Fact]
+		[Test]
 		public void BasicEquivalence()
 		{
 			var empty = new TestDto();
@@ -33,7 +33,7 @@ namespace Facility.Core.UnitTests
 			full.IsEquivalentTo(new TestDto { Id = 3 }).ShouldBe(false);
 		}
 
-		[Fact]
+		[Test]
 		public void BasicCloning()
 		{
 			var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };

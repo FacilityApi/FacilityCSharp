@@ -1,13 +1,13 @@
 ﻿using Facility.Core;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.ExampleApi.UnitTests
 {
 	public class DtoSerializationTests
 	{
-		[Fact]
+		[Test]
 		public void SerializeEmptyPreference()
 		{
 			SerializePreference(
@@ -15,7 +15,7 @@ namespace Facility.ExampleApi.UnitTests
 				expectedJson: "{}");
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeBoolean()
 		{
 			SerializePreference(
@@ -26,7 +26,7 @@ namespace Facility.ExampleApi.UnitTests
 				expectedJson: "{\"boolean\":true}");
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeBooleans()
 		{
 			SerializePreference(
@@ -36,7 +36,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeDouble()
 		{
 			SerializePreference(
@@ -46,7 +46,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeDoubles()
 		{
 			SerializePreference(
@@ -56,7 +56,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeInteger()
 		{
 			SerializePreference(
@@ -66,7 +66,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeIntegers()
 		{
 			SerializePreference(
@@ -76,7 +76,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeString()
 		{
 			SerializePreference(
@@ -86,7 +86,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeStrings()
 		{
 			SerializePreference(
@@ -96,7 +96,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeBytes()
 		{
 			SerializePreference(
@@ -106,7 +106,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeByteses()
 		{
 			SerializePreference(
@@ -116,7 +116,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeWidgetField()
 		{
 			SerializePreference(
@@ -126,7 +126,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeWidgetFields()
 		{
 			SerializePreference(
@@ -136,7 +136,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeWidget()
 		{
 			SerializePreference(
@@ -146,7 +146,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeWidgets()
 		{
 			SerializePreference(
@@ -156,7 +156,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeResult()
 		{
 			SerializePreference(
@@ -166,7 +166,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeResults()
 		{
 			SerializePreference(
@@ -176,7 +176,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeBigInteger()
 		{
 			SerializePreference(
@@ -186,7 +186,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeBigIntegers()
 		{
 			SerializePreference(
@@ -196,7 +196,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeError()
 		{
 			SerializePreference(
@@ -206,7 +206,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeErrors()
 		{
 			SerializePreference(
@@ -216,7 +216,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeObject()
 		{
 			SerializePreference(
@@ -226,7 +226,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeObjects()
 		{
 			SerializePreference(
@@ -236,7 +236,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeEverything()
 		{
 			SerializePreference(
@@ -267,7 +267,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeSimpleFields()
 		{
 			SerializePreference(
@@ -283,7 +283,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeArrayFields()
 		{
 			SerializePreference(
@@ -299,7 +299,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeResultSuccessField()
 		{
 			SerializePreference(
@@ -309,7 +309,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeResultFailureField()
 		{
 			SerializePreference(
@@ -319,7 +319,7 @@ namespace Facility.ExampleApi.UnitTests
 				});
 		}
 
-		[Fact]
+		[Test]
 		public void SerializeResultsField()
 		{
 			SerializePreference(

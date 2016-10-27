@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Core.UnitTests
 {
 	public sealed class ServiceJsonUtilityTests
 	{
-		[Fact]
+		[Test]
 		public void CamelCase()
 		{
 			var dto = ValueDto.Create(true);
@@ -21,7 +21,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.ToJson(token).ShouldBe(json);
 		}
 
-		[Fact]
+		[Test]
 		public void CamelCaseExceptDictionaryKeys()
 		{
 			var dto = ValueDto.Create(new Dictionary<string, bool> { ["Key"] = true });
@@ -35,7 +35,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.ToJson(token).ShouldBe(json);
 		}
 
-		[Fact]
+		[Test]
 		public void DateParseHandlingNone()
 		{
 			var dto = ValueDto.Create("2016-10-21T15:31:00Z");
@@ -49,7 +49,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.ToJson(token).ShouldBe(json);
 		}
 
-		[Fact]
+		[Test]
 		public void NullValueHandlingIgnore()
 		{
 			var dto = ValueDto.Create(default(bool?));
@@ -63,7 +63,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.ToJson(token).ShouldBe(json);
 		}
 
-		[Fact]
+		[Test]
 		public void MissingMemberHandlingIgnore()
 		{
 			var dto = ValueDto.Create(true);
@@ -71,7 +71,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.FromJson<ValueDto>(json).ShouldBeEquivalent(dto);
 		}
 
-		[Fact]
+		[Test]
 		public void MetadataPropertyHandlingIgnore()
 		{
 			var dto = ValueDto.Create(true);
@@ -79,7 +79,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.FromJson<ValueDto>(json).ShouldBeEquivalent(dto);
 		}
 
-		[Fact]
+		[Test]
 		public void ArraySerialization()
 		{
 			var invalidRequest = new ServiceErrorDto { Code = ServiceErrors.InvalidRequest };
@@ -99,7 +99,7 @@ namespace Facility.Core.UnitTests
 			ServiceJsonUtility.ToJson(token).ShouldBe(json);
 		}
 
-		[Fact]
+		[Test]
 		public void DictionarySerialization()
 		{
 			var invalidRequest = new ServiceErrorDto { Code = ServiceErrors.InvalidRequest };
