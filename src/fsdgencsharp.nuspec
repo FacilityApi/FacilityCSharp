@@ -6,10 +6,10 @@
     <authors>Ed Ball</authors>
     <owners>Ed Ball</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A command-line tool for generating FSD files.</description>
+    <description>A command-line tool that generates C# for a Facility Service Definition.</description>
     <copyright>Copyright 2016 Ed Ball</copyright>
-    <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
-    <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
   </metadata>
   <files>
     <file src="fsdgencsharp\bin\Release\*.exe" target="tools" />

@@ -8,8 +8,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>C# code generation for Facility Service Definitions.</description>
     <copyright>Copyright 2016 Ed Ball</copyright>
-    <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
-    <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
     <dependencies>
       <dependency id="Facility.Core" version="$version$" />
       <dependency id="Facility.Definition" version="0.1.2" />
