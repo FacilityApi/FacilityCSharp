@@ -70,7 +70,6 @@ namespace Facility.CSharp
 				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 			}
 
-
 			return outputFiles;
 		}
 
