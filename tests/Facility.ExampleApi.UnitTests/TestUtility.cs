@@ -86,7 +86,7 @@ namespace Facility.ExampleApi.UnitTests
 			case "InMemory":
 				return CreateInMemoryService();
 			case "TestHttpClient":
-				return new ExampleApiHttpClient(new HttpClientServiceSettings { HttpClient = CreateTestHttpClient() });
+				return new HttpClientExampleApi(new HttpClientServiceSettings { HttpClient = CreateTestHttpClient() });
 			default:
 				throw new ArgumentOutOfRangeException(nameof(category));
 			}

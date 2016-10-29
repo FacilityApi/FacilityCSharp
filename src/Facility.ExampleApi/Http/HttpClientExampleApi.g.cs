@@ -11,12 +11,12 @@ namespace Facility.ExampleApi.Http
 	/// Example service for widgets.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class ExampleApiHttpClient : IExampleApi
+	public sealed partial class HttpClientExampleApi : IExampleApi
 	{
 		/// <summary>
 		/// Creates the service.
 		/// </summary>
-		public ExampleApiHttpClient()
+		public HttpClientExampleApi()
 			: this(null)
 		{
 		}
@@ -24,7 +24,7 @@ namespace Facility.ExampleApi.Http
 		/// <summary>
 		/// Creates the service.
 		/// </summary>
-		public ExampleApiHttpClient(HttpClientServiceSettings settings)
+		public HttpClientExampleApi(HttpClientServiceSettings settings)
 		{
 			m_httpClientService = new HttpClientService(settings, defaultBaseUri: new Uri("http://local.example.com/v1"));
 		}

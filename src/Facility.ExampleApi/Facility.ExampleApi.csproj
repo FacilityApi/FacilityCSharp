@@ -70,9 +70,9 @@
     <Compile Include="GetWidgetsResponseDto.g.cs" />
     <Compile Include="GetWidgetWeightRequestDto.g.cs" />
     <Compile Include="GetWidgetWeightResponseDto.g.cs" />
-    <Compile Include="Http\ExampleApiHttpClient.g.cs" />
     <Compile Include="Http\ExampleApiHttpHandler.g.cs" />
     <Compile Include="Http\ExampleApiHttpMapping.g.cs" />
+    <Compile Include="Http\HttpClientExampleApi.g.cs" />
     <Compile Include="Http\HttpExampleApiErrors.g.cs" />
     <Compile Include="IExampleApi.g.cs" />
     <Compile Include="IExampleApiRepository.cs" />

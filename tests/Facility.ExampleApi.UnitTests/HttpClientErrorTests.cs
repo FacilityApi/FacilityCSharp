@@ -95,7 +95,7 @@ namespace Facility.ExampleApi.UnitTests
 
 		private static IExampleApi CreateTestService(Func<HttpRequestMessage, HttpResponseMessage> sendAsync)
 		{
-			return new ExampleApiHttpClient(new HttpClientServiceSettings { HttpClient = new HttpClient(new OurHttpMessageHandler(sendAsync)) });
+			return new HttpClientExampleApi(new HttpClientServiceSettings { HttpClient = new HttpClient(new OurHttpMessageHandler(sendAsync)) });
 		}
 
 		private sealed class OurHttpMessageHandler : HttpMessageHandler

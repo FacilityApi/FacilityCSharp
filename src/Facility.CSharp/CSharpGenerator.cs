@@ -816,7 +816,7 @@ namespace Facility.CSharp
 
 			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
 			string fullServiceName = serviceInfo.Name;
-			string fullHttpClientName = fullServiceName + "HttpClient";
+			string fullHttpClientName = "HttpClient" + fullServiceName;
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
