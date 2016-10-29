@@ -40,9 +40,9 @@ namespace Facility.ExampleApi.Http
 				await AdaptTask(TryHandleGetWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetBatchAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
-				await AdaptTask(TryHandleDeleteWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleEditWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleDeleteWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetWeightAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
 

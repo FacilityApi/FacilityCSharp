@@ -957,51 +957,18 @@ namespace Facility.CSharp
 						using (code.Block())
 						{
 							// check 'widgets/get' before 'widgets/{id}'
-							var httpServiceMethods = httpServiceInfo.Methods.ToList();
-							httpServiceMethods.Sort(
-								(left, right) =>
-								{
-									using (var leftIterator = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().GetEnumerator())
-									using (var rightIterator = right.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().GetEnumerator())
-									{
-										while (true)
-										{
-											string leftPart = leftIterator.MoveNext() ? leftIterator.Current : null;
-											string rightPart = rightIterator.MoveNext() ? rightIterator.Current : null;
-											if (leftPart == null && rightPart == null)
-												break;
-											if (leftPart == null)
-												return -1;
-											if (rightPart == null)
-												return 1;
-
-											bool leftPlaceholder = leftPart[0] == '{';
-											bool rightPlaceholder = rightPart[0] == '{';
-											if (!leftPlaceholder || !rightPlaceholder)
-											{
-												if (leftPlaceholder || rightPlaceholder)
-													return leftPlaceholder ? 1 : -1;
-
-												int partCompare = string.CompareOrdinal(leftPart, rightPart);
-												if (partCompare != 0)
-													return partCompare;
-											}
-										}
-									}
-
-									return string.CompareOrdinal(left.Method.ToString(), right.Method.ToString());
-								});
-
 							IDisposable indent = null;
-							int methodCount = httpServiceMethods.Count;
-							for (int methodIndex = 0; methodIndex < methodCount; methodIndex++)
+							code.Write("return ");
+							foreach (var httpServiceMethod in httpServiceInfo.Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer))
 							{
-								var methodInfo = httpServiceMethods[methodIndex].ServiceMethod;
-								string methodName = CSharpUtility.GetMethodName(methodInfo);
-								code.WriteLine($"{(methodIndex == 0 ? "return " : "")}await AdaptTask(TryHandle{methodName}Async(httpRequest, cancellationToken)).ConfigureAwait(true){(methodIndex == methodCount - 1 ? ";" : " ??")}");
+								if (indent != null)
+									code.WriteLine(" ??");
+								string methodName = CSharpUtility.GetMethodName(httpServiceMethod.ServiceMethod);
+								code.Write($"await AdaptTask(TryHandle{methodName}Async(httpRequest, cancellationToken)).ConfigureAwait(true)");
 								if (indent == null)
 									indent = code.Indent();
 							}
+							code.WriteLine(";");
 							indent?.Dispose();
 						}
 
