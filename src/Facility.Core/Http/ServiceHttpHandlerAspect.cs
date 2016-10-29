@@ -12,7 +12,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called when the request is received.
 		/// </summary>
-		/// <remarks>If a non-null response message is returned, it is used instead of the normal service behavior.</remarks>
+		/// <remarks>If a non-null response message is returned, it is used instead, bypassing any remaining aspects.</remarks>
 		public Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return RequestReceivedAsyncCore(httpRequest, cancellationToken);

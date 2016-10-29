@@ -20,9 +20,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		public Task ResponseReceivedAsync(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
+		public Task ResponseReceivedAsync(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
-			return ResponseReceivedAsyncCore(httpResponse, cancellationToken);
+			return ResponseReceivedAsyncCore(httpResponse, requestDto, cancellationToken);
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
+		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
 			return Task.FromResult<object>(null);
 		}

@@ -27,11 +27,20 @@ namespace Facility.Core.Http
 			return context as ServiceHttpContext;
 		}
 
+		/// <summary>
+		/// Attempts to get the context from the specified HTTP response.
+		/// </summary>
+		public static ServiceHttpContext TryGetContext(HttpResponseMessage httpResponse)
+		{
+			var httpRequest = httpResponse.RequestMessage;
+			return httpRequest != null ? TryGetContext(httpRequest) : null;
+		}
+
 		internal static void SetContext(HttpRequestMessage httpRequest, ServiceHttpContext context)
 		{
 			httpRequest.Properties[c_requestPropertyContextKey] = context;
 		}
 
-		const string c_requestPropertyContextKey = "FSDF_Context";
+		const string c_requestPropertyContextKey = "Facility_Context";
 	}
 }

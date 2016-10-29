@@ -24,7 +24,7 @@ namespace Facility.Core.Http
 		public string Path { get; }
 
 		/// <summary>
-		/// Returns an error if the request is invalid.
+		/// Returns a failure if the request is invalid.
 		/// </summary>
 		public ServiceResult ValidateRequest(TRequest request)
 		{

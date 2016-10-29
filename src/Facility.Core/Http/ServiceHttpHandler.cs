@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,87 +27,10 @@ namespace Facility.Core.Http
 			if (settings == null)
 				throw new ArgumentNullException(nameof(settings));
 
-			RootPath = (settings.RootPath ?? "").TrimEnd('/');
-			IncludeErrorDetail = settings.IncludeErrorDetail;
+			m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 			m_synchronous = settings.Synchronous;
 			m_defaultMediaType = settings.DefaultMediaType ?? HttpServiceUtility.JsonMediaType;
 			m_aspects = settings.Aspects;
-		}
-
-		/// <summary>
-		/// The root path of the service.
-		/// </summary>
-		protected string RootPath { get; }
-
-		/// <summary>
-		/// True if potentially insecure error detail should be included for debugging purposes.
-		/// </summary>
-		protected bool IncludeErrorDetail { get; }
-
-		/// <summary>
-		/// Makes a task synchronous if necessary.
-		/// </summary>
-		protected Task AdaptTask(Task task)
-		{
-			if (!m_synchronous)
-				return task;
-
-			task.GetAwaiter().GetResult();
-			return Task.FromResult<object>(null);
-		}
-
-		/// <summary>
-		/// Makes a task synchronous if necessary.
-		/// </summary>
-		protected Task<T> AdaptTask<T>(Task<T> task)
-		{
-			if (!m_synchronous)
-				return task;
-
-			return Task.FromResult(task.GetAwaiter().GetResult());
-		}
-
-		/// <summary>
-		/// Determines the best media type for the response.
-		/// </summary>
-		/// <param name="httpRequest"></param>
-		/// <returns></returns>
-		protected string GetResponseMediaType(HttpRequestMessage httpRequest)
-		{
-			return httpRequest.Headers.Accept
-				.OrderByDescending(x => x.Quality)
-				.Select(x => x.MediaType)
-				.FirstOrDefault(HttpServiceUtility.IsSupportedMediaType) ?? m_defaultMediaType;
-		}
-
-		/// <summary>
-		/// Called when the request is received.
-		/// </summary>
-		protected async Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			if (m_aspects != null)
-			{
-				foreach (var aspect in m_aspects)
-				{
-					var httpResponse = await aspect.RequestReceivedAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-					if (httpResponse != null)
-						return httpResponse;
-				}
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Called right before the response is sent.
-		/// </summary>
-		protected async Task ResponseReadyAsync(HttpResponseMessage httpResponse, ServiceResult<ServiceDto> result, CancellationToken cancellationToken)
-		{
-			if (m_aspects != null)
-			{
-				foreach (var aspect in m_aspects)
-					await aspect.ResponseReadyAsync(httpResponse, result, cancellationToken).ConfigureAwait(false);
-			}
 		}
 
 		/// <summary>
@@ -119,7 +43,7 @@ namespace Facility.Core.Http
 			if (httpRequest.Method != mapping.HttpMethod)
 				return null;
 
-			var pathParameters = HttpServiceUtility.TryMatchHttpRoute(httpRequest.RequestUri, RootPath + mapping.Path);
+			var pathParameters = TryMatchHttpRoute(httpRequest.RequestUri, m_rootPath + mapping.Path);
 			if (pathParameters == null)
 				return null;
 
@@ -137,7 +61,7 @@ namespace Facility.Core.Http
 			ServiceDto requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
-				var requestResult = await AdaptTask(HttpServiceUtility.TryReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, ServiceErrors.InvalidRequest)).ConfigureAwait(true);
+				var requestResult = await AdaptTask(HttpServiceUtility.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, ServiceErrors.InvalidRequest)).ConfigureAwait(true);
 				if (requestResult.IsFailure)
 					error = requestResult.Error;
 				else
@@ -150,7 +74,7 @@ namespace Facility.Core.Http
 				var request = mapping.CreateRequest(requestBody);
 
 				var uriParameters = new Dictionary<string, string>();
-				foreach (var queryParameter in HttpServiceUtility.ParseQueryString(httpRequest.RequestUri.Query))
+				foreach (var queryParameter in ParseQueryString(httpRequest.RequestUri.Query))
 					uriParameters[queryParameter.Key] = queryParameter.Value[0];
 				foreach (var pathParameter in pathParameters)
 					uriParameters[pathParameter.Key] = pathParameter.Value;
@@ -168,34 +92,37 @@ namespace Facility.Core.Http
 				context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response);
 			}
 
-			HttpResponseMessage httpResponse = null;
+			HttpResponseMessage httpResponse;
 			if (error == null)
 			{
-				var responseMapping = (
+				var responseMappings = (
 					from rm in mapping.ResponseMappings
 					let matches = rm.MatchesResponse(response)
 					where matches != false
 					orderby matches descending
-					select rm).FirstOrDefault();
-				if (responseMapping != null)
+					select rm).ToList();
+				if (responseMappings.Count == 1)
 				{
+					var responseMapping = responseMappings[0];
 					httpResponse = new HttpResponseMessage(responseMapping.StatusCode);
 
 					var headersResult = HttpServiceUtility.TryAddHeaders(httpResponse.Headers, mapping.GetResponseHeaders(response));
 					if (headersResult.IsFailure)
-					{
-						error = headersResult.Error;
-					}
-					else if (responseMapping.ResponseBodyType != null)
-					{
-						httpResponse.Content = await AdaptTask(HttpServiceUtility.CreateHttpContentAsync(
-							responseMapping.GetResponseBody(response), mediaType)).ConfigureAwait(true);
-					}
+						throw new InvalidOperationException(headersResult.Error.Message);
+
+					if (responseMapping.ResponseBodyType != null)
+						httpResponse.Content = HttpServiceUtility.CreateHttpContent(responseMapping.GetResponseBody(response), mediaType);
+				}
+				else
+				{
+					throw new InvalidOperationException($"Found {responseMappings.Count} valid HTTP responses for {typeof(TResponse).Name}: {response}");
 				}
 			}
-
-			if (httpResponse == null)
-				httpResponse = await AdaptTask(HttpServiceUtility.CreateHttpResponseFromErrorAsync(error ?? ServiceErrors.CreateInvalidResponse(), mediaType, TryGetCustomHttpStatusCode)).ConfigureAwait(true);
+			else
+			{
+				var statusCode = TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
+				httpResponse = new HttpResponseMessage(statusCode) { Content = HttpServiceUtility.CreateHttpContent(error, mediaType) };
+			}
 
 			httpResponse.RequestMessage = httpRequest;
 			await AdaptTask(ResponseReadyAsync(httpResponse, context.Result, cancellationToken)).ConfigureAwait(true);
@@ -220,6 +147,103 @@ namespace Facility.Core.Http
 				await base.SendAsync(request, cancellationToken).ConfigureAwait(true);
 		}
 
+		/// <summary>
+		/// Makes a task synchronous if necessary.
+		/// </summary>
+		protected Task AdaptTask(Task task)
+		{
+			if (!m_synchronous)
+				return task;
+
+			task.GetAwaiter().GetResult();
+			return Task.FromResult<object>(null);
+		}
+
+		/// <summary>
+		/// Makes a task synchronous if necessary.
+		/// </summary>
+		protected Task<T> AdaptTask<T>(Task<T> task)
+		{
+			if (!m_synchronous)
+				return task;
+
+			return Task.FromResult(task.GetAwaiter().GetResult());
+		}
+
+		private static bool IsSupportedMediaType(string mediaType)
+		{
+			return mediaType == HttpServiceUtility.JsonMediaType;
+		}
+
+		private static IReadOnlyDictionary<string, string> TryMatchHttpRoute(Uri requestUri, string routePath)
+		{
+			string requestPath = requestUri.AbsolutePath.Trim('/');
+			routePath = routePath.Trim('/');
+
+			if (routePath.IndexOf('{') != -1)
+			{
+				var names = s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
+				string regexPattern = Regex.Escape(routePath);
+				foreach (string name in names)
+					regexPattern = regexPattern.Replace("\\{" + name + "}", "(?'" + name + "'[^/]+)");
+				regexPattern = "^(?:" + regexPattern + ")$";
+				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant).Match(requestPath);
+				return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
+			}
+
+			if (string.Equals(requestPath, routePath, StringComparison.OrdinalIgnoreCase))
+				return s_emptyDictionary;
+
+			return null;
+		}
+
+		private static IReadOnlyDictionary<string, IReadOnlyList<string>> ParseQueryString(string query)
+		{
+			if (query.Length != 0 && query[0] == '?')
+				query = query.Substring(1);
+
+			return query.Split('&')
+				.Select(x => x.Split(new[] { '=' }, 2))
+				.GroupBy(x => Uri.UnescapeDataString(x[0]), x => Uri.UnescapeDataString(x.Length == 1 ? "" : x[1]), StringComparer.OrdinalIgnoreCase)
+				.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.ToList());
+		}
+
+		private string GetResponseMediaType(HttpRequestMessage httpRequest)
+		{
+			return httpRequest.Headers.Accept
+				.OrderByDescending(x => x.Quality)
+				.Select(x => x.MediaType)
+				.FirstOrDefault(IsSupportedMediaType) ?? m_defaultMediaType;
+		}
+
+		private async Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			if (m_aspects != null)
+			{
+				foreach (var aspect in m_aspects)
+				{
+					var httpResponse = await aspect.RequestReceivedAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+					if (httpResponse != null)
+						return httpResponse;
+				}
+			}
+
+			return null;
+		}
+
+		private async Task ResponseReadyAsync(HttpResponseMessage httpResponse, ServiceResult<ServiceDto> result, CancellationToken cancellationToken)
+		{
+			if (m_aspects != null)
+			{
+				foreach (var aspect in m_aspects)
+					await aspect.ResponseReadyAsync(httpResponse, result, cancellationToken).ConfigureAwait(false);
+			}
+		}
+
+		static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
+		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
+
+		readonly string m_rootPath;
 		readonly bool m_synchronous;
 		readonly string m_defaultMediaType;
 		readonly IReadOnlyList<ServiceHttpHandlerAspect> m_aspects;

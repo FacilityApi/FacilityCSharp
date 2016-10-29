@@ -57,8 +57,8 @@ namespace Facility.Core.Http
 				if (requestValidation.IsFailure)
 					return requestValidation.AsFailure();
 
-				// create the HTTP request with the right method, path, and query string
-				var httpRequestResult = TryCreateRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), mapping.GetRequestHeaders(request));
+				// create the HTTP request with the right method, path, query string, and headers
+				var httpRequestResult = TryCreateHttpRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), mapping.GetRequestHeaders(request));
 				if (httpRequestResult.IsFailure)
 					return httpRequestResult.AsFailure();
 				var httpRequest = httpRequestResult.Value;
@@ -66,7 +66,7 @@ namespace Facility.Core.Http
 				// create the request body if necessary
 				var requestBody = mapping.GetRequestBody(request);
 				if (requestBody != null)
-					httpRequest.Content = await CreateHttpContentAsync(requestBody).ConfigureAwait(false);
+					httpRequest.Content = HttpServiceUtility.CreateHttpContent(requestBody, m_mediaType);
 
 				// send the HTTP request and get the HTTP response
 				var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
@@ -81,13 +81,13 @@ namespace Facility.Core.Http
 
 				// fail if no response mapping can be found for the status code
 				if (responseMapping == null)
-					return ServiceResult.Failure(await HttpServiceUtility.CreateErrorFromHttpResponseAsync(httpResponse).ConfigureAwait(false));
+					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse).ConfigureAwait(false));
 
 				// read the response body if necessary
 				ServiceDto responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
-					ServiceResult<ServiceDto> responseResult = await HttpServiceUtility.TryReadHttpContentAsync(
+					ServiceResult<ServiceDto> responseResult = await HttpServiceUtility.ReadHttpContentAsync(
 						responseMapping.ResponseBodyType, httpResponse.Content, ServiceErrors.InvalidResponse).ConfigureAwait(false);
 					if (responseResult.IsFailure)
 						return responseResult.AsFailure();
@@ -114,16 +114,8 @@ namespace Facility.Core.Http
 			}
 		}
 
-		/// <summary>
-		/// Sends an HTTP request.
-		/// </summary>
-		public async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
+		private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
-			if (httpRequest == null)
-				throw new ArgumentNullException(nameof(httpRequest));
-
-			httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(m_mediaType));
-
 			if (m_aspects != null)
 			{
 				foreach (var aspect in m_aspects)
@@ -135,44 +127,65 @@ namespace Facility.Core.Http
 			if (m_aspects != null)
 			{
 				foreach (var aspect in m_aspects)
-					await AdaptTask(aspect.ResponseReceivedAsync(httpResponse, cancellationToken)).ConfigureAwait(true);
+					await AdaptTask(aspect.ResponseReceivedAsync(httpResponse, requestDto, cancellationToken)).ConfigureAwait(true);
 			}
 
 			return httpResponse;
 		}
 
-		/// <summary>
-		/// Creates an HTTP request.
-		/// </summary>
-		public HttpRequestMessage CreateRequest(HttpMethod httpMethod, string relativeUriPattern, IEnumerable<KeyValuePair<string, string>> uriParameters = null)
+		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUriPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
 		{
-			return TryCreateRequest(httpMethod, relativeUriPattern, uriParameters).GetValueOrDefault();
+			string uriText = m_baseUri.AbsoluteUri;
+
+			if (!string.IsNullOrEmpty(relativeUriPattern))
+				uriText = uriText.TrimEnd('/') + "/" + relativeUriPattern.TrimStart('/');
+
+			Uri uri = uriParameters != null ? GetUriFromPattern(uriText, uriParameters) : new Uri(uriText);
+			var requestMessage = new HttpRequestMessage(httpMethod, uri);
+
+			requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(m_mediaType));
+
+			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
+			if (headersResult.IsFailure)
+				return headersResult.AsFailure();
+
+			return ServiceResult.Success(requestMessage);
 		}
 
-		/// <summary>
-		/// Creates an HTTP request.
-		/// </summary>
-		public ServiceResult<HttpRequestMessage> TryCreateRequest(HttpMethod httpMethod, string relativeUriPattern, IEnumerable<KeyValuePair<string, string>> uriParameters = null, IEnumerable<KeyValuePair<string, string>> requestHeaders = null)
+		private static Uri GetUriFromPattern(string uriPattern, IEnumerable<KeyValuePair<string, string>> parameters)
 		{
-			return HttpServiceUtility.TryCreateHttpRequest(m_baseUri, httpMethod, relativeUriPattern, uriParameters, requestHeaders);
+			bool hasQuery = uriPattern.IndexOf('?') != -1;
+
+			foreach (KeyValuePair<string, string> parameter in parameters)
+			{
+				if (parameter.Key != null && parameter.Value != null)
+				{
+					string bracketedKey = "{" + parameter.Key + "}";
+					int bracketedKeyIndex = uriPattern.IndexOf(bracketedKey, StringComparison.Ordinal);
+					if (bracketedKeyIndex != -1)
+					{
+						uriPattern = uriPattern.Substring(0, bracketedKeyIndex) +
+							Uri.EscapeDataString(parameter.Value) + uriPattern.Substring(bracketedKeyIndex + bracketedKey.Length);
+					}
+					else
+					{
+						uriPattern += (hasQuery ? "&" : "?") + Uri.EscapeDataString(parameter.Key) + "=" + Uri.EscapeDataString(parameter.Value);
+						hasQuery = true;
+					}
+				}
+			}
+
+			return new Uri(uriPattern);
 		}
 
-		/// <summary>
-		/// Creates HTTP content.
-		/// </summary>
-		public Task<HttpContent> CreateHttpContentAsync(ServiceDto content)
+		private static async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response)
 		{
-			return HttpServiceUtility.CreateHttpContentAsync(content, m_mediaType);
-		}
+			var result = await HttpServiceUtility.ReadHttpContentAsync<ServiceErrorDto>(response.Content, ServiceErrors.InvalidResponse).ConfigureAwait(false);
 
-		/// <summary>
-		/// Creates a default HTTP client.
-		/// </summary>
-		public static HttpClient CreateDefaultHttpClient()
-		{
-			var httpClient = new HttpClient();
-			httpClient.DefaultRequestHeaders.ExpectContinue = false;
-			return httpClient;
+			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
+				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
+
+			return result.Value;
 		}
 
 		private Task AdaptTask(Task task)
@@ -192,7 +205,7 @@ namespace Facility.Core.Http
 			return Task.FromResult(task.GetAwaiter().GetResult());
 		}
 
-		static readonly HttpClient s_defaultHttpClient = CreateDefaultHttpClient();
+		static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
 		readonly bool m_synchronous;
 		readonly Uri m_baseUri;

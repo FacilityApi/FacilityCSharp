@@ -20,7 +20,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets?q=" + InMemoryExampleApiRepository.SampleWidgets[1].Name);
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<GetWidgetsResponseDto>(response.Content)).Value.Widgets[0].ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[1]);
+			(await HttpServiceUtility.ReadHttpContentAsync<GetWidgetsResponseDto>(response.Content, ServiceErrors.InvalidResponse)).Value.Widgets[0].ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[1]);
 		}
 
 		[Test]
@@ -29,7 +29,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets/" + InMemoryExampleApiRepository.SampleWidgets[0].Id);
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<WidgetDto>(response.Content)).Value.ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[0]);
+			(await HttpServiceUtility.ReadHttpContentAsync<WidgetDto>(response.Content, ServiceErrors.InvalidResponse)).Value.ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[0]);
 		}
 
 		[Test]
@@ -45,9 +45,9 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var widget = new WidgetDto();
-			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", await HttpServiceUtility.CreateHttpContentAsync(widget, HttpServiceUtility.JsonMediaType));
+			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", HttpServiceUtility.CreateHttpContent(widget, HttpServiceUtility.JsonMediaType));
 			response.StatusCode.ShouldBe(HttpStatusCode.Created);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<WidgetDto>(response.Content)).Value.Id.ShouldNotBe(null);
+			(await HttpServiceUtility.ReadHttpContentAsync<WidgetDto>(response.Content, ServiceErrors.InvalidResponse)).Value.Id.ShouldNotBe(null);
 		}
 
 		[Test]
@@ -72,7 +72,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("<html></html>", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
 			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			(await HttpServiceUtility.ReadHttpContentAsync<ServiceErrorDto>(response.Content, ServiceErrors.InvalidResponse)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
@@ -81,7 +81,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("{\"name\":\"xyzzy\"", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
 			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			(await HttpServiceUtility.ReadHttpContentAsync<ServiceErrorDto>(response.Content, ServiceErrors.InvalidResponse)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
@@ -90,7 +90,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("{\"name\":{}}", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
 			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await HttpServiceUtility.TryReadHttpResponseContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			(await HttpServiceUtility.ReadHttpContentAsync<ServiceErrorDto>(response.Content, ServiceErrors.InvalidResponse)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]

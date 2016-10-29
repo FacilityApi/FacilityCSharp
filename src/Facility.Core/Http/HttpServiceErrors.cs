@@ -18,9 +18,46 @@ namespace Facility.Core.Http
 		}
 
 		/// <summary>
-		/// Creates an error DTO for the specified status code and reason phrase.
+		/// An invalid request/response for missing Content-Type.
 		/// </summary>
-		public static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string reasonPhrase)
+		public static ServiceErrorDto CreateMissingContentType(string errorCode)
+		{
+			return new ServiceErrorDto(errorCode, "HTTP content missing Content-Type.");
+		}
+
+		/// <summary>
+		/// An invalid request/response for unsupported Content-Type.
+		/// </summary>
+		public static ServiceErrorDto CreateUnsupportedContentType(string errorCode, string contentType)
+		{
+			return new ServiceErrorDto(errorCode, $"HTTP content has unsupported Content-Type: {contentType}");
+		}
+
+		/// <summary>
+		/// An invalid request/response for bad content.
+		/// </summary>
+		public static ServiceErrorDto CreateInvalidContent(string errorCode, string message)
+		{
+			return new ServiceErrorDto(errorCode, $"HTTP content is invalid: {message}");
+		}
+
+		/// <summary>
+		/// The HTTP request header has an invalid format.
+		/// </summary>
+		public static ServiceErrorDto CreateRequestHeaderInvalidFormat(string headerName)
+		{
+			return ServiceErrors.CreateInvalidRequest($"HTTP request header '{headerName}' has an invalid format.");
+		}
+
+		/// <summary>
+		/// The HTTP request header is not supported.
+		/// </summary>
+		public static ServiceErrorDto CreateRequestHeaderNotSupported(string headerName)
+		{
+			return ServiceErrors.CreateInvalidRequest($"HTTP request header '{headerName}' is not supported.");
+		}
+
+		internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string reasonPhrase)
 		{
 			int statusCodeNumber = (int) statusCode;
 			bool isClientError = statusCodeNumber >= 400 && statusCodeNumber <= 499;
@@ -33,28 +70,14 @@ namespace Facility.Core.Http
 			return new ServiceErrorDto(errorCode, $"{message}: {statusCodeString} {reasonPhrase}");
 		}
 
-		/// <summary>
-		/// An invalid request/response for missing Content-Type.
-		/// </summary>
-		public static ServiceErrorDto CreateErrorMissingContentType(string errorCode)
+		internal static ServiceErrorDto CreateResponseHeaderInvalidFormat(string headerName)
 		{
-			return new ServiceErrorDto(errorCode, "HTTP content missing Content-Type.");
+			return ServiceErrors.CreateInvalidResponse($"HTTP response header '{headerName}' has an invalid format.");
 		}
 
-		/// <summary>
-		/// An invalid request/response  for unsupported Content-Type.
-		/// </summary>
-		public static ServiceErrorDto CreateErrorUnsupportedContentType(string errorCode, string contentType)
+		internal static ServiceErrorDto CreateResponseHeaderNotSupported(string headerName)
 		{
-			return new ServiceErrorDto(errorCode, $"HTTP content has unsupported Content-Type: {contentType}");
-		}
-
-		/// <summary>
-		/// An invalid request/response for bad content.
-		/// </summary>
-		public static ServiceErrorDto CreateErrorBadContent(string errorCode, string message)
-		{
-			return new ServiceErrorDto(errorCode, $"HTTP content is invalid: {message}");
+			return ServiceErrors.CreateInvalidResponse($"HTTP response header '{headerName}' is not supported.");
 		}
 	}
 }

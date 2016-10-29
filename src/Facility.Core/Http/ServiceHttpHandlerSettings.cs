@@ -5,17 +5,12 @@ namespace Facility.Core.Http
 	/// <summary>
 	/// Settings for service HTTP handlers.
 	/// </summary>
-	public sealed class ServiceHttpHandlerSettings
+	public class ServiceHttpHandlerSettings
 	{
 		/// <summary>
 		/// The root path of the service, default "/".
 		/// </summary>
 		public string RootPath { get; set; }
-
-		/// <summary>
-		/// True if potentially insecure error detail should be included for debugging purposes.
-		/// </summary>
-		public bool IncludeErrorDetail { get; set; }
 
 		/// <summary>
 		/// True to call services synchronously, allowing tasks to be safely blocked.

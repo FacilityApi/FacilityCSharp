@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Http;
 using Facility.ExampleApi.InMemory;
 using NUnit.Framework;
 
@@ -86,7 +87,7 @@ namespace Facility.ExampleApi.UnitTests
 			if (m_category == "InMemory")
 				result.ShouldBeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
 			else
-				result.ShouldBeFailure(ServiceErrors.CreateRequestHeaderInvalidFormat("If-None-Match"));
+				result.ShouldBeFailure(HttpServiceErrors.CreateRequestHeaderInvalidFormat("If-None-Match"));
 		}
 
 		readonly string m_category;
