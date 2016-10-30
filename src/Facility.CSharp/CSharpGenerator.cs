@@ -26,13 +26,21 @@ namespace Facility.CSharp
 		public string NamespaceName { get; set; }
 
 		/// <summary>
+		/// The text to use for each indent (null for tab).
+		/// </summary>
+		public string IndentText { get; set; }
+
+		/// <summary>
+		/// The text to use for each new line (null for default).
+		/// </summary>
+		public string NewLine { get; set; }
+
+		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
-		public IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceDefinitionInfo definition)
+		public IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceInfo serviceInfo)
 		{
 			var outputFiles = new List<ServiceTextSource>();
-
-			var serviceInfo = definition.Service;
 
 			var context = new Context
 			{
@@ -129,7 +137,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: fullErrorSetName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName(fullErrorSetName + CSharpUtility.FileExtension);
 			}
 		}
 
@@ -235,7 +243,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: enumName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+				return new ServiceTextSource(text: stringWriter.ToString()).WithName(enumName + CSharpUtility.FileExtension);
 			}
 		}
 
@@ -324,7 +332,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: fullDtoName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName(fullDtoName + CSharpUtility.FileExtension);
 			}
 		}
 
@@ -404,7 +412,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}");
 			}
 		}
 
@@ -614,7 +622,7 @@ namespace Facility.CSharp
 														code.WriteLine($"{fieldName} = request.{fieldName},");
 													}
 												}
-												code.WriteLine($"}},");
+												code.WriteLine("},");
 											}
 
 											code.WriteLine("CreateRequest = body =>");
@@ -630,7 +638,7 @@ namespace Facility.CSharp
 														code.WriteLine($"{fieldName} = (({requestTypeName}) body).{fieldName},");
 													}
 												}
-												code.WriteLine($"}},");
+												code.WriteLine("},");
 											}
 										}
 									}
@@ -649,20 +657,22 @@ namespace Facility.CSharp
 												string statusCode = ((int) validResponse.StatusCode).ToString(CultureInfo.InvariantCulture);
 												code.WriteLine($"StatusCode = (HttpStatusCode) {statusCode},");
 
-												if (validResponse.ResponseBodyField != null)
+												var bodyField = validResponse.BodyField;
+												if (bodyField != null)
 												{
-													string responseBodyFieldName = CSharpUtility.GetFieldPropertyName(validResponse.ResponseBodyField.ServiceField);
+													string responseBodyFieldName = CSharpUtility.GetFieldPropertyName(bodyField.ServiceField);
 
-													if (context.Service.GetFieldType(validResponse.ResponseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean)
+													var bodyFieldType = context.Service.GetFieldType(bodyField.ServiceField);
+													if (bodyFieldType.Kind == ServiceTypeKind.Boolean)
 													{
 														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName}.GetValueOrDefault(),");
 														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = true }},");
 													}
 													else
 													{
-														string responseBodyFieldTypeName = CSharpUtility.GetDtoName(context.Service.GetFieldType(validResponse.ResponseBodyField.ServiceField).Dto);
+														string responseBodyFieldTypeName = CSharpUtility.GetDtoName(bodyFieldType.Dto);
 
-														if (validResponse.HasResponseFields)
+														if (bodyFieldType.Dto.Fields.Count != 0)
 														{
 															code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
 															code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
@@ -676,12 +686,12 @@ namespace Facility.CSharp
 														}
 													}
 												}
-												else if (validResponse.HasResponseFields)
+												else if (validResponse.NormalFields.Count != 0)
 												{
 													code.WriteLine($"ResponseBodyType = typeof({responseTypeName}),");
 
 													// copy fields if necessary; full response is the default
-													if (httpMethodInfo.ServiceMethod.ResponseFields.Count != httpMethodInfo.ResponseNormalFields.Count)
+													if (httpMethodInfo.ServiceMethod.ResponseFields.Count != validResponse.NormalFields.Count)
 													{
 														code.WriteLine("GetResponseBody = response =>");
 														using (code.Indent())
@@ -690,13 +700,13 @@ namespace Facility.CSharp
 															code.WriteLine("{");
 															using (code.Indent())
 															{
-																foreach (var field in httpMethodInfo.ResponseNormalFields)
+																foreach (var field in validResponse.NormalFields)
 																{
 																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
 																	code.WriteLine($"{fieldName} = response.{fieldName},");
 																}
 															}
-															code.WriteLine($"}},");
+															code.WriteLine("},");
 														}
 
 														code.WriteLine("CreateResponse = body =>");
@@ -706,13 +716,13 @@ namespace Facility.CSharp
 															code.WriteLine("{");
 															using (code.Indent())
 															{
-																foreach (var field in httpMethodInfo.ResponseNormalFields)
+																foreach (var field in validResponse.NormalFields)
 																{
 																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
 																	code.WriteLine($"{fieldName} = (({responseTypeName}) body).{fieldName},");
 																}
 															}
-															code.WriteLine($"}},");
+															code.WriteLine("},");
 														}
 													}
 												}
@@ -766,7 +776,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}");
 			}
 		}
 
@@ -890,7 +900,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}");
 			}
 		}
 
@@ -1002,7 +1012,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: $"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}");
 			}
 		}
 
@@ -1099,7 +1109,7 @@ namespace Facility.CSharp
 					}
 				}
 
-				return new ServiceTextSource(name: interfaceName + CSharpUtility.FileExtension, text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName(interfaceName + CSharpUtility.FileExtension);
 			}
 		}
 

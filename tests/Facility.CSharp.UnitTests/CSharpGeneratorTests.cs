@@ -11,17 +11,17 @@ namespace Facility.CSharp.UnitTests
 		[Test]
 		public void GenerateExampleApiSuccess()
 		{
-			ServiceDefinitionInfo definition;
+			ServiceInfo service;
 			const string fileName = "Facility.CSharp.UnitTests.ExampleApi.fsd";
 			var parser = new FsdParser();
 			using (var reader = new StreamReader(GetType().GetTypeInfo().Assembly.GetManifestResourceStream(fileName)))
-				definition = parser.ParseDefinition(new ServiceTextSource(name: Path.GetFileName(fileName), text: reader.ReadToEnd()));
+				service = parser.ParseDefinition(new ServiceTextSource(reader.ReadToEnd()).WithName(Path.GetFileName(fileName)));
 
 			var generator = new CSharpGenerator
 			{
 				GeneratorName = "CSharpGeneratorTests",
 			};
-			generator.GenerateOutput(definition);
+			generator.GenerateOutput(service);
 		}
 	}
 }

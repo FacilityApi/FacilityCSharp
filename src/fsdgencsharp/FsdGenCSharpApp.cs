@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Facility.CSharp;
 using Facility.Definition;
+using Facility.Definition.Console;
 using Facility.Definition.Fsd;
 
 namespace fsdgencsharp
@@ -11,14 +12,29 @@ namespace fsdgencsharp
 	{
 		public static int Main(string[] args)
 		{
-			return new FsdGenCSharpApp().Run(args);
-		}
-
-		public int Run(IReadOnlyList<string> args)
-		{
 			try
 			{
-				return RunCore(args);
+				var argsReader = new ArgsReader(args);
+				if (argsReader.ReadHelpFlag())
+				{
+					foreach (string line in s_usageText)
+						Console.WriteLine(line);
+					return 0;
+				}
+				else
+				{
+					var app = new FsdGenCSharpApp(argsReader);
+					argsReader.VerifyComplete();
+					return app.Run();
+				}
+			}
+			catch (ArgsReaderException exception)
+			{
+				Console.Error.WriteLine(exception.Message);
+				Console.Error.WriteLine();
+				foreach (string line in s_usageText)
+					Console.Error.WriteLine(line);
+				return 1;
 			}
 			catch (Exception exception) when (exception is ApplicationException || exception is ServiceDefinitionException)
 			{
@@ -32,72 +48,72 @@ namespace fsdgencsharp
 			}
 		}
 
-		private int RunCore(IReadOnlyList<string> args)
+		public FsdGenCSharpApp(ArgsReader args)
 		{
-			string inputPath = null;
-			string outputPath = null;
-			var generator = new CSharpGenerator { GeneratorName = "fsdgencsharp" };
-
-			using (var enumerator = args.GetEnumerator())
+			m_generator = new CSharpGenerator
 			{
-				while (enumerator.MoveNext())
-				{
-					string arg = enumerator.Current;
-					if (arg[0] == '-')
-					{
-						if (arg == "--namespace")
-						{
-							if (!enumerator.MoveNext())
-								throw new ApplicationException("Argument missing: " + arg);
-							generator.NamespaceName = enumerator.Current;
-						}
-						else
-						{
-							throw new ApplicationException("Unknown option: " + arg);
-						}
-					}
-					else if (inputPath == null)
-					{
-						inputPath = arg;
-					}
-					else if (outputPath == null)
-					{
-						outputPath = arg;
-					}
-					else
-					{
-						throw new ArgumentException("Unused argument: " + arg);
-					}
-				}
-			}
+				GeneratorName = "fsdgencsharp",
+				NamespaceName = args.ReadOption("namespace"),
+				IndentText = args.ReadIndentOption(),
+				NewLine = args.ReadNewLineOption(),
+			};
 
-			if (outputPath == null)
-				throw new ApplicationException("Usage: fsdgencsharp [options] input-file output-directory");
+			m_inputFilePath = args.ReadArgument();
+			if (m_inputFilePath == null)
+				throw new ArgsReaderException("Missing input file.");
 
-			var input = inputPath == "-" ?
-				new ServiceTextSource("", Console.In.ReadToEnd()) :
-				new ServiceTextSource(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
+			m_outputDirectoryPath = args.ReadArgument();
+			if (m_outputDirectoryPath == null)
+				throw new ArgsReaderException("Missing output directory.");
+		}
+
+		public int Run()
+		{
+			var input = m_inputFilePath == "-" ?
+				new ServiceTextSource(Console.In.ReadToEnd()) :
+				new ServiceTextSource(File.ReadAllText(m_inputFilePath)).WithName(Path.GetFileName(m_inputFilePath));
 
 			var parser = new FsdParser();
-			var definition = parser.ParseDefinition(input);
+			var service = parser.ParseDefinition(input);
 
-			var outputs = generator.GenerateOutput(definition);
+			var outputs = m_generator.GenerateOutput(service);
 
-			if (!Directory.Exists(outputPath))
-				Directory.CreateDirectory(outputPath);
+			if (!Directory.Exists(m_outputDirectoryPath))
+				Directory.CreateDirectory(m_outputDirectoryPath);
 
 			foreach (var output in outputs)
 			{
-				string outputFile = Path.Combine(outputPath, output.Name);
+				string outputFilePath = Path.Combine(m_outputDirectoryPath, output.Name);
 
-				string outputFileDirectory = Path.GetDirectoryName(outputFile);
-				if (outputFileDirectory != null && outputFileDirectory != outputPath && !Directory.Exists(outputFileDirectory))
-					Directory.CreateDirectory(outputFileDirectory);
+				string outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
+				if (outputFileDirectoryPath != null && outputFileDirectoryPath != m_outputDirectoryPath && !Directory.Exists(outputFileDirectoryPath))
+					Directory.CreateDirectory(outputFileDirectoryPath);
 
-				File.WriteAllText(outputFile, output.Text);
+				File.WriteAllText(outputFilePath, output.Text);
 			}
 
 			return 0;
 		}
+
+		static readonly IReadOnlyList<string> s_usageText = new[]
+		{
+			"Usage: fsdgencsharp input-file output-directory [options]",
+			"",
+			"   input-file",
+			"      The input FSD file. (Standard input if \"-\".)",
+			"   output-directory",
+			"      The output directory.",
+			"",
+			"   --namespace <name>",
+			"      The namespace used by the generated C#.",
+			"   --indent (tab|1|2|3|4|5|6|7|8)",
+			"      The indent used in the output: a tab or a number of spaces.",
+			"   --newline (auto|lf|crlf)",
+			"      The newline used in the output.",
+		};
+
+		readonly CSharpGenerator m_generator;
+		readonly string m_inputFilePath;
+		readonly string m_outputDirectoryPath;
 	}
 }
