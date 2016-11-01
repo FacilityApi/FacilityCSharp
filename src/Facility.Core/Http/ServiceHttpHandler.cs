@@ -29,7 +29,7 @@ namespace Facility.Core.Http
 
 			m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 			m_synchronous = settings.Synchronous;
-			m_defaultMediaType = settings.DefaultMediaType ?? HttpServiceUtility.JsonMediaType;
+			m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 			m_aspects = settings.Aspects;
 		}
 
@@ -61,7 +61,7 @@ namespace Facility.Core.Http
 			ServiceDto requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
-				var requestResult = await AdaptTask(HttpServiceUtility.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, ServiceErrors.InvalidRequest)).ConfigureAwait(true);
+				var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content)).ConfigureAwait(true);
 				if (requestResult.IsFailure)
 					error = requestResult.Error;
 				else
@@ -111,7 +111,7 @@ namespace Facility.Core.Http
 						throw new InvalidOperationException(headersResult.Error.Message);
 
 					if (responseMapping.ResponseBodyType != null)
-						httpResponse.Content = HttpServiceUtility.CreateHttpContent(responseMapping.GetResponseBody(response), mediaType);
+						httpResponse.Content = m_contentSerializer.CreateHttpContent(responseMapping.GetResponseBody(response), mediaType);
 				}
 				else
 				{
@@ -121,7 +121,7 @@ namespace Facility.Core.Http
 			else
 			{
 				var statusCode = TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-				httpResponse = new HttpResponseMessage(statusCode) { Content = HttpServiceUtility.CreateHttpContent(error, mediaType) };
+				httpResponse = new HttpResponseMessage(statusCode) { Content = m_contentSerializer.CreateHttpContent(error, mediaType) };
 			}
 
 			httpResponse.RequestMessage = httpRequest;
@@ -170,11 +170,6 @@ namespace Facility.Core.Http
 			return Task.FromResult(task.GetAwaiter().GetResult());
 		}
 
-		private static bool IsSupportedMediaType(string mediaType)
-		{
-			return mediaType == HttpServiceUtility.JsonMediaType;
-		}
-
 		private static IReadOnlyDictionary<string, string> TryMatchHttpRoute(Uri requestUri, string routePath)
 		{
 			string requestPath = requestUri.AbsolutePath.Trim('/');
@@ -213,7 +208,7 @@ namespace Facility.Core.Http
 			return httpRequest.Headers.Accept
 				.OrderByDescending(x => x.Quality)
 				.Select(x => x.MediaType)
-				.FirstOrDefault(IsSupportedMediaType) ?? m_defaultMediaType;
+				.FirstOrDefault(m_contentSerializer.IsSupportedMediaType) ?? m_contentSerializer.DefaultMediaType;
 		}
 
 		private async Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
@@ -245,7 +240,7 @@ namespace Facility.Core.Http
 
 		readonly string m_rootPath;
 		readonly bool m_synchronous;
-		readonly string m_defaultMediaType;
+		readonly HttpContentSerializer m_contentSerializer;
 		readonly IReadOnlyList<ServiceHttpHandlerAspect> m_aspects;
 	}
 }

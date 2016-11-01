@@ -87,7 +87,7 @@ namespace Facility.ExampleApi.UnitTests
 			if (m_category == "InMemory")
 				result.ShouldBeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
 			else
-				result.ShouldBeFailure(HttpServiceErrors.CreateRequestHeaderInvalidFormat("If-None-Match"));
+				result.ShouldBeFailure(HttpServiceErrors.CreateHeaderInvalidFormat("If-None-Match"));
 		}
 
 		readonly string m_category;

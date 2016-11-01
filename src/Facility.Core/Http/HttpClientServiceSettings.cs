@@ -20,6 +20,11 @@ namespace Facility.Core.Http
 		public HttpClient HttpClient { get; set; }
 
 		/// <summary>
+		/// The content serializer used by requests and responses.
+		/// </summary>
+		public HttpContentSerializer ContentSerializer { get; set; }
+
+		/// <summary>
 		/// The aspects used when sending requests and receiving responses.
 		/// </summary>
 		public IReadOnlyList<HttpClientServiceAspect> Aspects { get; set; }
@@ -28,10 +33,5 @@ namespace Facility.Core.Http
 		/// True to call services synchronously, allowing tasks to be safely blocked.
 		/// </summary>
 		public bool Synchronous { get; set; }
-
-		/// <summary>
-		/// The media type used by requests and responses.
-		/// </summary>
-		public string MediaType { get; set; }
 	}
 }

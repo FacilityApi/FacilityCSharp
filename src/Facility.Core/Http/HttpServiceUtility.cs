@@ -27,58 +27,6 @@ namespace Facility.Core.Http
 		}
 
 		/// <summary>
-		/// Creates HTTP content for the specified DTO.
-		/// </summary>
-		public static HttpContent CreateHttpContent(ServiceDto content, string mediaType)
-		{
-			if (mediaType == JsonMediaType)
-				return new DelegateHttpContent(mediaType, stream => ServiceJsonUtility.ToJsonStream(content, stream));
-			else
-				throw new InvalidOperationException("Unsupported media type: " + mediaType);
-		}
-
-		/// <summary>
-		/// Reads a DTO from the specified HTTP content.
-		/// </summary>
-		public static async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent content, string errorCode)
-			where T : ServiceDto
-		{
-			return (await ReadHttpContentAsync(typeof(T), content, errorCode).ConfigureAwait(false)).Map(x => (T) x);
-		}
-
-		/// <summary>
-		/// Reads a DTO from the specified HTTP content.
-		/// </summary>
-		public static async Task<ServiceResult<ServiceDto>> ReadHttpContentAsync(Type dtoType, HttpContent content, string errorCode)
-		{
-			if (content == null || content.Headers.ContentLength == 0)
-				return ServiceResult.Success<ServiceDto>(null);
-
-			var contentType = content.Headers.ContentType;
-			if (contentType == null)
-				return ServiceResult.Failure(HttpServiceErrors.CreateMissingContentType(errorCode));
-
-			string mediaType = contentType.MediaType;
-			if (mediaType == JsonMediaType)
-			{
-				try
-				{
-					using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
-					using (var textReader = new StreamReader(stream))
-						return ServiceResult.Success((ServiceDto) ServiceJsonUtility.FromJsonTextReader(textReader, dtoType));
-				}
-				catch (JsonException exception)
-				{
-					return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent(errorCode, exception.Message));
-				}
-			}
-			else
-			{
-				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(errorCode, mediaType));
-			}
-		}
-
-		/// <summary>
 		/// The JSON media type.
 		/// </summary>
 		public const string JsonMediaType = "application/json";
@@ -101,15 +49,11 @@ namespace Facility.Core.Http
 					}
 					catch (FormatException)
 					{
-						return ServiceResult.Failure(httpHeaders is HttpResponseHeaders ?
-							HttpServiceErrors.CreateResponseHeaderInvalidFormat(header.Key) :
-							HttpServiceErrors.CreateRequestHeaderInvalidFormat(header.Key));
+						return ServiceResult.Failure(HttpServiceErrors.CreateHeaderInvalidFormat(header.Key));
 					}
 					catch (InvalidOperationException)
 					{
-						return ServiceResult.Failure(httpHeaders is HttpResponseHeaders ?
-							HttpServiceErrors.CreateResponseHeaderNotSupported(header.Key) :
-							HttpServiceErrors.CreateRequestHeaderNotSupported(header.Key));
+						return ServiceResult.Failure(HttpServiceErrors.CreateHeaderNotSupported(header.Key));
 					}
 				}
 			}

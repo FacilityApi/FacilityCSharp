@@ -32,12 +32,15 @@ namespace Facility.Core.Http
 
 			m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 			m_baseUri = settings.BaseUri ?? m_httpClient.BaseAddress ?? defaultBaseUri;
+			m_contentSerializer = settings.ContentSerializer;
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
-			m_mediaType = settings.MediaType ?? HttpServiceUtility.JsonMediaType;
 
 			if (m_baseUri == null || !m_baseUri.IsAbsoluteUri)
 				throw new ArgumentException("BaseUri (or HttpClient.BaseAddress) must be specified and absolute.");
+
+			if (m_contentSerializer == null)
+				m_contentSerializer = JsonHttpContentSerializer.Instance;
 		}
 
 		/// <summary>
@@ -66,7 +69,7 @@ namespace Facility.Core.Http
 				// create the request body if necessary
 				var requestBody = mapping.GetRequestBody(request);
 				if (requestBody != null)
-					httpRequest.Content = HttpServiceUtility.CreateHttpContent(requestBody, m_mediaType);
+					httpRequest.Content = m_contentSerializer.CreateHttpContent(requestBody);
 
 				// send the HTTP request and get the HTTP response
 				var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
@@ -87,10 +90,14 @@ namespace Facility.Core.Http
 				ServiceDto responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
-					ServiceResult<ServiceDto> responseResult = await HttpServiceUtility.ReadHttpContentAsync(
-						responseMapping.ResponseBodyType, httpResponse.Content, ServiceErrors.InvalidResponse).ConfigureAwait(false);
+					ServiceResult<ServiceDto> responseResult = await m_contentSerializer.ReadHttpContentAsync(
+						responseMapping.ResponseBodyType, httpResponse.Content).ConfigureAwait(false);
 					if (responseResult.IsFailure)
-						return responseResult.AsFailure();
+					{
+						var error = responseResult.Error;
+						error.Code = ServiceErrors.InvalidResponse;
+						return ServiceResult.Failure(error);
+					}
 					responseBody = responseResult.Value;
 				}
 
@@ -143,7 +150,9 @@ namespace Facility.Core.Http
 			Uri uri = uriParameters != null ? GetUriFromPattern(uriText, uriParameters) : new Uri(uriText);
 			var requestMessage = new HttpRequestMessage(httpMethod, uri);
 
-			requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(m_mediaType));
+			string defaultMediaType = m_contentSerializer.DefaultMediaType;
+			if (!string.IsNullOrEmpty(defaultMediaType))
+				requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(defaultMediaType));
 
 			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
 			if (headersResult.IsFailure)
@@ -178,9 +187,9 @@ namespace Facility.Core.Http
 			return new Uri(uriPattern);
 		}
 
-		private static async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response)
+		private async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response)
 		{
-			var result = await HttpServiceUtility.ReadHttpContentAsync<ServiceErrorDto>(response.Content, ServiceErrors.InvalidResponse).ConfigureAwait(false);
+			var result = await m_contentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content).ConfigureAwait(false);
 
 			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
 				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
@@ -210,7 +219,7 @@ namespace Facility.Core.Http
 		readonly bool m_synchronous;
 		readonly Uri m_baseUri;
 		readonly HttpClient m_httpClient;
-		readonly string m_mediaType;
+		readonly HttpContentSerializer m_contentSerializer;
 		readonly IReadOnlyList<HttpClientServiceAspect> m_aspects;
 	}
 }

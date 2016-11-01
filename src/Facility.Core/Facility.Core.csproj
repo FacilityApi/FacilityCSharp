@@ -45,6 +45,8 @@
     <Compile Include="Http\HttpClientService.cs" />
     <Compile Include="Http\HttpClientServiceAspect.cs" />
     <Compile Include="Http\HttpClientServiceSettings.cs" />
+    <Compile Include="Http\JsonHttpContentSerializer.cs" />
+    <Compile Include="Http\HttpContentSerializer.cs" />
     <Compile Include="Http\HttpMethodMapping.cs" />
     <Compile Include="Http\HttpResponseMapping.cs" />
     <Compile Include="Http\HttpServiceErrors.cs" />

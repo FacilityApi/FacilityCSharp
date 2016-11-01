@@ -18,9 +18,9 @@ namespace Facility.Core.Http
 		public bool Synchronous { get; set; }
 
 		/// <summary>
-		/// The default media type used by responses, default "application/json".
+		/// The content serializer used by requests and responses.
 		/// </summary>
-		public string DefaultMediaType { get; set; }
+		public HttpContentSerializer ContentSerializer { get; set; }
 
 		/// <summary>
 		/// The aspects used when receiving requests and sending responses.
