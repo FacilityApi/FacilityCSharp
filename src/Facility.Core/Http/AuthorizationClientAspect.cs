@@ -13,9 +13,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates an aspect that sets the Authorization header to the specified string.
 		/// </summary>
-		public AuthorizationClientAspect(string authorizationHeader)
+		public static HttpClientServiceAspect Create(string authorizationHeader)
 		{
-			m_authorizationHeader = authorizationHeader;
+			return new AuthorizationClientAspect(authorizationHeader);
 		}
 
 		/// <summary>
@@ -26,6 +26,11 @@ namespace Facility.Core.Http
 			if (!string.IsNullOrWhiteSpace(m_authorizationHeader))
 				request.Headers.Authorization = AuthenticationHeaderValue.Parse(m_authorizationHeader);
 			return Task.FromResult<object>(null);
+		}
+
+		private AuthorizationClientAspect(string authorizationHeader)
+		{
+			m_authorizationHeader = authorizationHeader;
 		}
 
 		readonly string m_authorizationHeader;

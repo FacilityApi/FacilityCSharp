@@ -15,7 +15,7 @@ namespace Facility.Core.UnitTests.Http
 		public async Task AuthorizationClientAspectWorks()
 		{
 			const string header = "MyAuth Whatever";
-			var aspect = new AuthorizationClientAspect(header);
+			var aspect = AuthorizationClientAspect.Create(header);
 			var httpRequest = new HttpRequestMessage();
 			await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
 			httpRequest.Headers.Authorization.ToString().ShouldBe(header);

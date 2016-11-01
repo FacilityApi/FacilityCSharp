@@ -12,9 +12,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates an aspect that sets the User-Agent header to the specified string.
 		/// </summary>
-		public UserAgentClientAspect(string userAgent)
+		public static HttpClientServiceAspect Create(string userAgent)
 		{
-			m_userAgent = userAgent;
+			return new UserAgentClientAspect(userAgent);
 		}
 
 		/// <summary>
@@ -25,6 +25,11 @@ namespace Facility.Core.Http
 			if (!string.IsNullOrWhiteSpace(m_userAgent))
 				request.Headers.Add("User-Agent", m_userAgent);
 			return Task.FromResult<object>(null);
+		}
+
+		private UserAgentClientAspect(string userAgent)
+		{
+			m_userAgent = userAgent;
 		}
 
 		readonly string m_userAgent;
