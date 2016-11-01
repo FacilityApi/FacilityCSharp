@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -84,14 +83,14 @@ namespace Facility.Core.Http
 
 				// fail if no response mapping can be found for the status code
 				if (responseMapping == null)
-					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse).ConfigureAwait(false));
+					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
 
 				// read the response body if necessary
 				ServiceDto responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
 					ServiceResult<ServiceDto> responseResult = await m_contentSerializer.ReadHttpContentAsync(
-						responseMapping.ResponseBodyType, httpResponse.Content).ConfigureAwait(false);
+						responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 					if (responseResult.IsFailure)
 					{
 						var error = responseResult.Error;
@@ -183,9 +182,9 @@ namespace Facility.Core.Http
 			return new Uri(uriPattern);
 		}
 
-		private async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response)
+		private async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
 		{
-			var result = await m_contentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content).ConfigureAwait(false);
+			var result = await m_contentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
 
 			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
 				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);

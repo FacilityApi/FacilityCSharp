@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -57,7 +58,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		protected override async Task<ServiceResult<ServiceDto>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content)
+		protected override async Task<ServiceResult<ServiceDto>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken)
 		{
 			try
 			{

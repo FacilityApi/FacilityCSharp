@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Facility.Core.Http
@@ -36,16 +37,16 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent content)
+		public async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
 			where T : ServiceDto
 		{
-			return (await ReadHttpContentAsync(typeof(T), content).ConfigureAwait(false)).Map(x => (T) x);
+			return (await ReadHttpContentAsync(typeof(T), content, cancellationToken).ConfigureAwait(false)).Map(x => (T) x);
 		}
 
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<ServiceDto>> ReadHttpContentAsync(Type dtoType, HttpContent content)
+		public async Task<ServiceResult<ServiceDto>> ReadHttpContentAsync(Type dtoType, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (content == null || content.Headers.ContentLength == 0)
 				return ServiceResult.Success<ServiceDto>(null);
@@ -58,7 +59,7 @@ namespace Facility.Core.Http
 			if (!IsSupportedMediaType(mediaType))
 				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 
-			return await ReadHttpContentAsyncCore(dtoType, content).ConfigureAwait(false);
+			return await ReadHttpContentAsyncCore(dtoType, content, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -79,6 +80,6 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		protected abstract Task<ServiceResult<ServiceDto>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content);
+		protected abstract Task<ServiceResult<ServiceDto>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken);
 	}
 }

@@ -61,7 +61,7 @@ namespace Facility.Core.Http
 			ServiceDto requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
-				var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content)).ConfigureAwait(true);
+				var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
 				if (requestResult.IsFailure)
 					error = requestResult.Error;
 				else
