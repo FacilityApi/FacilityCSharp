@@ -41,6 +41,7 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Http\AcceptClientAspect.cs" />
     <Compile Include="Http\AuthorizationClientAspect.cs" />
     <Compile Include="Http\HttpClientService.cs" />
     <Compile Include="Http\HttpClientServiceAspect.cs" />

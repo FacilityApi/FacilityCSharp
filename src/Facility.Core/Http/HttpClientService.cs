@@ -150,10 +150,6 @@ namespace Facility.Core.Http
 			Uri uri = uriParameters != null ? GetUriFromPattern(uriText, uriParameters) : new Uri(uriText);
 			var requestMessage = new HttpRequestMessage(httpMethod, uri);
 
-			string defaultMediaType = m_contentSerializer.DefaultMediaType;
-			if (!string.IsNullOrEmpty(defaultMediaType))
-				requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(defaultMediaType));
-
 			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
 			if (headersResult.IsFailure)
 				return headersResult.AsFailure();
