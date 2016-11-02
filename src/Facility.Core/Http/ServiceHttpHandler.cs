@@ -125,7 +125,7 @@ namespace Facility.Core.Http
 			}
 
 			httpResponse.RequestMessage = httpRequest;
-			await AdaptTask(ResponseReadyAsync(httpResponse, context.Result, cancellationToken)).ConfigureAwait(true);
+			await AdaptTask(ResponseReadyAsync(httpResponse, cancellationToken)).ConfigureAwait(true);
 
 			return httpResponse;
 		}
@@ -226,12 +226,12 @@ namespace Facility.Core.Http
 			return null;
 		}
 
-		private async Task ResponseReadyAsync(HttpResponseMessage httpResponse, ServiceResult<ServiceDto> result, CancellationToken cancellationToken)
+		private async Task ResponseReadyAsync(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
 		{
 			if (m_aspects != null)
 			{
 				foreach (var aspect in m_aspects)
-					await aspect.ResponseReadyAsync(httpResponse, result, cancellationToken).ConfigureAwait(false);
+					await aspect.ResponseReadyAsync(httpResponse, cancellationToken).ConfigureAwait(false);
 			}
 		}
 

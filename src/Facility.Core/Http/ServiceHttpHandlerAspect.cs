@@ -21,9 +21,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the response is sent.
 		/// </summary>
-		public Task ResponseReadyAsync(HttpResponseMessage httpResponse, ServiceResult<ServiceDto> result, CancellationToken cancellationToken)
+		public Task ResponseReadyAsync(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
 		{
-			return ResponseReadyAsyncCore(httpResponse, result, cancellationToken);
+			return ResponseReadyAsyncCore(httpResponse, cancellationToken);
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		protected virtual Task ResponseReadyAsyncCore(HttpResponseMessage httpResponse, ServiceResult<ServiceDto> result, CancellationToken cancellationToken)
+		protected virtual Task ResponseReadyAsyncCore(HttpResponseMessage httpResponse, CancellationToken cancellationToken)
 		{
 			return Task.FromResult<object>(null);
 		}
