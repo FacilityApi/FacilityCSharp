@@ -11,22 +11,14 @@ namespace Facility.ExampleApi.Http
 	/// Example service for widgets.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class HttpClientExampleApi : IExampleApi
+	public sealed partial class HttpClientExampleApi : HttpClientService, IExampleApi
 	{
 		/// <summary>
 		/// Creates the service.
 		/// </summary>
-		public HttpClientExampleApi()
-			: this(null)
+		public HttpClientExampleApi(HttpClientServiceSettings settings = null)
+			: base(settings, defaultBaseUri: new Uri("http://local.example.com/v1"))
 		{
-		}
-
-		/// <summary>
-		/// Creates the service.
-		/// </summary>
-		public HttpClientExampleApi(HttpClientServiceSettings settings)
-		{
-			m_httpClientService = new HttpClientService(settings, defaultBaseUri: new Uri("http://local.example.com/v1"));
 		}
 
 		/// <summary>
@@ -34,7 +26,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<GetWidgetsResponseDto>> GetWidgetsAsync(GetWidgetsRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetsMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetsMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -42,7 +34,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.CreateWidgetMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.CreateWidgetMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -50,7 +42,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -58,7 +50,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.DeleteWidgetMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.DeleteWidgetMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -66,7 +58,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<EditWidgetResponseDto>> EditWidgetAsync(EditWidgetRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.EditWidgetMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.EditWidgetMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -74,7 +66,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetBatchMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetBatchMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -83,7 +75,7 @@ namespace Facility.ExampleApi.Http
 		[Obsolete]
 		public Task<ServiceResult<GetWidgetWeightResponseDto>> GetWidgetWeightAsync(GetWidgetWeightRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetWeightMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetWidgetWeightMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -91,7 +83,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<GetPreferenceResponseDto>> GetPreferenceAsync(GetPreferenceRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.GetPreferenceMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetPreferenceMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -99,7 +91,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<SetPreferenceResponseDto>> SetPreferenceAsync(SetPreferenceRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.SetPreferenceMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.SetPreferenceMapping, request, cancellationToken);
 		}
 
 		/// <summary>
@@ -107,14 +99,12 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<ServiceResult<NotRestfulResponseDto>> NotRestfulAsync(NotRestfulRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.NotRestfulMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.NotRestfulMapping, request, cancellationToken);
 		}
 
 		public Task<ServiceResult<KitchenResponseDto>> KitchenAsync(KitchenRequestDto request, CancellationToken cancellationToken)
 		{
-			return m_httpClientService.TrySendRequestAsync(ExampleApiHttpMapping.KitchenMapping, request, cancellationToken);
+			return TrySendRequestAsync(ExampleApiHttpMapping.KitchenMapping, request, cancellationToken);
 		}
-
-		readonly HttpClientService m_httpClientService;
 	}
 }

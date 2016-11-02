@@ -853,32 +853,20 @@ namespace Facility.CSharp
 					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
 
-					code.WriteLine($"public sealed partial class {fullHttpClientName} : {fullInterfaceName}");
+					code.WriteLine($"public sealed partial class {fullHttpClientName} : HttpClientService, {fullInterfaceName}");
 					using (code.Block())
 					{
-						string defaultUrl = httpServiceInfo.Url;
-
-						if (defaultUrl != null)
-						{
-							CSharpUtility.WriteSummary(code, "Creates the service.");
-							code.WriteLine($"public {fullHttpClientName}()");
-							using (code.Indent())
-								code.WriteLine(": this(null)");
-							using (code.Block())
-							{
-							}
-							code.WriteLine();
-						}
-
 						CSharpUtility.WriteSummary(code, "Creates the service.");
-						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings)");
-						using (code.Block())
+						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings = null)");
+						using (code.Indent())
 						{
+							string defaultUrl = httpServiceInfo.Url;
 							if (defaultUrl != null)
-								code.WriteLine($"m_httpClientService = new HttpClientService(settings, defaultBaseUri: new Uri(\"{defaultUrl}\"));");
+								code.WriteLine($": base(settings, defaultBaseUri: new Uri(\"{defaultUrl}\"))");
 							else
-								code.WriteLine("m_httpClientService = new HttpClientService(settings);");
+								code.WriteLine(": base(settings, defaultBaseUri: null)");
 						}
+						code.Block().Dispose();
 
 						foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
 						{
@@ -892,11 +880,8 @@ namespace Facility.CSharp
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
 							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken)");
 							using (code.Block())
-								code.WriteLine($"return m_httpClientService.TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+								code.WriteLine($"return TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
 						}
-
-						code.WriteLine();
-						code.WriteLine("readonly HttpClientService m_httpClientService;");
 					}
 				}
 

@@ -12,40 +12,35 @@ namespace Facility.Core.Http
 	/// <summary>
 	/// Used by HTTP clients.
 	/// </summary>
-	public sealed class HttpClientService
+	public abstract class HttpClientService
 	{
 		/// <summary>
 		/// Creates an instance with the specified settings.
 		/// </summary>
-		public HttpClientService(HttpClientServiceSettings settings)
-			: this(settings, defaultBaseUri: null)
-		{
-		}
-
-		/// <summary>
-		/// Creates an instance with the specified settings.
-		/// </summary>
-		public HttpClientService(HttpClientServiceSettings settings, Uri defaultBaseUri)
+		protected HttpClientService(HttpClientServiceSettings settings, Uri defaultBaseUri)
 		{
 			settings = settings ?? new HttpClientServiceSettings();
 
 			m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
-			m_baseUri = settings.BaseUri ?? m_httpClient.BaseAddress ?? defaultBaseUri;
-			m_contentSerializer = settings.ContentSerializer;
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
 
+			m_baseUri = settings.BaseUri ?? m_httpClient.BaseAddress ?? defaultBaseUri;
 			if (m_baseUri == null || !m_baseUri.IsAbsoluteUri)
 				throw new ArgumentException("BaseUri (or HttpClient.BaseAddress) must be specified and absolute.");
 
-			if (m_contentSerializer == null)
-				m_contentSerializer = JsonHttpContentSerializer.Instance;
+			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 		}
+
+		/// <summary>
+		/// The HTTP content serializer.
+		/// </summary>
+		protected HttpContentSerializer ContentSerializer { get; }
 
 		/// <summary>
 		/// Sends an HTTP request and processes the response.
 		/// </summary>
-		public async Task<ServiceResult<TResponse>> TrySendRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
+		protected async Task<ServiceResult<TResponse>> TrySendRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
 			where TRequest : ServiceDto, new()
 			where TResponse : ServiceDto, new()
 		{
@@ -68,7 +63,7 @@ namespace Facility.Core.Http
 				// create the request body if necessary
 				var requestBody = mapping.GetRequestBody(request);
 				if (requestBody != null)
-					httpRequest.Content = m_contentSerializer.CreateHttpContent(requestBody);
+					httpRequest.Content = ContentSerializer.CreateHttpContent(requestBody);
 
 				// send the HTTP request and get the HTTP response
 				var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
@@ -89,7 +84,7 @@ namespace Facility.Core.Http
 				ServiceDto responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
-					ServiceResult<ServiceDto> responseResult = await m_contentSerializer.ReadHttpContentAsync(
+					ServiceResult<ServiceDto> responseResult = await ContentSerializer.ReadHttpContentAsync(
 						responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 					if (responseResult.IsFailure)
 					{
@@ -116,8 +111,29 @@ namespace Facility.Core.Http
 				cancellationToken.ThrowIfCancellationRequested();
 
 				// error contacting service
-				return ServiceResult.Failure(ServiceErrorUtility.CreateInternalErrorForException(exception));
+				return ServiceResult.Failure(CreateErrorFromException(exception));
 			}
+		}
+
+		/// <summary>
+		/// Called to create an error object from an unhandled HTTP response.
+		/// </summary>
+		protected virtual async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+		{
+			var result = await ContentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
+
+			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
+				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
+
+			return result.Value;
+		}
+
+		/// <summary>
+		/// Called to create an error object from an unexpected exception.
+		/// </summary>
+		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception)
+		{
+			return ServiceErrorUtility.CreateInternalErrorForException(exception);
 		}
 
 		private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
@@ -182,16 +198,6 @@ namespace Facility.Core.Http
 			return new Uri(uriPattern);
 		}
 
-		private async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
-		{
-			var result = await m_contentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
-
-			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
-				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
-
-			return result.Value;
-		}
-
 		private Task AdaptTask(Task task)
 		{
 			if (!m_synchronous)
@@ -211,10 +217,9 @@ namespace Facility.Core.Http
 
 		static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
+		readonly HttpClient m_httpClient;
+		readonly IReadOnlyList<HttpClientServiceAspect> m_aspects;
 		readonly bool m_synchronous;
 		readonly Uri m_baseUri;
-		readonly HttpClient m_httpClient;
-		readonly HttpContentSerializer m_contentSerializer;
-		readonly IReadOnlyList<HttpClientServiceAspect> m_aspects;
 	}
 }
