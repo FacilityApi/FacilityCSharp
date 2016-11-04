@@ -23,16 +23,17 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
-			if (!string.IsNullOrWhiteSpace(m_authorizationHeader))
-				request.Headers.Authorization = AuthenticationHeaderValue.Parse(m_authorizationHeader);
+			if (m_authorizationHeader != null)
+				request.Headers.Authorization = m_authorizationHeader;
 			return Task.FromResult<object>(null);
 		}
 
 		private AuthorizationClientAspect(string authorizationHeader)
 		{
-			m_authorizationHeader = authorizationHeader;
+			if (!string.IsNullOrWhiteSpace(authorizationHeader))
+				m_authorizationHeader = AuthenticationHeaderValue.Parse(authorizationHeader);
 		}
 
-		readonly string m_authorizationHeader;
+		readonly AuthenticationHeaderValue m_authorizationHeader;
 	}
 }

@@ -23,16 +23,17 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
-			if (!string.IsNullOrWhiteSpace(m_acceptHeader))
-				request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(m_acceptHeader));
+			if (m_acceptHeader != null)
+				request.Headers.Accept.Add(m_acceptHeader);
 			return Task.FromResult<object>(null);
 		}
 
 		private AcceptClientAspect(string acceptHeader)
 		{
-			m_acceptHeader = acceptHeader;
+			if (!string.IsNullOrWhiteSpace(acceptHeader))
+				m_acceptHeader = MediaTypeWithQualityHeaderValue.Parse(acceptHeader);
 		}
 
-		readonly string m_acceptHeader;
+		readonly MediaTypeWithQualityHeaderValue m_acceptHeader;
 	}
 }
