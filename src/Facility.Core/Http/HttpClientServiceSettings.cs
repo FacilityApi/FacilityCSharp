@@ -10,7 +10,7 @@ namespace Facility.Core.Http
 	public sealed class HttpClientServiceSettings
 	{
 		/// <summary>
-		/// The base URI of the service (optional if HttpClient.BaseAddress is set).
+		/// The base URI of the service (optional if the service has a default base URI).
 		/// </summary>
 		public Uri BaseUri { get; set; }
 

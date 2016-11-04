@@ -25,9 +25,9 @@ namespace Facility.Core.Http
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
 
-			m_baseUri = settings.BaseUri ?? m_httpClient.BaseAddress ?? defaultBaseUri;
+			m_baseUri = settings.BaseUri ?? defaultBaseUri;
 			if (m_baseUri == null || !m_baseUri.IsAbsoluteUri)
-				throw new ArgumentException("BaseUri (or HttpClient.BaseAddress) must be specified and absolute.");
+				throw new ArgumentException("BaseUri must be specified and absolute.", nameof(settings));
 
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 		}
