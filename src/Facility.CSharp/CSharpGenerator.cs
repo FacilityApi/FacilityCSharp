@@ -13,27 +13,12 @@ namespace Facility.CSharp
 	/// <summary>
 	/// Generates C#.
 	/// </summary>
-	public sealed class CSharpGenerator
+	public sealed class CSharpGenerator : CodeGenerator
 	{
-		/// <summary>
-		/// The name of the generator for comments.
-		/// </summary>
-		public string GeneratorName { get; set; }
-
 		/// <summary>
 		/// The name of the namespace (optional).
 		/// </summary>
 		public string NamespaceName { get; set; }
-
-		/// <summary>
-		/// The text to use for each indent (null for tab).
-		/// </summary>
-		public string IndentText { get; set; }
-
-		/// <summary>
-		/// The text to use for each new line (null for default).
-		/// </summary>
-		public string NewLine { get; set; }
 
 		/// <summary>
 		/// Generates the C# output.
@@ -85,10 +70,8 @@ namespace Facility.CSharp
 		{
 			string fullErrorSetName = CSharpUtility.GetErrorSetName(errorSetInfo);
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput(fullErrorSetName + CSharpUtility.FileExtension, code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				var usings = new List<string>
@@ -136,19 +119,15 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName(fullErrorSetName + CSharpUtility.FileExtension);
-			}
+			});
 		}
 
 		private ServiceTextSource GenerateEnum(ServiceEnumInfo enumInfo, Context context)
 		{
 			string enumName = CSharpUtility.GetEnumName(enumInfo);
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput(enumName + CSharpUtility.FileExtension, code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				var usings = new List<string>
@@ -242,19 +221,15 @@ namespace Facility.CSharp
 						code.WriteLine("readonly string m_value;");
 					}
 				}
-
-				return new ServiceTextSource(text: stringWriter.ToString()).WithName(enumName + CSharpUtility.FileExtension);
-			}
+			});
 		}
 
 		private ServiceTextSource GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 		{
 			string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput(fullDtoName + CSharpUtility.FileExtension, code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				var usings = new List<string>
@@ -331,9 +306,7 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName(fullDtoName + CSharpUtility.FileExtension);
-			}
+			});
 		}
 
 		private ServiceTextSource GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
@@ -347,10 +320,8 @@ namespace Facility.CSharp
 				.Select(x => new { x.ServiceError.Name, x.StatusCode })
 				.ToList();
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				var usings = new List<string>
@@ -411,9 +382,7 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}");
-			}
+			});
 		}
 
 		private ServiceTextSource GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
@@ -423,10 +392,8 @@ namespace Facility.CSharp
 			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
 			string httpMappingName = $"{serviceInfo.Name}HttpMapping";
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				List<string> usings = new List<string>
@@ -775,9 +742,7 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}");
-			}
+			});
 		}
 
 		private string GenerateFieldToStringCode(ServiceTypeInfo serviceType, string fieldCode)
@@ -830,10 +795,8 @@ namespace Facility.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				List<string> usings = new List<string>
@@ -884,9 +847,7 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}");
-			}
+			});
 		}
 
 		private ServiceTextSource GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
@@ -899,10 +860,8 @@ namespace Facility.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
 			{
-				var code = new CodeWriter(stringWriter);
-
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				List<string> usings = new List<string>
@@ -996,9 +955,7 @@ namespace Facility.CSharp
 						code.WriteLine($"readonly {fullInterfaceName} m_service;");
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}");
-			}
+			});
 		}
 
 		private static string TryGetAreEquivalentMethodName(ServiceTypeKind kind)
@@ -1059,9 +1016,8 @@ namespace Facility.CSharp
 		{
 			string interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 
-			using (var stringWriter = new StringWriter())
+			return CreateOutput(interfaceName + CSharpUtility.FileExtension, code =>
 			{
-				var code = new CodeWriter(stringWriter);
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
 				var usings = new List<string>
@@ -1093,9 +1049,7 @@ namespace Facility.CSharp
 						}
 					}
 				}
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName(interfaceName + CSharpUtility.FileExtension);
-			}
+			});
 		}
 
 		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType)
