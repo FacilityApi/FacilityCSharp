@@ -2,9 +2,9 @@
 #addin "nuget:?package=Octokit"
 #tool "nuget:?package=coveralls.io"
 #tool "nuget:?package=gitlink"
+#tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=xunit.runner.console"
 
 using LibGit2Sharp;
 
@@ -56,7 +56,7 @@ Task("Build")
 
 Task("Test")
 	.IsDependentOn("Build")
-	.Does(() => XUnit2($"tests/**/bin/**/*.UnitTests.dll"));
+	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")
 	.IsDependentOn("Test")
@@ -86,7 +86,7 @@ Task("SourceIndex")
 		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
 	});
 
-Task("NuGetPack")
+Task("NuGetPackage")
 	.IsDependentOn("SourceIndex")
 	.Does(() =>
 	{
@@ -102,9 +102,9 @@ Task("NuGetPack")
 		}
 	});
 
-Task("NuGetPublishOnly")
-	.IsDependentOn("NuGetPack")
-	.WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey))
+Task("NuGetPublish")
+	.IsDependentOn("NuGetPackage")
+	.WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey) && !string.IsNullOrEmpty(githubApiKey))
 	.Does(() =>
 	{
 		foreach (var nupkgPath in GetFiles($"release/*.nupkg"))
@@ -115,22 +115,12 @@ Task("NuGetPublishOnly")
 				Source = nugetSource,
 			});
 		}
-	});
 
-Task("NuGetTagOnly")
-	.IsDependentOn("NuGetPack")
-	.WithCriteria(() => !string.IsNullOrEmpty(githubApiKey))
-	.Does(() =>
-	{
 		var tagName = $"nuget-{version}";
 		Information($"Creating git tag '{tagName}'...");
 		githubClient.Git.Reference.Create(githubOwner, githubRepo,
 			new Octokit.NewReference($"refs/tags/{tagName}", headSha)).GetAwaiter().GetResult();
 	});
-
-Task("NuGetPublish")
-	.IsDependentOn("NuGetPublishOnly")
-	.IsDependentOn("NuGetTagOnly");
 
 Task("Coverage")
 	.IsDependentOn("Build")
@@ -144,8 +134,8 @@ Task("Coverage")
 
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
-			StartProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:cake\xunit.runner.console\tools\xunit.console.exe"" ""-targetargs:{testDllPath} -noshadow"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
+			ExecuteProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
+				$@"-register:user -mergeoutput ""-target:cake\NUnit.ConsoleRunner\tools\nunit3-console.exe"" ""-targetargs:{testDllPath} --noresult"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
 
@@ -153,17 +143,24 @@ Task("CoverageReport")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		StartProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
+		ExecuteProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
 	});
 
 Task("CoveragePublish")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		StartProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
+		ExecuteProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
 	.IsDependentOn("Test");
+
+void ExecuteProcess(string exePath, string arguments)
+{
+	int exitCode = StartProcess(exePath, arguments);
+	if (exitCode != 0)
+		throw new InvalidOperationException($"{exePath} failed with exit code {exitCode}.");
+}
 
 RunTarget(target);

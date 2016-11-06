@@ -1,7 +1,7 @@
 # Tools and Libraries
 
-[![Build status](https://ci.appveyor.com/api/projects/status/62s43a071xsqqxtl?svg=true)](https://ci.appveyor.com/project/ejball/facility)
-[![Coverage Status](https://coveralls.io/repos/github/FacilityApi/Facility/badge.svg?branch=master)](https://coveralls.io/github/FacilityApi/Facility?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/9jnedwr284uc32nt?svg=true)](https://ci.appveyor.com/project/ejball/facilitycsharp)
+[![Coverage Status](https://coveralls.io/repos/github/FacilityApi/FacilityCSharp/badge.svg?branch=master)](https://coveralls.io/github/FacilityApi/FacilityCSharp?branch=master)
 
 ## Facility.Core
 
