@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Http;
@@ -21,37 +22,42 @@ namespace Facility.CSharp
 		public string NamespaceName { get; set; }
 
 		/// <summary>
+		/// The .csproj files to update.
+		/// </summary>
+		public IReadOnlyList<NamedText> CsprojFiles { get; set; }
+
+		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
-		public IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceInfo serviceInfo)
+		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
 		{
-			var outputFiles = new List<ServiceTextSource>();
+			var outputFiles = new List<NamedText>();
 
 			var context = new Context
 			{
 				GeneratorName = GeneratorName,
-				NamespaceName = NamespaceName ?? CSharpUtility.GetNamespaceName(serviceInfo),
-				Service = serviceInfo,
+				NamespaceName = NamespaceName ?? CSharpUtility.GetNamespaceName(service),
+				Service = service,
 			};
 
-			foreach (var errorSetInfo in serviceInfo.ErrorSets)
+			foreach (var errorSetInfo in service.ErrorSets)
 				outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
 
-			foreach (var enumInfo in serviceInfo.Enums)
+			foreach (var enumInfo in service.Enums)
 				outputFiles.Add(GenerateEnum(enumInfo, context));
 
-			foreach (var dtoInfo in serviceInfo.Dtos)
+			foreach (var dtoInfo in service.Dtos)
 				outputFiles.Add(GenerateDto(dtoInfo, context));
 
-			if (serviceInfo.Methods.Count != 0)
+			if (service.Methods.Count != 0)
 			{
-				outputFiles.Add(GenerateInterface(serviceInfo, context));
+				outputFiles.Add(GenerateInterface(service, context));
 
-				foreach (var methodInfo in serviceInfo.Methods)
+				foreach (var methodInfo in service.Methods)
 					outputFiles.AddRange(GenerateMethodDtos(methodInfo, context));
 			}
 
-			var httpServiceInfo = new HttpServiceInfo(serviceInfo);
+			var httpServiceInfo = new HttpServiceInfo(service);
 
 			foreach (var httpErrorSetInfo in httpServiceInfo.ErrorSets)
 				outputFiles.Add(GenerateHttpErrors(httpErrorSetInfo, context));
@@ -63,14 +69,26 @@ namespace Facility.CSharp
 				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 			}
 
-			return outputFiles;
+			if (CsprojFiles != null && CsprojFiles.Count != 0)
+			{
+				foreach (var csprojFile in CsprojFiles)
+					outputFiles.Add(UpdateCsprojFile(csprojFile, outputFiles.Select(x => x.Name)));
+			}
+
+			string codeGenComment = CodeGenUtility.GetCodeGenComment(GeneratorName);
+			var patternsToClean = new[]
+			{
+				new CodeGenPattern("*.g.cs", codeGenComment),
+				new CodeGenPattern("Http/*.g.cs", codeGenComment),
+			};
+			return new CodeGenOutput(outputFiles, patternsToClean);
 		}
 
-		private ServiceTextSource GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
+		private NamedText GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
 		{
 			string fullErrorSetName = CSharpUtility.GetErrorSetName(errorSetInfo);
 
-			return CreateOutput(fullErrorSetName + CSharpUtility.FileExtension, code =>
+			return CreateNamedText(fullErrorSetName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -122,11 +140,11 @@ namespace Facility.CSharp
 			});
 		}
 
-		private ServiceTextSource GenerateEnum(ServiceEnumInfo enumInfo, Context context)
+		private NamedText GenerateEnum(ServiceEnumInfo enumInfo, Context context)
 		{
 			string enumName = CSharpUtility.GetEnumName(enumInfo);
 
-			return CreateOutput(enumName + CSharpUtility.FileExtension, code =>
+			return CreateNamedText(enumName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -224,11 +242,11 @@ namespace Facility.CSharp
 			});
 		}
 
-		private ServiceTextSource GenerateDto(ServiceDtoInfo dtoInfo, Context context)
+		private NamedText GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 		{
 			string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
 
-			return CreateOutput(fullDtoName + CSharpUtility.FileExtension, code =>
+			return CreateNamedText(fullDtoName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -309,7 +327,7 @@ namespace Facility.CSharp
 			});
 		}
 
-		private ServiceTextSource GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
+		private NamedText GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
 		{
 			var errorSetInfo = httpErrorSetInfo.ServiceErrorSet;
 
@@ -320,7 +338,7 @@ namespace Facility.CSharp
 				.Select(x => new { x.ServiceError.Name, x.StatusCode })
 				.ToList();
 
-			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
+			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -385,14 +403,14 @@ namespace Facility.CSharp
 			});
 		}
 
-		private ServiceTextSource GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
+		private NamedText GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
 			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
 			string httpMappingName = $"{serviceInfo.Name}HttpMapping";
 
-			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
+			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -785,7 +803,7 @@ namespace Facility.CSharp
 			}
 		}
 
-		private ServiceTextSource GenerateHttpClient(HttpServiceInfo httpServiceInfo, Context context)
+		private NamedText GenerateHttpClient(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
@@ -795,7 +813,7 @@ namespace Facility.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
+			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -850,7 +868,7 @@ namespace Facility.CSharp
 			});
 		}
 
-		private ServiceTextSource GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
+		private NamedText GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
@@ -860,7 +878,7 @@ namespace Facility.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			return CreateOutput($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
+			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -979,7 +997,7 @@ namespace Facility.CSharp
 			}
 		}
 
-		private IEnumerable<ServiceTextSource> GenerateMethodDtos(ServiceMethodInfo methodInfo, Context context)
+		private IEnumerable<NamedText> GenerateMethodDtos(ServiceMethodInfo methodInfo, Context context)
 		{
 			yield return GenerateDto(new ServiceDtoInfo(
 				name: $"{CodeGenUtility.Capitalize(methodInfo.Name)}Request",
@@ -1012,11 +1030,11 @@ namespace Facility.CSharp
 			}
 		}
 
-		private ServiceTextSource GenerateInterface(ServiceInfo serviceInfo, Context context)
+		private NamedText GenerateInterface(ServiceInfo serviceInfo, Context context)
 		{
 			string interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 
-			return CreateOutput(interfaceName + CSharpUtility.FileExtension, code =>
+			return CreateNamedText(interfaceName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -1050,6 +1068,93 @@ namespace Facility.CSharp
 					}
 				}
 			});
+		}
+
+		private NamedText UpdateCsprojFile(NamedText csprojFile, IEnumerable<string> outputFileNames)
+		{
+			// read .csproj
+			List<string> lines = new List<string>();
+			using (var textReader = new StringReader(csprojFile.Text))
+			{
+				string line;
+				while ((line = textReader.ReadLine()) != null)
+					lines.Add(line);
+			}
+
+			bool isEdited = false;
+
+			// remove old generated files
+			var neededFileNames = outputFileNames.ToList();
+			for (int index = lines.Count - 1; index >= 0; index--)
+			{
+				Match match = Regex.Match(lines[index], @"^\s*<Compile\s*Include=""([^""]*\.g\.cs)""\s*/>\s*$");
+				if (match.Success)
+				{
+					string fileName = match.Groups[1].ToString().Replace('\\', '/');
+					if (neededFileNames.Contains(fileName))
+					{
+						neededFileNames.Remove(fileName);
+					}
+					else
+					{
+						lines.RemoveAt(index);
+						isEdited = true;
+					}
+				}
+			}
+
+			// add new generated files
+			if (neededFileNames.Count != 0)
+			{
+				// skip past first Compile
+				int insertIndex = 0;
+				while (insertIndex < lines.Count)
+				{
+					if (Regex.IsMatch(lines[insertIndex], @"^\s*<Compile\s"))
+						break;
+					insertIndex++;
+				}
+
+				// skip to next ItemGroup close
+				while (insertIndex < lines.Count)
+				{
+					if (Regex.IsMatch(lines[insertIndex], @"^\s*</ItemGroup>\s*$"))
+						break;
+					insertIndex++;
+				}
+
+				lines.InsertRange(insertIndex,
+					neededFileNames.Select(x => $"    <Compile Include=\"{x}\" />"));
+				isEdited = true;
+			}
+
+			if (!isEdited)
+				return csprojFile;
+
+			// remove empty item groups
+			for (int index = lines.Count - 1; index >= 1; index--)
+			{
+				if (Regex.IsMatch(lines[index - 1], @"^\s*<ItemGroup>\s*$") && Regex.IsMatch(lines[index], @"^\s*</ItemGroup>\s*$"))
+				{
+					lines.RemoveAt(index - 1);
+					lines.RemoveAt(index - 1);
+					index--;
+				}
+			}
+
+			using (var textWriter = new StringWriter())
+			{
+				for (int index = 0; index < lines.Count; index++)
+				{
+					string line = lines[index];
+					if (index != lines.Count - 1)
+						textWriter.WriteLine(line);
+					else
+						textWriter.Write(line);
+				}
+
+				return new NamedText(name: csprojFile.Name, text: textWriter.ToString());
+			}
 		}
 
 		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType)

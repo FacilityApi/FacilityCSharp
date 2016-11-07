@@ -15,7 +15,7 @@ namespace Facility.CSharp.UnitTests
 			const string fileName = "Facility.CSharp.UnitTests.ExampleApi.fsd";
 			var parser = new FsdParser();
 			using (var reader = new StreamReader(GetType().GetTypeInfo().Assembly.GetManifestResourceStream(fileName)))
-				service = parser.ParseDefinition(new ServiceTextSource(reader.ReadToEnd()).WithName(Path.GetFileName(fileName)));
+				service = parser.ParseDefinition(new NamedText(Path.GetFileName(fileName), reader.ReadToEnd()));
 
 			var generator = new CSharpGenerator
 			{
