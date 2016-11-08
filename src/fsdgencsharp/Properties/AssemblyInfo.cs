@@ -4,7 +4,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("fsdgencsharp")]
-[assembly: AssemblyDescription("A command-line tool for generating FSD files.")]
+[assembly: AssemblyDescription("Generates C# for a Facility Service Definition.")]
 [assembly: AssemblyProduct("fsdgencsharp")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
