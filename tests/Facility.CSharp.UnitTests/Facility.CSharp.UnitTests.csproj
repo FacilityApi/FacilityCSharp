@@ -75,7 +75,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\src\Facility.ExampleApi\ExampleApi.fsd">
+    <EmbeddedResource Include="..\..\example\ExampleApi.fsd">
       <Link>ExampleApi.fsd</Link>
     </EmbeddedResource>
     <None Include="packages.config" />

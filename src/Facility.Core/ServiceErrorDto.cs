@@ -8,13 +8,6 @@ namespace Facility.Core
 		/// <summary>
 		/// Creates a service error.
 		/// </summary>
-		public ServiceErrorDto()
-		{
-		}
-
-		/// <summary>
-		/// Creates a service error.
-		/// </summary>
 		public ServiceErrorDto(string code)
 		{
 			Code = code;

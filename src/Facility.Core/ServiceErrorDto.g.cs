@@ -13,6 +13,13 @@ namespace Facility.Core
 	public sealed partial class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 	{
 		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public ServiceErrorDto()
+		{
+		}
+
+		/// <summary>
 		/// The error code.
 		/// </summary>
 		public string Code { get; set; }

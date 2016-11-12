@@ -36,6 +36,17 @@ string GetSemVerFromFile(string path)
 	return $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
 }
 
+void CodeGen(bool verify)
+{
+	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
+		$@"fsd\FacilityCore.fsd src\Facility.Core" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
+		$@"example\ExampleApi.fsd src\Facility.ExampleApi" + (verify ? " --verify" : ""));
+}
+
+Task("CodeGen")
+	.Does(() => CodeGen(verify: false));
+
 Task("Clean")
 	.Does(() =>
 	{
@@ -54,8 +65,12 @@ Task("Build")
 		MSBuild(solutionFileName, settings => settings.SetConfiguration(configuration));
 	});
 
-Task("Test")
+Task("VerifyCodeGen")
 	.IsDependentOn("Build")
+	.Does(() => CodeGen(verify: true));
+
+Task("Test")
+	.IsDependentOn("VerifyCodeGen")
 	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")
