@@ -331,7 +331,7 @@ namespace Facility.CSharp
 		{
 			var errorSetInfo = httpErrorSetInfo.ServiceErrorSet;
 
-			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string className = "Http" + errorSetInfo.Name;
 
 			var namesAndStatusCodes = httpErrorSetInfo.Errors
@@ -407,7 +407,7 @@ namespace Facility.CSharp
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
-			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string httpMappingName = $"{serviceInfo.Name}HttpMapping";
 
 			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
@@ -807,7 +807,7 @@ namespace Facility.CSharp
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
-			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string fullServiceName = serviceInfo.Name;
 			string fullHttpClientName = "HttpClient" + fullServiceName;
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
@@ -872,7 +872,7 @@ namespace Facility.CSharp
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
-			string namespaceName = $"{CSharpUtility.GetNamespaceName(context.Service)}.{CSharpUtility.HttpDirectoryName}";
+			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string fullServiceName = serviceInfo.Name;
 			string fullHttpHandlerName = fullServiceName + "HttpHandler";
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
