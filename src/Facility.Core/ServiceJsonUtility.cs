@@ -150,14 +150,21 @@ namespace Facility.Core
 		/// </summary>
 		public static JsonSerializerSettings GetJsonSerializerSettings()
 		{
-			return new JsonSerializerSettings
-			{
-				ContractResolver = new CamelCaseExceptDictionaryKeysContractResolver(),
-				DateParseHandling = DateParseHandling.None,
-				NullValueHandling = NullValueHandling.Ignore,
-				MissingMemberHandling = MissingMemberHandling.Ignore,
-				MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-			};
+			var settings = new JsonSerializerSettings();
+			ApplyJsonSerializerSettings(settings);
+			return settings;
+		}
+
+		/// <summary>
+		/// Applies the standard JSON serializer settings.
+		/// </summary>
+		public static void ApplyJsonSerializerSettings(JsonSerializerSettings settings)
+		{
+			settings.ContractResolver = new CamelCaseExceptDictionaryKeysContractResolver();
+			settings.DateParseHandling = DateParseHandling.None;
+			settings.NullValueHandling = NullValueHandling.Ignore;
+			settings.MissingMemberHandling = MissingMemberHandling.Ignore;
+			settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
 		}
 
 		private sealed class CamelCaseExceptDictionaryKeysContractResolver : CamelCasePropertyNamesContractResolver
