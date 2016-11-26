@@ -1,22 +1,24 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Facility.Core</id>
+    <id>Facility.CSharp</id>
     <version>$version$</version>
     <authors>Ed Ball</authors>
     <owners>Ed Ball</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A library for consuming/implementing Facility APIs.</description>
+    <description>C# code generation for Facility Service Definitions.</description>
     <copyright>Copyright 2016 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
     <dependencies>
+      <dependency id="Facility.Core" version="$version$" />
+      <dependency id="Facility.Definition" version="0.1.8" />
       <dependency id="Faithlife.Parsing" version="1.0.0" />
       <dependency id="Newtonsoft.Json" version="6.0.8" />
     </dependencies>
   </metadata>
   <files>
-    <file src="Facility.Core\bin\Release\Facility.Core.*" target="lib/dotnet" />
-    <file src="Facility.Core\bin\Release\Facility.Core.*" target="lib/portable-net45+netcore45+wpa81" />
+    <file src="bin\Release\Facility.CSharp.*" target="lib/dotnet" />
+    <file src="bin\Release\Facility.CSharp.*" target="lib/portable-net45+netcore45+wpa81" />
   </files>
 </package>

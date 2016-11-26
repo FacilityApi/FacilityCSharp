@@ -24,14 +24,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CSharp.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.ExampleApi.UnitTests", "tests\Facility.ExampleApi.UnitTests\Facility.ExampleApi.UnitTests.csproj", "{A9B9D3E1-5F07-43C7-8B98-561C56DB2418}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{06D7A4F7-94FF-457B-9BA7-407B226FBBDF}"
-	ProjectSection(SolutionItems) = preProject
-		src\Facility.Core.nuspec = src\Facility.Core.nuspec
-		src\Facility.CSharp.nuspec = src\Facility.CSharp.nuspec
-		src\fsdgencsharp.nuspec = src\fsdgencsharp.nuspec
-		src\README.md = src\README.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

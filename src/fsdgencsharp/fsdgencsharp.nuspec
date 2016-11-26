@@ -12,8 +12,8 @@
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
   </metadata>
   <files>
-    <file src="fsdgencsharp\bin\Release\*.exe" target="tools" />
-    <file src="fsdgencsharp\bin\Release\*.dll" target="tools" />
-    <file src="fsdgencsharp\bin\Release\*.config" target="tools" />
+    <file src="bin\Release\*.exe" target="tools" />
+    <file src="bin\Release\*.dll" target="tools" />
+    <file src="bin\Release\*.config" target="tools" />
   </files>
 </package>
