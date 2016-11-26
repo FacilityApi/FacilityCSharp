@@ -1,6 +1,6 @@
 # Facility C# Support
 
-[C# support]([Facility API Framework](https://facilityapi.github.io/docs/csharp).) for the [Facility API Framework](https://facilityapi.github.io/).
+[C# support](https://facilityapi.github.io/docs/csharp) for the [Facility API Framework](https://facilityapi.github.io/).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9jnedwr284uc32nt?svg=true)](https://ci.appveyor.com/project/ejball/facilitycsharp)
 [![Coverage Status](https://coveralls.io/repos/github/FacilityApi/FacilityCSharp/badge.svg?branch=master)](https://coveralls.io/github/FacilityApi/FacilityCSharp?branch=master)
