@@ -44,9 +44,9 @@ string GetSemVerFromFile(string path)
 void CodeGen(bool verify)
 {
 	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
-		$@"fsd\FacilityCore.fsd src\Facility.Core" + (verify ? " --verify" : ""));
+		@"fsd\FacilityCore.fsd src\Facility.Core" + (verify ? " --verify" : ""));
 	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
-		$@"example\ExampleApi.fsd src\Facility.ExampleApi" + (verify ? " --verify" : ""));
+		@"example\ExampleApi.fsd src\Facility.ExampleApi" + (verify ? " --verify" : ""));
 }
 
 Task("CodeGen")
