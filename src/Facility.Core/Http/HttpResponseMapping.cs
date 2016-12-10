@@ -30,7 +30,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the HTTP response content body from the response.
 		/// </summary>
-		public ServiceDto GetResponseBody(TResponse response)
+		public object GetResponseBody(TResponse response)
 		{
 			return m_getResponseBody != null ? m_getResponseBody(response) : ResponseBodyType == typeof(TResponse) ? response : null;
 		}
@@ -38,14 +38,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates a response with an optional body.
 		/// </summary>
-		public TResponse CreateResponse(ServiceDto responseBody)
+		public TResponse CreateResponse(object responseBody)
 		{
-			if (m_createResponse != null)
-				return m_createResponse(responseBody);
-			else if (ResponseBodyType == typeof(TResponse))
-				return (TResponse) responseBody;
-			else
-				return new TResponse();
+			return m_createResponse?.Invoke(responseBody) ?? responseBody as TResponse ?? new TResponse();
 		}
 
 		/// <summary>
@@ -71,12 +66,12 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the HTTP response content body from the response.
 			/// </summary>
-			public Func<TResponse, ServiceDto> GetResponseBody { get; set; }
+			public Func<TResponse, object> GetResponseBody { get; set; }
 
 			/// <summary>
 			/// Creates a response with an optional body.
 			/// </summary>
-			public Func<ServiceDto, TResponse> CreateResponse { get; set; }
+			public Func<object, TResponse> CreateResponse { get; set; }
 
 			/// <summary>
 			/// Builds the mapping.
@@ -97,7 +92,7 @@ namespace Facility.Core.Http
 		}
 
 		readonly Func<TResponse, bool> m_matchesResponse;
-		readonly Func<TResponse, ServiceDto> m_getResponseBody;
-		readonly Func<ServiceDto, TResponse> m_createResponse;
+		readonly Func<TResponse, object> m_getResponseBody;
+		readonly Func<object, TResponse> m_createResponse;
 	}
 }

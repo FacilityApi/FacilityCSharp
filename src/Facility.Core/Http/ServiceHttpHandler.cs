@@ -58,14 +58,14 @@ namespace Facility.Core.Http
 
 			ServiceErrorDto error = null;
 
-			ServiceDto requestBody = null;
+			object requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
 				var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
 				if (requestResult.IsFailure)
 					error = requestResult.Error;
 				else
-					requestBody = requestResult.Value ?? (ServiceDto) Activator.CreateInstance(mapping.RequestBodyType);
+					requestBody = requestResult.Value;
 			}
 
 			TResponse response = null;

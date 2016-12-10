@@ -41,7 +41,7 @@ service ExampleApi
 	}
 
 	/// Creates a new widget.
-	[http(method: POST, path: "/widgets/", code: 201)]
+	[http(method: POST, path: "/widgets/")]
 	method createWidget
 	{
 		/// The widget to create.
@@ -50,7 +50,7 @@ service ExampleApi
 	}:
 	{
 		/// The created widget.
-		[http(from: body)]
+		[http(from: body, code: 201)]
 		widget: Widget;
 	}
 
@@ -115,10 +115,12 @@ service ExampleApi
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
+		[http(from: body)]
 		ids: string[];
 	}:
 	{
 		/// The widget results.
+		[http(from: body)]
 		results: result<Widget>[];
 	}
 

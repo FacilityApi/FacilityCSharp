@@ -81,10 +81,10 @@ namespace Facility.Core.Http
 					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
 
 				// read the response body if necessary
-				ServiceDto responseBody = null;
+				object responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
-					ServiceResult<ServiceDto> responseResult = await ContentSerializer.ReadHttpContentAsync(
+					ServiceResult<object> responseResult = await ContentSerializer.ReadHttpContentAsync(
 						responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 					if (responseResult.IsFailure)
 					{

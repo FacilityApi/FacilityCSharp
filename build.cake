@@ -44,13 +44,10 @@ string GetSemVerFromFile(string path)
 void CodeGen(bool verify)
 {
 	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
-		@"fsd\FacilityCore.fsd src\Facility.Core" + (verify ? " --verify" : ""));
+		@"fsd\FacilityCore.fsd src\Facility.Core --clean --csproj" + (verify ? " --verify" : ""));
 	ExecuteProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe",
-		@"example\ExampleApi.fsd src\Facility.ExampleApi" + (verify ? " --verify" : ""));
+		@"example\ExampleApi.fsd src\Facility.ExampleApi --clean --csproj" + (verify ? " --verify" : ""));
 }
-
-Task("CodeGen")
-	.Does(() => CodeGen(verify: false));
 
 Task("Clean")
 	.Does(() =>
@@ -69,6 +66,10 @@ Task("Build")
 		NuGetRestore(solutionFileName);
 		MSBuild(solutionFileName, settings => settings.SetConfiguration(configuration));
 	});
+
+Task("CodeGen")
+	.IsDependentOn("Build")
+	.Does(() => CodeGen(verify: false));
 
 Task("VerifyCodeGen")
 	.IsDependentOn("Build")

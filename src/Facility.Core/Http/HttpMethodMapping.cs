@@ -55,7 +55,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the HTTP request content body from the request.
 		/// </summary>
-		public ServiceDto GetRequestBody(TRequest request)
+		public object GetRequestBody(TRequest request)
 		{
 			return m_getRequestBody != null ? m_getRequestBody(request) : RequestBodyType == typeof(TRequest) ? request : null;
 		}
@@ -79,14 +79,9 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates a request with an optional body.
 		/// </summary>
-		public TRequest CreateRequest(ServiceDto requestBody)
+		public TRequest CreateRequest(object requestBody)
 		{
-			if (m_createRequest != null)
-				return m_createRequest(requestBody);
-			else if (RequestBodyType == typeof(TRequest))
-				return (TRequest) requestBody;
-			else
-				return new TRequest();
+			return m_createRequest?.Invoke(requestBody) ?? requestBody as TRequest ?? new TRequest();
 		}
 
 		/// <summary>
@@ -148,7 +143,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the HTTP request content body from the request.
 			/// </summary>
-			public Func<TRequest, ServiceDto> GetRequestBody { get; set; }
+			public Func<TRequest, object> GetRequestBody { get; set; }
 
 			/// <summary>
 			/// Extracts the headers from the request.
@@ -163,7 +158,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Creates a request with an optional body.
 			/// </summary>
-			public Func<ServiceDto, TRequest> CreateRequest { get; set; }
+			public Func<object, TRequest> CreateRequest { get; set; }
 
 			/// <summary>
 			/// The response mappings.
@@ -211,8 +206,8 @@ namespace Facility.Core.Http
 		readonly Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> m_setUriParameters;
 		readonly Func<TRequest, IReadOnlyDictionary<string, string>> m_getRequestHeaders;
 		readonly Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> m_setRequestHeaders;
-		readonly Func<TRequest, ServiceDto> m_getRequestBody;
-		readonly Func<ServiceDto, TRequest> m_createRequest;
+		readonly Func<TRequest, object> m_getRequestBody;
+		readonly Func<object, TRequest> m_createRequest;
 		readonly Func<TResponse, IReadOnlyDictionary<string, string>> m_getResponseHeaders;
 		readonly Func<TResponse, IReadOnlyDictionary<string, string>, TResponse> m_setResponseHeaders;
 	}

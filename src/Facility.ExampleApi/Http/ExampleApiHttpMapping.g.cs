@@ -281,13 +281,18 @@ namespace Facility.ExampleApi.Http
 			{
 				HttpMethod = HttpMethod.Post,
 				Path = "/widgets/get",
-				RequestBodyType = typeof(GetWidgetBatchRequestDto),
+				RequestBodyType = typeof(IReadOnlyList<string>),
+				GetRequestBody = request => request.Ids,
+				CreateRequest = body => new GetWidgetBatchRequestDto{ Ids = (IReadOnlyList<string>) body },
 				ResponseMappings =
 				{
 					new HttpResponseMapping<GetWidgetBatchResponseDto>.Builder
 					{
 						StatusCode = (HttpStatusCode) 200,
-						ResponseBodyType = typeof(GetWidgetBatchResponseDto),
+						ResponseBodyType = typeof(IReadOnlyList<ServiceResult<WidgetDto>>),
+						MatchesResponse = response => response.Results != null,
+						GetResponseBody = response => response.Results,
+						CreateResponse = body => new GetWidgetBatchResponseDto { Results = (IReadOnlyList<ServiceResult<WidgetDto>>) body },
 					}.Build(),
 				},
 			}.Build();

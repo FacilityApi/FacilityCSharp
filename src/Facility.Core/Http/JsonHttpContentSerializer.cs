@@ -50,7 +50,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		protected override HttpContent CreateHttpContentCore(ServiceDto content, string mediaType)
+		protected override HttpContent CreateHttpContentCore(object content, string mediaType)
 		{
 			return new DelegateHttpContent(mediaType ?? DefaultMediaType, stream => ServiceJsonUtility.ToJsonStream(content, stream));
 		}
@@ -58,13 +58,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		protected override async Task<ServiceResult<ServiceDto>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken)
+		protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken)
 		{
 			try
 			{
 				using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
 				using (var textReader = new StreamReader(stream))
-					return ServiceResult.Success((ServiceDto) ServiceJsonUtility.FromJsonTextReader(textReader, dtoType));
+					return ServiceResult.Success(ServiceJsonUtility.FromJsonTextReader(textReader, dtoType));
 			}
 			catch (JsonException exception)
 			{

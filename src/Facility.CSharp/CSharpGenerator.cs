@@ -581,7 +581,7 @@ namespace Facility.CSharp
 									if (httpMethodInfo.RequestBodyField != null)
 									{
 										string requestBodyFieldName = CSharpUtility.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
-										string requestBodyFieldTypeName = CSharpUtility.GetDtoName(context.Service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField).Dto);
+										string requestBodyFieldTypeName = RenderNullableFieldType(context.Service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField));
 
 										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
 										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
@@ -655,20 +655,11 @@ namespace Facility.CSharp
 													}
 													else
 													{
-														string responseBodyFieldTypeName = CSharpUtility.GetDtoName(bodyFieldType.Dto);
-
-														if (bodyFieldType.Dto.Fields.Count != 0)
-														{
-															code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
-															code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
-															code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
-															code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
-														}
-														else
-														{
-															code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
-															code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = new {responseBodyFieldTypeName}() }},");
-														}
+														string responseBodyFieldTypeName = RenderNullableFieldType(bodyFieldType);
+														code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
+														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
+														code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
+														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
 													}
 												}
 												else if (validResponse.NormalFields.Count != 0)
