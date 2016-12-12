@@ -33,7 +33,8 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return await AdaptTask(TryHandleKitchenAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+			return await AdaptTask(TryHandleGetInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleKitchenAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleNotRestfulAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetPreferenceAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleSetPreferenceAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -117,6 +118,14 @@ namespace Facility.ExampleApi.Http
 		public Task<HttpResponseMessage> TryHandleSetPreferenceAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.SetPreferenceMapping, httpRequest, m_service.SetPreferenceAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets service info.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleGetInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetInfoMapping, httpRequest, m_service.GetInfoAsync, cancellationToken);
 		}
 
 		/// <summary>

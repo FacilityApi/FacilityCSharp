@@ -328,11 +328,7 @@ namespace Facility.Core
 			if (otherOfT == null)
 				return false;
 
-			var dto = m_value as ServiceDto;
-			if (dto != null)
-				return dto.IsEquivalentTo(otherOfT.m_value as ServiceDto);
-
-			return EqualityComparer<T>.Default.Equals(m_value, otherOfT.m_value);
+			return ServiceDataUtility.AreEquivalentFieldValues(m_value, otherOfT.m_value);
 		}
 
 		private ServiceResult(ServiceErrorDto error)

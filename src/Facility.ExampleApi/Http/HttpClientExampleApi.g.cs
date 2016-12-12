@@ -95,6 +95,14 @@ namespace Facility.ExampleApi.Http
 		}
 
 		/// <summary>
+		/// Gets service info.
+		/// </summary>
+		public Task<ServiceResult<GetInfoResponseDto>> GetInfoAsync(GetInfoRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ExampleApiHttpMapping.GetInfoMapping, request, cancellationToken);
+		}
+
+		/// <summary>
 		/// Demonstrates the default HTTP behavior.
 		/// </summary>
 		public Task<ServiceResult<NotRestfulResponseDto>> NotRestfulAsync(NotRestfulRequestDto request, CancellationToken cancellationToken)

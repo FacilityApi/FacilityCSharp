@@ -49,7 +49,7 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(GetWidgetsResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalentArrays(Widgets, other.Widgets, ServiceDataUtility.AreEquivalentDtos) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Widgets, other.Widgets) &&
 				Total == other.Total &&
 				TotalWeight == other.TotalWeight &&
 				ServiceDataUtility.AreEquivalentDtos(Job, other.Job);

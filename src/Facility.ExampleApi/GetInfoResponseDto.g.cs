@@ -8,30 +8,30 @@ using Newtonsoft.Json.Linq;
 namespace Facility.ExampleApi
 {
 	/// <summary>
-	/// Response for GetWidgetBatch.
+	/// Response for GetInfo.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class GetWidgetBatchResponseDto : ServiceDto<GetWidgetBatchResponseDto>
+	public sealed partial class GetInfoResponseDto : ServiceDto<GetInfoResponseDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public GetWidgetBatchResponseDto()
+		public GetInfoResponseDto()
 		{
 		}
 
 		/// <summary>
-		/// The widget results.
+		/// The name of the service.
 		/// </summary>
-		public IReadOnlyList<ServiceResult<WidgetDto>> Results { get; set; }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(GetWidgetBatchResponseDto other)
+		public override bool IsEquivalentTo(GetInfoResponseDto other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalentFieldValues(Results, other.Results);
+				Name == other.Name;
 		}
 	}
 }

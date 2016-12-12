@@ -1,4 +1,5 @@
-﻿using Facility.Core;
+﻿using System.Collections.Generic;
+using Facility.Core;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Shouldly;
@@ -331,6 +332,33 @@ namespace Facility.ExampleApi.UnitTests
 						ServiceResult.Failure(new ServiceErrorDto { Code = "TheCode" }),
 					}
 				});
+		}
+
+		[Test]
+		public void KitchenSinkEquivalence()
+		{
+			var innerArray = new[] { "bar", "baz" };
+
+			var response1 = new KitchenRequestDto
+			{
+				Sink = new KitchenSinkDto
+				{
+					Matrix = new[] { new[] { new[] { 1, 2 }, new[] { 3, 4 } }, new[] { new[] { 5, 6 }, new[] { 7, 8 } } },
+					Crazy = new[]
+					{
+						ServiceResult.Success<IReadOnlyList<IReadOnlyDictionary<string, IReadOnlyList<string>>>>(new[]
+						{
+							(IReadOnlyDictionary<string, IReadOnlyList<string>>) new Dictionary<string, IReadOnlyList<string>> { ["foo"] = innerArray },
+						}),
+					},
+				},
+			};
+
+			var response2 = ServiceDataUtility.Clone(response1);
+			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).ShouldBe(true);
+
+			innerArray[1] = "xyzzy";
+			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).ShouldBe(false);
 		}
 
 		private void SerializePreference(PreferenceDto dto, string expectedJson = null)

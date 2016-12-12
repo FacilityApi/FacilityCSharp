@@ -133,6 +133,14 @@ namespace Facility.ExampleApi
 			return ServiceResult.Success(new SetPreferenceResponseDto { Value = request.Value });
 		}
 
+		public Task<ServiceResult<GetInfoResponseDto>> GetInfoAsync(GetInfoRequestDto request, CancellationToken cancellationToken)
+		{
+			if (request == null)
+				throw new ArgumentNullException(nameof(request));
+
+			return Task.FromResult(ServiceResult.Success(new GetInfoResponseDto { Name = "ExampleApi" }));
+		}
+
 		public Task<ServiceResult<NotRestfulResponseDto>> NotRestfulAsync(NotRestfulRequestDto request, CancellationToken cancellationToken)
 		{
 			if (request == null)

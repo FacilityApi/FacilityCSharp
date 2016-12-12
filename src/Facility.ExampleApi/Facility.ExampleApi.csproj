@@ -89,6 +89,8 @@
     <Compile Include="WidgetDto.g.cs" />
     <Compile Include="WidgetField.g.cs" />
     <Compile Include="WidgetJobDto.g.cs" />
+    <Compile Include="GetInfoRequestDto.g.cs" />
+    <Compile Include="GetInfoResponseDto.g.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Facility.Core\Facility.Core.csproj">

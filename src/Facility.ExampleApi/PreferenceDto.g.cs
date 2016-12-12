@@ -76,29 +76,29 @@ namespace Facility.ExampleApi
 		{
 			return other != null &&
 				IsBoolean == other.IsBoolean &&
-				ServiceDataUtility.AreEquivalentArrays(Booleans, other.Booleans) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Booleans, other.Booleans) &&
 				Double == other.Double &&
-				ServiceDataUtility.AreEquivalentArrays(Doubles, other.Doubles) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Doubles, other.Doubles) &&
 				Integer == other.Integer &&
-				ServiceDataUtility.AreEquivalentArrays(Integers, other.Integers) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Integers, other.Integers) &&
 				String == other.String &&
-				ServiceDataUtility.AreEquivalentArrays(Strings, other.Strings) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Strings, other.Strings) &&
 				ServiceDataUtility.AreEquivalentBytes(Bytes, other.Bytes) &&
-				ServiceDataUtility.AreEquivalentArrays(Byteses, other.Byteses, ServiceDataUtility.AreEquivalentBytes) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Byteses, other.Byteses) &&
 				WidgetField == other.WidgetField &&
-				ServiceDataUtility.AreEquivalentArrays(WidgetFields, other.WidgetFields) &&
+				ServiceDataUtility.AreEquivalentFieldValues(WidgetFields, other.WidgetFields) &&
 				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
-				ServiceDataUtility.AreEquivalentArrays(Widgets, other.Widgets, ServiceDataUtility.AreEquivalentDtos) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Widgets, other.Widgets) &&
 				ServiceDataUtility.AreEquivalentResults(Result, other.Result) &&
-				ServiceDataUtility.AreEquivalentArrays(Results, other.Results, ServiceDataUtility.AreEquivalentResults) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Results, other.Results) &&
 				BigInteger == other.BigInteger &&
-				ServiceDataUtility.AreEquivalentArrays(BigIntegers, other.BigIntegers) &&
+				ServiceDataUtility.AreEquivalentFieldValues(BigIntegers, other.BigIntegers) &&
 				ServiceDataUtility.AreEquivalentDtos(Error, other.Error) &&
-				ServiceDataUtility.AreEquivalentArrays(Errors, other.Errors, ServiceDataUtility.AreEquivalentDtos) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Errors, other.Errors) &&
 				ServiceDataUtility.AreEquivalentObjects(Object, other.Object) &&
-				ServiceDataUtility.AreEquivalentArrays(Objects, other.Objects, ServiceDataUtility.AreEquivalentObjects) &&
-				ServiceDataUtility.AreEquivalentMaps(NamedStrings, other.NamedStrings) &&
-				ServiceDataUtility.AreEquivalentMaps(NamedWidgets, other.NamedWidgets, ServiceDataUtility.AreEquivalentDtos);
+				ServiceDataUtility.AreEquivalentFieldValues(Objects, other.Objects) &&
+				ServiceDataUtility.AreEquivalentFieldValues(NamedStrings, other.NamedStrings) &&
+				ServiceDataUtility.AreEquivalentFieldValues(NamedWidgets, other.NamedWidgets);
 		}
 	}
 }

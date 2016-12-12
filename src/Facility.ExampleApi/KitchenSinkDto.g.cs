@@ -19,6 +19,10 @@ namespace Facility.ExampleApi
 		{
 		}
 
+		public IReadOnlyList<IReadOnlyList<IReadOnlyList<int>>> Matrix { get; set; }
+
+		public IReadOnlyList<ServiceResult<IReadOnlyList<IReadOnlyDictionary<string, IReadOnlyList<string>>>>> Crazy { get; set; }
+
 		[Obsolete]
 		public string OldField { get; set; }
 
@@ -28,6 +32,8 @@ namespace Facility.ExampleApi
 		public override bool IsEquivalentTo(KitchenSinkDto other)
 		{
 			return other != null &&
+				ServiceDataUtility.AreEquivalentFieldValues(Matrix, other.Matrix) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Crazy, other.Crazy) &&
 				OldField == other.OldField;
 		}
 	}

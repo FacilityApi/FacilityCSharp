@@ -44,9 +44,9 @@ namespace Facility.Core.UnitTests
 			return other != null &&
 				BooleanValue == other.BooleanValue &&
 				StringValue == other.StringValue &&
-				ServiceDataUtility.AreEquivalentArrays(ErrorArrayValue, other.ErrorArrayValue, ServiceDataUtility.AreEquivalentDtos) &&
-				ServiceDataUtility.AreEquivalentMaps(BooleanMapValue, other.BooleanMapValue) &&
-				ServiceDataUtility.AreEquivalentMaps(ErrorMapValue, other.ErrorMapValue, ServiceDataUtility.AreEquivalentDtos);
+				ServiceDataUtility.AreEquivalentFieldValues(ErrorArrayValue, other.ErrorArrayValue) &&
+				ServiceDataUtility.AreEquivalentFieldValues(BooleanMapValue, other.BooleanMapValue) &&
+				ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue);
 		}
 	}
 }

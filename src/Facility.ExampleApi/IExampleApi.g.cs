@@ -59,6 +59,11 @@ namespace Facility.ExampleApi
 		Task<ServiceResult<SetPreferenceResponseDto>> SetPreferenceAsync(SetPreferenceRequestDto request, CancellationToken cancellationToken);
 
 		/// <summary>
+		/// Gets service info.
+		/// </summary>
+		Task<ServiceResult<GetInfoResponseDto>> GetInfoAsync(GetInfoRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
 		/// Demonstrates the default HTTP behavior.
 		/// </summary>
 		Task<ServiceResult<NotRestfulResponseDto>> NotRestfulAsync(NotRestfulRequestDto request, CancellationToken cancellationToken);

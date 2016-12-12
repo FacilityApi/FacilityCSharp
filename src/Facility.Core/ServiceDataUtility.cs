@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -56,14 +58,6 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the arrays are equivalent.
 		/// </summary>
-		public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second)
-		{
-			return AreEquivalentArrays(first, second, EqualityComparer<T>.Default.Equals);
-		}
-
-		/// <summary>
-		/// True if the arrays are equivalent.
-		/// </summary>
 		public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second, Func<T, T, bool> areEquivalent)
 		{
 			if (ReferenceEquals(first, second))
@@ -76,14 +70,6 @@ namespace Facility.Core
 					return false;
 			}
 			return true;
-		}
-
-		/// <summary>
-		/// True if the maps are equivalent.
-		/// </summary>
-		public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T> first, IReadOnlyDictionary<string, T> second)
-		{
-			return AreEquivalentMaps(first, second, EqualityComparer<T>.Default.Equals);
 		}
 
 		/// <summary>
@@ -102,6 +88,14 @@ namespace Facility.Core
 					return false;
 			}
 			return true;
+		}
+
+		/// <summary>
+		/// True if the field values are equal.
+		/// </summary>
+		public static bool AreEquivalentFieldValues<T>(T x, T y)
+		{
+			return EquivalenceComparerCache<T>.Instance.Equals(x, y);
 		}
 
 		/// <summary>
@@ -146,6 +140,102 @@ namespace Facility.Core
 		{
 			double value;
 			return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(double?);
+		}
+
+		private static class EquivalenceComparerCache<T>
+		{
+			public static readonly IEqualityComparer<T> Instance = CreateInstance();
+
+			private static IEqualityComparer<T> CreateInstance()
+			{
+				var type = typeof(T);
+				var typeInfo = type.GetTypeInfo();
+
+				if (Nullable.GetUnderlyingType(type) != null || typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return EqualityComparer<T>.Default;
+
+				if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceDtoEquivalenceComparer<>).MakeGenericType(type));
+
+				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type));
+
+				if (type == typeof(JObject))
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(JObjectEquivalenceComparer));
+
+				var interfaces = new[] { type }.Concat(typeInfo.ImplementedInterfaces).ToList();
+
+				var mapInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
+					x.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>) && x.GetTypeInfo().GenericTypeArguments[0] == typeof(string));
+				if (mapInterface != null)
+				{
+					var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
+					var valueType = genericTypeArguments[1];
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(MapEquivalenceComparer<,>).MakeGenericType(type, valueType));
+				}
+
+				var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
+					x.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+				if (arrayInterface != null)
+				{
+					var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ArrayEquivalenceComparer<,>).MakeGenericType(type, itemType));
+				}
+
+				throw new InvalidOperationException($"Type not supported for equivalence: {typeof(T)}");
+			}
+		}
+
+		private abstract class NoHashCodeEqualityComparer<T> : EqualityComparer<T>
+		{
+			public sealed override int GetHashCode(T obj)
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		private sealed class ServiceDtoEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
+			where T : ServiceDto
+		{
+			public override bool Equals(T x, T y)
+			{
+				return AreEquivalentDtos(x, y);
+			}
+		}
+
+		private sealed class ServiceResultEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
+			where T : ServiceResult
+		{
+			public override bool Equals(T x, T y)
+			{
+				return AreEquivalentResults(x, y);
+			}
+		}
+
+		private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>
+		{
+			public override bool Equals(JObject x, JObject y)
+			{
+				return AreEquivalentObjects(x, y);
+			}
+		}
+
+		private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
+			where T : IReadOnlyList<TItem>
+		{
+			public override bool Equals(T x, T y)
+			{
+				return AreEquivalentArrays(x, y, EquivalenceComparerCache<TItem>.Instance.Equals);
+			}
+		}
+
+		private sealed class MapEquivalenceComparer<T, TValue> : NoHashCodeEqualityComparer<T>
+			where T : IReadOnlyDictionary<string, TValue>
+		{
+			public override bool Equals(T x, T y)
+			{
+				return AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
+			}
 		}
 	}
 }

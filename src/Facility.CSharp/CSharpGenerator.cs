@@ -302,21 +302,10 @@ namespace Facility.CSharp
 										var fieldInfo = fieldInfos[fieldIndex];
 										string propertyName = CSharpUtility.GetFieldPropertyName(fieldInfo);
 										var fieldType = context.Service.GetFieldType(fieldInfo);
-										if (fieldType.Kind == ServiceTypeKind.Array || fieldType.Kind == ServiceTypeKind.Map)
-										{
-											string outerAreEquivalentMethodName = fieldType.Kind == ServiceTypeKind.Map ? "AreEquivalentMaps" : "AreEquivalentArrays";
-											string innerAreEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.ValueType.Kind);
-											code.Write(innerAreEquivalentMethodName != null ?
-												$"ServiceDataUtility.{outerAreEquivalentMethodName}({propertyName}, other.{propertyName}, ServiceDataUtility.{innerAreEquivalentMethodName})" :
-												$"ServiceDataUtility.{outerAreEquivalentMethodName}({propertyName}, other.{propertyName})");
-										}
-										else
-										{
-											string areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
-											code.Write(areEquivalentMethodName != null ?
-												$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
-												$"{propertyName} == other.{propertyName}");
-										}
+										string areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
+										code.Write(areEquivalentMethodName != null ?
+											$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
+											$"{propertyName} == other.{propertyName}");
 										code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
 									}
 								}
@@ -982,7 +971,7 @@ namespace Facility.CSharp
 				return "AreEquivalentResults";
 			case ServiceTypeKind.Array:
 			case ServiceTypeKind.Map:
-				throw new InvalidOperationException("Collections of collections not supported.");
+				return "AreEquivalentFieldValues";
 			default:
 				return null;
 			}

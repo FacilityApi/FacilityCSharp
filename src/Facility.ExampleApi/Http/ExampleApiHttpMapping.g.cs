@@ -92,7 +92,7 @@ namespace Facility.ExampleApi.Http
 			new HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Post,
-				Path = "/widgets/",
+				Path = "/widgets",
 				RequestBodyType = typeof(WidgetDto),
 				GetRequestBody = request => request.Widget,
 				CreateRequest = body => new CreateWidgetRequestDto{ Widget = (WidgetDto) body },
@@ -411,6 +411,24 @@ namespace Facility.ExampleApi.Http
 						MatchesResponse = response => response.Value != null,
 						GetResponseBody = response => response.Value,
 						CreateResponse = body => new SetPreferenceResponseDto { Value = (PreferenceDto) body },
+					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
+		/// Gets service info.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetInfoRequestDto, GetInfoResponseDto> GetInfoMapping =
+			new HttpMethodMapping<GetInfoRequestDto, GetInfoResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/",
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetInfoResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(GetInfoResponseDto),
 					}.Build(),
 				},
 			}.Build();

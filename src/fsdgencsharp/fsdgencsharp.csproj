@@ -37,11 +37,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Facility.Console, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Console.0.2.0-bodyfields1\lib\net45\Facility.Console.dll</HintPath>
+      <HintPath>..\..\packages\Facility.Console.0.2.0-bodyfields4\lib\net45\Facility.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Facility.Definition, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.2.0-bodyfields1\lib\dotnet\Facility.Definition.dll</HintPath>
+      <HintPath>..\..\packages\Facility.Definition.0.2.0-bodyfields4\lib\dotnet\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

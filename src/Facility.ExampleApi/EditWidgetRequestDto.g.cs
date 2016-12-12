@@ -45,7 +45,7 @@ namespace Facility.ExampleApi
 		{
 			return other != null &&
 				Id == other.Id &&
-				ServiceDataUtility.AreEquivalentArrays(Ops, other.Ops, ServiceDataUtility.AreEquivalentObjects) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Ops, other.Ops) &&
 				Weight == other.Weight;
 		}
 	}

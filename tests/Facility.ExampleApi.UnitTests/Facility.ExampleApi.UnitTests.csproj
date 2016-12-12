@@ -66,6 +66,7 @@
     <Compile Include="GetWidgetTests.cs" />
     <Compile Include="HttpClientErrorTests.cs" />
     <Compile Include="HttpMappingTests.cs" />
+    <Compile Include="KitchenTests.cs" />
     <Compile Include="NotRestfulTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
