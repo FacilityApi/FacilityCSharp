@@ -1104,7 +1104,7 @@ namespace Facility.CSharp
 				}
 
 				lines.InsertRange(insertIndex,
-					neededFileNames.Select(x => $"    <Compile Include=\"{x}\" />"));
+					neededFileNames.Select(x => $"    <Compile Include=\"{x.Replace('/', '\\')}\" />"));
 				isEdited = true;
 			}
 
