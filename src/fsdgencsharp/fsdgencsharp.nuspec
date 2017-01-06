@@ -7,7 +7,7 @@
     <owners>Ed Ball</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A command-line tool that generates C# for a Facility Service Definition.</description>
-    <copyright>Copyright 2016 Ed Ball</copyright>
+    <copyright>Copyright 2016-2017 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
   </metadata>
