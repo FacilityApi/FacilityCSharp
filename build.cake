@@ -158,7 +158,7 @@ Task("NuGetPublish")
 	});
 
 Task("Coverage")
-	.IsDependentOn("Build")
+	.IsDependentOn("VerifyCodeGen")
 	.Does(() =>
 	{
 		CreateDirectory("release");
