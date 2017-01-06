@@ -93,6 +93,12 @@ namespace Facility.ExampleApi.Http
 			{
 				HttpMethod = HttpMethod.Post,
 				Path = "/widgets",
+				ValidateRequest = request =>
+				{
+					if (request.Widget == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("widget"));
+					return ServiceResult.Success();
+				},
 				RequestBodyType = typeof(WidgetDto),
 				GetRequestBody = request => request.Widget,
 				CreateRequest = body => new CreateWidgetRequestDto{ Widget = (WidgetDto) body },
@@ -281,6 +287,12 @@ namespace Facility.ExampleApi.Http
 			{
 				HttpMethod = HttpMethod.Post,
 				Path = "/widgets/get",
+				ValidateRequest = request =>
+				{
+					if (request.Ids == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("ids"));
+					return ServiceResult.Success();
+				},
 				RequestBodyType = typeof(IReadOnlyList<string>),
 				GetRequestBody = request => request.Ids,
 				CreateRequest = body => new GetWidgetBatchRequestDto{ Ids = (IReadOnlyList<string>) body },
@@ -385,6 +397,8 @@ namespace Facility.ExampleApi.Http
 				{
 					if (string.IsNullOrEmpty(request.Key))
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("key"));
+					if (request.Value == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("value"));
 					return ServiceResult.Success();
 				},
 				GetUriParameters = request =>

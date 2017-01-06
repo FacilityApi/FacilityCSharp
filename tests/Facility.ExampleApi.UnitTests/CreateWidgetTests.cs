@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core;
 using NUnit.Framework;
 using Shouldly;
 
@@ -47,10 +48,10 @@ namespace Facility.ExampleApi.UnitTests
 		}
 
 		[Test]
-		public async Task MissingWidget_SameAsEmpty()
+		public async Task MissingWidget_BadRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.CreateWidgetAsync(widget: null)).ShouldBeSuccess();
+			(await service.CreateWidgetAsync(widget: null)).ShouldBeFailure(ServiceErrors.CreateRequestFieldRequired("widget"));
 		}
 
 		readonly string m_category;

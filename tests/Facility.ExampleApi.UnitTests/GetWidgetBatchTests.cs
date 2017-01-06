@@ -29,14 +29,14 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task MissingIds_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(ids: null)).ShouldBeFailure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
+			(await service.GetWidgetBatchAsync(ids: null)).ShouldBeFailure(ServiceErrors.CreateRequestFieldRequired("ids"));
 		}
 
 		[Test]
 		public async Task EmptyIds_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(ids: null)).ShouldBeFailure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
+			(await service.GetWidgetBatchAsync(ids: new string[0])).ShouldBeFailure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
 		}
 
 		[Test]

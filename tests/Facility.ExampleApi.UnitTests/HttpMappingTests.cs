@@ -105,8 +105,16 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NotAdminError_Uses403()
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
-			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new ByteArrayContent(new byte[0]));
+			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new StringContent("{}", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
 			response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+		}
+
+		[Test]
+		public async Task MissingBody_BadRequest()
+		{
+			var httpClient = TestUtility.CreateTestHttpClient();
+			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new ByteArrayContent(new byte[0]));
+			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 		}
 	}
 }

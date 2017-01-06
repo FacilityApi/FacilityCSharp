@@ -460,7 +460,7 @@ namespace Facility.CSharp
 
 									code.WriteLine($"Path = \"{httpPath}\",");
 
-									if (httpMethodInfo.PathFields.Count != 0)
+									if (httpMethodInfo.PathFields.Count != 0 || httpMethodInfo.RequestBodyField != null)
 									{
 										code.WriteLine("ValidateRequest = request =>");
 										code.WriteLine("{");
@@ -468,11 +468,22 @@ namespace Facility.CSharp
 										{
 											foreach (var pathField in httpMethodInfo.PathFields)
 											{
-												string fieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
+												var serviceField = pathField.ServiceField;
+												string fieldName = CSharpUtility.GetFieldPropertyName(serviceField);
 												code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
 												using (code.Indent())
-													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{pathField.ServiceField.Name}\"));");
+													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
 											}
+
+											if (httpMethodInfo.RequestBodyField != null)
+											{
+												var serviceField = httpMethodInfo.RequestBodyField.ServiceField;
+												string fieldName = CSharpUtility.GetFieldPropertyName(serviceField);
+												code.WriteLine($"if (request.{fieldName} == null)");
+												using (code.Indent())
+													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
+											}
+
 											code.WriteLine("return ServiceResult.Success();");
 										}
 										code.WriteLine("},");

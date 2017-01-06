@@ -48,10 +48,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			if (content == null || content.Headers.ContentLength == 0)
-				return ServiceResult.Success(default(object));
-
-			var contentType = content.Headers.ContentType;
+			var contentType = content?.Headers.ContentType;
 			if (contentType == null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateMissingContentType());
 

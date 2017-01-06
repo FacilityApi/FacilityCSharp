@@ -25,6 +25,8 @@ namespace Facility.ExampleApi
 		{
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
+			if (request.Widget == null)
+				return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("widget"));
 
 			var newWidget = await m_repository.CreateWidgetAsync(request.Widget, cancellationToken).ConfigureAwait(false);
 
@@ -56,7 +58,6 @@ namespace Facility.ExampleApi
 		{
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
-
 			if (string.IsNullOrEmpty(request.Id))
 				return ServiceResult.Failure(ExampleApiErrors.CreateInvalidRequestMissingWidgetId());
 
@@ -83,8 +84,9 @@ namespace Facility.ExampleApi
 		{
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
-
-			if (request.Ids == null || request.Ids.Count == 0)
+			if (request.Ids == null)
+				return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("ids"));
+			if (request.Ids.Count == 0)
 				return ServiceResult.Failure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
 
 			var widgets = await m_repository.GetWidgetBatchAsync(request.Ids, cancellationToken).ConfigureAwait(false);
