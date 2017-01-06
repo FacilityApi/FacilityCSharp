@@ -832,11 +832,9 @@ namespace Facility.CSharp
 						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings = null)");
 						using (code.Indent())
 						{
-							string defaultUrl = httpServiceInfo.Url;
-							if (defaultUrl != null)
-								code.WriteLine($": base(settings, defaultBaseUri: new Uri(\"{defaultUrl}\"))");
-							else
-								code.WriteLine(": base(settings, defaultBaseUri: null)");
+							string url = httpServiceInfo.Url;
+							string urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
+							code.WriteLine($": base(settings, defaultBaseUri: {urlCode})");
 						}
 						code.Block().Dispose();
 
