@@ -76,23 +76,38 @@ namespace Facility.Core.Http
 		{
 			public DelegateHttpContent(string mediaType, Action<Stream> writeToStream)
 			{
-				m_writeToStream = writeToStream;
 				Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
+
+				m_memoryStream = new MemoryStream();
+				writeToStream(m_memoryStream);
 			}
 
 			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
 			{
-				m_writeToStream(stream);
-				return Task.FromResult<object>(null);
+				m_memoryStream.Position = 0;
+				return m_memoryStream.CopyToAsync(stream);
 			}
 
 			protected override bool TryComputeLength(out long length)
 			{
-				length = -1L;
-				return false;
+				length = m_memoryStream.Length;
+				return true;
 			}
 
-			readonly Action<Stream> m_writeToStream;
+			protected override void Dispose(bool disposing)
+			{
+				try
+				{
+					if (disposing)
+						m_memoryStream.Dispose();
+				}
+				finally
+				{
+					base.Dispose(disposing);
+				}
+			}
+
+			readonly MemoryStream m_memoryStream;
 		}
 	}
 }
