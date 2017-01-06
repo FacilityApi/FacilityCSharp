@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace Facility.Core.Http
 {
@@ -58,29 +55,6 @@ namespace Facility.Core.Http
 			}
 
 			return ServiceResult.Success();
-		}
-
-		private sealed class DelegateHttpContent : HttpContent
-		{
-			public DelegateHttpContent(string mediaType, Action<Stream> writeToStream)
-			{
-				m_writeToStream = writeToStream;
-				Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
-			}
-
-			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
-			{
-				m_writeToStream(stream);
-				return Task.FromResult<object>(null);
-			}
-
-			protected override bool TryComputeLength(out long length)
-			{
-				length = -1L;
-				return false;
-			}
-
-			readonly Action<Stream> m_writeToStream;
 		}
 
 		private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
