@@ -58,6 +58,8 @@
     <Compile Include="Http\ServiceHttpHandlerAspect.cs" />
     <Compile Include="Http\ServiceHttpHandlerSettings.cs" />
     <Compile Include="Http\UserAgentClientAspect.cs" />
+    <Compile Include="IO\RecyclableMemoryStream.cs" />
+    <Compile Include="IO\RecyclableMemoryStreamManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDataUtility.cs" />
     <Compile Include="ServiceDto.cs" />
@@ -80,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Facility.Core.nuspec" />
+    <None Include="IO\.editorconfig" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

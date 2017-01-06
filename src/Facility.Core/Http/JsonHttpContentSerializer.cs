@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core.IO;
 using Newtonsoft.Json;
 
 namespace Facility.Core.Http
@@ -78,7 +79,7 @@ namespace Facility.Core.Http
 			{
 				Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
 
-				m_memoryStream = new MemoryStream();
+				m_memoryStream = new RecyclableMemoryStream(ServiceDataUtility.RecyclableMemoryStreamManager);
 				writeToStream(m_memoryStream);
 			}
 

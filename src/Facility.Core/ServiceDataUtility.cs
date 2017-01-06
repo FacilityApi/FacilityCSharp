@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Facility.Core.IO;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -141,6 +142,8 @@ namespace Facility.Core
 			double value;
 			return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(double?);
 		}
+
+		internal static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
 
 		private static class EquivalenceComparerCache<T>
 		{

@@ -20,14 +20,16 @@
 // THE SOFTWARE.
 // ---------------------------------------------------------------------
 
-namespace Microsoft.IO
+namespace Facility.Core.IO //Microsoft.IO
 {
     using System;
     using System.IO;
     using System.Collections.Generic;
     using System.Threading;
 
+#if false
     using Events = RecyclableMemoryStreamManager.Events;
+#endif
 
     /// <summary>
     /// MemoryStream implementation that deals with pooling and managing memory streams which use potentially large
@@ -58,7 +60,7 @@ namespace Microsoft.IO
     /// are maintained in the stream until the stream is disposed (unless AggressiveBufferReturn is enabled in the stream manager).
     /// 
     /// </remarks>
-    public sealed class RecyclableMemoryStream : MemoryStream
+    internal sealed class RecyclableMemoryStream : MemoryStream
     {
         private const long MaxStreamLength = Int32.MaxValue;
         
@@ -116,6 +118,7 @@ namespace Microsoft.IO
 
         private int disposedState = 0;
 
+#if false
         private readonly string allocationStack;
         private string disposeStack;
 
@@ -130,6 +133,7 @@ namespace Microsoft.IO
         /// which should only be in debugging situations.
         /// </summary>
         internal string DisposeStack => this.disposeStack;
+#endif
 
         /// <summary>
         /// This buffer exists so that WriteByte can forward all of its calls to Write
@@ -197,6 +201,7 @@ namespace Microsoft.IO
                 this.largeBuffer = initialLargeBuffer;
             }
 
+#if false
             if (this.memoryManager.GenerateCallStacks)
             {
                 this.allocationStack = Environment.StackTrace;
@@ -204,6 +209,7 @@ namespace Microsoft.IO
 
             Events.Write.MemoryStreamCreated(this.id, this.tag, requestedSize);
             this.memoryManager.ReportStreamCreated();
+#endif
         }
         #endregion
 
@@ -222,6 +228,7 @@ namespace Microsoft.IO
         {
             if (Interlocked.CompareExchange(ref this.disposedState, 1, 0) != 0)
             {
+#if false
                 string doubleDisposeStack = null;
                 if (this.memoryManager.GenerateCallStacks)
                 {
@@ -229,22 +236,28 @@ namespace Microsoft.IO
                 }
 
                 Events.Write.MemoryStreamDoubleDispose(this.id, this.tag, this.allocationStack, this.disposeStack, doubleDisposeStack);
+#endif
                 return;
             }
             
+#if false
             Events.Write.MemoryStreamDisposed(this.id, this.tag);
 
             if (this.memoryManager.GenerateCallStacks)
             {
                 this.disposeStack = Environment.StackTrace;
             }
+#endif
 
             if (disposing)
             {
+#if false
                 this.memoryManager.ReportStreamDisposed();
+#endif
                                 
                 GC.SuppressFinalize(this);
             }
+#if false
             else
             {
                 // We're being finalized.
@@ -264,6 +277,7 @@ namespace Microsoft.IO
             }
 
             this.memoryManager.ReportStreamLength(this.length);
+#endif
 
             if (this.largeBuffer != null)
             {
@@ -287,7 +301,7 @@ namespace Microsoft.IO
         /// <summary>
         /// Equivalent to Dispose
         /// </summary>
-        public override void Close()
+        public void Close()
         {
             this.Dispose(true);
         }
@@ -397,7 +411,7 @@ namespace Microsoft.IO
         /// <remarks>IMPORTANT: Doing a Write() after calling GetBuffer() invalidates the buffer. The old buffer is held onto
         /// until Dispose is called, but the next time GetBuffer() is called, a new buffer from the pool will be required.</remarks>
         /// <exception cref="ObjectDisposedException">Object has been disposed</exception>
-        public override byte[] GetBuffer()
+        public byte[] GetBuffer()
         {
             this.CheckDisposed();
 
@@ -445,9 +459,11 @@ namespace Microsoft.IO
             var newBuffer = new byte[this.Length];
 
             this.InternalRead(newBuffer, 0, this.length, 0);
+#if false
             string stack = this.memoryManager.GenerateCallStacks ? Environment.StackTrace : null;
             Events.Write.MemoryStreamToArray(this.id, this.tag, stack, 0);
             this.memoryManager.ReportStreamToArray();
+#endif
 
             return newBuffer;
         }
@@ -746,7 +762,11 @@ namespace Microsoft.IO
         #region Helper Methods
         private bool Disposed
         {
+#if false
             get { return Thread.VolatileRead(ref this.disposedState) != 0; }
+#else
+            get { return this.disposedState != 0; }
+#endif
         }
 
         private void CheckDisposed()
@@ -812,7 +832,9 @@ namespace Microsoft.IO
         {
             if (newCapacity > this.memoryManager.MaximumStreamCapacity && this.memoryManager.MaximumStreamCapacity > 0)
             {
+#if false
                 Events.Write.MemoryStreamOverCapacity(newCapacity, this.memoryManager.MaximumStreamCapacity, this.tag, this.allocationStack);
+#endif
                 throw new InvalidOperationException("Requested capacity is too large: " + newCapacity + ". Limit is " + this.memoryManager.MaximumStreamCapacity);
             }
 

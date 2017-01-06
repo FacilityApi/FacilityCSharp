@@ -20,7 +20,7 @@
 // THE SOFTWARE.
 // ---------------------------------------------------------------------
 
-namespace Microsoft.IO
+namespace Facility.Core.IO //Microsoft.IO
 {
     using System;
     using System.Collections.Concurrent;
@@ -41,8 +41,9 @@ namespace Microsoft.IO
     /// multiples of LargeBufferMultiple (1 MB by default). They are split by size to avoid overly-wasteful buffer
     /// usage. There should be far fewer 8 MB buffers than 1 MB buffers, for example.
     /// </remarks>
-    public partial class RecyclableMemoryStreamManager
+    internal class RecyclableMemoryStreamManager
     {
+#if false
         /// <summary>
         /// Generic delegate for handling events without any arguments.
         /// </summary>
@@ -69,6 +70,7 @@ namespace Microsoft.IO
         /// <param name="largePoolFreeBytes">Bytes currently free in the large pool.</param>
         public delegate void UsageReportEventHandler(
             long smallPoolInUseBytes, long smallPoolFreeBytes, long largePoolInUseBytes, long largePoolFreeBytes);
+#endif
 
         public const int DefaultBlockSize = 128 * 1024;
         public const int DefaultLargeBufferMultiple = 1024 * 1024;
@@ -150,7 +152,9 @@ namespace Microsoft.IO
                 this.largePools[i] = new ConcurrentStack<byte[]>();
             }
 
+#if false
             Events.Write.MemoryStreamManagerInitialized(blockSize, largeBufferMultiple, maximumBufferSize);
+#endif
         }
 
         /// <summary>
@@ -230,11 +234,13 @@ namespace Microsoft.IO
         /// <remarks>A value of 0 indicates no limit.</remarks>
         public long MaximumStreamCapacity { get; set; }
 
+#if false
         /// <summary>
         /// Whether to save callstacks for stream allocations. This can help in debugging.
         /// It should NEVER be turned on generally in production.
         /// </summary>
         public bool GenerateCallStacks { get; set; }
+#endif
 
         /// <summary>
         /// Whether dirty buffers can be immediately returned to the buffer pool. E.g. when GetBuffer() is called on
@@ -258,8 +264,10 @@ namespace Microsoft.IO
                 // We'll add this back to the pool when the stream is disposed
                 // (unless our free pool is too large)
                 block = new byte[this.BlockSize];
+#if false
                 Events.Write.MemoryStreamNewBlockCreated(this.smallPoolInUseSize);
                 ReportBlockCreated();
+#endif
             }
             else
             {
@@ -290,8 +298,10 @@ namespace Microsoft.IO
                 {
                     buffer = new byte[requiredSize];
 
+#if false
                     Events.Write.MemoryStreamNewLargeBufferCreated(requiredSize, this.LargePoolInUseSize);
                     ReportLargeBufferCreated();
+#endif
                 }
                 else
                 {
@@ -308,6 +318,7 @@ namespace Microsoft.IO
 
                 // We still want to round up to reduce heap fragmentation.
                 buffer = new byte[requiredSize];
+#if false
                 string callStack = null;
                 if (this.GenerateCallStacks)
                 {
@@ -316,6 +327,7 @@ namespace Microsoft.IO
                 }
                 Events.Write.MemoryStreamNonPooledLargeBufferCreated(requiredSize, tag, callStack);
                 ReportLargeBufferCreated();
+#endif
             }
 
             Interlocked.Add(ref this.largeBufferInUseSize[poolIndex], buffer.Length);
@@ -364,12 +376,14 @@ namespace Microsoft.IO
                     this.largePools[poolIndex].Push(buffer);
                     Interlocked.Add(ref this.largeBufferFreeSize[poolIndex], buffer.Length);
                 }
+#if false
                 else
                 {
                     Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Large, tag,
                                                            Events.MemoryStreamDiscardReason.EnoughFree);
                     ReportLargeBufferDiscarded(Events.MemoryStreamDiscardReason.EnoughFree);
                 }
+#endif
             }
             else
             {
@@ -377,15 +391,19 @@ namespace Microsoft.IO
                 // analysis. We have space in the inuse array for this.
                 poolIndex = this.largeBufferInUseSize.Length - 1;
 
+#if false
                 Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Large, tag,
                                                        Events.MemoryStreamDiscardReason.TooLarge);
                 ReportLargeBufferDiscarded(Events.MemoryStreamDiscardReason.TooLarge);
+#endif
             }
 
             Interlocked.Add(ref this.largeBufferInUseSize[poolIndex], -buffer.Length);
 
+#if false
             ReportUsageReport(this.smallPoolInUseSize, this.smallPoolFreeSize, this.LargePoolInUseSize,
                               this.LargePoolFreeSize);
+#endif
         }
 
         /// <summary>
@@ -422,17 +440,22 @@ namespace Microsoft.IO
                 }
                 else
                 {
+#if false
                     Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Small, tag,
                                                            Events.MemoryStreamDiscardReason.EnoughFree);
                     ReportBlockDiscarded();
+#endif
                     break;
                 }
             }
 
+#if false
             ReportUsageReport(this.smallPoolInUseSize, this.smallPoolFreeSize, this.LargePoolInUseSize,
                               this.LargePoolFreeSize);
+#endif
         }
 
+#if false
         internal void ReportBlockCreated()
         {
             this.BlockCreated?.Invoke();
@@ -483,6 +506,7 @@ namespace Microsoft.IO
         {
             this.UsageReport?.Invoke(smallPoolInUseBytes, smallPoolFreeBytes, largePoolInUseBytes, largePoolFreeBytes);
         }
+#endif
 
         /// <summary>
         /// Retrieve a new MemoryStream object with no tag and a default initial capacity.
@@ -555,6 +579,7 @@ namespace Microsoft.IO
             return stream;
         }
 
+#if false
         /// <summary>
         /// Triggered when a new block is created.
         /// </summary>
@@ -604,5 +629,6 @@ namespace Microsoft.IO
         /// Periodically triggered to report usage statistics.
         /// </summary>
         public event UsageReportEventHandler UsageReport;
+#endif
     }
 }
