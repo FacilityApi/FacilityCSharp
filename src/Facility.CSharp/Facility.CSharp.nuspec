@@ -12,9 +12,10 @@
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
     <dependencies>
       <dependency id="Facility.Core" version="$version$" />
-      <dependency id="Facility.Definition" version="0.1.8" />
-      <dependency id="Faithlife.Parsing" version="1.0.0" />
+      <dependency id="Facility.Definition" version="0.4.2" />
+      <dependency id="Faithlife.Parsing" version="1.0.1" />
       <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="YamlDotNet" version="4.0.0" />
     </dependencies>
   </metadata>
   <files>
