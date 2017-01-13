@@ -502,7 +502,7 @@ namespace Facility.CSharp
 												{
 													string fieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"{{ \"{pathField.ServiceField.Name}\", {fieldValue} }},");
+													code.WriteLine($"{{ \"{pathField.Name}\", {fieldValue} }},");
 												}
 												foreach (var queryField in httpMethodInfo.QueryFields)
 												{
@@ -532,7 +532,7 @@ namespace Facility.CSharp
 												string dtoFieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
 												string queryParameterName = $"queryParameter{dtoFieldName}";
 												code.WriteLine($"string {queryParameterName};");
-												code.WriteLine($"parameters.TryGetValue(\"{pathField.ServiceField.Name}\", out {queryParameterName});");
+												code.WriteLine($"parameters.TryGetValue(\"{pathField.Name}\", out {queryParameterName});");
 												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(pathField.ServiceField), queryParameterName)};");
 											}
 

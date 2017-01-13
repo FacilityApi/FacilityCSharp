@@ -40,12 +40,12 @@
       <HintPath>..\..\packages\ArgsReading.1.0.0\lib\dotnet\ArgsReading.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.Console, Version=0.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Console.0.4.2\lib\net45\Facility.Console.dll</HintPath>
+    <Reference Include="Facility.Console, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Console.0.4.3\lib\net45\Facility.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.Definition, Version=0.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.4.2\lib\dotnet\Facility.Definition.dll</HintPath>
+    <Reference Include="Facility.Definition, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Definition.0.4.3\lib\dotnet\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
