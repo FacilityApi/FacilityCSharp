@@ -7,8 +7,8 @@
     <ProjectGuid>{D394544E-D86F-46D5-A6FD-658089A21463}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Facility.CSharp.UnitTests</RootNamespace>
-    <AssemblyName>Facility.CSharp.UnitTests</AssemblyName>
+    <RootNamespace>Facility.CodeGen.CSharp.UnitTests</RootNamespace>
+    <AssemblyName>Facility.CodeGen.CSharp.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,8 +32,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Facility.Definition, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.4.3\lib\dotnet\Facility.Definition.dll</HintPath>
+    <Reference Include="Facility.Definition, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Definition.0.5.0\lib\dotnet\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -73,9 +73,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Facility.CSharp\Facility.CSharp.csproj">
+    <ProjectReference Include="..\..\src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj">
       <Project>{3bf2823c-57a7-416f-a16e-49489ea858b1}</Project>
-      <Name>Facility.CSharp</Name>
+      <Name>Facility.CodeGen.CSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

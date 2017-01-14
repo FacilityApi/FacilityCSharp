@@ -40,12 +40,12 @@
       <HintPath>..\..\packages\ArgsReading.1.0.0\lib\dotnet\ArgsReading.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.Console, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Console.0.4.3\lib\net45\Facility.Console.dll</HintPath>
+    <Reference Include="Facility.CodeGen.Console, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.CodeGen.Console.0.5.0\lib\net45\Facility.CodeGen.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.Definition, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.4.3\lib\dotnet\Facility.Definition.dll</HintPath>
+    <Reference Include="Facility.Definition, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Definition.0.5.0\lib\dotnet\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -86,9 +86,9 @@
       <Project>{ee35f718-afdf-4e5e-99b8-87306a73c3c7}</Project>
       <Name>Facility.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Facility.CSharp\Facility.CSharp.csproj">
+    <ProjectReference Include="..\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj">
       <Project>{3bf2823c-57a7-416f-a16e-49489ea858b1}</Project>
-      <Name>Facility.CSharp</Name>
+      <Name>Facility.CodeGen.CSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

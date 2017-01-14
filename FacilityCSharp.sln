@@ -14,13 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fsdgencsharp", "src\fsdgencsharp\fsdgencsharp.csproj", "{6095DCD7-A6A8-43E9-8E97-FF77BE4C6495}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CSharp", "src\Facility.CSharp\Facility.CSharp.csproj", "{3BF2823C-57A7-416F-A16E-49489EA858B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CodeGen.CSharp", "src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj", "{3BF2823C-57A7-416F-A16E-49489EA858B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.ExampleApi", "src\Facility.ExampleApi\Facility.ExampleApi.csproj", "{D3531034-E50F-4111-B5C4-D9716C2FF70A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Core.UnitTests", "tests\Facility.Core.UnitTests\Facility.Core.UnitTests.csproj", "{0354EDA3-04DD-4422-BAFF-988497484F82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CSharp.UnitTests", "tests\Facility.CSharp.UnitTests\Facility.CSharp.UnitTests.csproj", "{D394544E-D86F-46D5-A6FD-658089A21463}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CodeGen.CSharp.UnitTests", "tests\Facility.CodeGen.CSharp.UnitTests\Facility.CodeGen.CSharp.UnitTests.csproj", "{D394544E-D86F-46D5-A6FD-658089A21463}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.ExampleApi.UnitTests", "tests\Facility.ExampleApi.UnitTests\Facility.ExampleApi.UnitTests.csproj", "{A9B9D3E1-5F07-43C7-8B98-561C56DB2418}"
 EndProject

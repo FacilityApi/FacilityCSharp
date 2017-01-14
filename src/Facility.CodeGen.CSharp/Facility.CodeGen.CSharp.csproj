@@ -8,8 +8,8 @@
     <ProjectGuid>{3BF2823C-57A7-416F-A16E-49489EA858B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Facility.CSharp</RootNamespace>
-    <AssemblyName>Facility.CSharp</AssemblyName>
+    <RootNamespace>Facility.CodeGen.CSharp</RootNamespace>
+    <AssemblyName>Facility.CodeGen.CSharp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\Facility.CSharp.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Facility.CodeGen.CSharp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\Facility.CSharp.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Facility.CodeGen.CSharp.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\SolutionInfo.cs">
@@ -46,8 +46,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Facility.Definition, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.4.3\lib\portable-net45+netcore45+wpa81\Facility.Definition.dll</HintPath>
+    <Reference Include="Facility.Definition, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Definition.0.5.0\lib\portable-net45+netcore45+wpa81\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -64,7 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Facility.CSharp.nuspec" />
+    <None Include="Facility.CodeGen.CSharp.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

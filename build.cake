@@ -21,7 +21,7 @@ var githubOwner = "FacilityApi";
 var githubRepo = "FacilityCSharp";
 var githubRawUri = "http://raw.githubusercontent.com";
 var nugetSource = "https://www.nuget.org/api/v2/package";
-var coverageAssemblies = new[] { "Facility.Core", "Facility.CSharp" };
+var coverageAssemblies = new[] { "Facility.Core", "Facility.CodeGen.CSharp" };
 
 var rootPath = MakeAbsolute(Directory(".")).FullPath;
 var gitRepository = LibGit2Sharp.Repository.IsValid(rootPath) ? new LibGit2Sharp.Repository(rootPath) : null;

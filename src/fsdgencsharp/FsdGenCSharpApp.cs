@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using ArgsReading;
-using Facility.Console;
-using Facility.CSharp;
+using Facility.CodeGen.Console;
+using Facility.CodeGen.CSharp;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 

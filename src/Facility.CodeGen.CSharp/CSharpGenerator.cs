@@ -9,7 +9,7 @@ using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Http;
 
-namespace Facility.CSharp
+namespace Facility.CodeGen.CSharp
 {
 	/// <summary>
 	/// Generates C#.

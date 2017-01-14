@@ -4,7 +4,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Facility.Core")]
-[assembly: AssemblyDescription("The core .NET library for the Facility API Framework.")]
+[assembly: AssemblyDescription("A library for consuming/implementing Facility APIs.")]
 [assembly: AssemblyProduct("Facility.Core")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
