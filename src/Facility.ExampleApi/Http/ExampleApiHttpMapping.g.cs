@@ -459,7 +459,7 @@ namespace Facility.ExampleApi.Http
 				{
 					new HttpResponseMapping<NotRestfulResponseDto>.Builder
 					{
-						StatusCode = (HttpStatusCode) 204,
+						StatusCode = (HttpStatusCode) 200,
 					}.Build(),
 				},
 			}.Build();
@@ -474,7 +474,7 @@ namespace Facility.ExampleApi.Http
 				{
 					new HttpResponseMapping<KitchenResponseDto>.Builder
 					{
-						StatusCode = (HttpStatusCode) 204,
+						StatusCode = (HttpStatusCode) 200,
 					}.Build(),
 				},
 			}.Build();
