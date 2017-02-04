@@ -122,7 +122,9 @@ namespace Facility.Core.Http
 			{
 				var statusCode = error.Code == null ? HttpStatusCode.InternalServerError :
 					(TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
-				httpResponse = new HttpResponseMessage(statusCode) { Content = m_contentSerializer.CreateHttpContent(error, mediaType) };
+				httpResponse = new HttpResponseMessage(statusCode);
+				if (statusCode != HttpStatusCode.NoContent && statusCode != HttpStatusCode.NotModified)
+					httpResponse.Content = m_contentSerializer.CreateHttpContent(error, mediaType);
 			}
 
 			httpResponse.RequestMessage = httpRequest;
