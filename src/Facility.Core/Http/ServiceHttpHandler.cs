@@ -120,7 +120,8 @@ namespace Facility.Core.Http
 			}
 			else
 			{
-				var statusCode = TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
+				var statusCode = error.Code == null ? HttpStatusCode.InternalServerError :
+					(TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
 				httpResponse = new HttpResponseMessage(statusCode) { Content = m_contentSerializer.CreateHttpContent(error, mediaType) };
 			}
 
