@@ -72,10 +72,6 @@ namespace Facility.Core.Http
 				var statusCode = httpResponse.StatusCode;
 				var responseMapping = mapping.ResponseMappings.FirstOrDefault(x => x.StatusCode == statusCode);
 
-				// adding the first field by changing 204 to 200 is not a breaking change
-				if (responseMapping == null && statusCode == HttpStatusCode.OK)
-					responseMapping = mapping.ResponseMappings.FirstOrDefault(x => x.StatusCode == HttpStatusCode.NoContent);
-
 				// fail if no response mapping can be found for the status code
 				if (responseMapping == null)
 					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
