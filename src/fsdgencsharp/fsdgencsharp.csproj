@@ -40,12 +40,12 @@
       <HintPath>..\..\packages\ArgsReading.1.0.1\lib\dotnet\ArgsReading.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.CodeGen.Console, Version=0.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.CodeGen.Console.0.5.3\lib\net45\Facility.CodeGen.Console.dll</HintPath>
+    <Reference Include="Facility.CodeGen.Console, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.CodeGen.Console.1.0.0\lib\net45\Facility.CodeGen.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Facility.Definition, Version=0.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Facility.Definition.0.5.3\lib\dotnet\Facility.Definition.dll</HintPath>
+    <Reference Include="Facility.Definition, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facility.Definition.1.0.0\lib\dotnet\Facility.Definition.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
