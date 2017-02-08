@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core.Assertions;
 using Facility.ExampleApi.InMemory;
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NullQuery_AllWidgets()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetsAsync(query: null)).ShouldBeSuccess(
+			(await service.GetWidgetsAsync(query: null)).Should().BeSuccess(
 				new GetWidgetsResponseDto
 				{
 					Widgets = InMemoryExampleApiRepository.SampleWidgets.OrderBy(x => x.Id).ToList(),
@@ -41,7 +42,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task BlankQuery_NoWidgets()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetsAsync(query: "")).ShouldBeSuccess(
+			(await service.GetWidgetsAsync(query: "")).Should().BeSuccess(
 				new GetWidgetsResponseDto
 				{
 					Widgets = new WidgetDto[0],
@@ -53,7 +54,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NotFoundQuery_NoWidgets()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetsAsync(query: "xyzzy")).ShouldBeSuccess(
+			(await service.GetWidgetsAsync(query: "xyzzy")).Should().BeSuccess(
 				new GetWidgetsResponseDto
 				{
 					Widgets = new WidgetDto[0],
@@ -66,7 +67,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var service = TestUtility.CreateService(m_category);
 			var widgets = InMemoryExampleApiRepository.SampleWidgets.Where(x => x.Name.Contains("ey")).OrderBy(x => x.Id).ToList();
-			(await service.GetWidgetsAsync(query: "ey")).ShouldBeSuccess(
+			(await service.GetWidgetsAsync(query: "ey")).Should().BeSuccess(
 				new GetWidgetsResponseDto
 				{
 					Widgets = widgets,
@@ -78,7 +79,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task ReverseSortByName()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetsAsync(limit: 2, sort: WidgetField.Name, desc: true)).ShouldBeSuccess(
+			(await service.GetWidgetsAsync(limit: 2, sort: WidgetField.Name, desc: true)).Should().BeSuccess(
 				new GetWidgetsResponseDto
 				{
 					Widgets = InMemoryExampleApiRepository.SampleWidgets.OrderByDescending(x => x.Name).Take(2).ToList(),

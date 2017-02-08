@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using NUnit.Framework;
 
 namespace Facility.ExampleApi.UnitTests
@@ -28,7 +29,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NullId_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.NotRestfulAsync(new NotRestfulRequestDto(), CancellationToken.None)).ShouldBeFailure(ServiceErrors.NotFound);
+			(await service.NotRestfulAsync(new NotRestfulRequestDto(), CancellationToken.None)).Should().BeFailure(ServiceErrors.NotFound);
 		}
 
 		readonly string m_category;

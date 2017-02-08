@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core.Assertions;
 using Facility.ExampleApi.InMemory;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -31,7 +32,7 @@ namespace Facility.ExampleApi.UnitTests
 			var service = TestUtility.CreateService(m_category);
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
 			(await service.EditWidgetAsync(new EditWidgetRequestDto { Id = widget.Id }, CancellationToken.None))
-				.ShouldBeSuccess(new EditWidgetResponseDto { Widget = widget });
+				.Should().BeSuccess(new EditWidgetResponseDto { Widget = widget });
 		}
 
 		[Test]
@@ -40,7 +41,7 @@ namespace Facility.ExampleApi.UnitTests
 			var service = TestUtility.CreateService(m_category);
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
 			(await service.EditWidgetAsync(new EditWidgetRequestDto { Id = widget.Id, Ops = new[] { new JObject() } }, CancellationToken.None))
-				.ShouldBeSuccess(new EditWidgetResponseDto { Job = new WidgetJobDto { Id = "TODO" } });
+				.Should().BeSuccess(new EditWidgetResponseDto { Job = new WidgetJobDto { Id = "TODO" } });
 		}
 
 		readonly string m_category;

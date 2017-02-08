@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.Assertions;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.ExampleApi.UnitTests
 {
@@ -355,18 +356,18 @@ namespace Facility.ExampleApi.UnitTests
 			};
 
 			var response2 = ServiceDataUtility.Clone(response1);
-			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).ShouldBe(true);
+			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).Should().BeTrue();
 
 			innerArray[1] = "xyzzy";
-			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).ShouldBe(false);
+			ServiceDataUtility.AreEquivalentFieldValues(response1, response2).Should().BeFalse();
 		}
 
 		private void SerializePreference(PreferenceDto dto, string expectedJson = null)
 		{
 			string json = ServiceJsonUtility.ToJson(dto);
 			if (expectedJson != null)
-				json.ShouldBe(expectedJson);
-			ServiceJsonUtility.FromJson<PreferenceDto>(json).ShouldBeEquivalent(dto);
+				json.Should().Be(expectedJson);
+			ServiceJsonUtility.FromJson<PreferenceDto>(json).Should().BeEquivalentTo(dto);
 		}
 	}
 }

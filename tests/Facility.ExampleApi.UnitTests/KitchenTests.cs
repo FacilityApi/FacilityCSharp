@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using Facility.Core;
+using Facility.Core.Assertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.ExampleApi.UnitTests
 {
@@ -30,7 +28,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NotAdminErrorCode()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.KitchenAsync(new KitchenRequestDto(), CancellationToken.None)).ShouldBeFailure(ExampleApiErrors.NotAdmin);
+			(await service.KitchenAsync(new KitchenRequestDto(), CancellationToken.None)).Should().BeFailure(ExampleApiErrors.NotAdmin);
 		}
 
 		readonly string m_category;

@@ -6,10 +6,11 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using Facility.Core.Http;
 using Facility.ExampleApi.Http;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.ExampleApi.UnitTests
 {
@@ -30,7 +31,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.ShouldBeEquivalent(error);
+			result.Error.Should().BeEquivalentTo(error);
 		}
 
 		[Test]
@@ -45,7 +46,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.ShouldBeEquivalent(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.BadGateway));
+			result.Error.Should().BeEquivalentTo(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.BadGateway));
 		}
 
 		[Test]
@@ -60,7 +61,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.ShouldBeEquivalent(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.NotFound));
+			result.Error.Should().BeEquivalentTo(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.NotFound));
 		}
 
 		[Test]
@@ -75,7 +76,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.Code.ShouldBe(ServiceErrors.InvalidResponse);
+			result.Error.Code.Should().Be(ServiceErrors.InvalidResponse);
 		}
 
 		[Test]
@@ -90,7 +91,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.Code.ShouldBe(ServiceErrors.InvalidResponse);
+			result.Error.Code.Should().Be(ServiceErrors.InvalidResponse);
 		}
 
 		private static IExampleApi CreateTestService(Func<HttpRequestMessage, HttpResponseMessage> sendAsync)

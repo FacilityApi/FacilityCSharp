@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests
 {
@@ -18,9 +18,9 @@ namespace Facility.Core.UnitTests
 			});
 
 			var clone = ServiceDataUtility.Clone(dto);
-			clone.ShouldNotBeSameAs(dto);
-			clone.ErrorMapValue.ShouldNotBeSameAs(dto.ErrorMapValue);
-			clone.IsEquivalentTo(dto).ShouldBe(true);
+			clone.Should().NotBeSameAs(dto);
+			clone.ErrorMapValue.Should().NotBeSameAs(dto.ErrorMapValue);
+			clone.IsEquivalentTo(dto).Should().Be(true);
 		}
 	}
 }

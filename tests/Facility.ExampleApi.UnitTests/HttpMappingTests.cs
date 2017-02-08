@@ -4,10 +4,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using Facility.Core.Http;
 using Facility.ExampleApi.InMemory;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.ExampleApi.UnitTests
 {
@@ -19,8 +20,8 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets?q=" + InMemoryExampleApiRepository.SampleWidgets[1].Name);
-			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<GetWidgetsResponseDto>(response.Content)).Value.Widgets[0].ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[1]);
+			response.StatusCode.Should().Be(HttpStatusCode.OK);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<GetWidgetsResponseDto>(response.Content)).Value.Widgets[0].Should().BeEquivalentTo(InMemoryExampleApiRepository.SampleWidgets[1]);
 		}
 
 		[Test]
@@ -28,8 +29,8 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets/" + InMemoryExampleApiRepository.SampleWidgets[0].Id);
-			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.ShouldBeEquivalent(InMemoryExampleApiRepository.SampleWidgets[0]);
+			response.StatusCode.Should().Be(HttpStatusCode.OK);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.Should().BeEquivalentTo(InMemoryExampleApiRepository.SampleWidgets[0]);
 		}
 
 		[Test]
@@ -37,7 +38,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets/xyzzy");
-			response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 		[Test]
@@ -46,8 +47,8 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var widget = new WidgetDto();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", JsonHttpContentSerializer.Instance.CreateHttpContent(widget));
-			response.StatusCode.ShouldBe(HttpStatusCode.Created);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.Id.ShouldNotBe(null);
+			response.StatusCode.Should().Be(HttpStatusCode.Created);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.Id.Should().NotBeNull();
 		}
 
 		[Test]
@@ -55,7 +56,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.DeleteAsync("http://local.example.com/v1/widgets/" + InMemoryExampleApiRepository.SampleWidgets[0].Id);
-			response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+			response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 		}
 
 		[Test]
@@ -63,7 +64,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.DeleteAsync("http://local.example.com/v1/widgets/xyzzy");
-			response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 		[Test]
@@ -71,8 +72,8 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("<html></html>", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
-			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.Should().Be(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
@@ -80,8 +81,8 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("{\"name\":\"xyzzy\"", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
-			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.Should().Be(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
@@ -89,8 +90,8 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("{\"name\":{}}", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
-			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.ShouldBe(ServiceErrors.InvalidRequest);
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<ServiceErrorDto>(response.Content)).Value.Code.Should().Be(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
@@ -98,7 +99,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets", new StringContent("{\"name\":\"xyzzy\",\"notInTheSpec\":42}", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
-			response.StatusCode.ShouldBe(HttpStatusCode.Created);
+			response.StatusCode.Should().Be(HttpStatusCode.Created);
 		}
 
 		[Test]
@@ -106,7 +107,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new StringContent("{}", Encoding.UTF8, HttpServiceUtility.JsonMediaType));
-			response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
+			response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
 		}
 
 		[Test]
@@ -114,7 +115,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new ByteArrayContent(new byte[0]));
-			response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
 	}
 }

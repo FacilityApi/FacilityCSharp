@@ -3,8 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.ExampleApi.UnitTests
 {
@@ -31,9 +32,9 @@ namespace Facility.ExampleApi.UnitTests
 			var service = TestUtility.CreateService(m_category);
 			var widget = new WidgetDto(name: "Test Widget");
 			var newWidget = (await service.CreateWidgetAsync(widget)).Value.Widget;
-			newWidget.Id.ShouldNotBe(null);
+			newWidget.Id.Should().NotBeNull();
 			widget = new WidgetDto(id: newWidget.Id, name: widget.Name);
-			newWidget.ShouldBeEquivalent(widget);
+			newWidget.Should().BeEquivalentTo(widget);
 		}
 
 		[Test]
@@ -42,16 +43,16 @@ namespace Facility.ExampleApi.UnitTests
 			var service = TestUtility.CreateService(m_category);
 			var widget = new WidgetDto();
 			var newWidget = (await service.CreateWidgetAsync(widget)).Value.Widget;
-			newWidget.Id.ShouldNotBe(null);
+			newWidget.Id.Should().NotBeNull();
 			widget = new WidgetDto(id: newWidget.Id, name: widget.Name);
-			newWidget.ShouldBeEquivalent(widget);
+			newWidget.Should().BeEquivalentTo(widget);
 		}
 
 		[Test]
 		public async Task MissingWidget_BadRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.CreateWidgetAsync(widget: null)).ShouldBeFailure(ServiceErrors.CreateRequestFieldRequired("widget"));
+			(await service.CreateWidgetAsync(widget: null)).Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("widget"));
 		}
 
 		readonly string m_category;

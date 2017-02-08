@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using Facility.ExampleApi.InMemory;
 using NUnit.Framework;
 
@@ -29,21 +30,21 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task MissingIds_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(ids: null)).ShouldBeFailure(ServiceErrors.CreateRequestFieldRequired("ids"));
+			(await service.GetWidgetBatchAsync(ids: null)).Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("ids"));
 		}
 
 		[Test]
 		public async Task EmptyIds_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(ids: new string[0])).ShouldBeFailure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
+			(await service.GetWidgetBatchAsync(ids: new string[0])).Should().BeFailure(ExampleApiErrors.CreateInvalidRequestMissingWidgetIds());
 		}
 
 		[Test]
 		public async Task BlankId_Null()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(new[] { "" })).ShouldBeSuccess(
+			(await service.GetWidgetBatchAsync(new[] { "" })).Should().BeSuccess(
 				new GetWidgetBatchResponseDto
 				{
 					Results = new[] { ServiceResult.Failure(ExampleApiErrors.CreateInvalidRequestMissingWidgetId()).Cast<WidgetDto>() }
@@ -54,7 +55,7 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NotFoundId_Null()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetBatchAsync(new[] { "xyzzy" })).ShouldBeSuccess(
+			(await service.GetWidgetBatchAsync(new[] { "xyzzy" })).Should().BeSuccess(
 				new GetWidgetBatchResponseDto
 				{
 					Results = new[] { ServiceResult.Failure(ExampleApiErrors.CreateNotFoundWidget("xyzzy")).Cast<WidgetDto>() }
@@ -66,7 +67,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var service = TestUtility.CreateService(m_category);
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
-			(await service.GetWidgetBatchAsync(new[] { widget.Id })).ShouldBeSuccess(
+			(await service.GetWidgetBatchAsync(new[] { widget.Id })).Should().BeSuccess(
 				new GetWidgetBatchResponseDto
 				{
 					Results = new[] { ServiceResult.Success(widget) }
@@ -79,7 +80,7 @@ namespace Facility.ExampleApi.UnitTests
 			var service = TestUtility.CreateService(m_category);
 			var widget1 = InMemoryExampleApiRepository.SampleWidgets[0];
 			var widget2 = InMemoryExampleApiRepository.SampleWidgets[1];
-			(await service.GetWidgetBatchAsync(new[] { widget2.Id, "xyzzy", widget1.Id })).ShouldBeSuccess(
+			(await service.GetWidgetBatchAsync(new[] { widget2.Id, "xyzzy", widget1.Id })).Should().BeSuccess(
 				new GetWidgetBatchResponseDto
 				{
 					Results = new[]

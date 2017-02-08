@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using Facility.ExampleApi.InMemory;
 using NUnit.Framework;
 
@@ -29,21 +30,21 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NullId_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.DeleteWidgetAsync(id: null)).ShouldBeFailure(ServiceErrors.InvalidRequest);
+			(await service.DeleteWidgetAsync(id: null)).Should().BeFailure(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
 		public async Task BlankId_NotFound()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.DeleteWidgetAsync(id: "")).ShouldBeFailure(ServiceErrors.InvalidRequest);
+			(await service.DeleteWidgetAsync(id: "")).Should().BeFailure(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
 		public async Task NotFoundId_NotFound()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.DeleteWidgetAsync(id: "xyzzy")).ShouldBeFailure(ExampleApiErrors.CreateNotFoundWidget("xyzzy"));
+			(await service.DeleteWidgetAsync(id: "xyzzy")).Should().BeFailure(ExampleApiErrors.CreateNotFoundWidget("xyzzy"));
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var service = TestUtility.CreateService(m_category);
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
-			(await service.DeleteWidgetAsync(id: widget.Id)).ShouldBeSuccess(new DeleteWidgetResponseDto());
+			(await service.DeleteWidgetAsync(id: widget.Id)).Should().BeSuccess(new DeleteWidgetResponseDto());
 		}
 
 		readonly string m_category;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests
 {
@@ -11,7 +11,7 @@ namespace Facility.Core.UnitTests
 		public void ToStringUsesJson()
 		{
 			var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-			dto.ToString().ShouldBe(@"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}");
+			dto.ToString().Should().Be(@"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}");
 		}
 
 		[Test]
@@ -20,17 +20,17 @@ namespace Facility.Core.UnitTests
 			var empty = new TestDto();
 			var full = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
 
-			empty.IsEquivalentTo(null).ShouldBe(false);
-			empty.IsEquivalentTo(empty).ShouldBe(true);
-			empty.IsEquivalentTo(new TestDto()).ShouldBe(true);
-			empty.IsEquivalentTo(full).ShouldBe(false);
-			full.IsEquivalentTo(new TestDto { Id = 3 }).ShouldBe(false);
+			empty.IsEquivalentTo(null).Should().BeFalse();
+			empty.IsEquivalentTo(empty).Should().BeTrue();
+			empty.IsEquivalentTo(new TestDto()).Should().BeTrue();
+			empty.IsEquivalentTo(full).Should().BeFalse();
+			full.IsEquivalentTo(new TestDto { Id = 3 }).Should().BeFalse();
 
-			full.IsEquivalentTo(null).ShouldBe(false);
-			full.IsEquivalentTo(empty).ShouldBe(false);
-			full.IsEquivalentTo(new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } }).ShouldBe(true);
-			full.IsEquivalentTo(full).ShouldBe(true);
-			full.IsEquivalentTo(new TestDto { Id = 3 }).ShouldBe(false);
+			full.IsEquivalentTo(null).Should().BeFalse();
+			full.IsEquivalentTo(empty).Should().BeFalse();
+			full.IsEquivalentTo(new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } }).Should().BeTrue();
+			full.IsEquivalentTo(full).Should().BeTrue();
+			full.IsEquivalentTo(new TestDto { Id = 3 }).Should().BeFalse();
 		}
 
 		[Test]
@@ -38,9 +38,9 @@ namespace Facility.Core.UnitTests
 		{
 			var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
 			var second = ServiceDataUtility.Clone(first);
-			first.IsEquivalentTo(second).ShouldBe(true);
+			first.IsEquivalentTo(second).Should().Be(true);
 			second.Id += 1;
-			first.IsEquivalentTo(second).ShouldBe(false);
+			first.IsEquivalentTo(second).Should().Be(false);
 		}
 
 		[SuppressMessage("ReSharper", "All", Justification = "unit test")]

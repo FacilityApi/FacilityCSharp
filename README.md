@@ -9,6 +9,10 @@
 
 A library for consuming/implementing Facility APIs. [![NuGet](https://img.shields.io/nuget/v/Facility.Core.svg)](https://www.nuget.org/packages/Facility.Core)
 
+## Facility.Core.Assertions
+
+FluentAssertions extensions for Facility unit tests. [![NuGet](https://img.shields.io/nuget/v/Facility.Core.Assertions.svg)](https://www.nuget.org/packages/Facility.Core.Assertions)
+
 ## fsdgencsharp
 
 A tool that generates C# for a Facility Service Definition. [![NuGet](https://img.shields.io/nuget/v/fsdgencsharp.svg)](https://www.nuget.org/packages/fsdgencsharp)

@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core.Http;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests.Http
 {
@@ -18,7 +18,7 @@ namespace Facility.Core.UnitTests.Http
 			var aspect = UserAgentClientAspect.Create(header);
 			var httpRequest = new HttpRequestMessage();
 			await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
-			httpRequest.Headers.UserAgent.ToString().ShouldBe(header);
+			httpRequest.Headers.UserAgent.ToString().Should().Be(header);
 		}
 
 		private class TestDto : ServiceDto<TestDto>

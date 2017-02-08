@@ -1,6 +1,6 @@
 ﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests
 {
@@ -20,8 +20,8 @@ namespace Facility.Core.UnitTests
 			}
 			catch (ServiceException exception)
 			{
-				exception.Error.Code.ShouldBe(code);
-				exception.Message.ShouldBe(message);
+				exception.Error.Code.Should().Be(code);
+				exception.Message.Should().Be(message);
 
 				try
 				{
@@ -29,9 +29,9 @@ namespace Facility.Core.UnitTests
 				}
 				catch (ServiceException outerException)
 				{
-					outerException.Error.Code.ShouldBe(outerCode);
-					outerException.Message.ShouldBe(outerMessage);
-					outerException.InnerException.Message.ShouldBe(message);
+					outerException.Error.Code.Should().Be(outerCode);
+					outerException.Message.Should().Be(outerMessage);
+					outerException.InnerException.Message.Should().Be(message);
 				}
 			}
 		}

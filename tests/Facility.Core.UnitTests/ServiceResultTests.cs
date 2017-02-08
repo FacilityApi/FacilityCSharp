@@ -1,7 +1,8 @@
 ﻿using System;
+using Facility.Core.Assertions;
+using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests
 {
@@ -11,9 +12,9 @@ namespace Facility.Core.UnitTests
 		public void VoidSuccess()
 		{
 			var result = ServiceResult.Success();
-			result.IsSuccess.ShouldBe(true);
-			result.IsFailure.ShouldBe(false);
-			result.Error.ShouldBe(null);
+			result.IsSuccess.Should().BeTrue();
+			result.IsFailure.Should().BeFalse();
+			result.Error.Should().BeNull();
 			result.Verify();
 		}
 
@@ -21,24 +22,24 @@ namespace Facility.Core.UnitTests
 		public void Int32Success()
 		{
 			var result = ServiceResult.Success(1);
-			result.IsSuccess.ShouldBe(true);
-			result.IsFailure.ShouldBe(false);
-			result.Error.ShouldBe(null);
+			result.IsSuccess.Should().BeTrue();
+			result.IsFailure.Should().BeFalse();
+			result.Error.Should().BeNull();
 			result.Verify();
-			result.Value.ShouldBe(1);
-			result.GetValueOrDefault().ShouldBe(1);
+			result.Value.Should().Be(1);
+			result.GetValueOrDefault().Should().Be(1);
 		}
 
 		[Test]
 		public void NullSuccess()
 		{
 			var result = ServiceResult.Success((string) null);
-			result.IsSuccess.ShouldBe(true);
-			result.IsFailure.ShouldBe(false);
-			result.Error.ShouldBe(null);
+			result.IsSuccess.Should().BeTrue();
+			result.IsFailure.Should().BeFalse();
+			result.Error.Should().BeNull();
 			result.Verify();
-			result.Value.ShouldBe(null);
-			result.GetValueOrDefault().ShouldBe(null);
+			result.Value.Should().BeNull();
+			result.GetValueOrDefault().Should().BeNull();
 		}
 
 		[Test]
@@ -51,9 +52,9 @@ namespace Facility.Core.UnitTests
 		public void EmptyFailure()
 		{
 			var result = ServiceResult.Failure(new ServiceErrorDto());
-			result.IsSuccess.ShouldBe(false);
-			result.IsFailure.ShouldBe(true);
-			result.Error.ShouldBeEquivalent(new ServiceErrorDto());
+			result.IsSuccess.Should().BeFalse();
+			result.IsFailure.Should().BeTrue();
+			result.Error.Should().BeEquivalentTo(new ServiceErrorDto());
 			try
 			{
 				result.Verify();
@@ -61,7 +62,7 @@ namespace Facility.Core.UnitTests
 			}
 			catch (ServiceException exception)
 			{
-				exception.Error.ShouldBeEquivalent(new ServiceErrorDto());
+				exception.Error.Should().BeEquivalentTo(new ServiceErrorDto());
 			}
 		}
 
@@ -69,9 +70,9 @@ namespace Facility.Core.UnitTests
 		public void Int32Failure()
 		{
 			ServiceResult<int> result = ServiceResult.Failure(new ServiceErrorDto("Int32Failure"));
-			result.IsSuccess.ShouldBe(false);
-			result.IsFailure.ShouldBe(true);
-			result.Error.ShouldBeEquivalent(new ServiceErrorDto("Int32Failure"));
+			result.IsSuccess.Should().BeFalse();
+			result.IsFailure.Should().BeTrue();
+			result.Error.Should().BeEquivalentTo(new ServiceErrorDto("Int32Failure"));
 			try
 			{
 				result.Verify();
@@ -79,16 +80,16 @@ namespace Facility.Core.UnitTests
 			}
 			catch (ServiceException exception)
 			{
-				exception.Error.ShouldBeEquivalent(new ServiceErrorDto("Int32Failure"));
+				exception.Error.Should().BeEquivalentTo(new ServiceErrorDto("Int32Failure"));
 			}
 			try
 			{
-				result.Value.ShouldBe(0);
+				result.Value.Should().Be(0);
 				throw new InvalidOperationException();
 			}
 			catch (ServiceException exception)
 			{
-				exception.Error.ShouldBeEquivalent(new ServiceErrorDto("Int32Failure"));
+				exception.Error.Should().BeEquivalentTo(new ServiceErrorDto("Int32Failure"));
 			}
 		}
 
@@ -96,40 +97,40 @@ namespace Facility.Core.UnitTests
 		public void AlwaysCastFailure()
 		{
 			ServiceResultFailure failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
-			failure.Cast<int>().Error.ShouldBeEquivalent(new ServiceErrorDto("Failure"));
+			failure.Cast<int>().Error.Should().BeEquivalentTo(new ServiceErrorDto("Failure"));
 			ServiceResult noValue = ServiceResult.Failure(new ServiceErrorDto("NoValue"));
-			noValue.Cast<int>().Error.ShouldBeEquivalent(new ServiceErrorDto("NoValue"));
+			noValue.Cast<int>().Error.Should().BeEquivalentTo(new ServiceErrorDto("NoValue"));
 			ServiceResult<string> stringValue = ServiceResult.Failure(new ServiceErrorDto("StringValue"));
-			stringValue.Cast<int>().Error.ShouldBeEquivalent(new ServiceErrorDto("StringValue"));
+			stringValue.Cast<int>().Error.Should().BeEquivalentTo(new ServiceErrorDto("StringValue"));
 		}
 
 		[Test]
 		public void ReferenceCasts()
 		{
 			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(new ArgumentNullException());
-			result.Value.GetType().ShouldBe(typeof(ArgumentNullException));
-			result.Cast<ArgumentNullException>().Value.GetType().ShouldBe(typeof(ArgumentNullException));
-			result.Cast<ArgumentException>().Value.GetType().ShouldBe(typeof(ArgumentNullException));
-			result.Cast<Exception>().Value.GetType().ShouldBe(typeof(ArgumentNullException));
-			result.Cast<object>().Value.GetType().ShouldBe(typeof(ArgumentNullException));
-			Assert.Throws<InvalidCastException>(() => result.Cast<InvalidOperationException>().Value.GetType().ShouldBe(typeof(ArgumentNullException)));
+			result.Value.GetType().Should().Be(typeof(ArgumentNullException));
+			result.Cast<ArgumentNullException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
+			result.Cast<ArgumentException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
+			result.Cast<Exception>().Value.GetType().Should().Be(typeof(ArgumentNullException));
+			result.Cast<object>().Value.GetType().Should().Be(typeof(ArgumentNullException));
+			Assert.Throws<InvalidCastException>(() => result.Cast<InvalidOperationException>().Value.GetType().Should().Be(typeof(ArgumentNullException)));
 		}
 
 		[Test]
 		public void ValueCasts()
 		{
 			ServiceResult<long> result = ServiceResult.Success(1L);
-			result.Value.GetType().ShouldBe(typeof(long));
-			result.Cast<long>().Value.GetType().ShouldBe(typeof(long));
-			Assert.Throws<InvalidCastException>(() => result.Cast<int>().Value.ShouldBe(1));
+			result.Value.GetType().Should().Be(typeof(long));
+			result.Cast<long>().Value.GetType().Should().Be(typeof(long));
+			Assert.Throws<InvalidCastException>(() => result.Cast<int>().Value.Should().Be(1));
 		}
 
 		[Test]
 		public void NullCasts()
 		{
 			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(null);
-			result.Cast<InvalidOperationException>().Value.ShouldBe(null);
-			result.Cast<long?>().Value.ShouldBe(null);
+			result.Cast<InvalidOperationException>().Value.Should().BeNull();
+			result.Cast<long?>().Value.Should().BeNull();
 		}
 
 		[Test]
@@ -144,20 +145,20 @@ namespace Facility.Core.UnitTests
 		{
 			var error = new ServiceErrorDto("Error");
 			ServiceResultFailure failure = ServiceResult.Failure(error);
-			failure.AsFailure().Error.ShouldBe(error);
+			failure.AsFailure().Error.Should().BeEquivalentTo(error);
 			ServiceResult failedResult = ServiceResult.Failure(error);
-			failedResult.AsFailure().Error.ShouldBe(error);
+			failedResult.AsFailure().Error.Should().BeEquivalentTo(error);
 			ServiceResult<int> failedValue = ServiceResult.Failure(error);
-			failedValue.AsFailure().Error.ShouldBe(error);
+			failedValue.AsFailure().Error.Should().BeEquivalentTo(error);
 		}
 
 		[Test]
 		public void SuccessAsFailure()
 		{
 			ServiceResult successResult = ServiceResult.Success();
-			successResult.AsFailure().ShouldBe(null);
+			successResult.AsFailure().Should().BeNull();
 			ServiceResult<int> successValue = ServiceResult.Success(1);
-			successValue.AsFailure().ShouldBe(null);
+			successValue.AsFailure().Should().BeNull();
 		}
 
 		[Test]
@@ -165,14 +166,14 @@ namespace Facility.Core.UnitTests
 		{
 			var error = new ServiceErrorDto("Error");
 			ServiceResult<int> failedValue = ServiceResult.Failure(error);
-			failedValue.Map(x => x.ToString()).Error.ShouldBe(error);
+			failedValue.Map(x => x.ToString()).Error.Should().BeEquivalentTo(error);
 		}
 
 		[Test]
 		public void MapSuccess()
 		{
 			ServiceResult<int> successValue = ServiceResult.Success(1);
-			successValue.Map(x => x.ToString()).Value.ShouldBe("1");
+			successValue.Map(x => x.ToString()).Value.Should().Be("1");
 		}
 
 		[Test]
@@ -180,9 +181,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Success();
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{}");
+			json.Should().Be("{}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -190,9 +191,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto());
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"error\":{}}");
+			json.Should().Be("{\"error\":{}}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -200,9 +201,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
+			json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -210,9 +211,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Success(1337);
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"value\":1337}");
+			json.Should().Be("{\"value\":1337}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -220,9 +221,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto());
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"error\":{}}");
+			json.Should().Be("{\"error\":{}}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int?>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -230,9 +231,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
+			json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -240,9 +241,9 @@ namespace Facility.Core.UnitTests
 		{
 			var before = ServiceResult.Success(default(int?));
 			string json = ServiceJsonUtility.ToJson(before);
-			json.ShouldBe("{\"value\":null}");
+			json.Should().Be("{\"value\":null}");
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int?>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -251,7 +252,7 @@ namespace Facility.Core.UnitTests
 			var before = ServiceResult.Success(default(int?));
 			const string json = "{}";
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int?>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -267,7 +268,7 @@ namespace Facility.Core.UnitTests
 			var before = ServiceResult.Success(1337);
 			string json = "{\"values\":1337,\"value\":1337,\"valuex\":1337}";
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 
 		[Test]
@@ -276,7 +277,7 @@ namespace Facility.Core.UnitTests
 			var before = ServiceResult.Failure(new ServiceErrorDto());
 			string json = "{\"values\":1337,\"error\":{},\"valuex\":1337}";
 			var after = ServiceJsonUtility.FromJson<ServiceResult<int>>(json);
-			after.ShouldBeEquivalent(before);
+			after.Should().BeEquivalentTo(before);
 		}
 	}
 }

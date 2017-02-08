@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
+using Facility.Core.Assertions;
 using Facility.Core.Http;
 using Facility.ExampleApi.InMemory;
 using NUnit.Framework;
@@ -30,21 +31,21 @@ namespace Facility.ExampleApi.UnitTests
 		public async Task NullId_InvalidRequest()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetAsync(id: null)).ShouldBeFailure(ServiceErrors.InvalidRequest);
+			(await service.GetWidgetAsync(id: null)).Should().BeFailure(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
 		public async Task BlankId_NotFound()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetAsync(id: "")).ShouldBeFailure(ServiceErrors.InvalidRequest);
+			(await service.GetWidgetAsync(id: "")).Should().BeFailure(ServiceErrors.InvalidRequest);
 		}
 
 		[Test]
 		public async Task NotFoundId_NotFound()
 		{
 			var service = TestUtility.CreateService(m_category);
-			(await service.GetWidgetAsync(id: "xyzzy")).ShouldBeFailure(ExampleApiErrors.CreateNotFoundWidget("xyzzy"));
+			(await service.GetWidgetAsync(id: "xyzzy")).Should().BeFailure(ExampleApiErrors.CreateNotFoundWidget("xyzzy"));
 		}
 
 		[Test]
@@ -54,7 +55,7 @@ namespace Facility.ExampleApi.UnitTests
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
 			string eTag = ExampleApiService.CreateWidgetETag(widget);
 			(await service.GetWidgetAsync(id: widget.Id))
-				.ShouldBeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
+				.Should().BeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
 		}
 
 		[Test]
@@ -64,7 +65,7 @@ namespace Facility.ExampleApi.UnitTests
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
 			string eTag = ExampleApiService.CreateWidgetETag(widget);
 			(await service.GetWidgetAsync(new GetWidgetRequestDto { Id = widget.Id, IfNoneMatch = eTag }, CancellationToken.None))
-				.ShouldBeSuccess(new GetWidgetResponseDto { NotModified = true, ETag = eTag });
+				.Should().BeSuccess(new GetWidgetResponseDto { NotModified = true, ETag = eTag });
 		}
 
 		[Test]
@@ -74,7 +75,7 @@ namespace Facility.ExampleApi.UnitTests
 			var widget = InMemoryExampleApiRepository.SampleWidgets[0];
 			string eTag = ExampleApiService.CreateWidgetETag(widget);
 			(await service.GetWidgetAsync(new GetWidgetRequestDto { Id = widget.Id, IfNoneMatch = "\"xyzzy\"" }, CancellationToken.None))
-				.ShouldBeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
+				.Should().BeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
 		}
 
 		[Test]
@@ -85,9 +86,9 @@ namespace Facility.ExampleApi.UnitTests
 			string eTag = ExampleApiService.CreateWidgetETag(widget);
 			var result = await service.GetWidgetAsync(new GetWidgetRequestDto { Id = widget.Id, IfNoneMatch = "xyzzy" }, CancellationToken.None);
 			if (m_category == "InMemory")
-				result.ShouldBeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
+				result.Should().BeSuccess(new GetWidgetResponseDto { Widget = widget, ETag = eTag });
 			else
-				result.ShouldBeFailure(HttpServiceErrors.CreateHeaderInvalidFormat("If-None-Match"));
+				result.Should().BeFailure(HttpServiceErrors.CreateHeaderInvalidFormat("If-None-Match"));
 		}
 
 		readonly string m_category;

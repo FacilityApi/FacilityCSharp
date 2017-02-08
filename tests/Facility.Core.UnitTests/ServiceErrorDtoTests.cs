@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Core.UnitTests
 {
@@ -9,7 +9,7 @@ namespace Facility.Core.UnitTests
 		[Test]
 		public void ToStringUsesJson()
 		{
-			s_error.ToString().ShouldBe(@"{""code"":""Test"",""message"":""Message."",""details"":{""Some"":""details.""},""innerError"":{""code"":""Inner""}}");
+			s_error.ToString().Should().Be(@"{""code"":""Test"",""message"":""Message."",""details"":{""Some"":""details.""},""innerError"":{""code"":""Inner""}}");
 		}
 
 		[Test]
@@ -18,17 +18,17 @@ namespace Facility.Core.UnitTests
 			var empty = new ServiceErrorDto();
 			var full = s_error;
 
-			empty.IsEquivalentTo(null).ShouldBe(false);
-			empty.IsEquivalentTo(empty).ShouldBe(true);
-			empty.IsEquivalentTo(new ServiceErrorDto()).ShouldBe(true);
-			empty.IsEquivalentTo(full).ShouldBe(false);
-			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).ShouldBe(false);
+			empty.IsEquivalentTo(null).Should().BeFalse();
+			empty.IsEquivalentTo(empty).Should().BeTrue();
+			empty.IsEquivalentTo(new ServiceErrorDto()).Should().BeTrue();
+			empty.IsEquivalentTo(full).Should().BeFalse();
+			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 
-			full.IsEquivalentTo(null).ShouldBe(false);
-			full.IsEquivalentTo(empty).ShouldBe(false);
-			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code, s_error.Message) { Details = s_error.Details, InnerError = s_error.InnerError }).ShouldBe(true);
-			full.IsEquivalentTo(full).ShouldBe(true);
-			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).ShouldBe(false);
+			full.IsEquivalentTo(null).Should().BeFalse();
+			full.IsEquivalentTo(empty).Should().BeFalse();
+			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code, s_error.Message) { Details = s_error.Details, InnerError = s_error.InnerError }).Should().BeTrue();
+			full.IsEquivalentTo(full).Should().BeTrue();
+			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 		}
 
 		readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
