@@ -44,9 +44,7 @@
     <Compile Include="AssertionsUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDtoAssertions.cs" />
-    <Compile Include="ServiceDtoCollectionAssertions.cs" />
     <Compile Include="ServiceResultAssertions.cs" />
-    <Compile Include="ServiceResultCollectionAssertions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">

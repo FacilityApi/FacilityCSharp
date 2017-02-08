@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Facility.Core;
+using FluentAssertions.Collections;
 
 namespace Facility.Core.Assertions
 {
@@ -26,23 +26,6 @@ namespace Facility.Core.Assertions
 		}
 
 		/// <summary>
-		/// Returns a <see cref="ServiceDtoCollectionAssertions" /> object that can be used to assert the current <see cref="ServiceDto" /> collection.
-		/// </summary>
-		public static ServiceDtoCollectionAssertions Should(this IEnumerable<ServiceDto> dtos)
-		{
-			return new ServiceDtoCollectionAssertions(dtos);
-		}
-
-		/// <summary>
-		/// Returns a <see cref="ServiceDtoCollectionAssertions{T}" /> object that can be used to assert the current <see cref="ServiceDto{T}" /> collection.
-		/// </summary>
-		public static ServiceDtoCollectionAssertions<T> Should<T>(this IEnumerable<ServiceDto<T>> dtos)
-			where T : ServiceDto<T>
-		{
-			return new ServiceDtoCollectionAssertions<T>(dtos);
-		}
-
-		/// <summary>
 		/// Returns a <see cref="ServiceResultAssertions" /> object that can be used to assert the current <see cref="ServiceResult" />.
 		/// </summary>
 		public static ServiceResultAssertions Should(this ServiceResult result)
@@ -59,19 +42,39 @@ namespace Facility.Core.Assertions
 		}
 
 		/// <summary>
-		/// Returns a <see cref="ServiceResultCollectionAssertions" /> object that can be used to assert the current <see cref="ServiceResult" /> collection.
+		/// Asserts that the subject DTOs are equivalent to the expected DTOs.
 		/// </summary>
-		public static ServiceResultCollectionAssertions Should(this IEnumerable<ServiceResult> results)
+		public static void BeDtos<T>(this GenericCollectionAssertions<T> assertions, params T[] expected)
+			where T : ServiceDto
 		{
-			return new ServiceResultCollectionAssertions(results);
+			assertions.Equal(expected, ServiceDataUtility.AreEquivalentDtos);
 		}
 
 		/// <summary>
-		/// Returns a <see cref="ServiceResultCollectionAssertions" /> object that can be used to assert the current <see cref="ServiceResult" /> collection.
+		/// Asserts that the subject DTOs are equivalent to the expected DTOs.
 		/// </summary>
-		public static ServiceResultCollectionAssertions<T> Should<T>(this IEnumerable<ServiceResult<T>> results)
+		public static void BeDtos<T>(this GenericCollectionAssertions<T> assertions, IEnumerable<T> expected)
+			where T : ServiceDto
 		{
-			return new ServiceResultCollectionAssertions<T>(results);
+			assertions.Equal(expected, ServiceDataUtility.AreEquivalentDtos);
+		}
+
+		/// <summary>
+		/// Asserts that the subject results are equivalent to the expected results.
+		/// </summary>
+		public static void BeResults<T>(this GenericCollectionAssertions<T> assertions, params T[] expected)
+			where T : ServiceResult
+		{
+			assertions.Equal(expected, ServiceDataUtility.AreEquivalentResults);
+		}
+
+		/// <summary>
+		/// Asserts that the subject results are equivalent to the expected results.
+		/// </summary>
+		public static void BeResults<T>(this GenericCollectionAssertions<T> assertions, IEnumerable<T> expected)
+			where T : ServiceResult
+		{
+			assertions.Equal(expected, ServiceDataUtility.AreEquivalentResults);
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using Facility.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 
