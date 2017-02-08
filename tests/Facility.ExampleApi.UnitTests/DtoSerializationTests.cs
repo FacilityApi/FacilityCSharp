@@ -367,7 +367,7 @@ namespace Facility.ExampleApi.UnitTests
 			string json = ServiceJsonUtility.ToJson(dto);
 			if (expectedJson != null)
 				json.Should().Be(expectedJson);
-			ServiceJsonUtility.FromJson<PreferenceDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<PreferenceDto>(json).Should().BeDto(dto);
 		}
 	}
 }

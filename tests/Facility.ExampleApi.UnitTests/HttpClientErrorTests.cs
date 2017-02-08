@@ -31,7 +31,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.Should().BeEquivalentTo(error);
+			result.Error.Should().BeDto(error);
 		}
 
 		[Test]
@@ -46,7 +46,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.Should().BeEquivalentTo(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.BadGateway));
+			result.Error.Should().BeDto(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.BadGateway));
 		}
 
 		[Test]
@@ -61,7 +61,7 @@ namespace Facility.ExampleApi.UnitTests
 			});
 
 			var result = await service.CreateWidgetAsync(new WidgetDto(name: "hi"));
-			result.Error.Should().BeEquivalentTo(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.NotFound));
+			result.Error.Should().BeDto(HttpServiceErrors.CreateErrorForStatusCode(HttpStatusCode.NotFound));
 		}
 
 		[Test]

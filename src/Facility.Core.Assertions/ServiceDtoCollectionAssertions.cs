@@ -23,7 +23,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Asserts that the subject results are equivalent to the expected results.
 		/// </summary>
-		public AndConstraint<TAssertions> BeEquivalentTo(params TServiceDto[] expected)
+		public AndConstraint<TAssertions> BeDtos(params TServiceDto[] expected)
 		{
 			Equal(expected, ServiceDataUtility.AreEquivalentDtos);
 			return new AndConstraint<TAssertions>((TAssertions) this);
@@ -32,7 +32,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Asserts that the subject results are equivalent to the expected results.
 		/// </summary>
-		public AndConstraint<TAssertions> BeEquivalentTo(IEnumerable<TServiceDto> expected)
+		public AndConstraint<TAssertions> BeDtos(IEnumerable<TServiceDto> expected)
 		{
 			Equal(expected, ServiceDataUtility.AreEquivalentDtos);
 			return new AndConstraint<TAssertions>((TAssertions) this);

@@ -21,7 +21,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets?q=" + InMemoryExampleApiRepository.SampleWidgets[1].Name);
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<GetWidgetsResponseDto>(response.Content)).Value.Widgets[0].Should().BeEquivalentTo(InMemoryExampleApiRepository.SampleWidgets[1]);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<GetWidgetsResponseDto>(response.Content)).Value.Widgets[0].Should().BeDto(InMemoryExampleApiRepository.SampleWidgets[1]);
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace Facility.ExampleApi.UnitTests
 			var httpClient = TestUtility.CreateTestHttpClient();
 			var response = await httpClient.GetAsync("http://local.example.com/v1/widgets/" + InMemoryExampleApiRepository.SampleWidgets[0].Id);
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
-			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.Should().BeEquivalentTo(InMemoryExampleApiRepository.SampleWidgets[0]);
+			(await JsonHttpContentSerializer.Instance.ReadHttpContentAsync<WidgetDto>(response.Content)).Value.Should().BeDto(InMemoryExampleApiRepository.SampleWidgets[0]);
 		}
 
 		[Test]

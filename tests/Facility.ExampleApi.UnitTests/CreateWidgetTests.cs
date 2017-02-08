@@ -34,7 +34,7 @@ namespace Facility.ExampleApi.UnitTests
 			var newWidget = (await service.CreateWidgetAsync(widget)).Value.Widget;
 			newWidget.Id.Should().NotBeNull();
 			widget = new WidgetDto(id: newWidget.Id, name: widget.Name);
-			newWidget.Should().BeEquivalentTo(widget);
+			newWidget.Should().BeDto(widget);
 		}
 
 		[Test]
@@ -45,7 +45,7 @@ namespace Facility.ExampleApi.UnitTests
 			var newWidget = (await service.CreateWidgetAsync(widget)).Value.Widget;
 			newWidget.Id.Should().NotBeNull();
 			widget = new WidgetDto(id: newWidget.Id, name: widget.Name);
-			newWidget.Should().BeEquivalentTo(widget);
+			newWidget.Should().BeDto(widget);
 		}
 
 		[Test]

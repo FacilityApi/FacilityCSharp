@@ -15,7 +15,7 @@ namespace Facility.Core.UnitTests
 			string json = "{\"booleanValue\":true}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["booleanValue"].Type.Should().Be(JTokenType.Boolean);
@@ -29,7 +29,7 @@ namespace Facility.Core.UnitTests
 			string json = "{\"booleanMapValue\":{\"Key\":true}}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["booleanMapValue"].Type.Should().Be(JTokenType.Object);
@@ -43,7 +43,7 @@ namespace Facility.Core.UnitTests
 			string json = $"{{\"stringValue\":\"{dto.StringValue}\"}}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["stringValue"].Type.Should().Be(JTokenType.String);
@@ -57,7 +57,7 @@ namespace Facility.Core.UnitTests
 			string json = "{}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["stringValue"].Should().BeNull();
@@ -69,7 +69,7 @@ namespace Facility.Core.UnitTests
 		{
 			var dto = ValueDto.Create(true);
 			string json = "{\"booleanValue\":true,\"missing\":false}";
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 		}
 
 		[Test]
@@ -77,7 +77,7 @@ namespace Facility.Core.UnitTests
 		{
 			var dto = ValueDto.Create(true);
 			string json = "{\"$ref\":\"xyzzy\",\"booleanValue\":true}";
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 		}
 
 		[Test]
@@ -93,7 +93,7 @@ namespace Facility.Core.UnitTests
 			string json = "{\"errorArrayValue\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["errorArrayValue"].Type.Should().Be(JTokenType.Array);
@@ -114,7 +114,7 @@ namespace Facility.Core.UnitTests
 			string json = "{\"errorMapValue\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
 
 			ServiceJsonUtility.ToJson(dto).Should().Be(json);
-			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeEquivalentTo(dto);
+			ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 			var token = ServiceJsonUtility.FromJson<JToken>(json);
 			token["errorMapValue"].Type.Should().Be(JTokenType.Object);
