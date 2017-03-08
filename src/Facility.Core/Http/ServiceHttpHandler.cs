@@ -95,15 +95,14 @@ namespace Facility.Core.Http
 			HttpResponseMessage httpResponse;
 			if (error == null)
 			{
-				var responseMappings = (
-					from rm in mapping.ResponseMappings
-					let matches = rm.MatchesResponse(response)
-					where matches != false
-					orderby matches descending
-					select rm).ToList();
-				if (responseMappings.Count == 1)
+				var responseMappingGroups = mapping.ResponseMappings
+					.GroupBy(x => x.MatchesResponse(response))
+					.Where(x => x.Key != false)
+					.OrderByDescending(x => x.Key)
+					.ToList();
+				if (responseMappingGroups.Count >= 1 && responseMappingGroups[0].Count() == 1)
 				{
-					var responseMapping = responseMappings[0];
+					var responseMapping = responseMappingGroups[0].Single();
 					httpResponse = new HttpResponseMessage(responseMapping.StatusCode);
 
 					var headersResult = HttpServiceUtility.TryAddHeaders(httpResponse.Headers, mapping.GetResponseHeaders(response));
@@ -115,7 +114,7 @@ namespace Facility.Core.Http
 				}
 				else
 				{
-					throw new InvalidOperationException($"Found {responseMappings.Count} valid HTTP responses for {typeof(TResponse).Name}: {response}");
+					throw new InvalidOperationException($"Found {responseMappingGroups.Sum(x => x.Count())} valid HTTP responses for {typeof(TResponse).Name}: {response}");
 				}
 			}
 			else
