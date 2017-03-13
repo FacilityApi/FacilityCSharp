@@ -170,7 +170,7 @@ namespace Facility.CodeGen.CSharp
 					CSharpUtility.WriteObsoleteAttribute(code, enumInfo);
 
 					code.WriteLine($"[JsonConverter(typeof({enumName}JsonConverter))]");
-					code.WriteLine($"public struct {enumName} : IEquatable<{enumName}>");
+					code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
 						foreach (var enumValue in enumInfo.Values)
