@@ -226,6 +226,33 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine("return !left.Equals(right);");
 
 						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Returns true if the instance is equal to one of the defined values.");
+						code.WriteLine("public bool IsDefined()");
+						using (code.Block())
+						{
+							int count = enumInfo.Values.Count;
+							if (count == 0)
+							{
+								code.WriteLine("return false;");
+							}
+							else
+							{
+								IDisposable indent = null;
+								for (int index = 0; index < count; index++)
+								{
+									if (index == 0)
+									{
+										code.Write("return ");
+										indent = code.Indent();
+									}
+									code.Write($"Equals({CSharpUtility.GetEnumValueName(enumInfo.Values[index])})");
+									code.WriteLine(index == count - 1 ? ";" : " ||");
+								}
+								indent?.Dispose();
+							}
+						}
+
+						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
 						code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
 						using (code.Block())

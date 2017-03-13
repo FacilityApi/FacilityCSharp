@@ -72,6 +72,14 @@ namespace Facility.ExampleApi
 		}
 
 		/// <summary>
+		/// Returns true if the instance is equal to one of the defined values.
+		/// </summary>
+		public bool IsDefined()
+		{
+			return Equals(Unused);
+		}
+
+		/// <summary>
 		/// Used for JSON serialization.
 		/// </summary>
 		public sealed class ObsoleteEnumJsonConverter : ServiceEnumJsonConverter<ObsoleteEnum>

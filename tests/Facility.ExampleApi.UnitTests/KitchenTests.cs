@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Facility.Core.Assertions;
 using NUnit.Framework;
 
+#pragma warning disable 612
+
 namespace Facility.ExampleApi.UnitTests
 {
 	[TestFixture("InMemory")]
@@ -29,6 +31,13 @@ namespace Facility.ExampleApi.UnitTests
 		{
 			var service = TestUtility.CreateService(m_category);
 			(await service.KitchenAsync(new KitchenRequestDto(), CancellationToken.None)).Should().BeFailure(ExampleApiErrors.NotAdmin);
+		}
+
+		[TestCase("unused", true)]
+		[TestCase("used", false)]
+		public void ObsoleteEnum_IsDefined(string value, bool isDefined)
+		{
+			//new ObsoleteEnum(value).IsDefined().Should().Be(isDefined);
 		}
 
 		readonly string m_category;
