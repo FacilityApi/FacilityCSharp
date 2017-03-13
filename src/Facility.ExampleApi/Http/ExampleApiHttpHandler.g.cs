@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core.Http;
 
-#pragma warning disable 612 // member is obsolete
+#pragma warning disable 612, 618 // member is obsolete
 
 namespace Facility.ExampleApi.Http
 {

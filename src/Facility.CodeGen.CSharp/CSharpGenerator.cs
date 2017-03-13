@@ -1011,8 +1011,7 @@ namespace Facility.CodeGen.CSharp
 
 				code.WriteLine();
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
-				if (fieldInfo.IsObsolete())
-					code.WriteLine("[Obsolete]");
+				CSharpUtility.WriteObsoleteAttribute(code, fieldInfo);
 				if (propertyName != normalPropertyName)
 					code.WriteLine($"[JsonProperty(\"{fieldInfo.Name}\")]");
 				code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");

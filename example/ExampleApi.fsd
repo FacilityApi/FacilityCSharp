@@ -307,7 +307,7 @@ service ExampleApi
 
 		crazy: result<map<string[]>[]>[];
 
-		[obsolete]
+		[obsolete(message: "This field was never used.")]
 		oldField: string;
 	}
 }

@@ -7,7 +7,7 @@ using System.Net.Http;
 using Facility.Core;
 using Facility.Core.Http;
 
-#pragma warning disable 612 // member is obsolete
+#pragma warning disable 612, 618 // member is obsolete
 
 namespace Facility.ExampleApi.Http
 {

@@ -5,7 +5,7 @@ using Facility.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-#pragma warning disable 612 // member is obsolete
+#pragma warning disable 612, 618 // member is obsolete
 
 namespace Facility.ExampleApi
 {
@@ -23,7 +23,7 @@ namespace Facility.ExampleApi
 
 		public IReadOnlyList<ServiceResult<IReadOnlyList<IReadOnlyDictionary<string, IReadOnlyList<string>>>>> Crazy { get; set; }
 
-		[Obsolete]
+		[Obsolete("This field was never used.")]
 		public string OldField { get; set; }
 
 		/// <summary>

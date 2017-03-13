@@ -22,13 +22,16 @@ namespace Facility.CodeGen.CSharp
 
 		public static void WriteObsoletePragma(CodeWriter code)
 		{
-			code.WriteLine("#pragma warning disable 612 // member is obsolete");
+			code.WriteLine("#pragma warning disable 612, 618 // member is obsolete");
 		}
 
 		public static void WriteObsoleteAttribute(CodeWriter code, IServiceElementInfo element)
 		{
 			if (element.IsObsolete())
-				code.WriteLine("[Obsolete]");
+			{
+				string message = element.TryGetObsoleteMessage();
+				code.WriteLine(message != null ? $"[Obsolete({CreateString(message)})]" : "[Obsolete]");
+			}
 		}
 
 		public static void WriteUsings(CodeWriter code, IEnumerable<string> namespaceNames, string namespaceName)
