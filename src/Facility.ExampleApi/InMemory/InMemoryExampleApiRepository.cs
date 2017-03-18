@@ -47,6 +47,9 @@ namespace Facility.ExampleApi.InMemory
 					widgets = m_widgets.Values.Where(x => x.Name.Contains(request.Query)).ToList();
 			}
 
+			if (request.MinPrice != null)
+				widgets = m_widgets.Values.Where(x => x.Price >= request.MinPrice);
+
 			int total = widgets.Count();
 
 			Func<WidgetDto, string> keySelector;

@@ -39,6 +39,11 @@ namespace Facility.ExampleApi
 		public double? Weight { get; set; }
 
 		/// <summary>
+		/// The price of the widget.
+		/// </summary>
+		public decimal? Price { get; set; }
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(WidgetDto other)
@@ -46,7 +51,8 @@ namespace Facility.ExampleApi
 			return other != null &&
 				Id == other.Id &&
 				Name == other.Name &&
-				Weight == other.Weight;
+				Weight == other.Weight &&
+				Price == other.Price;
 		}
 	}
 }

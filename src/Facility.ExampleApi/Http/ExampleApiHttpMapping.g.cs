@@ -33,6 +33,7 @@ namespace Facility.ExampleApi.Http
 						{ "sort", request.Sort == null ? null : request.Sort.Value.ToString() },
 						{ "desc", request.Desc == null ? null : request.Desc.Value.ToString() },
 						{ "maxWeight", request.MaxWeight == null ? null : request.MaxWeight.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "minPrice", request.MinPrice == null ? null : request.MinPrice.Value.ToString(CultureInfo.InvariantCulture) },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
@@ -51,6 +52,9 @@ namespace Facility.ExampleApi.Http
 					string queryParameterMaxWeight;
 					parameters.TryGetValue("maxWeight", out queryParameterMaxWeight);
 					request.MaxWeight = ServiceDataUtility.TryParseDouble(queryParameterMaxWeight);
+					string queryParameterMinPrice;
+					parameters.TryGetValue("minPrice", out queryParameterMinPrice);
+					request.MinPrice = ServiceDataUtility.TryParseDecimal(queryParameterMinPrice);
 					return request;
 				},
 				ResponseMappings =

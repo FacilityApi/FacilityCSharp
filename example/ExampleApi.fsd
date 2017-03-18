@@ -23,6 +23,9 @@ service ExampleApi
 		/// The maximum weight.
 		[obsolete]
 		maxWeight: double;
+
+		/// The minimum price.
+		minPrice: decimal;
 	}:
 	{
 		/// The widgets.
@@ -211,6 +214,9 @@ service ExampleApi
 		/// The weight of the widget.
 		[obsolete]
 		weight: double;
+
+		/// The price of the widget.
+		price: decimal;
 	}
 
 	/// A widget job.
@@ -259,6 +265,10 @@ service ExampleApi
 		bigInteger: int64;
 
 		bigIntegers: int64[];
+
+		decimal: decimal;
+
+		decimals: decimal[];
 
 		error: error;
 

@@ -143,6 +143,15 @@ namespace Facility.Core
 			return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(double?);
 		}
 
+		/// <summary>
+		/// Attempts to parse a Decimal.
+		/// </summary>
+		public static decimal? TryParseDecimal(string text)
+		{
+			decimal value;
+			return decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(decimal?);
+		}
+
 		internal static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
 
 		private static class EquivalenceComparerCache<T>

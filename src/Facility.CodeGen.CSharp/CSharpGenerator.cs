@@ -791,6 +791,7 @@ namespace Facility.CodeGen.CSharp
 			case ServiceTypeKind.Double:
 			case ServiceTypeKind.Int32:
 			case ServiceTypeKind.Int64:
+			case ServiceTypeKind.Decimal:
 				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString(CultureInfo.InvariantCulture)";
 			case ServiceTypeKind.String:
 				return fieldCode;
@@ -814,6 +815,8 @@ namespace Facility.CodeGen.CSharp
 				return $"ServiceDataUtility.TryParseInt32({fieldCode})";
 			case ServiceTypeKind.Int64:
 				return $"ServiceDataUtility.TryParseInt64({fieldCode})";
+			case ServiceTypeKind.Decimal:
+				return $"ServiceDataUtility.TryParseDecimal({fieldCode})";
 			case ServiceTypeKind.String:
 				return fieldCode;
 			default:
@@ -1191,6 +1194,8 @@ namespace Facility.CodeGen.CSharp
 				return "int?";
 			case ServiceTypeKind.Int64:
 				return "long?";
+			case ServiceTypeKind.Decimal:
+				return "decimal?";
 			case ServiceTypeKind.Bytes:
 				return "byte[]";
 			case ServiceTypeKind.Object:

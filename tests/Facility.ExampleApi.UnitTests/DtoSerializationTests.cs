@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Facility.Core;
 using Facility.Core.Assertions;
 using FluentAssertions;
@@ -144,7 +145,7 @@ namespace Facility.ExampleApi.UnitTests
 			SerializePreference(
 				new PreferenceDto
 				{
-					Widget = new WidgetDto { Id = "id", Name = "name" },
+					Widget = new WidgetDto { Id = "id", Name = "name", Price = 1.23m },
 				});
 		}
 
@@ -154,7 +155,7 @@ namespace Facility.ExampleApi.UnitTests
 			SerializePreference(
 				new PreferenceDto
 				{
-					Widgets = new[] { new WidgetDto { Id = "id", Name = "name" }, new WidgetDto { Id = "id2", Name = "name2" } },
+					Widgets = new[] { new WidgetDto { Id = "id", Name = "name", Price = 1.23m }, new WidgetDto { Id = "id2", Name = "name2", Price = 2.34m } },
 				});
 		}
 
@@ -164,7 +165,7 @@ namespace Facility.ExampleApi.UnitTests
 			SerializePreference(
 				new PreferenceDto
 				{
-					Result = ServiceResult.Success(new WidgetDto { Id = "id", Name = "name" }),
+					Result = ServiceResult.Success(new WidgetDto { Id = "id", Name = "name", Price = 1.23m }),
 				});
 		}
 
@@ -174,7 +175,7 @@ namespace Facility.ExampleApi.UnitTests
 			SerializePreference(
 				new PreferenceDto
 				{
-					Results = new[] { ServiceResult.Success(new WidgetDto { Id = "id", Name = "name" }), ServiceResult.Failure(new ServiceErrorDto { Code = "Epic" }) },
+					Results = new[] { ServiceResult.Success(new WidgetDto { Id = "id", Name = "name", Price = 1.23m }), ServiceResult.Failure(new ServiceErrorDto { Code = "Epic" }) },
 				});
 		}
 
@@ -262,6 +263,8 @@ namespace Facility.ExampleApi.UnitTests
 					Results = new[] { ServiceResult.Success(new WidgetDto { Id = "id", Name = "name" }), ServiceResult.Failure(new ServiceErrorDto { Code = "Epic" }) },
 					BigInteger = (long) int.MaxValue + 1,
 					BigIntegers = new[] { (long) int.MaxValue + 1, (long) int.MinValue - 1, long.MaxValue, long.MinValue },
+					Decimal = 1.23m,
+					Decimals = new [] { Decimal.MaxValue, Decimal.MinValue, Decimal.MinusOne, Decimal.One, Decimal.Zero },
 					Error = new ServiceErrorDto { Code = "Zero" },
 					Errors = new[] { new ServiceErrorDto { Code = "One" }, new ServiceErrorDto { Code = "Two" } },
 					Object = new JObject { { "number", 3.14 }, { "nested", new JObject { { "hey", "you" } } } },

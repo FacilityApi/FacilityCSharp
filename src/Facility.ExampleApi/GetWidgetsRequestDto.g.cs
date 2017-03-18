@@ -49,6 +49,11 @@ namespace Facility.ExampleApi
 		public double? MaxWeight { get; set; }
 
 		/// <summary>
+		/// The minimum price.
+		/// </summary>
+		public decimal? MinPrice { get; set; }
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(GetWidgetsRequestDto other)
@@ -58,7 +63,8 @@ namespace Facility.ExampleApi
 				Limit == other.Limit &&
 				Sort == other.Sort &&
 				Desc == other.Desc &&
-				MaxWeight == other.MaxWeight;
+				MaxWeight == other.MaxWeight &&
+				MinPrice == other.MinPrice;
 		}
 	}
 }

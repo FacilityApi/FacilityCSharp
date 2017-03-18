@@ -57,6 +57,10 @@ namespace Facility.ExampleApi
 
 		public IReadOnlyList<long> BigIntegers { get; set; }
 
+		public decimal? Decimal { get; set; }
+
+		public IReadOnlyList<decimal> Decimals { get; set; }
+
 		public ServiceErrorDto Error { get; set; }
 
 		public IReadOnlyList<ServiceErrorDto> Errors { get; set; }
@@ -93,6 +97,8 @@ namespace Facility.ExampleApi
 				ServiceDataUtility.AreEquivalentFieldValues(Results, other.Results) &&
 				BigInteger == other.BigInteger &&
 				ServiceDataUtility.AreEquivalentFieldValues(BigIntegers, other.BigIntegers) &&
+				Decimal == other.Decimal &&
+				ServiceDataUtility.AreEquivalentFieldValues(Decimals, other.Decimals) &&
 				ServiceDataUtility.AreEquivalentDtos(Error, other.Error) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Errors, other.Errors) &&
 				ServiceDataUtility.AreEquivalentObjects(Object, other.Object) &&
