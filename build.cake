@@ -1,5 +1,5 @@
-#addin "nuget:?package=Cake.Git&version=0.10.0"
-#addin "nuget:?package=Octokit&version=0.23.0"
+#addin "nuget:?package=Cake.Git&version=0.16.1"
+#addin "nuget:?package=Octokit&version=0.27.0"
 #tool "nuget:?package=coveralls.io&version=1.3.4"
 #tool "nuget:?package=gitlink&version=2.3.0"
 #tool "nuget:?package=NUnit.ConsoleRunner&version=3.5.0"
@@ -153,8 +153,8 @@ Task("Coverage")
 
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
-			ExecuteProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:cake\NUnit.ConsoleRunner\tools\nunit3-console.exe"" ""-targetargs:{testDllPath} --noresult"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
+			ExecuteProcess(@"cake\opencover.4.6.519\OpenCover\tools\OpenCover.Console.exe",
+				$@"-register:user -mergeoutput ""-target:cake\nunit.consolerunner.3.5.0\NUnit.ConsoleRunner\tools\nunit3-console.exe"" ""-targetargs:{testDllPath} --noresult"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
 
@@ -162,14 +162,14 @@ Task("CoverageReport")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
+		ExecuteProcess(@"cake\reportgenerator.2.5.0\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
 	});
 
 Task("CoveragePublish")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
+		ExecuteProcess(@"cake\coveralls.io.1.3.4\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
