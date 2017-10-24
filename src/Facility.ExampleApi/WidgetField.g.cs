@@ -101,6 +101,9 @@ namespace Facility.ExampleApi
 		/// </summary>
 		public sealed class WidgetFieldJsonConverter : ServiceEnumJsonConverter<WidgetField>
 		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
 			protected override WidgetField CreateCore(string value)
 			{
 				return new WidgetField(value);

@@ -257,6 +257,7 @@ namespace Facility.CodeGen.CSharp
 						code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
 						using (code.Block())
 						{
+							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
 							code.WriteLine($"protected override {enumName} CreateCore(string value)");
 							using (code.Block())
 								code.WriteLine($"return new {enumName}(value);");

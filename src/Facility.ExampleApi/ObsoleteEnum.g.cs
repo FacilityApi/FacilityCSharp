@@ -84,6 +84,9 @@ namespace Facility.ExampleApi
 		/// </summary>
 		public sealed class ObsoleteEnumJsonConverter : ServiceEnumJsonConverter<ObsoleteEnum>
 		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
 			protected override ObsoleteEnum CreateCore(string value)
 			{
 				return new ObsoleteEnum(value);
