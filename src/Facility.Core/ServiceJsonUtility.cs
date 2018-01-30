@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -169,11 +169,9 @@ namespace Facility.Core
 
 		private sealed class CamelCaseExceptDictionaryKeysContractResolver : CamelCasePropertyNamesContractResolver
 		{
-			protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
+			protected override string ResolveDictionaryKey(string dictionaryKey)
 			{
-				JsonDictionaryContract contract = base.CreateDictionaryContract(objectType);
-				contract.PropertyNameResolver = propertyName => propertyName;
-				return contract;
+				return dictionaryKey;
 			}
 		}
 
