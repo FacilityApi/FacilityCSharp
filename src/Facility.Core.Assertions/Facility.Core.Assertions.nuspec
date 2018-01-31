@@ -6,13 +6,13 @@
     <authors>Ed Ball</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>FluentAssertions extensions for Facility unit tests.</description>
-    <copyright>Copyright 2016-2017 Ed Ball</copyright>
+    <copyright>Copyright 2016-2018 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
     <tags>Facility FluentAssertions test testing</tags>
     <dependencies>
       <dependency id="Facility.Core" version="$version$" />
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
       <dependency id="FluentAssertions" version="4.19.0" />
     </dependencies>
   </metadata>

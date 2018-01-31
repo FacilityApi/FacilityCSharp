@@ -6,12 +6,12 @@
     <authors>Ed Ball</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library for consuming/implementing Facility APIs.</description>
-    <copyright>Copyright 2016-2017 Ed Ball</copyright>
+    <copyright>Copyright 2016-2018 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/FacilityCSharp</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/FacilityCSharp/master/LICENSE</licenseUrl>
     <tags>Facility FSD Core</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
     </dependencies>
   </metadata>
   <files>
