@@ -16,6 +16,7 @@
   </metadata>
   <files>
     <file src="bin\Release\Facility.Core.*" target="lib/dotnet" />
+    <file src="bin\Release\Facility.Core.*" target="lib/netstandard1.1" />
     <file src="bin\Release\Facility.Core.*" target="lib/portable-net45+netcore45+wpa81" />
   </files>
 </package>
