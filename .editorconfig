@@ -6,6 +6,7 @@ indent_size = 2
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+end_of_line = lf
 
 [*.{cake,cs,fsd}]
 indent_size = 4
