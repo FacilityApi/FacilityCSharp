@@ -43,8 +43,11 @@ Task("Clean")
 		CleanDirectories("release");
 	});
 
-Task("Build")
+Task("Rebuild")
 	.IsDependentOn("Clean")
+	.IsDependentOn("Build");
+
+Task("Build")
 	.Does(() =>
 	{
 		NuGetRestore(solutionFileName);
@@ -151,10 +154,11 @@ Task("Coverage")
 
 		string filter = string.Concat(coverageAssemblies.Select(x => $@" ""-filter:+[{x}]*"""));
 
+		var nunitPath = Context.Tools.Resolve("nunit3-console.exe").ToString();
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
-			ExecuteProcess(@"cake\opencover.4.6.519\OpenCover\tools\OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:cake\nunit.consolerunner.3.5.0\NUnit.ConsoleRunner\tools\nunit3-console.exe"" ""-targetargs:{testDllPath} --noresult"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
+			ExecuteTool("OpenCover.Console.exe",
+				$@"-register:user -mergeoutput ""-target:{nunitPath}"" ""-targetargs:{testDllPath} --noresult"" ""-output:{File("release/coverage.xml")}"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
 
@@ -162,14 +166,14 @@ Task("CoverageReport")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\reportgenerator.2.5.0\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
+		ExecuteTool("ReportGenerator.exe", $@"""-reports:{File("release/coverage.xml")}"" ""-targetdir:{File("release/coverage")}""");
 	});
 
 Task("CoveragePublish")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\coveralls.io.1.3.4\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
+		ExecuteTool("coveralls.net.exe", $@"--opencover ""{File("release/coverage.xml")}"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
@@ -186,21 +190,37 @@ string GetSemVerFromFile(string path)
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen(@"fsd\FacilityCore.fsd src\Facility.Core --clean --csproj", verify);
-	ExecuteCodeGen(@"example\ExampleApi.fsd src\Facility.ExampleApi --clean --csproj", verify);
+	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")} --clean --csproj", verify);
+	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("src/Facility.ExampleApi")} --clean --csproj", verify);
 }
 
 void ExecuteCodeGen(string args, bool verify)
 {
-	int exitCode = StartProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe", args + " --newline lf" + (verify ? " --verify" : ""));
+	string exePath = File($"src/fsdgencsharp/bin/{configuration}/fsdgencsharp.exe");
+	if (IsRunningOnUnix())
+	{
+		args = exePath + " " + args;
+		exePath = "mono";
+	}
+	int exitCode = StartProcess(exePath, args + " --newline lf" + (verify ? " --verify" : ""));
 	if (exitCode == 1 && verify)
 		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
 	else if (exitCode != 0)
 		throw new InvalidOperationException($"Code generation failed with exit code {exitCode}.");
 }
 
+void ExecuteTool(string tool, string arguments)
+{
+	ExecuteProcess(Context.Tools.Resolve(tool).ToString(), arguments);
+}
+
 void ExecuteProcess(string exePath, string arguments)
 {
+	if (IsRunningOnUnix())
+	{
+		arguments = exePath + " " + arguments;
+		exePath = "mono";
+	}
 	int exitCode = StartProcess(exePath, arguments);
 	if (exitCode != 0)
 		throw new InvalidOperationException($"{exePath} failed with exit code {exitCode}.");
