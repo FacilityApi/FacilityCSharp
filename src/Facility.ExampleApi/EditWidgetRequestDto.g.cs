@@ -28,6 +28,11 @@ namespace Facility.ExampleApi
 		public string Id { get; set; }
 
 		/// <summary>
+		/// The fields to return.
+		/// </summary>
+		public string Fields { get; set; }
+
+		/// <summary>
 		/// The operations.
 		/// </summary>
 		public IReadOnlyList<JObject> Ops { get; set; }
@@ -45,6 +50,7 @@ namespace Facility.ExampleApi
 		{
 			return other != null &&
 				Id == other.Id &&
+				Fields == other.Fields &&
 				ServiceDataUtility.AreEquivalentFieldValues(Ops, other.Ops) &&
 				Weight == other.Weight;
 		}

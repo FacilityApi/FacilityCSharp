@@ -230,7 +230,7 @@ namespace Facility.ExampleApi.Http
 			new HttpMethodMapping<EditWidgetRequestDto, EditWidgetResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Post,
-				Path = "/widgets/{id}",
+				Path = "/widgets/{id}/edit",
 				ValidateRequest = request =>
 				{
 					if (string.IsNullOrEmpty(request.Id))
@@ -241,9 +241,13 @@ namespace Facility.ExampleApi.Http
 					new Dictionary<string, string>
 					{
 						{ "id", request.Id },
+						{ "fields", request.Fields },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
+					string queryParameterFields;
+					parameters.TryGetValue("fields", out queryParameterFields);
+					request.Fields = queryParameterFields;
 					string queryParameterId;
 					parameters.TryGetValue("id", out queryParameterId);
 					request.Id = queryParameterId;
