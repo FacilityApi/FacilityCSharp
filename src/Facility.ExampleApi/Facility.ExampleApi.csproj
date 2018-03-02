@@ -87,6 +87,8 @@
     <Compile Include="WidgetJobDto.g.cs" />
     <Compile Include="GetInfoRequestDto.g.cs" />
     <Compile Include="GetInfoResponseDto.g.cs" />
+    <Compile Include="TransformRequestDto.g.cs" />
+    <Compile Include="TransformResponseDto.g.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Facility.Core\Facility.Core.csproj">

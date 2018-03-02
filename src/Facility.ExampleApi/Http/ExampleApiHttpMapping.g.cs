@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using Facility.Core;
 using Facility.Core.Http;
+using Newtonsoft.Json.Linq;
 
 #pragma warning disable 612, 618 // member is obsolete
 
@@ -105,7 +106,7 @@ namespace Facility.ExampleApi.Http
 				},
 				RequestBodyType = typeof(WidgetDto),
 				GetRequestBody = request => request.Widget,
-				CreateRequest = body => new CreateWidgetRequestDto{ Widget = (WidgetDto) body },
+				CreateRequest = body => new CreateWidgetRequestDto { Widget = (WidgetDto) body },
 				ResponseMappings =
 				{
 					new HttpResponseMapping<CreateWidgetResponseDto>.Builder
@@ -303,7 +304,7 @@ namespace Facility.ExampleApi.Http
 				},
 				RequestBodyType = typeof(IReadOnlyList<string>),
 				GetRequestBody = request => request.Ids,
-				CreateRequest = body => new GetWidgetBatchRequestDto{ Ids = (IReadOnlyList<string>) body },
+				CreateRequest = body => new GetWidgetBatchRequestDto { Ids = (IReadOnlyList<string>) body },
 				ResponseMappings =
 				{
 					new HttpResponseMapping<GetWidgetBatchResponseDto>.Builder
@@ -423,7 +424,7 @@ namespace Facility.ExampleApi.Http
 				},
 				RequestBodyType = typeof(PreferenceDto),
 				GetRequestBody = request => request.Value,
-				CreateRequest = body => new SetPreferenceRequestDto{ Value = (PreferenceDto) body },
+				CreateRequest = body => new SetPreferenceRequestDto { Value = (PreferenceDto) body },
 				ResponseMappings =
 				{
 					new HttpResponseMapping<SetPreferenceResponseDto>.Builder
@@ -483,6 +484,33 @@ namespace Facility.ExampleApi.Http
 					new HttpResponseMapping<KitchenResponseDto>.Builder
 					{
 						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+			}.Build();
+
+		public static readonly HttpMethodMapping<TransformRequestDto, TransformResponseDto> TransformMapping =
+			new HttpMethodMapping<TransformRequestDto, TransformResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/transform",
+				ValidateRequest = request =>
+				{
+					if (request.Before == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("before"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(JObject),
+				GetRequestBody = request => request.Before,
+				CreateRequest = body => new TransformRequestDto { Before = (JObject) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<TransformResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(JObject),
+						MatchesResponse = response => response.After != null,
+						GetResponseBody = response => response.After,
+						CreateResponse = body => new TransformResponseDto { After = (JObject) body },
 					}.Build(),
 				},
 			}.Build();

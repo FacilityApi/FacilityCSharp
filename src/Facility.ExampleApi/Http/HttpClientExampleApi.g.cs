@@ -114,5 +114,10 @@ namespace Facility.ExampleApi.Http
 		{
 			return TrySendRequestAsync(ExampleApiHttpMapping.KitchenMapping, request, cancellationToken);
 		}
+
+		public Task<ServiceResult<TransformResponseDto>> TransformAsync(TransformRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ExampleApiHttpMapping.TransformMapping, request, cancellationToken);
+		}
 	}
 }

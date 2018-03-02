@@ -69,5 +69,7 @@ namespace Facility.ExampleApi
 		Task<ServiceResult<NotRestfulResponseDto>> NotRestfulAsync(NotRestfulRequestDto request, CancellationToken cancellationToken);
 
 		Task<ServiceResult<KitchenResponseDto>> KitchenAsync(KitchenRequestDto request, CancellationToken cancellationToken);
+
+		Task<ServiceResult<TransformResponseDto>> TransformAsync(TransformRequestDto request, CancellationToken cancellationToken);
 	}
 }

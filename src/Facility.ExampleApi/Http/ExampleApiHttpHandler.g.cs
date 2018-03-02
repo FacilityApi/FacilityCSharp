@@ -38,6 +38,7 @@ namespace Facility.ExampleApi.Http
 				await AdaptTask(TryHandleNotRestfulAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetPreferenceAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleSetPreferenceAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleTransformAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetBatchAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -139,6 +140,11 @@ namespace Facility.ExampleApi.Http
 		public Task<HttpResponseMessage> TryHandleKitchenAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.KitchenMapping, httpRequest, m_service.KitchenAsync, cancellationToken);
+		}
+
+		public Task<HttpResponseMessage> TryHandleTransformAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.TransformMapping, httpRequest, m_service.TransformAsync, cancellationToken);
 		}
 
 		/// <summary>

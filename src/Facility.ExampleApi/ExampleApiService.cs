@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -157,6 +157,14 @@ namespace Facility.ExampleApi
 				throw new ArgumentNullException(nameof(request));
 
 			return Task.FromResult<ServiceResult<KitchenResponseDto>>(ServiceResult.Failure(ExampleApiErrors.CreateNotAdmin()));
+		}
+
+		public Task<ServiceResult<TransformResponseDto>> TransformAsync(TransformRequestDto request, CancellationToken cancellationToken)
+		{
+			if (request == null)
+				throw new ArgumentNullException(nameof(request));
+
+			return Task.FromResult(ServiceResult.Success(new TransformResponseDto { After = request.Before }));
 		}
 
 		public static string CreateWidgetETag(WidgetDto widget)

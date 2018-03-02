@@ -440,6 +440,7 @@ namespace Facility.CodeGen.CSharp
 					"System.Net.Http",
 					"Facility.Core",
 					"Facility.Core.Http",
+					"Newtonsoft.Json.Linq",
 				};
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
@@ -613,7 +614,7 @@ namespace Facility.CodeGen.CSharp
 
 										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
 										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
-										code.WriteLine($"CreateRequest = body => new {requestTypeName}{{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
+										code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
 									}
 									else if (httpMethodInfo.RequestNormalFields.Any())
 									{
