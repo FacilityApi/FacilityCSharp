@@ -192,7 +192,7 @@ void CodeGen(bool verify)
 
 void ExecuteCodeGen(string args, bool verify)
 {
-	int exitCode = StartProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe", args + (verify ? " --verify" : ""));
+	int exitCode = StartProcess($@"src\fsdgencsharp\bin\{configuration}\fsdgencsharp.exe", args + " --newline lf" + (verify ? " --verify" : ""));
 	if (exitCode == 1 && verify)
 		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
 	else if (exitCode != 0)
