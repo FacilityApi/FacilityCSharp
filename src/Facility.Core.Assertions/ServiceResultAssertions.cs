@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 
@@ -79,7 +79,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// The type of the subject.
 		/// </summary>
-		protected override string Context => "service result";
+		protected override string Identifier => "service result";
 	}
 
 	/// <summary>

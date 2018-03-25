@@ -1,9 +1,7 @@
 # Facility C# Support
 
 [C# support](https://facilityapi.github.io/generate/csharp) for the [Facility API Framework](https://facilityapi.github.io/).
-
-[![Build status](https://ci.appveyor.com/api/projects/status/9jnedwr284uc32nt?svg=true)](https://ci.appveyor.com/project/ejball/facilitycsharp)
-[![Coverage Status](https://coveralls.io/repos/github/FacilityApi/FacilityCSharp/badge.svg?branch=master)](https://coveralls.io/github/FacilityApi/FacilityCSharp?branch=master)
+[![AppVeyor](https://img.shields.io/appveyor/ci/ejball/facilitycsharp.svg)](https://ci.appveyor.com/project/ejball/facilitycsharp)
 
 ## Facility.Core
 
@@ -20,3 +18,10 @@ A tool that generates C# for a Facility Service Definition. [![NuGet](https://im
 ## Facility.CodeGen.CSharp
 
 Used by fsdgencsharp to generate C# for a Facility Service Definition. [![NuGet](https://img.shields.io/nuget/v/Facility.CodeGen.CSharp.svg)](https://www.nuget.org/packages/Facility.CodeGen.CSharp)
+
+## Documentation
+
+* https://facilityapi.github.io/
+* License: [MIT](LICENSE)
+* [Version History](VersionHistory.md)
+* [Contributing Guidelines](CONTRIBUTING.md)

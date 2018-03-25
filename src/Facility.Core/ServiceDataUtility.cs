@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Facility.Core.IO;
+using Microsoft.IO;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core

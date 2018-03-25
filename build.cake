@@ -1,58 +1,45 @@
-#addin "nuget:?package=Cake.Git&version=0.16.1"
-#addin "nuget:?package=Octokit&version=0.27.0"
-#tool "nuget:?package=coveralls.io&version=1.3.4"
-#tool "nuget:?package=gitlink&version=2.3.0"
-#tool "nuget:?package=NUnit.ConsoleRunner&version=3.5.0"
-#tool "nuget:?package=OpenCover&version=4.6.519"
-#tool "nuget:?package=ReportGenerator&version=2.5.0"
+#addin nuget:?package=Cake.Git&version=0.17.0
+#addin nuget:?package=Cake.XmlDocMarkdown&version=1.2.1
 
-using LibGit2Sharp;
+using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var nugetApiKey = Argument("nugetApiKey", "");
-var githubApiKey = Argument("githubApiKey", "");
-var coverallsApiKey = Argument("coverallsApiKey", "");
-var prerelease = Argument("prerelease", "");
-var sourceIndex = Argument("sourceIndex", true);
+var trigger = Argument("trigger", "");
+var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "FacilityCSharp.sln";
-var githubOwner = "FacilityApi";
-var githubRepo = "FacilityCSharp";
-var githubRawUri = "http://raw.githubusercontent.com";
-var nugetSource = "https://www.nuget.org/api/v2/package";
-var coverageAssemblies = new[] { "Facility.Core", "Facility.CodeGen.CSharp", "Facility.Core.Assertions" };
+var docsAssemblies = new[] { "Facility.CodeGen.CSharp", "Facility.Core", "Facility.Core.Assertions" };
+var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
+var docsRepoBranch = "master";
+var docsSourceUri = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src";
 
-var rootPath = MakeAbsolute(Directory(".")).FullPath;
-var gitRepository = LibGit2Sharp.Repository.IsValid(rootPath) ? new LibGit2Sharp.Repository(rootPath) : null;
-
-var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("build.cake"));
-if (!string.IsNullOrEmpty(githubApiKey))
-	githubClient.Credentials = new Octokit.Credentials(githubApiKey);
-
-string version = null;
-string headSha = null;
+var nugetSource = "https://api.nuget.org/v3/index.json";
+var buildBotUserName = "ejball";
+var buildBotPassword = EnvironmentVariable("BUILD_BOT_PASSWORD");
+var slash = System.IO.Path.DirectorySeparatorChar;
 
 Task("Clean")
 	.Does(() =>
 	{
-		CleanDirectories($"src/**/bin");
-		CleanDirectories($"src/**/obj");
-		CleanDirectories($"tests/**/bin");
-		CleanDirectories($"tests/**/obj");
+		CleanDirectories("src/**/bin");
+		CleanDirectories("src/**/obj");
+		CleanDirectories("tests/**/bin");
+		CleanDirectories("tests/**/obj");
 		CleanDirectories("release");
+	});
+
+Task("Build")
+	.Does(() =>
+	{
+		DotNetCoreRestore(solutionFileName);
+		DotNetCoreBuild(solutionFileName, new DotNetCoreBuildSettings { Configuration = configuration, ArgumentCustomization = args => args.Append("--verbosity normal") });
 	});
 
 Task("Rebuild")
 	.IsDependentOn("Clean")
 	.IsDependentOn("Build");
-
-Task("Build")
-	.Does(() =>
-	{
-		NuGetRestore(solutionFileName);
-		MSBuild(solutionFileName, settings => settings.SetConfiguration(configuration));
-	});
 
 Task("CodeGen")
 	.IsDependentOn("Build")
@@ -64,134 +51,97 @@ Task("VerifyCodeGen")
 
 Task("Test")
 	.IsDependentOn("VerifyCodeGen")
-	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
-
-Task("SourceIndex")
-	.IsDependentOn("Test")
-	.WithCriteria(() => configuration == "Release" && gitRepository != null)
 	.Does(() =>
 	{
-		if (sourceIndex)
-		{
-			var dirtyEntry = gitRepository.RetrieveStatus().FirstOrDefault(x => x.State != FileStatus.Unaltered && x.State != FileStatus.Ignored);
-			if (dirtyEntry != null)
-				throw new InvalidOperationException($"The git working directory must be clean, but '{dirtyEntry.FilePath}' is dirty.");
-
-			headSha = gitRepository.Head.Tip.Sha;
-			try
-			{
-				githubClient.Repository.Commit.GetSha1(githubOwner, githubRepo, headSha).GetAwaiter().GetResult();
-			}
-			catch (Octokit.NotFoundException exception)
-			{
-				throw new InvalidOperationException($"The current commit '{headSha}' must be pushed to GitHub.", exception);
-			}
-
-			GitLink(MakeAbsolute(Directory(".")).FullPath, new GitLinkSettings
-			{
-				RepositoryUrl = $"{githubRawUri}/{githubOwner}/{githubRepo}",
-				ArgumentCustomization = args => args.Append($"-ignore Bom,BomTest"),
-			});
-		}
-		else
-		{
-			Warning("Skipping source index.");
-		}
-
-		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
+		foreach (var projectPath in GetFiles("tests/**/*.csproj").Select(x => x.FullPath))
+			DotNetCoreTest(projectPath, new DotNetCoreTestSettings { Configuration = configuration });
 	});
 
 Task("NuGetPackage")
-	.IsDependentOn("SourceIndex")
+	.IsDependentOn("Rebuild")
+	.IsDependentOn("Test")
 	.Does(() =>
 	{
-		CreateDirectory("release");
+		if (string.IsNullOrEmpty(versionSuffix) && !string.IsNullOrEmpty(trigger))
+			versionSuffix = Regex.Match(trigger, @"^v[^\.]+\.[^\.]+\.[^\.]+-(.+)").Groups[1].ToString();
 
-		foreach (var nuspecPath in GetFiles($"src/**/*.nuspec"))
+		foreach (var projectPath in GetFiles("src/**/*.csproj").Select(x => x.FullPath))
+			DotNetCorePack(projectPath, new DotNetCorePackSettings { Configuration = configuration, OutputDirectory = "release", VersionSuffix = versionSuffix });
+	});
+
+Task("UpdateDocs")
+	.WithCriteria(!string.IsNullOrEmpty(buildBotPassword))
+	.IsDependentOn("Build")
+	.Does(() =>
+	{
+		var docsDirectory = new DirectoryPath(docsRepoBranch);
+		GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
+
+		var outputPath = $"{docsRepoBranch}{slash}reference";
+		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+		if (buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$"))
+			outputPath += $"{slash}preview{slash}{buildBranch}";
+
+		Information($"Updating documentation at {outputPath}.");
+		foreach (var docsAssembly in docsAssemblies)
 		{
-			NuGetPack(nuspecPath, new NuGetPackSettings
-			{
-				Version = version,
-				OutputDirectory = "release",
-			});
+			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net461/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
+		}
+
+		if (GitHasUncommitedChanges(docsDirectory))
+		{
+			Information("Committing all documentation changes.");
+			GitAddAll(docsDirectory);
+			GitCommit(docsDirectory, "ejball", "ejball@gmail.com", "Automatic documentation update.");
+			Information("Pushing updated documentation to GitHub.");
+			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
+		}
+		else
+		{
+			Information("No documentation changes detected.");
 		}
 	});
 
 Task("NuGetPublish")
 	.IsDependentOn("NuGetPackage")
-	.WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey) && !string.IsNullOrEmpty(githubApiKey))
+	.IsDependentOn("UpdateDocs")
 	.Does(() =>
 	{
-		foreach (var nupkgPath in GetFiles($"release/*.nupkg"))
+		var nupkgPaths = GetFiles("release/*.nupkg").Select(x => x.FullPath).ToList();
+
+		string version = null;
+		foreach (var nupkgPath in nupkgPaths)
 		{
-			NuGetPush(nupkgPath, new NuGetPushSettings
-			{
-				ApiKey = nugetApiKey,
-				Source = nugetSource,
-			});
+			string nupkgVersion = Regex.Match(nupkgPath, @"\.([^\.]+\.[^\.]+\.[^\.]+)\.nupkg$").Groups[1].ToString();
+			if (version == null)
+				version = nupkgVersion;
+			else if (version != nupkgVersion)
+				throw new InvalidOperationException($"Mismatched package versions '{version}' and '{nupkgVersion}'.");
 		}
 
-		if (headSha != null)
+		if (!string.IsNullOrEmpty(nugetApiKey) && (trigger == null || Regex.IsMatch(trigger, "^v[0-9]")))
 		{
-			var tagName = $"nuget-{version}";
-			Information($"Creating git tag '{tagName}'...");
-			githubClient.Git.Reference.Create(githubOwner, githubRepo,
-				new Octokit.NewReference($"refs/tags/{tagName}", headSha)).GetAwaiter().GetResult();
+			if (trigger != null && trigger != $"v{version}")
+				throw new InvalidOperationException($"Trigger '{trigger}' doesn't match package version '{version}'.");
+
+			var pushSettings = new NuGetPushSettings { ApiKey = nugetApiKey, Source = nugetSource };
+			foreach (var nupkgPath in nupkgPaths)
+				NuGetPush(nupkgPath, pushSettings);
 		}
 		else
 		{
-			Warning("Skipping git tag for prerelease.");
+			Information("To publish NuGet packages, push this git tag: v" + version);
 		}
-	});
-
-Task("Coverage")
-	.IsDependentOn("VerifyCodeGen")
-	.Does(() =>
-	{
-		CreateDirectory("release");
-		if (FileExists("release/coverage.xml"))
-			DeleteFile("release/coverage.xml");
-
-		string filter = string.Concat(coverageAssemblies.Select(x => $@" ""-filter:+[{x}]*"""));
-
-		var nunitPath = Context.Tools.Resolve("nunit3-console.exe").ToString();
-		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
-		{
-			ExecuteTool("OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:{nunitPath}"" ""-targetargs:{testDllPath} --noresult"" ""-output:{File("release/coverage.xml")}"" -skipautoprops -returntargetcode" + filter);
-		}
-	});
-
-Task("CoverageReport")
-	.IsDependentOn("Coverage")
-	.Does(() =>
-	{
-		ExecuteTool("ReportGenerator.exe", $@"""-reports:{File("release/coverage.xml")}"" ""-targetdir:{File("release/coverage")}""");
-	});
-
-Task("CoveragePublish")
-	.IsDependentOn("Coverage")
-	.Does(() =>
-	{
-		ExecuteTool("coveralls.net.exe", $@"--opencover ""{File("release/coverage.xml")}"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
 	.IsDependentOn("Test");
 
-string GetSemVerFromFile(string path)
-{
-	var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
-	var semver = $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
-	if (prerelease.Length != 0)
-		semver += $"-{prerelease}";
-	return semver;
-}
-
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")} --clean --csproj", verify);
-	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("src/Facility.ExampleApi")} --clean --csproj", verify);
+	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")}{slash}", verify);
+	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("src/Facility.ExampleApi")}{slash}", verify);
 }
 
 void ExecuteCodeGen(string args, bool verify)
@@ -204,26 +154,9 @@ void ExecuteCodeGen(string args, bool verify)
 	}
 	int exitCode = StartProcess(exePath, args + " --newline lf" + (verify ? " --verify" : ""));
 	if (exitCode == 1 && verify)
-		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
+		throw new InvalidOperationException("Generated code doesn't match; use --target=CodeGen to regenerate.");
 	else if (exitCode != 0)
 		throw new InvalidOperationException($"Code generation failed with exit code {exitCode}.");
-}
-
-void ExecuteTool(string tool, string arguments)
-{
-	ExecuteProcess(Context.Tools.Resolve(tool).ToString(), arguments);
-}
-
-void ExecuteProcess(string exePath, string arguments)
-{
-	if (IsRunningOnUnix())
-	{
-		arguments = exePath + " " + arguments;
-		exePath = "mono";
-	}
-	int exitCode = StartProcess(exePath, arguments);
-	if (exitCode != 0)
-		throw new InvalidOperationException($"{exePath} failed with exit code {exitCode}.");
 }
 
 RunTarget(target);
