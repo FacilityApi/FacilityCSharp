@@ -25,11 +25,11 @@ namespace Facility.CodeGen.CSharp
 			code.WriteLine("#pragma warning disable 612, 618 // member is obsolete");
 		}
 
-		public static void WriteObsoleteAttribute(CodeWriter code, IServiceElementInfo element)
+		public static void WriteObsoleteAttribute(CodeWriter code, ServiceElementWithAttributesInfo element)
 		{
-			if (element.IsObsolete())
+			if (element.IsObsolete)
 			{
-				string message = element.TryGetObsoleteMessage();
+				string message = element.ObsoleteMessage;
 				code.WriteLine(message != null ? $"[Obsolete({CreateString(message)})]" : "[Obsolete]");
 			}
 		}
@@ -148,7 +148,7 @@ namespace Facility.CodeGen.CSharp
 			return namespaceName == "System" || namespaceName.StartsWith("System.", StringComparison.Ordinal) ? 1 : 2;
 		}
 
-		private static string TryGetCSharpName(IServiceElementInfo element)
+		private static string TryGetCSharpName(ServiceElementWithAttributesInfo element)
 		{
 			return element?.TryGetAttribute("csharp")?.Parameters.SingleOrDefault(x => x.Name == "name")?.Value;
 		}

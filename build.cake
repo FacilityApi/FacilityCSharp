@@ -1,5 +1,5 @@
 #addin nuget:?package=Cake.Git&version=0.17.0
-#addin nuget:?package=Cake.XmlDocMarkdown&version=1.2.1
+#addin nuget:?package=Cake.XmlDocMarkdown&version=1.4.0
 
 using System.Text.RegularExpressions;
 
@@ -11,6 +11,7 @@ var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "FacilityCSharp.sln";
 var docsAssemblies = new[] { "Facility.CodeGen.CSharp", "Facility.Core", "Facility.Core.Assertions" };
+var docsAssemblyDirectory = $"tools/XmlDocTarget/bin/{configuration}/net47";
 var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
 var docsRepoBranch = "master";
 var docsSourceUri = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src";
@@ -18,7 +19,6 @@ var docsSourceUri = "https://github.com/FacilityApi/FacilityCSharp/tree/master/s
 var nugetSource = "https://api.nuget.org/v3/index.json";
 var buildBotUserName = "ejball";
 var buildBotPassword = EnvironmentVariable("BUILD_BOT_PASSWORD");
-var slash = System.IO.Path.DirectorySeparatorChar;
 
 Task("Clean")
 	.Does(() =>
@@ -53,7 +53,7 @@ Task("Test")
 	.IsDependentOn("VerifyCodeGen")
 	.Does(() =>
 	{
-		foreach (var projectPath in GetFiles("tests/**/*.csproj").Select(x => x.FullPath))
+		foreach (var projectPath in GetFiles("tests/**/*Tests.csproj").Select(x => x.FullPath))
 			DotNetCoreTest(projectPath, new DotNetCoreTestSettings { Configuration = configuration });
 	});
 
@@ -70,30 +70,37 @@ Task("NuGetPackage")
 	});
 
 Task("UpdateDocs")
-	.WithCriteria(!string.IsNullOrEmpty(buildBotPassword))
 	.IsDependentOn("Build")
 	.Does(() =>
 	{
-		var docsDirectory = new DirectoryPath(docsRepoBranch);
-		GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
+		bool shouldCommit = !string.IsNullOrEmpty(buildBotPassword);
+		var docsDirectory = Directory($"release/{docsRepoBranch}");
+		if (shouldCommit)
+			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
-		var outputPath = $"{docsRepoBranch}{slash}reference";
+		var outputPath = $"release/{docsRepoBranch}/reference";
 		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-		if (buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$"))
-			outputPath += $"{slash}preview{slash}{buildBranch}";
+		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
+		if (isPreview)
+			outputPath += $"/preview/{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net461/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+			XmlDocMarkdownGenerate(File($"{docsAssemblyDirectory}/{docsAssembly}.dll").ToString(), $"{outputPath}/",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
-		if (GitHasUncommitedChanges(docsDirectory))
+		if (!shouldCommit)
+		{
+			Information("Set BUILD_BOT_PASSWORD to publish documentation changes.");
+		}
+		else if (GitHasUncommitedChanges(docsDirectory))
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
-			GitCommit(docsDirectory, "ejball", "ejball@gmail.com", "Automatic documentation update.");
+			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com",
+				"Automatic documentation update." + (isPreview ? $" (preview {buildBranch})" : ""));
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
 		}
@@ -140,8 +147,8 @@ Task("Default")
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")}{slash}", verify);
-	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("src/Facility.ExampleApi")}{slash}", verify);
+	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")}/", verify);
+	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("tools/Facility.ExampleApi")}/", verify);
 }
 
 void ExecuteCodeGen(string args, bool verify)

@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="*.ncrunchproject" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="NUnit" Version="3.8.1" />
@@ -19,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
-    <ProjectReference Include="..\..\src\Facility.ExampleApi\Facility.ExampleApi.csproj" />
+    <ProjectReference Include="..\..\tools\Facility.ExampleApi\Facility.ExampleApi.csproj" />
   </ItemGroup>
 
 </Project>

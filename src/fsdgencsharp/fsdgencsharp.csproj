@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
-    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net461' and '$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.6.1-api/</FrameworkPathOverride>
+    <TargetFrameworks>net47</TargetFrameworks>
+    <FrameworkPathOverride Condition="'$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.7-api/</FrameworkPathOverride>
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);1591</NoWarn>
@@ -15,8 +15,6 @@
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <Import Project="..\..\SolutionInfo.props" />
-
   <ItemGroup>
     <None Include="bin\$(Configuration)\*.dll">
       <PackagePath>tools/</PackagePath>
@@ -25,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Facility.CodeGen.Console" Version="2.0.0-beta1" />
+    <PackageReference Include="Facility.CodeGen.Console" Version="2.0.0-beta2" />
   </ItemGroup>
 
   <ItemGroup>

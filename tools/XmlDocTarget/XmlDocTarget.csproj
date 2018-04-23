@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+  </ItemGroup>
+
+</Project>

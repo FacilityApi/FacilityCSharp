@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
@@ -13,15 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 		build.ps1 = build.ps1
 		build.sh = build.sh
 		CONTRIBUTING.md = CONTRIBUTING.md
+		src\Directory.Build.props = src\Directory.Build.props
+		example\ExampleApi.fsd = example\ExampleApi.fsd
 		LICENSE = LICENSE
 		README.md = README.md
-		SolutionInfo.props = SolutionInfo.props
 		VersionHistory.md = VersionHistory.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{41FFDB1A-088F-4480-9AB1-11862C847010}"
-	ProjectSection(SolutionItems) = preProject
-		example\ExampleApi.fsd = example\ExampleApi.fsd
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core", "src\Facility.Core\Facility.Core.csproj", "{E28C464C-6FC4-4802-A7CC-0F50957FBF9D}"
@@ -30,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core.Assertions", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.CodeGen.CSharp", "src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj", "{F45ECCED-3306-4CB1-8F5D-130C367A544F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ExampleApi", "src\Facility.ExampleApi\Facility.ExampleApi.csproj", "{C565C926-EB65-4440-A774-0686AB863177}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ExampleApi", "tools\Facility.ExampleApi\Facility.ExampleApi.csproj", "{C565C926-EB65-4440-A774-0686AB863177}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fsdgencsharp", "src\fsdgencsharp\fsdgencsharp.csproj", "{A8EC12EC-783B-47D2-8A75-E36E129F3FC6}"
 EndProject
@@ -39,6 +35,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core.UnitTests", "tests\Facility.Core.UnitTests\Facility.Core.UnitTests.csproj", "{BA429714-E26A-42B8-BAD7-434ED139C31C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ExampleApi.UnitTests", "tests\Facility.ExampleApi.UnitTests\Facility.ExampleApi.UnitTests.csproj", "{CDA741DD-F364-4490-8527-53713DA87991}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlDocTarget", "tools\XmlDocTarget\XmlDocTarget.csproj", "{DA518D37-125F-422C-B9F6-25EBC8FA76AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +76,10 @@ Global
 		{CDA741DD-F364-4490-8527-53713DA87991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA741DD-F364-4490-8527-53713DA87991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA741DD-F364-4490-8527-53713DA87991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA518D37-125F-422C-B9F6-25EBC8FA76AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA518D37-125F-422C-B9F6-25EBC8FA76AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA518D37-125F-422C-B9F6-25EBC8FA76AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA518D37-125F-422C-B9F6-25EBC8FA76AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

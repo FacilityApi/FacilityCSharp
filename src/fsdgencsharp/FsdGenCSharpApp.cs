@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using ArgsReading;
@@ -43,13 +43,13 @@ namespace fsdgencsharp
 		{
 			if (m_updateCsproj)
 			{
-				var csprojFiles = new List<NamedText>();
+				var csprojFiles = new List<CodeGenFile>();
 
 				var outputDirectoryInfo = new DirectoryInfo(outputPath);
 				if (outputDirectoryInfo.Exists)
 				{
 					foreach (var csprojFileInfo in outputDirectoryInfo.GetFiles("*.csproj"))
-						csprojFiles.Add(new NamedText(Path.GetFileName(csprojFileInfo.FullName), File.ReadAllText(csprojFileInfo.FullName)));
+						csprojFiles.Add(new CodeGenFile(Path.GetFileName(csprojFileInfo.FullName), File.ReadAllText(csprojFileInfo.FullName)));
 				}
 
 				((CSharpGenerator) generator).CsprojFiles = csprojFiles;

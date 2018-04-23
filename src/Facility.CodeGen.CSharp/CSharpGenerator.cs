@@ -23,14 +23,14 @@ namespace Facility.CodeGen.CSharp
 		/// <summary>
 		/// The .csproj files to update.
 		/// </summary>
-		public IReadOnlyList<NamedText> CsprojFiles { get; set; }
+		public IReadOnlyList<CodeGenFile> CsprojFiles { get; set; }
 
 		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
 		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
 		{
-			var outputFiles = new List<NamedText>();
+			var outputFiles = new List<CodeGenFile>();
 
 			var context = new Context
 			{
@@ -56,7 +56,7 @@ namespace Facility.CodeGen.CSharp
 					outputFiles.AddRange(GenerateMethodDtos(methodInfo, context));
 			}
 
-			var httpServiceInfo = new HttpServiceInfo(service);
+			var httpServiceInfo = HttpServiceInfo.Create(service);
 
 			foreach (var httpErrorSetInfo in httpServiceInfo.ErrorSets)
 				outputFiles.Add(GenerateHttpErrors(httpErrorSetInfo, context));
@@ -83,11 +83,11 @@ namespace Facility.CodeGen.CSharp
 			return new CodeGenOutput(outputFiles, patternsToClean);
 		}
 
-		private NamedText GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
+		private CodeGenFile GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
 		{
 			string fullErrorSetName = CSharpUtility.GetErrorSetName(errorSetInfo);
 
-			return CreateNamedText(fullErrorSetName + CSharpUtility.FileExtension, code =>
+			return CreateFile(fullErrorSetName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -97,7 +97,7 @@ namespace Facility.CodeGen.CSharp
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
-				if (!errorSetInfo.IsObsolete() && errorSetInfo.Errors.Any(x => x.IsObsolete()))
+				if (!errorSetInfo.IsObsolete && errorSetInfo.Errors.Any(x => x.IsObsolete))
 				{
 					CSharpUtility.WriteObsoletePragma(code);
 					code.WriteLine();
@@ -139,11 +139,11 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText GenerateEnum(ServiceEnumInfo enumInfo, Context context)
+		private CodeGenFile GenerateEnum(ServiceEnumInfo enumInfo, Context context)
 		{
 			string enumName = CSharpUtility.GetEnumName(enumInfo);
 
-			return CreateNamedText(enumName + CSharpUtility.FileExtension, code =>
+			return CreateFile(enumName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -155,7 +155,7 @@ namespace Facility.CodeGen.CSharp
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
-				if (!enumInfo.IsObsolete() && enumInfo.Values.Any(x => x.IsObsolete()))
+				if (!enumInfo.IsObsolete && enumInfo.Values.Any(x => x.IsObsolete))
 				{
 					CSharpUtility.WriteObsoletePragma(code);
 					code.WriteLine();
@@ -269,11 +269,11 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText GenerateDto(ServiceDtoInfo dtoInfo, Context context)
+		private CodeGenFile GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 		{
 			string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
 
-			return CreateNamedText(fullDtoName + CSharpUtility.FileExtension, code =>
+			return CreateFile(fullDtoName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -287,7 +287,7 @@ namespace Facility.CodeGen.CSharp
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
-				if (!dtoInfo.IsObsolete() && dtoInfo.Fields.Any(x => x.IsObsolete()))
+				if (!dtoInfo.IsObsolete && dtoInfo.Fields.Any(x => x.IsObsolete))
 				{
 					CSharpUtility.WriteObsoletePragma(code);
 					code.WriteLine();
@@ -343,7 +343,7 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
+		private CodeGenFile GenerateHttpErrors(HttpErrorSetInfo httpErrorSetInfo, Context context)
 		{
 			var errorSetInfo = httpErrorSetInfo.ServiceErrorSet;
 
@@ -354,7 +354,7 @@ namespace Facility.CodeGen.CSharp
 				.Select(x => new { x.ServiceError.Name, x.StatusCode })
 				.ToList();
 
-			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
+			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -419,14 +419,14 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
+		private CodeGenFile GenerateHttpMapping(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
 			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string httpMappingName = $"{serviceInfo.Name}HttpMapping";
 
-			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
+			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -816,7 +816,7 @@ namespace Facility.CodeGen.CSharp
 			}
 		}
 
-		private NamedText GenerateHttpClient(HttpServiceInfo httpServiceInfo, Context context)
+		private CodeGenFile GenerateHttpClient(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
@@ -826,7 +826,7 @@ namespace Facility.CodeGen.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
+			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -879,7 +879,7 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
+		private CodeGenFile GenerateHttpHandler(HttpServiceInfo httpServiceInfo, Context context)
 		{
 			var serviceInfo = httpServiceInfo.Service;
 
@@ -889,7 +889,7 @@ namespace Facility.CodeGen.CSharp
 			string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 			string httpMappingName = serviceInfo.Name + "HttpMapping";
 
-			return CreateNamedText($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
+			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -904,7 +904,7 @@ namespace Facility.CodeGen.CSharp
 				};
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
-				if (serviceInfo.Methods.Any(x => x.IsObsolete()))
+				if (serviceInfo.Methods.Any(x => x.IsObsolete))
 				{
 					CSharpUtility.WriteObsoletePragma(code);
 					code.WriteLine();
@@ -1008,19 +1008,17 @@ namespace Facility.CodeGen.CSharp
 			}
 		}
 
-		private IEnumerable<NamedText> GenerateMethodDtos(ServiceMethodInfo methodInfo, Context context)
+		private IEnumerable<CodeGenFile> GenerateMethodDtos(ServiceMethodInfo methodInfo, Context context)
 		{
 			yield return GenerateDto(new ServiceDtoInfo(
 				name: $"{CodeGenUtility.Capitalize(methodInfo.Name)}Request",
 				fields: methodInfo.RequestFields,
-				summary: $"Request for {CodeGenUtility.Capitalize(methodInfo.Name)}.",
-				position: methodInfo.Position), context);
+				summary: $"Request for {CodeGenUtility.Capitalize(methodInfo.Name)}."), context);
 
 			yield return GenerateDto(new ServiceDtoInfo(
 				name: $"{CodeGenUtility.Capitalize(methodInfo.Name)}Response",
 				fields: methodInfo.ResponseFields,
-				summary: $"Response for {CodeGenUtility.Capitalize(methodInfo.Name)}.",
-				position: methodInfo.Position), context);
+				summary: $"Response for {CodeGenUtility.Capitalize(methodInfo.Name)}."), context);
 		}
 
 		private void GenerateFieldProperties(CodeWriter code, IEnumerable<ServiceFieldInfo> fieldInfos, Context context)
@@ -1040,11 +1038,11 @@ namespace Facility.CodeGen.CSharp
 			}
 		}
 
-		private NamedText GenerateInterface(ServiceInfo serviceInfo, Context context)
+		private CodeGenFile GenerateInterface(ServiceInfo serviceInfo, Context context)
 		{
 			string interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 
-			return CreateNamedText(interfaceName + CSharpUtility.FileExtension, code =>
+			return CreateFile(interfaceName + CSharpUtility.FileExtension, code =>
 			{
 				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
 
@@ -1080,7 +1078,7 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private NamedText UpdateCsprojFile(NamedText csprojFile, IEnumerable<string> outputFileNames)
+		private CodeGenFile UpdateCsprojFile(CodeGenFile csprojFile, IEnumerable<string> outputFileNames)
 		{
 			// read .csproj
 			List<string> lines = new List<string>();
@@ -1163,7 +1161,7 @@ namespace Facility.CodeGen.CSharp
 						textWriter.Write(line);
 				}
 
-				return new NamedText(name: csprojFile.Name, text: textWriter.ToString());
+				return new CodeGenFile(name: csprojFile.Name, text: textWriter.ToString());
 			}
 		}
 
