@@ -5,20 +5,29 @@ using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var nugetApiKey = Argument("nugetApiKey", "");
-var trigger = Argument("trigger", "");
 var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "FacilityCSharp.sln";
 var docsAssemblies = new[] { "Facility.CodeGen.CSharp", "Facility.Core", "Facility.Core.Assertions" };
 var docsAssemblyDirectory = $"tools/XmlDocTarget/bin/{configuration}/net47";
-var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
-var docsRepoBranch = "master";
 var docsSourceUri = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src";
+var codeGenExe = $"src/fsdgencsharp/bin/{configuration}/fsdgencsharp.exe";
 
 var nugetSource = "https://api.nuget.org/v3/index.json";
-var buildBotUserName = "ejball";
+var nugetApiKey = EnvironmentVariable("NUGET_API_KEY");
+var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
+var docsRepoBranch = "master";
+var buildBotUserName = "FacilityApiBot";
+var buildBotEmail = "facilityapi@gmail.com";
 var buildBotPassword = EnvironmentVariable("BUILD_BOT_PASSWORD");
+var trigger = EnvironmentVariable("APPVEYOR_REPO_TAG_NAME");;
+var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+
+void CodeGen(bool verify)
+{
+	ExecuteCodeGen("fsd/FacilityCore.fsd src/Facility.Core/", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd tools/Facility.ExampleApi/", verify);
+}
 
 Task("Clean")
 	.Does(() =>
@@ -57,7 +66,7 @@ Task("Test")
 			DotNetCoreTest(projectPath, new DotNetCoreTestSettings { Configuration = configuration });
 	});
 
-Task("NuGetPackage")
+Task("Package")
 	.IsDependentOn("Rebuild")
 	.IsDependentOn("Test")
 	.Does(() =>
@@ -79,15 +88,14 @@ Task("UpdateDocs")
 			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
 		var outputPath = $"release/{docsRepoBranch}/reference";
-		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
+		var isPreview = buildBranch != "master" || trigger == null || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
 		if (isPreview)
 			outputPath += $"/preview/{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"{docsAssemblyDirectory}/{docsAssembly}.dll").ToString(), $"{outputPath}/",
+			XmlDocMarkdownGenerate($"{docsAssemblyDirectory}/{docsAssembly}.dll", $"{outputPath}/",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
@@ -99,7 +107,7 @@ Task("UpdateDocs")
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
-			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com",
+			GitCommit(docsDirectory, buildBotUserName, buildBotEmail,
 				"Automatic documentation update." + (isPreview ? $" (preview {buildBranch})" : ""));
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
@@ -110,8 +118,8 @@ Task("UpdateDocs")
 		}
 	});
 
-Task("NuGetPublish")
-	.IsDependentOn("NuGetPackage")
+Task("Publish")
+	.IsDependentOn("Package")
 	.IsDependentOn("UpdateDocs")
 	.Does(() =>
 	{
@@ -127,9 +135,9 @@ Task("NuGetPublish")
 				throw new InvalidOperationException($"Mismatched package versions '{version}' and '{nupkgVersion}'.");
 		}
 
-		if (!string.IsNullOrEmpty(nugetApiKey) && (trigger == null || Regex.IsMatch(trigger, "^v[0-9]")))
+		if (!string.IsNullOrEmpty(nugetApiKey) && trigger != null && Regex.IsMatch(trigger, "^v[0-9]"))
 		{
-			if (trigger != null && trigger != $"v{version}")
+			if (trigger != $"v{version}")
 				throw new InvalidOperationException($"Trigger '{trigger}' doesn't match package version '{version}'.");
 
 			var pushSettings = new NuGetPushSettings { ApiKey = nugetApiKey, Source = nugetSource };
@@ -145,15 +153,10 @@ Task("NuGetPublish")
 Task("Default")
 	.IsDependentOn("Test");
 
-void CodeGen(bool verify)
-{
-	ExecuteCodeGen($"{File("fsd/FacilityCore.fsd")} {Directory("src/Facility.Core")}/", verify);
-	ExecuteCodeGen($"{File("example/ExampleApi.fsd")} {Directory("tools/Facility.ExampleApi")}/", verify);
-}
-
 void ExecuteCodeGen(string args, bool verify)
 {
-	string exePath = File($"src/fsdgencsharp/bin/{configuration}/fsdgencsharp.exe");
+	Information(args);
+	string exePath = codeGenExe;
 	if (IsRunningOnUnix())
 	{
 		args = exePath + " " + args;
