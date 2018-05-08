@@ -1,0 +1,12 @@
+[csharp(namespace: Facility.TestServerApi)]
+service TestServerApi
+{
+	[http(method: get, path: "/")]
+	method getApiInfo
+	{
+	}:
+	{
+		service: string;
+		version: string;
+	}
+}
