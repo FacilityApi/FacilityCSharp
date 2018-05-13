@@ -7,7 +7,6 @@ using Facility.Core.Http;
 using Facility.ServerTesting;
 using Facility.TestServerApi.Core;
 using Facility.TestServerApi.Http;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.TestServerApi.UnitTests
@@ -24,8 +23,7 @@ namespace Facility.TestServerApi.UnitTests
 			};
 			var httpClient = new HttpClient(handler);
 			var tester = new ServerTester("http://example.com/", httpClient);
-			var result = await tester.RunTestAsync(test);
-			result.Status.Should().Be(ServerTestStatus.Pass, result.Message);
+			await tester.RunTestAsync(test);
 		}
 
 		public sealed class NotFoundHttpHandler : HttpMessageHandler

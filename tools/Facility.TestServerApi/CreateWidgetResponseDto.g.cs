@@ -8,36 +8,39 @@ using Newtonsoft.Json.Linq;
 namespace Facility.TestServerApi
 {
 	/// <summary>
-	/// Response for GetApiInfo.
+	/// Response for CreateWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class GetApiInfoResponseDto : ServiceDto<GetApiInfoResponseDto>
+	public sealed partial class CreateWidgetResponseDto : ServiceDto<CreateWidgetResponseDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public GetApiInfoResponseDto()
+		public CreateWidgetResponseDto()
 		{
 		}
 
 		/// <summary>
-		/// The name of the service.
+		/// The created widget.
 		/// </summary>
-		public string Service { get; set; }
+		public WidgetDto Widget { get; set; }
 
 		/// <summary>
-		/// The version of the service.
+		/// The URL of the created widget.
 		/// </summary>
-		public string Version { get; set; }
+		public string Url { get; set; }
+
+		public string ETag { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(GetApiInfoResponseDto other)
+		public override bool IsEquivalentTo(CreateWidgetResponseDto other)
 		{
 			return other != null &&
-				Service == other.Service &&
-				Version == other.Version;
+				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
+				Url == other.Url &&
+				ETag == other.ETag;
 		}
 	}
 }

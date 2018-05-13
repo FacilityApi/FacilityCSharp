@@ -11,13 +11,7 @@ namespace Facility.ServerTesting
 	{
 		public ServerTester(string basePath, HttpClient httpClient = null)
 		{
-			var http = httpClient ?? s_httpClient;
-
-			var root = basePath ?? "";
-			if (!root.EndsWith("/", StringComparison.Ordinal))
-				root += "/";
-
-			m_tests = new ServerTests(http, root);
+			m_tests = new ServerTests(httpClient ?? s_httpClient, basePath?.TrimEnd('/') ?? "");
 		}
 
 		public static IReadOnlyList<string> GetTestNames()
@@ -33,24 +27,29 @@ namespace Facility.ServerTesting
 			var results = new List<ServerTestResult>();
 
 			foreach (var testName in GetTestNames())
-				results.Add(await RunTestAsync(testName));
+				results.Add(await TryRunTestAsync(testName));
 
 			return new ServerTestRun(results);
 		}
 
-		public async Task<ServerTestResult> RunTestAsync(string testName)
+		public async Task<ServerTestResult> TryRunTestAsync(string testName)
 		{
-			var method = typeof(ServerTests).GetMethod(testName, BindingFlags.Public | BindingFlags.Instance) ?? throw new InvalidOperationException();
 			try
 			{
-				await (Task) method.Invoke(m_tests, null);
+				await RunTestAsync(testName);
 				return new ServerTestResult(testName, ServerTestStatus.Pass);
 			}
 			catch (Exception exception)
 			{
 				return new ServerTestResult(testName, ServerTestStatus.Fail,
-					(exception is TestFailedException ? "" : $"Unhanded exception {exception.GetType().FullName}: ") + exception.Message);
+					(exception is TestFailedException ? "" : $"Unhandled exception {exception.GetType().FullName}: ") + exception.Message);
 			}
+		}
+
+		public async Task RunTestAsync(string testName)
+		{
+			var method = typeof(ServerTests).GetMethod(testName, BindingFlags.Public | BindingFlags.Instance) ?? throw new InvalidOperationException();
+			await (Task) method.Invoke(m_tests, null);
 		}
 
 		private static readonly HttpClient s_httpClient = new HttpClient();

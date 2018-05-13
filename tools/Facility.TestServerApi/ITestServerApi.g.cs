@@ -6,9 +6,20 @@ using Facility.Core;
 
 namespace Facility.TestServerApi
 {
+	/// <summary>
+	/// API for a Facility test server.
+	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public partial interface ITestServerApi
 	{
+		/// <summary>
+		/// Gets API information.
+		/// </summary>
 		Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoAsync(GetApiInfoRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Creates a new widget.
+		/// </summary>
+		Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken);
 	}
 }

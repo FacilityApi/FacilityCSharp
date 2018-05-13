@@ -8,6 +8,9 @@ using Facility.Core.Http;
 
 namespace Facility.TestServerApi.Http
 {
+	/// <summary>
+	/// API for a Facility test server.
+	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public sealed partial class TestServerApiHttpHandler : ServiceHttpHandler
 	{
@@ -28,12 +31,24 @@ namespace Facility.TestServerApi.Http
 		/// </summary>
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
+			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
 
+		/// <summary>
+		/// Gets API information.
+		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.GetApiInfoMapping, httpRequest, m_service.GetApiInfoAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Creates a new widget.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.CreateWidgetMapping, httpRequest, m_service.CreateWidgetAsync, cancellationToken);
 		}
 
 		readonly ITestServerApi m_service;

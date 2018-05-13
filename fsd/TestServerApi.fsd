@@ -1,12 +1,50 @@
+/// API for a Facility test server.
 [csharp(namespace: Facility.TestServerApi)]
 service TestServerApi
 {
+	/// Gets API information.
 	[http(method: get, path: "/")]
 	method getApiInfo
 	{
 	}:
 	{
+		/// The name of the service.
 		service: string;
+
+		/// The version of the service.
 		version: string;
+	}
+
+	/// Creates a new widget.
+	[http(method: POST, path: "/widgets")]
+	[tag(name: widgets)]
+	method createWidget
+	{
+		/// The widget to create.
+		[http(from: body)]
+		widget: Widget;
+	}:
+	{
+		/// The created widget.
+		[http(from: body, code: 201)]
+		widget: Widget;
+
+		/// The URL of the created widget.
+		[http(from: header, name: Location)]
+		url: string;
+
+		[http(from: header)]
+		eTag: string;
+	}
+
+	/// A widget.
+	[tag(name: widgets)]
+	data Widget
+	{
+		/// A unique identifier for the widget.
+		id: int32;
+
+		/// The name of the widget.
+		name: string;
 	}
 }

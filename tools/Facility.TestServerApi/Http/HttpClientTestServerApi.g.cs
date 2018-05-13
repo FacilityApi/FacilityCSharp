@@ -7,6 +7,9 @@ using Facility.Core.Http;
 
 namespace Facility.TestServerApi.Http
 {
+	/// <summary>
+	/// API for a Facility test server.
+	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public sealed partial class HttpClientTestServerApi : HttpClientService, ITestServerApi
 	{
@@ -18,9 +21,20 @@ namespace Facility.TestServerApi.Http
 		{
 		}
 
+		/// <summary>
+		/// Gets API information.
+		/// </summary>
 		public Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoAsync(GetApiInfoRequestDto request, CancellationToken cancellationToken)
 		{
 			return TrySendRequestAsync(TestServerApiHttpMapping.GetApiInfoMapping, request, cancellationToken);
+		}
+
+		/// <summary>
+		/// Creates a new widget.
+		/// </summary>
+		public Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(TestServerApiHttpMapping.CreateWidgetMapping, request, cancellationToken);
 		}
 	}
 }

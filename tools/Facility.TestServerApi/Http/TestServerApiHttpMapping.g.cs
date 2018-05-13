@@ -12,9 +12,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Facility.TestServerApi.Http
 {
+	/// <summary>
+	/// API for a Facility test server.
+	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	public static partial class TestServerApiHttpMapping
 	{
+		/// <summary>
+		/// Gets API information.
+		/// </summary>
 		public static readonly HttpMethodMapping<GetApiInfoRequestDto, GetApiInfoResponseDto> GetApiInfoMapping =
 			new HttpMethodMapping<GetApiInfoRequestDto, GetApiInfoResponseDto>.Builder
 			{
@@ -27,6 +33,52 @@ namespace Facility.TestServerApi.Http
 						StatusCode = (HttpStatusCode) 200,
 						ResponseBodyType = typeof(GetApiInfoResponseDto),
 					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
+		/// Creates a new widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto> CreateWidgetMapping =
+			new HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/widgets",
+				ValidateRequest = request =>
+				{
+					if (request.Widget == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("widget"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(WidgetDto),
+				GetRequestBody = request => request.Widget,
+				CreateRequest = body => new CreateWidgetRequestDto { Widget = (WidgetDto) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<CreateWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 201,
+						ResponseBodyType = typeof(WidgetDto),
+						MatchesResponse = response => response.Widget != null,
+						GetResponseBody = response => response.Widget,
+						CreateResponse = body => new CreateWidgetResponseDto { Widget = (WidgetDto) body },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string>
+					{
+						{ "Location", response.Url },
+						{ "eTag", response.ETag },
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					string headerUrl;
+					headers.TryGetValue("Location", out headerUrl);
+					response.Url = headerUrl;
+					string headerETag;
+					headers.TryGetValue("eTag", out headerETag);
+					response.ETag = headerETag;
+					return response;
 				},
 			}.Build();
 	}
