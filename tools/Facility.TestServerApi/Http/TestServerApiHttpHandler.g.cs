@@ -32,7 +32,8 @@ namespace Facility.TestServerApi.Http
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
-				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
+				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
 
 		/// <summary>
@@ -49,6 +50,14 @@ namespace Facility.TestServerApi.Http
 		public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.CreateWidgetMapping, httpRequest, m_service.CreateWidgetAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets the specified widget.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.GetWidgetMapping, httpRequest, m_service.GetWidgetAsync, cancellationToken);
 		}
 
 		readonly ITestServerApi m_service;

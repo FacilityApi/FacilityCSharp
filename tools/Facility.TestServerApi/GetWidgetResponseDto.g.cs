@@ -8,42 +8,42 @@ using Newtonsoft.Json.Linq;
 namespace Facility.TestServerApi
 {
 	/// <summary>
-	/// Response for CreateWidget.
+	/// Response for GetWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class CreateWidgetResponseDto : ServiceDto<CreateWidgetResponseDto>
+	public sealed partial class GetWidgetResponseDto : ServiceDto<GetWidgetResponseDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public CreateWidgetResponseDto()
+		public GetWidgetResponseDto()
 		{
 		}
 
 		/// <summary>
-		/// The created widget.
+		/// The requested widget.
 		/// </summary>
 		public WidgetDto Widget { get; set; }
 
 		/// <summary>
-		/// The URL of the created widget.
-		/// </summary>
-		public string Url { get; set; }
-
-		/// <summary>
-		/// The ETag of the created widget.
+		/// The ETag of the widget.
 		/// </summary>
 		public string ETag { get; set; }
 
 		/// <summary>
+		/// The widget still has the specified ETag.
+		/// </summary>
+		public bool? NotModified { get; set; }
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(CreateWidgetResponseDto other)
+		public override bool IsEquivalentTo(GetWidgetResponseDto other)
 		{
 			return other != null &&
 				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
-				Url == other.Url &&
-				ETag == other.ETag;
+				ETag == other.ETag &&
+				NotModified == other.NotModified;
 		}
 	}
 }

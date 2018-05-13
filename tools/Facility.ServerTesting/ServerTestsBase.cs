@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Faithlife.Parsing;
 using Faithlife.Parsing.Json;
+using static System.FormattableString;
 
 namespace Facility.ServerTesting
 {
@@ -18,21 +19,38 @@ namespace Facility.ServerTesting
 			m_root = rootPath;
 		}
 
-		protected async Task VerifyResponse(HttpMethod httpMethod, string path, object body, HttpStatusCode statusCode,
-			bool anyContent = false, Dictionary<string, object> json = null, Dictionary<string, string> headers = null)
+		protected async Task VerifyResponseAsync(HttpMethod httpMethod, string path,
+			HttpStatusCode statusCode, bool anyContent = false, IReadOnlyDictionary<string, string> headers = null, Dictionary<string, object> json = null)
+		{
+			await VerifyResponseAsync(httpMethod, path, null, null, statusCode, anyContent, headers, json);
+		}
+
+		protected async Task VerifyResponseAsync(HttpMethod httpMethod, string path, object requestContent,
+			HttpStatusCode statusCode, bool anyContent = false, IReadOnlyDictionary<string, string> headers = null, Dictionary<string, object> json = null)
+		{
+			await VerifyResponseAsync(httpMethod, path, null, requestContent, statusCode, anyContent, headers, json);
+		}
+
+		protected async Task VerifyResponseAsync(HttpMethod httpMethod, string path, IReadOnlyDictionary<string, string> requestHeaders, object requestContent,
+			HttpStatusCode statusCode, bool anyContent = false, IReadOnlyDictionary<string, string> headers = null, Dictionary<string, object> json = null)
 		{
 			var request = new HttpRequestMessage(httpMethod, $"{m_root}{path}");
 
-			if (body != null)
+			if (requestHeaders != null)
 			{
-				if (body is IEnumerable<KeyValuePair<string, object>> bodyJson)
+				foreach (var header in requestHeaders)
 				{
+					if (!request.Headers.TryAddWithoutValidation(header.Key, header.Value))
+						throw new ArgumentException($"Failed to add request header '{header.Key}' value '{header.Value}'.");
+				}
+			}
+
+			if (requestContent != null)
+			{
+				if (requestContent is IEnumerable<KeyValuePair<string, object>> bodyJson)
 					request.Content = new StringContent(RenderJson(bodyJson), Encoding.UTF8, "application/json");
-				}
 				else
-				{
-					throw new ArgumentException($"Unrecognized body type: {body.GetType().FullName}");
-				}
+					throw new ArgumentException($"Unrecognized type of request content: {requestContent.GetType().FullName}");
 			}
 
 			var response = await m_http.SendAsync(request);
@@ -43,27 +61,37 @@ namespace Facility.ServerTesting
 
 			if (!anyContent)
 			{
-				if (response.Content == null)
-					throw new TestFailedException("response content missing");
+				if (json != null)
+				{
+					if (response.Content == null)
+						throw new TestFailedException("response content missing");
 
-				string expectedContentType = "application/json";
-				string actualContentType = response.Content.Headers.ContentType.ToString();
-				if (actualContentType != expectedContentType)
-					throw new TestFailedException($"response content type {actualContentType}; expected {expectedContentType}");
+					string expectedContentType = "application/json";
+					string actualContentType = response.Content.Headers.ContentType.ToString();
+					if (actualContentType != expectedContentType)
+						throw new TestFailedException($"response content type {actualContentType}; expected {expectedContentType}");
 
-				string actualContent = await response.Content.ReadAsStringAsync();
-				var parseResult = JsonParsers.JsonObject.TryParse(actualContent);
-				if (!parseResult.Success)
-					throw new TestFailedException($"response content invalid JSON: {parseResult.ToMessage()}");
+					string actualContent = await response.Content.ReadAsStringAsync();
+					var parseResult = JsonParsers.JsonObject.TryParse(actualContent);
+					if (!parseResult.Success)
+						throw new TestFailedException($"response content invalid JSON: {parseResult.ToMessage()}");
 
-				VerifyJsonEquivalent(parseResult.Value, json);
+					VerifyJsonEquivalent(parseResult.Value, json);
+				}
+				else
+				{
+					if (response.Content != null)
+						throw new TestFailedException("unexpected response content");
+				}
 			}
 
 			if (headers != null)
 			{
 				foreach (var header in headers)
 				{
-					string actualHeader = string.Join(",", response.Headers.GetValues(header.Key));
+					if (!response.Headers.TryGetValues(header.Key, out var values))
+						throw new TestFailedException($"response header '{header.Key}' is missing; expected '{header.Value}'");
+					string actualHeader = string.Join(",", values);
 					if (actualHeader != header.Value)
 						throw new TestFailedException($"response header '{header.Key}' is '{actualHeader}'; expected '{header.Value}'");
 				}
@@ -88,7 +116,7 @@ namespace Facility.ServerTesting
 			}
 			else
 			{
-				return json?.ToString() ?? "null";
+				return json != null ? Invariant($"{json}") : "null";
 			}
 		}
 

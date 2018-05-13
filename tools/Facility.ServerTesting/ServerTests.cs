@@ -12,9 +12,9 @@ namespace Facility.ServerTesting
 		{
 		}
 
-		public async Task ApiInfo()
+		public async Task GetApiInfo()
 		{
-			await VerifyResponse(HttpMethod.Get, "", null,
+			await VerifyResponseAsync(HttpMethod.Get, "",
 				HttpStatusCode.OK,
 				json: new Dictionary<string, object>
 				{
@@ -25,14 +25,14 @@ namespace Facility.ServerTesting
 
 		public async Task DeleteApiInfo()
 		{
-			await VerifyResponse(HttpMethod.Delete, "", null,
+			await VerifyResponseAsync(HttpMethod.Delete, "",
 				HttpStatusCode.NotFound,
 				anyContent: true);
 		}
 
 		public async Task CreateWidget()
 		{
-			await VerifyResponse(HttpMethod.Post, "/widgets",
+			await VerifyResponseAsync(HttpMethod.Post, "/widgets",
 				new Dictionary<string, object>
 				{
 					["name"] = "shiny",
@@ -45,14 +45,14 @@ namespace Facility.ServerTesting
 				},
 				headers: new Dictionary<string, string>
 				{
-					["Location"] = "http://example.com/widgets/1337",
+					["Location"] = "/widgets/1337",
 					["ETag"] = "\"initial\"",
 				});
 		}
 
 		public async Task CreateWidget_NoRequestBody()
 		{
-			await VerifyResponse(HttpMethod.Post, "/widgets", null,
+			await VerifyResponseAsync(HttpMethod.Post, "/widgets",
 				HttpStatusCode.BadRequest,
 				json: new Dictionary<string, object>
 				{
@@ -63,7 +63,7 @@ namespace Facility.ServerTesting
 
 		public async Task CreateWidget_IdSpecified()
 		{
-			await VerifyResponse(HttpMethod.Post, "/widgets",
+			await VerifyResponseAsync(HttpMethod.Post, "/widgets",
 				new Dictionary<string, object>
 				{
 					["id"] = 1337,
@@ -79,7 +79,7 @@ namespace Facility.ServerTesting
 
 		public async Task CreateWidget_NameMissing()
 		{
-			await VerifyResponse(HttpMethod.Post, "/widgets",
+			await VerifyResponseAsync(HttpMethod.Post, "/widgets",
 				new Dictionary<string, object>
 				{
 				},
@@ -89,6 +89,43 @@ namespace Facility.ServerTesting
 					["code"] = "InvalidRequest",
 					["message"] = Matches(x => x is string s && s.Length != 0),
 				});
+		}
+
+		public async Task GetWidget()
+		{
+			await VerifyResponseAsync(HttpMethod.Get, "/widgets/1337",
+				HttpStatusCode.OK,
+				headers: new Dictionary<string, string>
+				{
+					["ETag"] = "\"initial\"",
+				},
+				json: new Dictionary<string, object>
+				{
+					["id"] = 1337,
+					["name"] = "shiny",
+				});
+		}
+
+		public async Task GetWidget_NotFound()
+		{
+			await VerifyResponseAsync(HttpMethod.Get, "/widgets/1336",
+				HttpStatusCode.NotFound,
+				json: new Dictionary<string, object>
+				{
+					["code"] = "NotFound",
+					["message"] = Matches(x => x is string s && s.Length != 0),
+				});
+		}
+
+		public async Task GetWidget_NotModified()
+		{
+			await VerifyResponseAsync(HttpMethod.Get, "/widgets/1337",
+				new Dictionary<string, string>
+				{
+					["If-None-Match"] = "\"initial\"",
+				},
+				null,
+				HttpStatusCode.NotModified);
 		}
 	}
 }

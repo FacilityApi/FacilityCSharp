@@ -489,7 +489,11 @@ namespace Facility.CodeGen.CSharp
 											{
 												var serviceField = pathField.ServiceField;
 												string fieldName = CSharpUtility.GetFieldPropertyName(serviceField);
-												code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
+												var fieldType = context.Service.GetFieldType(serviceField);
+												if (fieldType.Kind == ServiceTypeKind.String)
+													code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
+												else
+													code.WriteLine($"if (request.{fieldName} == null)");
 												using (code.Indent())
 													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
 											}

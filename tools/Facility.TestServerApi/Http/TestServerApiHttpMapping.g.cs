@@ -81,5 +81,74 @@ namespace Facility.TestServerApi.Http
 					return response;
 				},
 			}.Build();
+
+		/// <summary>
+		/// Gets the specified widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetWidgetRequestDto, GetWidgetResponseDto> GetWidgetMapping =
+			new HttpMethodMapping<GetWidgetRequestDto, GetWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/widgets/{id}",
+				ValidateRequest = request =>
+				{
+					if (request.Id == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("id"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					string queryParameterId;
+					parameters.TryGetValue("id", out queryParameterId);
+					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
+					return request;
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string>
+					{
+						{ "If-None-Match", request.IfNotETag },
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					string headerIfNotETag;
+					headers.TryGetValue("If-None-Match", out headerIfNotETag);
+					request.IfNotETag = headerIfNotETag;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(WidgetDto),
+						MatchesResponse = response => response.Widget != null,
+						GetResponseBody = response => response.Widget,
+						CreateResponse = body => new GetWidgetResponseDto { Widget = (WidgetDto) body },
+					}.Build(),
+					new HttpResponseMapping<GetWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 304,
+						MatchesResponse = response => response.NotModified.GetValueOrDefault(),
+						CreateResponse = body => new GetWidgetResponseDto { NotModified = true },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string>
+					{
+						{ "eTag", response.ETag },
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					string headerETag;
+					headers.TryGetValue("eTag", out headerETag);
+					response.ETag = headerETag;
+					return response;
+				},
+			}.Build();
 	}
 }

@@ -29,20 +29,50 @@ namespace Facility.TestServerApi.Core
 
 			if (request.Widget.Id != null)
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Widget 'id' must not be specified."));
-			if (string.IsNullOrEmpty(request.Widget.Name))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Widget 'name' is missing or empty."));
+
+			if (request.Widget.Name != c_shinyWidgetName)
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Widget 'name' must be 'shiny'."));
 
 			return ServiceResult.Success(
 				new CreateWidgetResponseDto
 				{
 					Widget = new WidgetDto
 					{
-						Id = 1337,
-						Name = request.Widget.Name
+						Id = c_shinyWidgetId,
+						Name = c_shinyWidgetName,
 					},
-					Url = "http://example.com/widgets/1337",
-					ETag = "\"initial\"",
+					Url = "/widgets/1337",
+					ETag = c_initialETag,
 				});
 		}
+
+		public async Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken)
+		{
+			if (request == null)
+				throw new ArgumentNullException(nameof(request));
+			if (request.Id == null)
+				throw new ArgumentException("ID cannot be null.", nameof(request));
+
+			if (request.Id != c_shinyWidgetId)
+				return ServiceResult.Failure(ServiceErrors.CreateNotFound());
+
+			if (request.IfNotETag == c_initialETag)
+				return ServiceResult.Success(new GetWidgetResponseDto { NotModified = true });
+
+			return ServiceResult.Success(
+				new GetWidgetResponseDto
+				{
+					Widget = new WidgetDto
+					{
+						Id = c_shinyWidgetId,
+						Name = c_shinyWidgetName,
+					},
+					ETag = c_initialETag,
+				});
+		}
+
+		private const string c_initialETag = "\"initial\"";
+		private const string c_shinyWidgetName = "shiny";
+		private const int c_shinyWidgetId = 1337;
 	}
 }

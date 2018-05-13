@@ -33,8 +33,35 @@ service TestServerApi
 		[http(from: header, name: Location)]
 		url: string;
 
+		/// The ETag of the created widget.
 		[http(from: header)]
 		eTag: string;
+	}
+
+	/// Gets the specified widget.
+	[http(method: GET, path: "/widgets/{id}")]
+	[tag(name: widgets)]
+	method getWidget
+	{
+		/// The widget ID.
+		id: int32;
+
+		/// Don't get the widget if it has this ETag.
+		[http(from: header, name: If-None-Match)]
+		ifNotETag: string;
+	}:
+	{
+		/// The requested widget.
+		[http(from: body)]
+		widget: Widget;
+
+		/// The ETag of the widget.
+		[http(from: header)]
+		eTag: string;
+
+		/// The widget still has the specified ETag.
+		[http(from: body, code: 304)]
+		notModified: boolean;
 	}
 
 	/// A widget.

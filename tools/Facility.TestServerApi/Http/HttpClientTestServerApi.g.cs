@@ -36,5 +36,13 @@ namespace Facility.TestServerApi.Http
 		{
 			return TrySendRequestAsync(TestServerApiHttpMapping.CreateWidgetMapping, request, cancellationToken);
 		}
+
+		/// <summary>
+		/// Gets the specified widget.
+		/// </summary>
+		public Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(TestServerApiHttpMapping.GetWidgetMapping, request, cancellationToken);
+		}
 	}
 }

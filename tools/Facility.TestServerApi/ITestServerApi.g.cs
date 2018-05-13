@@ -21,5 +21,10 @@ namespace Facility.TestServerApi
 		/// Creates a new widget.
 		/// </summary>
 		Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Gets the specified widget.
+		/// </summary>
+		Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken);
 	}
 }
