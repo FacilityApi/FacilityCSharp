@@ -150,5 +150,32 @@ namespace Facility.TestServerApi.Http
 					return response;
 				},
 			}.Build();
+
+		/// <summary>
+		/// Finishes a client test.
+		/// </summary>
+		public static readonly HttpMethodMapping<FinishTestRequestDto, FinishTestResponseDto> FinishTestMapping =
+			new HttpMethodMapping<FinishTestRequestDto, FinishTestResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/finishTest",
+				ValidateRequest = request =>
+				{
+					if (request.Response == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("response"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(JObject),
+				GetRequestBody = request => request.Response,
+				CreateRequest = body => new FinishTestRequestDto { Response = (JObject) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<FinishTestResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(FinishTestResponseDto),
+					}.Build(),
+				},
+			}.Build();
 	}
 }

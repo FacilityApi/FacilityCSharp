@@ -71,6 +71,11 @@ namespace Facility.TestServerApi.Core
 				});
 		}
 
+		public async Task<ServiceResult<FinishTestResponseDto>> FinishTestAsync(FinishTestRequestDto request, CancellationToken cancellationToken)
+		{
+			return ServiceResult.Failure(ServiceErrors.CreateInternalError("finishTest not implemented."));
+		}
+
 		private const string c_initialETag = "\"initial\"";
 		private const string c_shinyWidgetName = "shiny";
 		private const int c_shinyWidgetId = 1337;

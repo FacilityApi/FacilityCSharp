@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Facility.TestServerApi.UnitTests
 {
-	public class TestServerTests
+	public class ServerUnitTests
 	{
 		[TestCaseSource(nameof(TestNames))]
 		public async Task RunTest(string test)
@@ -28,8 +28,8 @@ namespace Facility.TestServerApi.UnitTests
 
 		public sealed class NotFoundHttpHandler : HttpMessageHandler
 		{
-			protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
-				Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+			protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+				new HttpResponseMessage(HttpStatusCode.NotFound);
 		}
 
 		private static IReadOnlyList<string> TestNames => ServerTester.GetTestNames();

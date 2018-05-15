@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Facility.TestServerApi.UnitTests
 {
-	public sealed class CSharpGeneratorTests
+	public sealed class CodeGenTests
 	{
 		[Test]
 		public void GenerateTestServerApi()
@@ -22,7 +22,7 @@ namespace Facility.TestServerApi.UnitTests
 
 			var generator = new CSharpGenerator
 			{
-				GeneratorName = "CSharpGeneratorTests",
+				GeneratorName = "CodeGenTests",
 			};
 			var output = generator.GenerateOutput(service);
 			output.Files.Count(x => x.Name == "ITestServerApi.g.cs").Should().Be(1);

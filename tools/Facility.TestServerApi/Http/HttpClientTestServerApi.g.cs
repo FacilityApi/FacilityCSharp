@@ -44,5 +44,13 @@ namespace Facility.TestServerApi.Http
 		{
 			return TrySendRequestAsync(TestServerApiHttpMapping.GetWidgetMapping, request, cancellationToken);
 		}
+
+		/// <summary>
+		/// Finishes a client test.
+		/// </summary>
+		public Task<ServiceResult<FinishTestResponseDto>> FinishTestAsync(FinishTestRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(TestServerApiHttpMapping.FinishTestMapping, request, cancellationToken);
+		}
 	}
 }

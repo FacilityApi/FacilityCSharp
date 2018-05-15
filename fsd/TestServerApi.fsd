@@ -64,6 +64,31 @@ service TestServerApi
 		notModified: boolean;
 	}
 
+	/// Finishes a client test.
+	method finishTest
+	{
+		/// The response from the client request.
+		[http(from: body)]
+		response: object;
+	}:
+	{
+		/// The test status.
+		status: TestStatus;
+
+		/// The test message.
+		message: string;
+	}
+
+	/// The status of a test.
+	enum TestStatus
+	{
+		/// The test passed.
+		pass,
+
+		/// The test failed.
+		fail,
+	}
+
 	/// A widget.
 	[tag(name: widgets)]
 	data Widget

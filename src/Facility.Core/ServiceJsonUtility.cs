@@ -130,6 +130,20 @@ namespace Facility.Core
 		}
 
 		/// <summary>
+		/// Converts the object to a JToken.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The JToken.</returns>
+		public static JToken ToJToken(object value)
+		{
+			using (JTokenWriter jTokenWriter = new JTokenWriter())
+			{
+				ToJsonWriter(value, jTokenWriter);
+				return jTokenWriter.Token;
+			}
+		}
+
+		/// <summary>
 		/// Clones a JToken.
 		/// </summary>
 		public static T CloneToken<T>(T token) where T : JToken

@@ -32,6 +32,7 @@ namespace Facility.TestServerApi.Http
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleFinishTestAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
@@ -58,6 +59,14 @@ namespace Facility.TestServerApi.Http
 		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.GetWidgetMapping, httpRequest, m_service.GetWidgetAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Finishes a client test.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleFinishTestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(TestServerApiHttpMapping.FinishTestMapping, httpRequest, m_service.FinishTestAsync, cancellationToken);
 		}
 
 		readonly ITestServerApi m_service;

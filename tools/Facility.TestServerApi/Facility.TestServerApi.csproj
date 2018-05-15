@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+    <ProjectReference Include="..\Facility.ServerTesting\Facility.ServerTesting.csproj" />
   </ItemGroup>
 
 </Project>

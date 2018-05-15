@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Faithlife.Parsing;
 using Faithlife.Parsing.Json;
-using static System.FormattableString;
 
 namespace Facility.ServerTesting
 {
@@ -48,7 +47,7 @@ namespace Facility.ServerTesting
 			if (requestContent != null)
 			{
 				if (requestContent is IEnumerable<KeyValuePair<string, object>> bodyJson)
-					request.Content = new StringContent(RenderJson(bodyJson), Encoding.UTF8, "application/json");
+					request.Content = new StringContent(TestUtility.RenderJson(bodyJson), Encoding.UTF8, "application/json");
 				else
 					throw new ArgumentException($"Unrecognized type of request content: {requestContent.GetType().FullName}");
 			}
@@ -100,81 +99,10 @@ namespace Facility.ServerTesting
 
 		protected static Func<object, bool> Matches(Func<object, bool> predicate) => predicate;
 
-		private static string RenderJson(object json)
+		private static void VerifyJsonEquivalent(object actual, object expected)
 		{
-			if (json is IEnumerable<KeyValuePair<string, object>> jsonObject)
-			{
-				return "{" + string.Join(",", jsonObject.Select(x => RenderJson(x))) + "}";
-			}
-			else if (json is KeyValuePair<string, object> jsonProperty)
-			{
-				return RenderJson(jsonProperty.Key) + ":" + RenderJson(jsonProperty.Value);
-			}
-			else if (json is string jsonString)
-			{
-				return "\"" + jsonString + "\"";
-			}
-			else
-			{
-				return json != null ? Invariant($"{json}") : "null";
-			}
-		}
-
-		private static void VerifyJsonEquivalent(object actual, object expected, string path = "")
-		{
-			if (actual is int actualInt32)
-				actual = (long) actualInt32;
-			if (expected is int expectedInt32)
-				expected = (long) expectedInt32;
-
-			if (expected is IEnumerable<KeyValuePair<string, object>> expectedObject)
-			{
-				if (!(actual is IEnumerable<KeyValuePair<string, object>> actualObject))
-					throw new TestFailedException($"{renderPath("")} was not an object");
-
-				using (var actualIterator = actualObject.GetEnumerator())
-				{
-					foreach (var expectedPair in expectedObject.OrderBy(x => x.Key, StringComparer.Ordinal))
-					{
-						if (!actualIterator.MoveNext() || actualIterator.Current.Key != expectedPair.Key)
-							throw new TestFailedException($"{renderPath("object")} missing property '{expectedPair.Key}'");
-						VerifyJsonEquivalent(actualIterator.Current.Value, expectedPair.Value, combinePath(path, expectedPair.Key));
-					}
-
-					if (actualIterator.MoveNext())
-						throw new TestFailedException($"{renderPath("object")} has extra property '{actualIterator.Current.Key}'");
-				}
-			}
-			else if (expected is Func<object, bool> predicate)
-			{
-				if (!predicate(actual))
-					throw new TestFailedException(FormattableString.Invariant($"{renderPath("")} was {getTypeName(actual)} '{actual}'"));
-			}
-			else if (!Equals(actual, expected))
-			{
-				throw new TestFailedException(FormattableString.Invariant($"{renderPath("")} was {getTypeName(actual)} '{actual}'; expected {getTypeName(expected)} {expected}"));
-			}
-
-			string getTypeName(object o)
-			{
-				if (o is IEnumerable<KeyValuePair<string, object>>)
-					return "object";
-				if (o is IReadOnlyList<object>)
-					return "array";
-				if (o is int || o is long || o is double)
-					return "number";
-				if (o is string)
-					return "string";
-				if (o is bool)
-					return "boolean";
-				if (o == null)
-					return "null";
-				throw new InvalidOperationException($"Unexpected type {o.GetType().FullName}");
-			}
-
-			string combinePath(string a, string b) => a.Length == 0 ? b : $"{a}.{b}";
-
-			string renderPath(string t) => (t.Length == 0 ? "response" : $"response {t}") + (path.Length == 0 ? "" : $" at '{path}'");
+			if (!TestUtility.IsJsonEquivalent(actual, expected, out var message))
+				throw new TestFailedException(message);
 		}
 
 		private readonly HttpClient m_http;
