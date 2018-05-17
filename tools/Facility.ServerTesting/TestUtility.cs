@@ -9,17 +9,19 @@ namespace Facility.ServerTesting
 {
 	public static class TestUtility
 	{
-		public static bool TryParseJson(string json, out object value)
+		public static bool TryParseJson(string json, out object value, out string message)
 		{
 			var parseResult = JsonParsers.JsonValue.TryParse(json);
 			if (parseResult.Success)
 			{
 				value = parseResult.Value;
+				message = null;
 				return true;
 			}
 			else
 			{
 				value = null;
+				message = parseResult.ToMessage();
 				return true;
 			}
 		}
@@ -62,12 +64,14 @@ namespace Facility.ServerTesting
 				if (!(actual is IEnumerable<KeyValuePair<string, object>> actualObject))
 					return $"{renderPath("")} was not an object";
 
-				using (var actualIterator = actualObject.GetEnumerator())
+				using (var actualIterator = actualObject.OrderBy(x => x.Key, StringComparer.Ordinal).GetEnumerator())
 				{
 					foreach (var expectedPair in expectedObject.OrderBy(x => x.Key, StringComparer.Ordinal))
 					{
-						if (!actualIterator.MoveNext() || actualIterator.Current.Key != expectedPair.Key)
+						if (!actualIterator.MoveNext())
 							return $"{renderPath("object")} missing property '{expectedPair.Key}'";
+						if (actualIterator.Current.Key != expectedPair.Key)
+							return $"{renderPath("object")} missing property '{expectedPair.Key}'; found '{actualIterator.Current.Key}' instead";
 						GetJsonNotEquivalentMessage(actualIterator.Current.Value, expectedPair.Value, combinePath(path, expectedPair.Key));
 					}
 
