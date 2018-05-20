@@ -67,24 +67,24 @@ namespace Facility.ConformanceApi.Testing
 
 				dynamic result = ((dynamic) task).Result;
 				ServiceDto response = (ServiceDto) result.GetValueOrDefault();
+				var expectedResponse = testInfo.Response ?? new JObject();
 				var expectedError = testInfo.Error;
 				if (response != null)
 				{
-					if (expectedError != null)
-						return failure("Got valid response; expected error.");
-
 					var actualResponse = (JObject) ServiceJsonUtility.ToJToken(response);
-					var expectedResponse = testInfo.Response ?? new JObject();
+
+					if (expectedError != null)
+						return failure($"Got valid response; expected error. expected={ServiceJsonUtility.ToJson(expectedError)} actual={ServiceJsonUtility.ToJson(actualResponse)}");
 					if (!JToken.DeepEquals(expectedResponse, actualResponse))
 						return failure($"Response did not match. expected={ServiceJsonUtility.ToJson(expectedResponse)} actual={ServiceJsonUtility.ToJson(actualResponse)}");
 				}
 				else
 				{
-					if (expectedError == null)
-						return failure("Got error; expected valid response.");
-
 					ServiceErrorDto error = result.Error;
 					var actualError = (JObject) ServiceJsonUtility.ToJToken(error);
+
+					if (expectedError == null)
+						return failure($"Got error; expected valid response. expected={ServiceJsonUtility.ToJson(expectedResponse)} actual={ServiceJsonUtility.ToJson(actualError)}");
 					if (!JToken.DeepEquals(expectedError, actualError))
 						return failure($"Error did not match. expected={ServiceJsonUtility.ToJson(expectedError)} actual={ServiceJsonUtility.ToJson(actualError)}");
 				}

@@ -1,0 +1,6 @@
+{
+  "method": "deleteWidget",
+  "request": {
+    "id": 1337
+  }
+}

@@ -150,5 +150,64 @@ namespace Facility.ConformanceApi.Http
 					return response;
 				},
 			}.Build();
+
+		/// <summary>
+		/// Deletes the specified widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<DeleteWidgetRequestDto, DeleteWidgetResponseDto> DeleteWidgetMapping =
+			new HttpMethodMapping<DeleteWidgetRequestDto, DeleteWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Delete,
+				Path = "/widgets/{id}",
+				ValidateRequest = request =>
+				{
+					if (request.Id == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("id"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					string queryParameterId;
+					parameters.TryGetValue("id", out queryParameterId);
+					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
+					return request;
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string>
+					{
+						{ "If-Match", request.IfETag },
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					string headerIfETag;
+					headers.TryGetValue("If-Match", out headerIfETag);
+					request.IfETag = headerIfETag;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<DeleteWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 204,
+					}.Build(),
+					new HttpResponseMapping<DeleteWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 404,
+						MatchesResponse = response => response.NotFound.GetValueOrDefault(),
+						CreateResponse = body => new DeleteWidgetResponseDto { NotFound = true },
+					}.Build(),
+					new HttpResponseMapping<DeleteWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 409,
+						MatchesResponse = response => response.Conflict.GetValueOrDefault(),
+						CreateResponse = body => new DeleteWidgetResponseDto { Conflict = true },
+					}.Build(),
+				},
+			}.Build();
 	}
 }

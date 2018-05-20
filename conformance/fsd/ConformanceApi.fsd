@@ -64,6 +64,28 @@ service ConformanceApi
 		notModified: boolean;
 	}
 
+	/// Deletes the specified widget.
+	[http(method: DELETE, path: "/widgets/{id}", code: 204)]
+	[tag(name: widgets)]
+	method deleteWidget
+	{
+		/// The widget ID.
+		id: int32;
+
+		/// Don't delete the widget unless it has this ETag.
+		[http(from: header, name: If-Match)]
+		ifETag: string;
+	}:
+	{
+		/// The widget was not found.
+		[http(from: body, code: 404)]
+		notFound: boolean;
+
+		/// The widget no longer has the specified ETag.
+		[http(from: body, code: 409)]
+		conflict: boolean;
+	}
+
 	/// A widget.
 	[tag(name: widgets)]
 	data Widget

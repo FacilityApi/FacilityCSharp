@@ -26,5 +26,10 @@ namespace Facility.ConformanceApi
 		/// Gets the specified widget.
 		/// </summary>
 		Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Deletes the specified widget.
+		/// </summary>
+		Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken);
 	}
 }

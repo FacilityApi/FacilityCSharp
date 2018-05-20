@@ -44,5 +44,13 @@ namespace Facility.ConformanceApi.Http
 		{
 			return TrySendRequestAsync(ConformanceApiHttpMapping.GetWidgetMapping, request, cancellationToken);
 		}
+
+		/// <summary>
+		/// Deletes the specified widget.
+		/// </summary>
+		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, request, cancellationToken);
+		}
 	}
 }

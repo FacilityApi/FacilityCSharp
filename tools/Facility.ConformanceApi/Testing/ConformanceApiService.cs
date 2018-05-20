@@ -31,6 +31,10 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<GetWidgetResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<DeleteWidgetResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

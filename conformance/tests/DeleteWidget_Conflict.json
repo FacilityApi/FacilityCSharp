@@ -1,0 +1,10 @@
+{
+  "method": "deleteWidget",
+  "request": {
+    "id": 1337,
+    "ifETag": "\"not-initial\""
+  },
+  "response": {
+    "conflict": true
+  }
+}

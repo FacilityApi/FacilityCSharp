@@ -45,7 +45,8 @@ namespace Facility.ConformanceApi.Http
 		{
 			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
-				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
+				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleDeleteWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
 
 		/// <summary>
@@ -70,6 +71,14 @@ namespace Facility.ConformanceApi.Http
 		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetMapping, httpRequest, GetService(httpRequest).GetWidgetAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Deletes the specified widget.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, httpRequest, GetService(httpRequest).DeleteWidgetAsync, cancellationToken);
 		}
 
 		private IConformanceApi GetService(HttpRequestMessage httpRequest)
