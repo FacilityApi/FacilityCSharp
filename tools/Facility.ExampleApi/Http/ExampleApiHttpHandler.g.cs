@@ -29,6 +29,18 @@ namespace Facility.ExampleApi.Http
 		}
 
 		/// <summary>
+		/// Creates the handler.
+		/// </summary>
+		public ExampleApiHttpHandler(Func<HttpRequestMessage, IExampleApi> getService, ServiceHttpHandlerSettings settings)
+			: base(settings)
+		{
+			if (getService == null)
+				throw new ArgumentNullException("getService");
+
+			m_getService = getService;
+		}
+
+		/// <summary>
 		/// Attempts to handle the HTTP request.
 		/// </summary>
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
@@ -53,7 +65,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetsMapping, httpRequest, m_service.GetWidgetsAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetsMapping, httpRequest, GetService(httpRequest).GetWidgetsAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -61,7 +73,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.CreateWidgetMapping, httpRequest, m_service.CreateWidgetAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.CreateWidgetMapping, httpRequest, GetService(httpRequest).CreateWidgetAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -69,7 +81,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetMapping, httpRequest, m_service.GetWidgetAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetMapping, httpRequest, GetService(httpRequest).GetWidgetAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -77,7 +89,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.DeleteWidgetMapping, httpRequest, m_service.DeleteWidgetAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.DeleteWidgetMapping, httpRequest, GetService(httpRequest).DeleteWidgetAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -85,7 +97,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleEditWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.EditWidgetMapping, httpRequest, m_service.EditWidgetAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.EditWidgetMapping, httpRequest, GetService(httpRequest).EditWidgetAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -93,7 +105,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetBatchMapping, httpRequest, m_service.GetWidgetBatchAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetBatchMapping, httpRequest, GetService(httpRequest).GetWidgetBatchAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -102,7 +114,7 @@ namespace Facility.ExampleApi.Http
 		[Obsolete]
 		public Task<HttpResponseMessage> TryHandleGetWidgetWeightAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetWeightMapping, httpRequest, m_service.GetWidgetWeightAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetWidgetWeightMapping, httpRequest, GetService(httpRequest).GetWidgetWeightAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -110,7 +122,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetPreferenceAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetPreferenceMapping, httpRequest, m_service.GetPreferenceAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetPreferenceMapping, httpRequest, GetService(httpRequest).GetPreferenceAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -118,7 +130,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleSetPreferenceAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.SetPreferenceMapping, httpRequest, m_service.SetPreferenceAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.SetPreferenceMapping, httpRequest, GetService(httpRequest).SetPreferenceAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -126,7 +138,7 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleGetInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetInfoMapping, httpRequest, m_service.GetInfoAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.GetInfoMapping, httpRequest, GetService(httpRequest).GetInfoAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -134,17 +146,17 @@ namespace Facility.ExampleApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage> TryHandleNotRestfulAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.NotRestfulMapping, httpRequest, m_service.NotRestfulAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.NotRestfulMapping, httpRequest, GetService(httpRequest).NotRestfulAsync, cancellationToken);
 		}
 
 		public Task<HttpResponseMessage> TryHandleKitchenAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.KitchenMapping, httpRequest, m_service.KitchenAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.KitchenMapping, httpRequest, GetService(httpRequest).KitchenAsync, cancellationToken);
 		}
 
 		public Task<HttpResponseMessage> TryHandleTransformAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
-			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.TransformMapping, httpRequest, m_service.TransformAsync, cancellationToken);
+			return TryHandleServiceMethodAsync(ExampleApiHttpMapping.TransformMapping, httpRequest, GetService(httpRequest).TransformAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -155,6 +167,12 @@ namespace Facility.ExampleApi.Http
 			return HttpExampleApiErrors.TryGetHttpStatusCode(errorCode);
 		}
 
+		private IExampleApi GetService(HttpRequestMessage httpRequest)
+		{
+			return m_service ?? m_getService(httpRequest);
+		}
+
 		readonly IExampleApi m_service;
+		readonly Func<HttpRequestMessage, IExampleApi> m_getService;
 	}
 }

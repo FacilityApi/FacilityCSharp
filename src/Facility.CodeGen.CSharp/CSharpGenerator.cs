@@ -939,6 +939,21 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Creates the handler.");
+						code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings settings)");
+						using (code.Indent())
+							code.WriteLine(": base(settings)");
+						using (code.Block())
+						{
+							code.WriteLine("if (getService == null)");
+							using (code.Indent())
+								code.WriteLine("throw new ArgumentNullException(\"getService\");");
+
+							code.WriteLine();
+							code.WriteLine("m_getService = getService;");
+						}
+
+						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Attempts to handle the HTTP request.");
 						code.WriteLine("public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
 						using (code.Block())
@@ -969,7 +984,7 @@ namespace Facility.CodeGen.CSharp
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
 							code.WriteLine($"public Task<HttpResponseMessage> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
 							using (code.Block())
-								code.WriteLine($"return TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, m_service.{methodName}Async, cancellationToken);");
+								code.WriteLine($"return TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
 						}
 
 						if (httpServiceInfo.ErrorSets.Count != 0)
@@ -985,7 +1000,13 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
+						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest)");
+						using (code.Block())
+							code.WriteLine("return m_service ?? m_getService(httpRequest);");
+
+						code.WriteLine();
 						code.WriteLine($"readonly {fullInterfaceName} m_service;");
+						code.WriteLine($"readonly Func<HttpRequestMessage, {fullInterfaceName}> m_getService;");
 					}
 				}
 			});

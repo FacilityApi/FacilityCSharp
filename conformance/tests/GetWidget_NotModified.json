@@ -1,0 +1,10 @@
+{
+  "method": "getWidget",
+  "request": {
+    "id": 1337,
+    "ifNotETag": "\"initial\""
+  },
+  "response": {
+    "notModified": true
+  }
+}

@@ -26,7 +26,7 @@ var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 void CodeGen(bool verify)
 {
 	ExecuteCodeGen("fsd/FacilityCore.fsd src/Facility.Core/", verify);
-	ExecuteCodeGen("fsd/TestServerApi.fsd tools/Facility.TestServerApi/", verify);
+	ExecuteCodeGen("conformance/fsd/ConformanceApi.fsd tools/Facility.ConformanceApi/", verify);
 	ExecuteCodeGen("example/ExampleApi.fsd tools/Facility.ExampleApi/", verify);
 }
 

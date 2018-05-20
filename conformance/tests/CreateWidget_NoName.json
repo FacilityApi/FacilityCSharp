@@ -1,0 +1,10 @@
+{
+  "method": "createWidget",
+  "request": {
+    "widget": {}
+  },
+  "error": {
+    "code": "InvalidRequest",
+    "message": "The widget name is required."
+  }
+}

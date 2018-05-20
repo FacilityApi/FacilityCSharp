@@ -1,0 +1,7 @@
+{
+  "method": "getApiInfo",
+  "response": {
+    "service": "ConformanceApi",
+    "version": "0.1.0"
+  }
+}

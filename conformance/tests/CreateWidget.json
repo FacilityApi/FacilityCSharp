@@ -1,0 +1,16 @@
+{
+  "method": "createWidget",
+  "request": {
+    "widget": {
+      "name": "shiny"
+    }
+  },
+  "response": {
+    "widget": {
+      "id": 1337,
+      "name": "shiny"
+    },
+    "url": "/widgets/1337",
+    "eTag": "\"initial\""
+  }
+}
