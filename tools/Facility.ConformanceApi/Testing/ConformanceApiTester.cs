@@ -60,14 +60,14 @@ namespace Facility.ConformanceApi.Testing
 				if (methodInfo == null)
 					return failure($"Missing API method for {testInfo.Method}");
 
-				var request = ServiceJsonUtility.FromJToken(testInfo.Request ?? new JObject(), methodInfo.GetParameters()[0].ParameterType);
+				var request = ServiceJsonUtility.FromJToken(testInfo.Request, methodInfo.GetParameters()[0].ParameterType);
 
 				var task = (Task) methodInfo.Invoke(api, new[] { request, cancellationToken });
 				await task.ConfigureAwait(false);
 
 				dynamic result = ((dynamic) task).Result;
 				ServiceDto response = (ServiceDto) result.GetValueOrDefault();
-				var expectedResponse = testInfo.Response ?? new JObject();
+				var expectedResponse = testInfo.Response;
 				var expectedError = testInfo.Error;
 				if (response != null)
 				{

@@ -1,5 +1,6 @@
 {
   "method": "createWidget",
+  "request": {},
   "error": {
     "code": "InvalidRequest",
     "message": "The request field 'widget' is required."

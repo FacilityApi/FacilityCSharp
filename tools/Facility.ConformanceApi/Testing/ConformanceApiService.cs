@@ -46,14 +46,14 @@ namespace Facility.ConformanceApi.Testing
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unexpected method name for test {m_testInfo.TestName}. expected={m_testInfo.Method} actual={methodName}"));
 
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
-			var expectedRequest = m_testInfo.Request ?? new JObject();
+			var expectedRequest = m_testInfo.Request;
 			if (!JToken.DeepEquals(expectedRequest, actualRequest))
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(expectedRequest)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
 
 			if (m_testInfo.Error != null)
 				return ServiceResult.Failure(ServiceJsonUtility.FromJToken<ServiceErrorDto>(m_testInfo.Error));
 			else
-				return ServiceResult.Success(ServiceJsonUtility.FromJToken<T>(m_testInfo.Response ?? new JObject()));
+				return ServiceResult.Success(ServiceJsonUtility.FromJToken<T>(m_testInfo.Response));
 		}
 
 		private readonly ConformanceTestInfo m_testInfo;
