@@ -46,14 +46,25 @@ namespace Facility.ConformanceApi.Testing
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unexpected method name for test {m_testInfo.TestName}. expected={m_testInfo.Method} actual={methodName}"));
 
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
-			var expectedRequest = m_testInfo.Request;
-			if (!JToken.DeepEquals(expectedRequest, actualRequest))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(expectedRequest)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
+			if (!JToken.DeepEquals(m_testInfo.Request, actualRequest))
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Request)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
 
 			if (m_testInfo.Error != null)
-				return ServiceResult.Failure(ServiceJsonUtility.FromJToken<ServiceErrorDto>(m_testInfo.Error));
+			{
+				var error = ServiceJsonUtility.FromJToken<ServiceErrorDto>(m_testInfo.Error);
+				var errorRoundTrip = ServiceJsonUtility.ToJToken(error);
+				if (!JToken.DeepEquals(m_testInfo.Error, errorRoundTrip))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Error round trip failed for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Error)} actual={ServiceJsonUtility.ToJson(errorRoundTrip)}"));
+				return ServiceResult.Failure(error);
+			}
 			else
-				return ServiceResult.Success(ServiceJsonUtility.FromJToken<T>(m_testInfo.Response));
+			{
+				var response = ServiceJsonUtility.FromJToken<T>(m_testInfo.Response);
+				var responseRoundTrip = ServiceJsonUtility.ToJToken(response);
+				if (!JToken.DeepEquals(m_testInfo.Response, responseRoundTrip))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Response)} actual={ServiceJsonUtility.ToJson(responseRoundTrip)}"));
+				return ServiceResult.Success(response);
+			}
 		}
 
 		private readonly ConformanceTestInfo m_testInfo;
