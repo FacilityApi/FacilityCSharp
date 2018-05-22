@@ -102,6 +102,7 @@ Task("SourceIndex")
 	});
 
 Task("NuGetPackage")
+	.IsDependentOn("Rebuild")
 	.IsDependentOn("SourceIndex")
 	.Does(() =>
 	{
