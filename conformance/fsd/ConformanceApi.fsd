@@ -96,4 +96,93 @@ service ConformanceApi
 		/// The name of the widget.
 		name: string;
 	}
+
+	method mirrorFields
+	{
+		field: Any;
+		matrix: double[][][];
+	}:
+	{
+		field: Any;
+		matrix: double[][][];
+	}
+
+	data Any
+	{
+		string: string;
+		boolean: boolean;
+		double: double;
+		int32: int32;
+		int64: int64;
+		decimal: decimal;
+		bytes: bytes;
+		object: object;
+		error: error;
+		data: Any;
+		enum: Answer;
+		array: AnyArray;
+		map: AnyMap;
+		result: AnyResult;
+	}
+
+	data AnyArray
+	{
+		string: string[];
+		boolean: boolean[];
+		double: double[];
+		int32: int32[];
+		int64: int64[];
+		decimal: decimal[];
+		bytes: bytes[];
+		object: object[];
+		error: error[];
+		data: Any[];
+		enum: Answer[];
+		array: int32[][];
+		map: map<int32>[];
+		result: result<int32>[];
+	}
+
+	data AnyMap
+	{
+		string: map<string>;
+		boolean: map<boolean>;
+		double: map<double>;
+		int32: map<int32>;
+		int64: map<int64>;
+		decimal: map<decimal>;
+		bytes: map<bytes>;
+		object: map<object>;
+		error: map<error>;
+		data: map<Any>;
+		enum: map<Answer>;
+		array: map<int32[]>;
+		map: map<map<int32>>;
+		result: map<result<int32>>;
+	}
+
+	data AnyResult
+	{
+		string: result<string>;
+		boolean: result<boolean>;
+		double: result<double>;
+		int32: result<int32>;
+		int64: result<int64>;
+		decimal: result<decimal>;
+		bytes: result<bytes>;
+		object: result<object>;
+		error: result<error>;
+		data: result<Any>;
+		enum: result<Answer>;
+		array: result<int32[]>;
+		map: result<map<int32>>;
+		result: result<result<int32>>;
+	}
+
+	enum Answer
+	{
+		yes,
+		no,
+		maybe,
+	}
 }

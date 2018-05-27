@@ -1,0 +1,43 @@
+{
+  "method": "mirrorFields",
+  "request": {
+    "field": {
+      "result": {
+        "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
+      }
+    }
+  },
+  "response": {
+    "field": {
+      "result": {
+        "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+        "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
+      }
+    }
+  }
+}

@@ -52,5 +52,10 @@ namespace Facility.ConformanceApi.Http
 		{
 			return TrySendRequestAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, request, cancellationToken);
 		}
+
+		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, request, cancellationToken);
+		}
 	}
 }

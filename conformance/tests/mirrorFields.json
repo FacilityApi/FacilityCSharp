@@ -1,0 +1,33 @@
+{
+  "method": "mirrorFields",
+  "request": {
+    "field": {
+      "string": "string",
+      "boolean": true,
+      "double": 6.022E23,
+      "int32": 42,
+      "int64": 12345678910,
+      "decimal": 3.14,
+      "bytes": "aGk=",
+      "object": { "": null, " ": [null] },
+      "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+      "data": { "data": { "data": {} } },
+      "enum": "yes"
+    }
+  },
+  "response": {
+    "field": {
+      "string": "string",
+      "boolean": true,
+      "double": 6.022E23,
+      "int32": 42,
+      "int64": 12345678910,
+      "decimal": 3.14,
+      "bytes": "aGk=",
+      "object": { "": null, " ": [null] },
+      "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+      "data": { "data": { "data": {} } },
+      "enum": "yes"
+    }
+  }
+}

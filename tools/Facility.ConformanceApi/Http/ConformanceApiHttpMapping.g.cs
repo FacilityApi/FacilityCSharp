@@ -209,5 +209,21 @@ namespace Facility.ConformanceApi.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto> MirrorFieldsMapping =
+			new HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/mirrorFields",
+				RequestBodyType = typeof(MirrorFieldsRequestDto),
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MirrorFieldsResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(MirrorFieldsResponseDto),
+					}.Build(),
+				},
+			}.Build();
 	}
 }

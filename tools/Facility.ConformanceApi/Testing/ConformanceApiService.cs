@@ -35,6 +35,10 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<DeleteWidgetResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<MirrorFieldsResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

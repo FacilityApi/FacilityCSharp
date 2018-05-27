@@ -136,11 +136,8 @@ namespace Facility.Core
 		/// <returns>The JToken.</returns>
 		public static JToken ToJToken(object value)
 		{
-			using (JTokenWriter jTokenWriter = new JTokenWriter())
-			{
-				ToJsonWriter(value, jTokenWriter);
-				return jTokenWriter.Token;
-			}
+			// use JSON to avoid unusual types like byte arrays in the JToken
+			return FromJson<JToken>(ToJson(value));
 		}
 
 		/// <summary>

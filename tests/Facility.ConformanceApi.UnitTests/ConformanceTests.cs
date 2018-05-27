@@ -83,6 +83,6 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static IReadOnlyList<string> TestNames => s_testProvider.GetTestNames();
 
-		private static HttpClient s_httpClient = CreateHttpClient();
+		private static readonly HttpClient s_httpClient = CreateHttpClient();
 	}
 }
