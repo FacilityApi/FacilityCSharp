@@ -257,10 +257,67 @@ service ConformanceApi
 		result: result<result<int32>>;
 	}
 
+	/// One of three answers.
 	enum Answer
 	{
+		/// Affirmative.
 		yes,
+
+		/// Negative.
 		no,
+
+		/// Unknown.
 		maybe,
 	}
 }
+
+# ConformanceApi
+
+The Facility Conformance API allows clients and servers in various languages and platforms
+to test one another for conformance.
+
+## Conformance Web Server
+
+A conformance web server should leverage a Facility server code generator and/or library.
+On each request, the web server should determine the conformance test being executed by
+looking at the `FacilityTest` HTTP header. The web server should find the test data for the
+specified test, ensure that the request matches, and return the specified response or error.
+
+The web server should return `InvalidRequest` if:
+
+* The `FacilityTest` HTTP header is missing.
+* The API method called does not match the method specified by the test data.
+* The actual request is not an exact match of the request specified by the test data.
+* The server fails to create a response or error that is an exact match of the specified
+  response or error.
+
+When checking for an exact match, the only thing that can be ignored is the order of the
+properties of an object. There should be no missing properties, no extra properties, and
+all property names and other strings should use the same letter case.
+
+## Conformance Tester
+
+A conformance tester should leverage a Facility client generator and/or library. The tester
+should enumerate through all of the conformance tests. For each test, it should create a
+client that adds the `FacilityTest` HTTP header to any request. It should use that client to
+call the method specified by the test data with the request specified by the test data. The
+tester should verify that the result matches the response or error specified by the test data.
+
+The tester should report a test failure if:
+
+* The method specified by the test data is missing.
+* The client fails to create a request that is an exact match of the specified request.
+* The client receives a response or error that is not an exact match of the specified
+  response or error.
+
+# getApiInfo
+
+The name of the service should be `ConformanceApi`.
+
+# Widget
+
+Widgets are useful for conformance tests.
+
+# Answer
+
+Use `maybe` if you aren't sure.
