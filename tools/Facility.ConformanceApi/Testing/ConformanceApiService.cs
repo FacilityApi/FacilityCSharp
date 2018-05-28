@@ -64,6 +64,9 @@ namespace Facility.ConformanceApi.Testing
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
 
+			if (m_testInfo == null)
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Facility test name is missing; set the FacilityTest HTTP header."));
+
 			string uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 			string methodName = uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
 			if (methodName != m_testInfo.Method)
