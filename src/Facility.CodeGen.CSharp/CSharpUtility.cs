@@ -60,11 +60,6 @@ namespace Facility.CodeGen.CSharp
 
 		public const string HttpDirectoryName = "Http";
 
-		public static string GetNamespaceName(ServiceInfo serviceInfo)
-		{
-			return serviceInfo.TryGetAttribute("csharp")?.TryGetParameterValue("namespace") ?? CodeGenUtility.Capitalize(serviceInfo.Name);
-		}
-
 		public static string GetInterfaceName(ServiceInfo serviceInfo)
 		{
 			return $"I{CodeGenUtility.Capitalize(serviceInfo.Name)}";
@@ -88,11 +83,6 @@ namespace Facility.CodeGen.CSharp
 		public static string GetResponseDtoName(ServiceMethodInfo methodInfo)
 		{
 			return CodeGenUtility.Capitalize(methodInfo.Name) + "ResponseDto";
-		}
-
-		public static string GetFieldPropertyName(ServiceFieldInfo fieldInfo)
-		{
-			return TryGetCSharpName(fieldInfo) ?? CodeGenUtility.Capitalize(fieldInfo.Name);
 		}
 
 		public static string GetEnumName(ServiceEnumInfo enumInfo)
@@ -146,11 +136,6 @@ namespace Facility.CodeGen.CSharp
 		private static int GetUsingGroup(string namespaceName)
 		{
 			return namespaceName == "System" || namespaceName.StartsWith("System.", StringComparison.Ordinal) ? 1 : 2;
-		}
-
-		private static string TryGetCSharpName(ServiceElementWithAttributesInfo element)
-		{
-			return element?.TryGetAttribute("csharp")?.Parameters.SingleOrDefault(x => x.Name == "name")?.Value;
 		}
 	}
 }

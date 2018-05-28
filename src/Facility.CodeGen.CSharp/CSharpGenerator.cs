@@ -32,12 +32,7 @@ namespace Facility.CodeGen.CSharp
 		{
 			var outputFiles = new List<CodeGenFile>();
 
-			var context = new Context
-			{
-				GeneratorName = GeneratorName,
-				NamespaceName = NamespaceName ?? CSharpUtility.GetNamespaceName(service),
-				Service = service,
-			};
+			var context = new Context(GeneratorName, CSharpServiceInfo.Create(service));
 
 			foreach (var errorSetInfo in service.ErrorSets)
 				outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
@@ -327,8 +322,8 @@ namespace Facility.CodeGen.CSharp
 									for (int fieldIndex = 0; fieldIndex < fieldInfos.Count; fieldIndex++)
 									{
 										var fieldInfo = fieldInfos[fieldIndex];
-										string propertyName = CSharpUtility.GetFieldPropertyName(fieldInfo);
-										var fieldType = context.Service.GetFieldType(fieldInfo);
+										string propertyName = context.GetFieldPropertyName(fieldInfo);
+										var fieldType = context.GetFieldType(fieldInfo);
 										string areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
 										code.Write(areEquivalentMethodName != null ?
 											$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
@@ -488,8 +483,8 @@ namespace Facility.CodeGen.CSharp
 											foreach (var pathField in httpMethodInfo.PathFields)
 											{
 												var serviceField = pathField.ServiceField;
-												string fieldName = CSharpUtility.GetFieldPropertyName(serviceField);
-												var fieldType = context.Service.GetFieldType(serviceField);
+												string fieldName = context.GetFieldPropertyName(serviceField);
+												var fieldType = context.GetFieldType(serviceField);
 												if (fieldType.Kind == ServiceTypeKind.String)
 													code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
 												else
@@ -501,7 +496,7 @@ namespace Facility.CodeGen.CSharp
 											if (httpMethodInfo.RequestBodyField != null)
 											{
 												var serviceField = httpMethodInfo.RequestBodyField.ServiceField;
-												string fieldName = CSharpUtility.GetFieldPropertyName(serviceField);
+												string fieldName = context.GetFieldPropertyName(serviceField);
 												code.WriteLine($"if (request.{fieldName} == null)");
 												using (code.Indent())
 													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
@@ -523,14 +518,14 @@ namespace Facility.CodeGen.CSharp
 											{
 												foreach (var pathField in httpMethodInfo.PathFields)
 												{
-													string fieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
-													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
+													string fieldName = context.GetFieldPropertyName(pathField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
 													code.WriteLine($"{{ \"{pathField.Name}\", {fieldValue} }},");
 												}
 												foreach (var queryField in httpMethodInfo.QueryFields)
 												{
-													string fieldName = CSharpUtility.GetFieldPropertyName(queryField.ServiceField);
-													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
+													string fieldName = context.GetFieldPropertyName(queryField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
 													code.WriteLine($"{{ \"{queryField.Name}\", {fieldValue} }},");
 												}
 											}
@@ -543,20 +538,20 @@ namespace Facility.CodeGen.CSharp
 										{
 											foreach (var queryField in httpMethodInfo.QueryFields)
 											{
-												string dtoFieldName = CSharpUtility.GetFieldPropertyName(queryField.ServiceField);
+												string dtoFieldName = context.GetFieldPropertyName(queryField.ServiceField);
 												string queryParameterName = $"queryParameter{dtoFieldName}";
 												code.WriteLine($"string {queryParameterName};");
 												code.WriteLine($"parameters.TryGetValue(\"{queryField.Name}\", out {queryParameterName});");
-												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(queryField.ServiceField), queryParameterName)};");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(queryField.ServiceField), queryParameterName)};");
 											}
 
 											foreach (var pathField in httpMethodInfo.PathFields)
 											{
-												string dtoFieldName = CSharpUtility.GetFieldPropertyName(pathField.ServiceField);
+												string dtoFieldName = context.GetFieldPropertyName(pathField.ServiceField);
 												string queryParameterName = $"queryParameter{dtoFieldName}";
 												code.WriteLine($"string {queryParameterName};");
 												code.WriteLine($"parameters.TryGetValue(\"{pathField.Name}\", out {queryParameterName});");
-												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(pathField.ServiceField), queryParameterName)};");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(pathField.ServiceField), queryParameterName)};");
 											}
 
 											code.WriteLine("return request;");
@@ -575,8 +570,8 @@ namespace Facility.CodeGen.CSharp
 											{
 												foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 												{
-													string fieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
-													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
+													string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
 													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
 												}
 											}
@@ -589,11 +584,11 @@ namespace Facility.CodeGen.CSharp
 										{
 											foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 											{
-												string dtoFieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+												string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
 												string headerVariableName = $"header{dtoFieldName}";
 												code.WriteLine($"string {headerVariableName};");
 												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
-												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(headerField.ServiceField), headerVariableName)};");
+												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 											}
 
 											code.WriteLine("return request;");
@@ -603,8 +598,8 @@ namespace Facility.CodeGen.CSharp
 
 									if (httpMethodInfo.RequestBodyField != null)
 									{
-										string requestBodyFieldName = CSharpUtility.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
-										string requestBodyFieldTypeName = RenderNullableFieldType(context.Service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField));
+										string requestBodyFieldName = context.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
+										string requestBodyFieldTypeName = RenderNullableFieldType(context.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField));
 
 										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
 										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
@@ -626,7 +621,7 @@ namespace Facility.CodeGen.CSharp
 												{
 													foreach (var field in httpMethodInfo.RequestNormalFields)
 													{
-														string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+														string fieldName = context.GetFieldPropertyName(field.ServiceField);
 														code.WriteLine($"{fieldName} = request.{fieldName},");
 													}
 												}
@@ -642,7 +637,7 @@ namespace Facility.CodeGen.CSharp
 												{
 													foreach (var field in httpMethodInfo.RequestNormalFields)
 													{
-														string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+														string fieldName = context.GetFieldPropertyName(field.ServiceField);
 														code.WriteLine($"{fieldName} = (({requestTypeName}) body).{fieldName},");
 													}
 												}
@@ -668,9 +663,9 @@ namespace Facility.CodeGen.CSharp
 												var bodyField = validResponse.BodyField;
 												if (bodyField != null)
 												{
-													string responseBodyFieldName = CSharpUtility.GetFieldPropertyName(bodyField.ServiceField);
+													string responseBodyFieldName = context.GetFieldPropertyName(bodyField.ServiceField);
 
-													var bodyFieldType = context.Service.GetFieldType(bodyField.ServiceField);
+													var bodyFieldType = context.GetFieldType(bodyField.ServiceField);
 													if (bodyFieldType.Kind == ServiceTypeKind.Boolean)
 													{
 														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName}.GetValueOrDefault(),");
@@ -701,7 +696,7 @@ namespace Facility.CodeGen.CSharp
 															{
 																foreach (var field in validResponse.NormalFields)
 																{
-																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+																	string fieldName = context.GetFieldPropertyName(field.ServiceField);
 																	code.WriteLine($"{fieldName} = response.{fieldName},");
 																}
 															}
@@ -717,7 +712,7 @@ namespace Facility.CodeGen.CSharp
 															{
 																foreach (var field in validResponse.NormalFields)
 																{
-																	string fieldName = CSharpUtility.GetFieldPropertyName(field.ServiceField);
+																	string fieldName = context.GetFieldPropertyName(field.ServiceField);
 																	code.WriteLine($"{fieldName} = (({responseTypeName}) body).{fieldName},");
 																}
 															}
@@ -743,8 +738,8 @@ namespace Facility.CodeGen.CSharp
 											{
 												foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 												{
-													string fieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
-													string fieldValue = GenerateFieldToStringCode(context.Service.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
+													string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
+													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
 													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
 												}
 											}
@@ -757,11 +752,11 @@ namespace Facility.CodeGen.CSharp
 										{
 											foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 											{
-												string dtoFieldName = CSharpUtility.GetFieldPropertyName(headerField.ServiceField);
+												string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
 												string headerVariableName = $"header{dtoFieldName}";
 												code.WriteLine($"string {headerVariableName};");
 												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
-												code.WriteLine($"response.{dtoFieldName} = {GenerateStringToFieldCode(context.Service.GetFieldType(headerField.ServiceField), headerVariableName)};");
+												code.WriteLine($"response.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 											}
 
 											code.WriteLine("return response;");
@@ -1050,9 +1045,9 @@ namespace Facility.CodeGen.CSharp
 		{
 			foreach (var fieldInfo in fieldInfos)
 			{
-				string propertyName = CSharpUtility.GetFieldPropertyName(fieldInfo);
+				string propertyName = context.GetFieldPropertyName(fieldInfo);
 				string normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
-				string nullableFieldType = RenderNullableFieldType(context.Service.GetFieldType(fieldInfo));
+				string nullableFieldType = RenderNullableFieldType(context.GetFieldType(fieldInfo));
 
 				code.WriteLine();
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
@@ -1234,11 +1229,21 @@ namespace Facility.CodeGen.CSharp
 
 		private sealed class Context
 		{
-			public string GeneratorName { get; set; }
+			public Context(string generatorName, CSharpServiceInfo csharpServiceInfo)
+			{
+				m_csharpServiceInfo = csharpServiceInfo;
+				GeneratorName = generatorName;
+			}
 
-			public string NamespaceName { get; set; }
+			public string GeneratorName { get; }
 
-			public ServiceInfo Service { get; set; }
+			public string NamespaceName => m_csharpServiceInfo.Namespace;
+
+			public string GetFieldPropertyName(ServiceFieldInfo field) => m_csharpServiceInfo.GetFieldPropertyName(field);
+
+			public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => m_csharpServiceInfo.Service.GetFieldType(field);
+
+			private readonly CSharpServiceInfo m_csharpServiceInfo;
 		}
 	}
 }
