@@ -225,5 +225,209 @@ namespace Facility.ConformanceApi.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<CheckQueryRequestDto, CheckQueryResponseDto> CheckQueryMapping =
+			new HttpMethodMapping<CheckQueryRequestDto, CheckQueryResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/checkQuery",
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						{ "string", request.String },
+						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
+						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					string queryParameterString;
+					parameters.TryGetValue("string", out queryParameterString);
+					request.String = queryParameterString;
+					string queryParameterBoolean;
+					parameters.TryGetValue("boolean", out queryParameterBoolean);
+					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
+					string queryParameterDouble;
+					parameters.TryGetValue("double", out queryParameterDouble);
+					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
+					string queryParameterInt32;
+					parameters.TryGetValue("int32", out queryParameterInt32);
+					request.Int32 = ServiceDataUtility.TryParseInt32(queryParameterInt32);
+					string queryParameterInt64;
+					parameters.TryGetValue("int64", out queryParameterInt64);
+					request.Int64 = ServiceDataUtility.TryParseInt64(queryParameterInt64);
+					string queryParameterDecimal;
+					parameters.TryGetValue("decimal", out queryParameterDecimal);
+					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
+					string queryParameterEnum;
+					parameters.TryGetValue("enum", out queryParameterEnum);
+					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<CheckQueryResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+			}.Build();
+
+		public static readonly HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto> CheckPathMapping =
+			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/mirror/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
+				ValidateRequest = request =>
+				{
+					if (string.IsNullOrEmpty(request.String))
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("string"));
+					if (request.Boolean == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("boolean"));
+					if (request.Double == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("double"));
+					if (request.Int32 == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("int32"));
+					if (request.Int64 == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("int64"));
+					if (request.Decimal == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("decimal"));
+					if (request.Enum == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("enum"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						{ "string", request.String },
+						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
+						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					string queryParameterString;
+					parameters.TryGetValue("string", out queryParameterString);
+					request.String = queryParameterString;
+					string queryParameterBoolean;
+					parameters.TryGetValue("boolean", out queryParameterBoolean);
+					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
+					string queryParameterDouble;
+					parameters.TryGetValue("double", out queryParameterDouble);
+					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
+					string queryParameterInt32;
+					parameters.TryGetValue("int32", out queryParameterInt32);
+					request.Int32 = ServiceDataUtility.TryParseInt32(queryParameterInt32);
+					string queryParameterInt64;
+					parameters.TryGetValue("int64", out queryParameterInt64);
+					request.Int64 = ServiceDataUtility.TryParseInt64(queryParameterInt64);
+					string queryParameterDecimal;
+					parameters.TryGetValue("decimal", out queryParameterDecimal);
+					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
+					string queryParameterEnum;
+					parameters.TryGetValue("enum", out queryParameterEnum);
+					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<CheckPathResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+			}.Build();
+
+		public static readonly HttpMethodMapping<MirrorHeadersRequestDto, MirrorHeadersResponseDto> MirrorHeadersMapping =
+			new HttpMethodMapping<MirrorHeadersRequestDto, MirrorHeadersResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/mirrorHeaders",
+				GetRequestHeaders = request =>
+					new Dictionary<string, string>
+					{
+						{ "string", request.String },
+						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
+						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					string headerString;
+					headers.TryGetValue("string", out headerString);
+					request.String = headerString;
+					string headerBoolean;
+					headers.TryGetValue("boolean", out headerBoolean);
+					request.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
+					string headerDouble;
+					headers.TryGetValue("double", out headerDouble);
+					request.Double = ServiceDataUtility.TryParseDouble(headerDouble);
+					string headerInt32;
+					headers.TryGetValue("int32", out headerInt32);
+					request.Int32 = ServiceDataUtility.TryParseInt32(headerInt32);
+					string headerInt64;
+					headers.TryGetValue("int64", out headerInt64);
+					request.Int64 = ServiceDataUtility.TryParseInt64(headerInt64);
+					string headerDecimal;
+					headers.TryGetValue("decimal", out headerDecimal);
+					request.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
+					string headerEnum;
+					headers.TryGetValue("enum", out headerEnum);
+					request.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MirrorHeadersResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string>
+					{
+						{ "string", response.String },
+						{ "boolean", response.Boolean == null ? null : response.Boolean.Value.ToString() },
+						{ "double", response.Double == null ? null : response.Double.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int32", response.Int32 == null ? null : response.Int32.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "int64", response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "decimal", response.Decimal == null ? null : response.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
+						{ "enum", response.Enum == null ? null : response.Enum.Value.ToString() },
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					string headerString;
+					headers.TryGetValue("string", out headerString);
+					response.String = headerString;
+					string headerBoolean;
+					headers.TryGetValue("boolean", out headerBoolean);
+					response.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
+					string headerDouble;
+					headers.TryGetValue("double", out headerDouble);
+					response.Double = ServiceDataUtility.TryParseDouble(headerDouble);
+					string headerInt32;
+					headers.TryGetValue("int32", out headerInt32);
+					response.Int32 = ServiceDataUtility.TryParseInt32(headerInt32);
+					string headerInt64;
+					headers.TryGetValue("int64", out headerInt64);
+					response.Int64 = ServiceDataUtility.TryParseInt64(headerInt64);
+					string headerDecimal;
+					headers.TryGetValue("decimal", out headerDecimal);
+					response.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
+					string headerEnum;
+					headers.TryGetValue("enum", out headerEnum);
+					response.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					return response;
+				},
+			}.Build();
 	}
 }

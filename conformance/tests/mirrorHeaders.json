@@ -1,0 +1,21 @@
+{
+  "method": "mirrorHeaders",
+  "request": {
+    "string": "string",
+    "boolean": true,
+    "double": 6.022E23,
+    "int32": 42,
+    "int64": 12345678910,
+    "decimal": 3.14,
+    "enum": "yes"
+  },
+  "response": {
+    "string": "string",
+    "boolean": true,
+    "double": 6.022E23,
+    "int32": 42,
+    "int64": 12345678910,
+    "decimal": 3.14,
+    "enum": "yes"
+  }
+}

@@ -44,7 +44,10 @@ namespace Facility.ConformanceApi.Http
 		public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleCheckQueryAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleCheckPathAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleDeleteWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
@@ -85,6 +88,21 @@ namespace Facility.ConformanceApi.Http
 		public Task<HttpResponseMessage> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, httpRequest, GetService(httpRequest).MirrorFieldsAsync, cancellationToken);
+		}
+
+		public Task<HttpResponseMessage> TryHandleCheckQueryAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckQueryMapping, httpRequest, GetService(httpRequest).CheckQueryAsync, cancellationToken);
+		}
+
+		public Task<HttpResponseMessage> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckPathMapping, httpRequest, GetService(httpRequest).CheckPathAsync, cancellationToken);
+		}
+
+		public Task<HttpResponseMessage> TryHandleMirrorHeadersAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, httpRequest, GetService(httpRequest).MirrorHeadersAsync, cancellationToken);
 		}
 
 		private IConformanceApi GetService(HttpRequestMessage httpRequest)

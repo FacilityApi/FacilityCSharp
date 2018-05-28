@@ -107,6 +107,55 @@ service ConformanceApi
 		matrix: double[][][];
 	}
 
+	[http(method: GET)]
+	method checkQuery
+	{
+		string: string;
+		boolean: boolean;
+		double: double;
+		int32: int32;
+		int64: int64;
+		decimal: decimal;
+		enum: Answer;
+	}:
+	{
+	}
+
+	[http(method: GET, path: "/mirror/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}")]
+	method checkPath
+	{
+		string: string;
+		boolean: boolean;
+		double: double;
+		int32: int32;
+		int64: int64;
+		decimal: decimal;
+		enum: Answer;
+	}:
+	{
+	}
+
+	[http(method: GET)]
+	method mirrorHeaders
+	{
+		[http(from: header)] string: string;
+		[http(from: header)] boolean: boolean;
+		[http(from: header)] double: double;
+		[http(from: header)] int32: int32;
+		[http(from: header)] int64: int64;
+		[http(from: header)] decimal: decimal;
+		[http(from: header)] enum: Answer;
+	}:
+	{
+		[http(from: header)] string: string;
+		[http(from: header)] boolean: boolean;
+		[http(from: header)] double: double;
+		[http(from: header)] int32: int32;
+		[http(from: header)] int64: int64;
+		[http(from: header)] decimal: decimal;
+		[http(from: header)] enum: Answer;
+	}
+
 	data Any
 	{
 		string: string;

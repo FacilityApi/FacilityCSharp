@@ -57,5 +57,20 @@ namespace Facility.ConformanceApi.Http
 		{
 			return TrySendRequestAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, request, cancellationToken);
 		}
+
+		public Task<ServiceResult<CheckQueryResponseDto>> CheckQueryAsync(CheckQueryRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.CheckQueryMapping, request, cancellationToken);
+		}
+
+		public Task<ServiceResult<CheckPathResponseDto>> CheckPathAsync(CheckPathRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.CheckPathMapping, request, cancellationToken);
+		}
+
+		public Task<ServiceResult<MirrorHeadersResponseDto>> MirrorHeadersAsync(MirrorHeadersRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, request, cancellationToken);
+		}
 	}
 }

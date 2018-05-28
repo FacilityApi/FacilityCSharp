@@ -39,6 +39,18 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<MirrorFieldsResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<CheckQueryResponseDto>> CheckQueryAsync(CheckQueryRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<CheckQueryResponseDto>(request));
+
+		/// <inheritdoc />
+		public Task<ServiceResult<CheckPathResponseDto>> CheckPathAsync(CheckPathRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<CheckPathResponseDto>(request));
+
+		/// <inheritdoc />
+		public Task<ServiceResult<MirrorHeadersResponseDto>> MirrorHeadersAsync(MirrorHeadersRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<MirrorHeadersResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

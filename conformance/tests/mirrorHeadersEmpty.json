@@ -1,0 +1,9 @@
+{
+  "method": "mirrorHeaders",
+  "request": {
+    "string": ""
+  },
+  "response": {
+    "string": ""
+  }
+}
