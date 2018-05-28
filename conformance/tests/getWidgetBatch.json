@@ -1,0 +1,21 @@
+{
+  "method": "getWidgetBatch",
+  "request": {
+    "ids": [1337,42]
+  },
+  "response": {
+    "results": [
+      {
+        "value": {
+          "id": 1337,
+          "name": "shiny"
+        }
+      },
+      {
+        "error": {
+          "code": "NotFound"
+        }
+      }
+    ]
+  }
+}

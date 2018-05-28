@@ -18,6 +18,11 @@ namespace Facility.ConformanceApi
 		Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoAsync(GetApiInfoRequestDto request, CancellationToken cancellationToken);
 
 		/// <summary>
+		/// Gets widgets.
+		/// </summary>
+		Task<ServiceResult<GetWidgetsResponseDto>> GetWidgetsAsync(GetWidgetsRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
 		/// Creates a new widget.
 		/// </summary>
 		Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken);
@@ -31,6 +36,11 @@ namespace Facility.ConformanceApi
 		/// Deletes the specified widget.
 		/// </summary>
 		Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Gets the specified widgets.
+		/// </summary>
+		Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken);
 
 		Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken);
 

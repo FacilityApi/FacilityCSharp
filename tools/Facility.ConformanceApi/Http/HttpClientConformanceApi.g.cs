@@ -30,6 +30,14 @@ namespace Facility.ConformanceApi.Http
 		}
 
 		/// <summary>
+		/// Gets widgets.
+		/// </summary>
+		public Task<ServiceResult<GetWidgetsResponseDto>> GetWidgetsAsync(GetWidgetsRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.GetWidgetsMapping, request, cancellationToken);
+		}
+
+		/// <summary>
 		/// Creates a new widget.
 		/// </summary>
 		public Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken)
@@ -51,6 +59,14 @@ namespace Facility.ConformanceApi.Http
 		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken)
 		{
 			return TrySendRequestAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, request, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets the specified widgets.
+		/// </summary>
+		public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken)
+		{
+			return TrySendRequestAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, request, cancellationToken);
 		}
 
 		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken)

@@ -1,0 +1,18 @@
+{
+  "method": "getWidgets",
+  "request": {
+    "query": "shiny"
+  },
+  "response": {
+    "widgets": [
+      {
+        "id": 1337,
+        "name": "shiny"
+      },
+      {
+        "id": 7331,
+        "name": "shinier"
+      }
+    ]
+  }
+}

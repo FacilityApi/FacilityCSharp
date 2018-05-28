@@ -48,7 +48,9 @@ namespace Facility.ConformanceApi.Http
 				await AdaptTask(TryHandleCheckPathAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCreateWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetWidgetBatchAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleDeleteWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
@@ -59,6 +61,14 @@ namespace Facility.ConformanceApi.Http
 		public Task<HttpResponseMessage> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetApiInfoMapping, httpRequest, GetService(httpRequest).GetApiInfoAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets widgets.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetsMapping, httpRequest, GetService(httpRequest).GetWidgetsAsync, cancellationToken);
 		}
 
 		/// <summary>
@@ -83,6 +93,14 @@ namespace Facility.ConformanceApi.Http
 		public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, httpRequest, GetService(httpRequest).DeleteWidgetAsync, cancellationToken);
+		}
+
+		/// <summary>
+		/// Gets the specified widgets.
+		/// </summary>
+		public Task<HttpResponseMessage> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		{
+			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, httpRequest, GetService(httpRequest).GetWidgetBatchAsync, cancellationToken);
 		}
 
 		public Task<HttpResponseMessage> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)

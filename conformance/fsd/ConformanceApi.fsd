@@ -15,6 +15,20 @@ service ConformanceApi
 		version: string;
 	}
 
+	/// Gets widgets.
+	[http(method: GET, path: "/widgets")]
+	[tag(name: widgets)]
+	method getWidgets
+	{
+		/// The query.
+		[http(name: "q")]
+		query: string;
+	}:
+	{
+		/// The widgets.
+		widgets: Widget[];
+	}
+
 	/// Creates a new widget.
 	[http(method: POST, path: "/widgets")]
 	[tag(name: widgets)]
@@ -84,6 +98,21 @@ service ConformanceApi
 		/// The widget no longer has the specified ETag.
 		[http(from: body, code: 409)]
 		conflict: boolean;
+	}
+
+	/// Gets the specified widgets.
+	[http(method: POST, path: "/widgets/get")]
+	[tag(name: widgets)]
+	method getWidgetBatch
+	{
+		/// The IDs of the widgets to return.
+		[http(from: body)]
+		ids: int32[];
+	}:
+	{
+		/// The widget results.
+		[http(from: body)]
+		results: result<Widget>[];
 	}
 
 	/// A widget.

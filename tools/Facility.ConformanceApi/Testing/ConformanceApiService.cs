@@ -24,6 +24,10 @@ namespace Facility.ConformanceApi.Testing
 			Task.FromResult(Execute<GetApiInfoResponseDto>(request));
 
 		/// <inheritdoc />
+		public Task<ServiceResult<GetWidgetsResponseDto>> GetWidgetsAsync(GetWidgetsRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<GetWidgetsResponseDto>(request));
+
+		/// <inheritdoc />
 		public Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<CreateWidgetResponseDto>(request));
 
@@ -34,6 +38,10 @@ namespace Facility.ConformanceApi.Testing
 		/// <inheritdoc />
 		public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<DeleteWidgetResponseDto>(request));
+
+		/// <inheritdoc />
+		public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<GetWidgetBatchResponseDto>(request));
 
 		/// <inheritdoc />
 		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken) =>

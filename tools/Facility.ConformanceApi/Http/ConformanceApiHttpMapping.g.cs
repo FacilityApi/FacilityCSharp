@@ -37,6 +37,36 @@ namespace Facility.ConformanceApi.Http
 			}.Build();
 
 		/// <summary>
+		/// Gets widgets.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetWidgetsRequestDto, GetWidgetsResponseDto> GetWidgetsMapping =
+			new HttpMethodMapping<GetWidgetsRequestDto, GetWidgetsResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/widgets",
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						{ "q", request.Query },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					string queryParameterQuery;
+					parameters.TryGetValue("q", out queryParameterQuery);
+					request.Query = queryParameterQuery;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetWidgetsResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(GetWidgetsResponseDto),
+					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
 		/// Creates a new widget.
 		/// </summary>
 		public static readonly HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto> CreateWidgetMapping =
@@ -206,6 +236,36 @@ namespace Facility.ConformanceApi.Http
 						StatusCode = (HttpStatusCode) 409,
 						MatchesResponse = response => response.Conflict.GetValueOrDefault(),
 						CreateResponse = body => new DeleteWidgetResponseDto { Conflict = true },
+					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
+		/// Gets the specified widgets.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetWidgetBatchRequestDto, GetWidgetBatchResponseDto> GetWidgetBatchMapping =
+			new HttpMethodMapping<GetWidgetBatchRequestDto, GetWidgetBatchResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/widgets/get",
+				ValidateRequest = request =>
+				{
+					if (request.Ids == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("ids"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(IReadOnlyList<int>),
+				GetRequestBody = request => request.Ids,
+				CreateRequest = body => new GetWidgetBatchRequestDto { Ids = (IReadOnlyList<int>) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetWidgetBatchResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(IReadOnlyList<ServiceResult<WidgetDto>>),
+						MatchesResponse = response => response.Results != null,
+						GetResponseBody = response => response.Results,
+						CreateResponse = body => new GetWidgetBatchResponseDto { Results = (IReadOnlyList<ServiceResult<WidgetDto>>) body },
 					}.Build(),
 				},
 			}.Build();
