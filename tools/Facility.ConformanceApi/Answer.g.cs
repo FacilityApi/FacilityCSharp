@@ -5,14 +5,26 @@ using Newtonsoft.Json;
 
 namespace Facility.ConformanceApi
 {
+	/// <summary>
+	/// One of three answers.
+	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[JsonConverter(typeof(AnswerJsonConverter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
+		/// <summary>
+		/// Affirmative.
+		/// </summary>
 		public static readonly Answer Yes = new Answer("yes");
 
+		/// <summary>
+		/// Negative.
+		/// </summary>
 		public static readonly Answer No = new Answer("no");
 
+		/// <summary>
+		/// Unknown.
+		/// </summary>
 		public static readonly Answer Maybe = new Answer("maybe");
 
 		/// <summary>
