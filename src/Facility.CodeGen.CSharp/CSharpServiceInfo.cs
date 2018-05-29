@@ -85,6 +85,39 @@ namespace Facility.CodeGen.CSharp
 				}
 			}
 
+			var typeName = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { CSharpUtility.GetInterfaceName(serviceInfo) };
+
+			void checkTypeName(string name, ServiceDefinitionPosition position)
+			{
+				if (!typeName.Add(name))
+					validationErrors.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
+			}
+
+			foreach (var member in serviceInfo.Members)
+			{
+				if (member is ServiceMethodInfo method)
+				{
+					checkTypeName(CSharpUtility.GetRequestDtoName(method), method.Position);
+					checkTypeName(CSharpUtility.GetResponseDtoName(method), method.Position);
+				}
+				else if (member is ServiceDtoInfo dto)
+				{
+					checkTypeName(CSharpUtility.GetDtoName(dto), dto.Position);
+				}
+				else if (member is ServiceEnumInfo @enum)
+				{
+					checkTypeName(CSharpUtility.GetEnumName(@enum), @enum.Position);
+				}
+				else if (member is ServiceErrorSetInfo errorSet)
+				{
+					checkTypeName(CSharpUtility.GetErrorSetName(errorSet), errorSet.Position);
+				}
+				else
+				{
+					throw new InvalidOperationException($"Unknown member type {member.GetType().FullName}");
+				}
+			}
+
 			errors = validationErrors;
 		}
 
@@ -92,3 +125,4 @@ namespace Facility.CodeGen.CSharp
 		private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
 	}
 }
+
