@@ -269,6 +269,14 @@ service ConformanceApi
 		/// Unknown.
 		maybe,
 	}
+
+	/// Custom errors.
+	errors ApiErrors
+	{
+		/// The user is not an administrator.
+		[http(code: 403)]
+		NotAdmin,
+	}
 }
 
 # ConformanceApi

@@ -123,6 +123,14 @@ namespace Facility.ConformanceApi.Http
 			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, httpRequest, GetService(httpRequest).MirrorHeadersAsync, cancellationToken);
 		}
 
+		/// <summary>
+		/// Returns the HTTP status code for a custom error code.
+		/// </summary>
+		protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode)
+		{
+			return HttpApiErrors.TryGetHttpStatusCode(errorCode);
+		}
+
 		private IConformanceApi GetService(HttpRequestMessage httpRequest)
 		{
 			return m_service ?? m_getService(httpRequest);
