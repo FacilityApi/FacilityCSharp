@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core.Http;
-using NCrunch.Framework;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Facility.ConformanceApi.UnitTests
 {
