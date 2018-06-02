@@ -88,15 +88,10 @@ namespace Facility.CodeGen.CSharp
 
 				var usings = new List<string>
 				{
+					"System",
 					"Facility.Core",
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
-
-				if (!errorSetInfo.IsObsolete && errorSetInfo.Errors.Any(x => x.IsObsolete))
-				{
-					CSharpUtility.WriteObsoletePragma(code);
-					code.WriteLine();
-				}
 
 				code.WriteLine($"namespace {context.NamespaceName}");
 				using (code.Block())
@@ -125,9 +120,9 @@ namespace Facility.CodeGen.CSharp
 							string memberName = CSharpUtility.GetErrorName(errorInfo);
 							CSharpUtility.WriteSummary(code, errorInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, errorInfo);
-							code.WriteLine($"public static ServiceErrorDto Create{memberName}(string message = null)");
-							using (code.Block())
-								code.WriteLine($"return new ServiceErrorDto({memberName}, message ?? {CSharpUtility.CreateString(errorInfo.Summary)});");
+							code.WriteLine($"public static ServiceErrorDto Create{memberName}(string message = null) => " +
+								$"new ServiceErrorDto({memberName}, message" +
+								$"{(string.IsNullOrWhiteSpace(errorInfo.Summary) ? "" : $" ?? {CSharpUtility.CreateString(errorInfo.Summary)}")});");
 						}
 					}
 				}
@@ -345,8 +340,8 @@ namespace Facility.CodeGen.CSharp
 			string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
 			string className = "Http" + errorSetInfo.Name;
 
-			var namesAndStatusCodes = httpErrorSetInfo.Errors
-				.Select(x => new { x.ServiceError.Name, x.StatusCode })
+			var errorsAndStatusCodes = httpErrorSetInfo.Errors
+				.Select(x => new { x.ServiceError, x.StatusCode })
 				.ToList();
 
 			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
@@ -361,6 +356,12 @@ namespace Facility.CodeGen.CSharp
 				};
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
+				if (!errorSetInfo.IsObsolete && errorSetInfo.Errors.Any(x => x.IsObsolete))
+				{
+					CSharpUtility.WriteObsoletePragma(code);
+					code.WriteLine();
+				}
+
 				code.WriteLine($"namespace {namespaceName}");
 				using (code.Block())
 				{
@@ -372,12 +373,9 @@ namespace Facility.CodeGen.CSharp
 					using (code.Block())
 					{
 						CSharpUtility.WriteSummary(code, "Gets the HTTP status code that corresponds to the specified error code.");
-						code.WriteLine("public static HttpStatusCode? TryGetHttpStatusCode(string errorCode)");
-						using (code.Block())
-						{
-							code.WriteLine("int statusCode;");
-							code.WriteLine("return s_errorToStatus.TryGetValue(errorCode, out statusCode) ? (HttpStatusCode?) statusCode : null;");
-						}
+						code.WriteLine("public static HttpStatusCode? TryGetHttpStatusCode(string errorCode) =>");
+						using (code.Indent())
+							code.WriteLine("s_errorToStatus.TryGetValue(errorCode, out var statusCode) ? (HttpStatusCode?) statusCode : null;");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the error code that corresponds to the specified HTTP status code.");
@@ -387,11 +385,11 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine("switch ((int) statusCode)");
 							using (code.Block())
 							{
-								foreach (var nameAndCodeGroup in namesAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
+								foreach (var errorAndCodeGroup in errorsAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
 								{
-									string statusCode = nameAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
-									string errorCode = nameAndCodeGroup.Select(x => x.Name).First();
-									code.WriteLine($"case {statusCode}: return \"{errorCode}\";");
+									string statusCode = errorAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
+									code.WriteLine($"case {statusCode}: " +
+										$"return {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndCodeGroup.First().ServiceError)};");
 								}
 
 								code.WriteLine("default: return null;");
@@ -399,14 +397,13 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine("static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)");
+						code.WriteLine("private static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)");
 						using (code.Block("{", "};"))
 						{
-							foreach (var nameAndCode in namesAndStatusCodes)
+							foreach (var errorAndStatusCode in errorsAndStatusCodes)
 							{
-								string errorCode = nameAndCode.Name;
-								string statusCode = ((int) nameAndCode.StatusCode).ToString(CultureInfo.InvariantCulture);
-								code.WriteLine($"[\"{errorCode}\"] = {statusCode},");
+								string statusCode = ((int) errorAndStatusCode.StatusCode).ToString(CultureInfo.InvariantCulture);
+								code.WriteLine($"[{CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndStatusCode.ServiceError)}] = {statusCode},");
 							}
 						}
 					}

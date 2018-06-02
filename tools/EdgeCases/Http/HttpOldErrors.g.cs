@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace Facility.ConformanceApi.Http
+#pragma warning disable 612, 618 // member is obsolete
+
+namespace EdgeCases.Http
 {
 	/// <summary>
-	/// Custom errors.
+	/// Some old errors.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public static partial class HttpApiErrors
+	public static partial class HttpOldErrors
 	{
 		/// <summary>
 		/// Gets the HTTP status code that corresponds to the specified error code.
@@ -24,14 +26,15 @@ namespace Facility.ConformanceApi.Http
 		{
 			switch ((int) statusCode)
 			{
-				case 403: return ApiErrors.NotAdmin;
+				case 500: return OldErrors.Old;
 				default: return null;
 			}
 		}
 
 		private static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
 		{
-			[ApiErrors.NotAdmin] = 403,
+			[OldErrors.Old] = 500,
+			[OldErrors.Older] = 500,
 		};
 	}
 }

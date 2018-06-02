@@ -14,11 +14,8 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Gets the HTTP status code that corresponds to the specified error code.
 		/// </summary>
-		public static HttpStatusCode? TryGetHttpStatusCode(string errorCode)
-		{
-			int statusCode;
-			return s_errorToStatus.TryGetValue(errorCode, out statusCode) ? (HttpStatusCode?) statusCode : null;
-		}
+		public static HttpStatusCode? TryGetHttpStatusCode(string errorCode) =>
+			s_errorToStatus.TryGetValue(errorCode, out var statusCode) ? (HttpStatusCode?) statusCode : null;
 
 		/// <summary>
 		/// Gets the error code that corresponds to the specified HTTP status code.
@@ -27,34 +24,34 @@ namespace Facility.Core.Http
 		{
 			switch ((int) statusCode)
 			{
-				case 304: return "NotModified";
-				case 400: return "InvalidRequest";
-				case 401: return "NotAuthenticated";
-				case 403: return "NotAuthorized";
-				case 404: return "NotFound";
-				case 409: return "Conflict";
-				case 413: return "RequestTooLarge";
-				case 429: return "TooManyRequests";
-				case 500: return "InternalError";
-				case 503: return "ServiceUnavailable";
+				case 304: return ServiceErrors.NotModified;
+				case 400: return ServiceErrors.InvalidRequest;
+				case 401: return ServiceErrors.NotAuthenticated;
+				case 403: return ServiceErrors.NotAuthorized;
+				case 404: return ServiceErrors.NotFound;
+				case 409: return ServiceErrors.Conflict;
+				case 413: return ServiceErrors.RequestTooLarge;
+				case 429: return ServiceErrors.TooManyRequests;
+				case 500: return ServiceErrors.InternalError;
+				case 503: return ServiceErrors.ServiceUnavailable;
 				default: return null;
 			}
 		}
 
-		static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+		private static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
 		{
-			["InvalidRequest"] = 400,
-			["InternalError"] = 500,
-			["InvalidResponse"] = 500,
-			["ServiceUnavailable"] = 503,
-			["Timeout"] = 500,
-			["NotAuthenticated"] = 401,
-			["NotAuthorized"] = 403,
-			["NotFound"] = 404,
-			["NotModified"] = 304,
-			["Conflict"] = 409,
-			["TooManyRequests"] = 429,
-			["RequestTooLarge"] = 413,
+			[ServiceErrors.InvalidRequest] = 400,
+			[ServiceErrors.InternalError] = 500,
+			[ServiceErrors.InvalidResponse] = 500,
+			[ServiceErrors.ServiceUnavailable] = 503,
+			[ServiceErrors.Timeout] = 500,
+			[ServiceErrors.NotAuthenticated] = 401,
+			[ServiceErrors.NotAuthorized] = 403,
+			[ServiceErrors.NotFound] = 404,
+			[ServiceErrors.NotModified] = 304,
+			[ServiceErrors.Conflict] = 409,
+			[ServiceErrors.TooManyRequests] = 429,
+			[ServiceErrors.RequestTooLarge] = 413,
 		};
 	}
 }

@@ -1,0 +1,13 @@
+service EdgeCases
+{
+	/// Some old errors.
+	errors OldErrors
+	{
+		/// An old error.
+		[obsolete]
+		old,
+
+		[obsolete]
+		older,
+	}
+}

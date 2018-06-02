@@ -3,7 +3,7 @@ namespace Facility.Core
 	/// <summary>
 	/// An error.
 	/// </summary>
-	public sealed partial class ServiceErrorDto : ServiceDto<ServiceErrorDto>
+	public sealed partial class ServiceErrorDto
 	{
 		/// <summary>
 		/// Creates a service error.

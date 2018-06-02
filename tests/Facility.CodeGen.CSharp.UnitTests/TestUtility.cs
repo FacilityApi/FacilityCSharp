@@ -3,7 +3,7 @@ using System.IO;
 using NCrunch.Framework;
 using NUnit.Framework.Internal;
 
-namespace Facility.ConformanceApi.UnitTests
+namespace Facility.CodeGen.CSharp.UnitTests
 {
 	internal static class TestUtility
 	{

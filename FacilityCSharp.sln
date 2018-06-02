@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.UnitTests", "tests\Facility.ConformanceApi.UnitTests\Facility.ConformanceApi.UnitTests.csproj", "{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeCases", "tools\EdgeCases\EdgeCases.csproj", "{771FB7B6-E2CE-4F73-A62A-E52FBF980448}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{771FB7B6-E2CE-4F73-A62A-E52FBF980448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{771FB7B6-E2CE-4F73-A62A-E52FBF980448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{771FB7B6-E2CE-4F73-A62A-E52FBF980448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{771FB7B6-E2CE-4F73-A62A-E52FBF980448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

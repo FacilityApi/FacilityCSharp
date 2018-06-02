@@ -27,6 +27,7 @@ void CodeGen(bool verify)
 {
 	ExecuteCodeGen("fsd/FacilityCore.fsd src/Facility.Core/", verify);
 	ExecuteCodeGen("conformance/ConformanceApi.fsd tools/Facility.ConformanceApi/ --clean", verify);
+	ExecuteCodeGen("tools/EdgeCases.fsd tools/EdgeCases/ --clean", verify);
 }
 
 Task("Clean")
