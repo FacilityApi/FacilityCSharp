@@ -10,4 +10,15 @@ service EdgeCases
 		[obsolete]
 		older,
 	}
+
+	/// Some old values.
+	enum OldValues
+	{
+		/// An old value.
+		[obsolete]
+		old,
+
+		[obsolete]
+		older,
+	}
 }

@@ -5,34 +5,30 @@ using System.Collections.ObjectModel;
 using Facility.Core;
 using Newtonsoft.Json;
 
-namespace Facility.ConformanceApi
+#pragma warning disable 612, 618 // member is obsolete
+
+namespace EdgeCases
 {
 	/// <summary>
-	/// One of three answers.
+	/// Some old values.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	[JsonConverter(typeof(AnswerJsonConverter))]
-	public partial struct Answer : IEquatable<Answer>
+	[JsonConverter(typeof(OldValuesJsonConverter))]
+	public partial struct OldValues : IEquatable<OldValues>
 	{
 		/// <summary>
-		/// Affirmative.
+		/// An old value.
 		/// </summary>
-		public static readonly Answer Yes = new Answer("yes");
+		[Obsolete]
+		public static readonly OldValues Old = new OldValues("old");
 
-		/// <summary>
-		/// Negative.
-		/// </summary>
-		public static readonly Answer No = new Answer("no");
-
-		/// <summary>
-		/// Unknown.
-		/// </summary>
-		public static readonly Answer Maybe = new Answer("maybe");
+		[Obsolete]
+		public static readonly OldValues Older = new OldValues("older");
 
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public Answer(string value) => m_value = value;
+		public OldValues(string value) => m_value = value;
 
 		/// <summary>
 		/// Converts the instance to a string.
@@ -42,12 +38,12 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(Answer other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
+		public bool Equals(OldValues other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
 
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public override bool Equals(object obj) => obj is Answer && Equals((Answer) obj);
+		public override bool Equals(object obj) => obj is OldValues && Equals((OldValues) obj);
 
 		/// <summary>
 		/// Gets the hash code.
@@ -57,12 +53,12 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public static bool operator ==(Answer left, Answer right) => left.Equals(right);
+		public static bool operator ==(OldValues left, OldValues right) => left.Equals(right);
 
 		/// <summary>
 		/// Checks for inequality.
 		/// </summary>
-		public static bool operator !=(Answer left, Answer right) => !left.Equals(right);
+		public static bool operator !=(OldValues left, OldValues right) => !left.Equals(right);
 
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
@@ -72,25 +68,24 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Returns all of the defined values.
 		/// </summary>
-		public static IReadOnlyList<Answer> GetValues() => s_values;
+		public static IReadOnlyList<OldValues> GetValues() => s_values;
 
 		/// <summary>
 		/// Used for JSON serialization.
 		/// </summary>
-		public sealed class AnswerJsonConverter : ServiceEnumJsonConverter<Answer>
+		public sealed class OldValuesJsonConverter : ServiceEnumJsonConverter<OldValues>
 		{
 			/// <summary>
 			/// Creates the value from a string.
 			/// </summary>
-			protected override Answer CreateCore(string value) => new Answer(value);
+			protected override OldValues CreateCore(string value) => new OldValues(value);
 		}
 
-		private static readonly ReadOnlyCollection<Answer> s_values = new ReadOnlyCollection<Answer>(
+		private static readonly ReadOnlyCollection<OldValues> s_values = new ReadOnlyCollection<OldValues>(
 			new[]
 			{
-				Yes,
-				No,
-				Maybe,
+				Old,
+				Older,
 			});
 
 		readonly string m_value;

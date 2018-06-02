@@ -34,10 +34,10 @@ namespace Facility.CodeGen.CSharp
 
 			var context = new Context(GeneratorName, CSharpServiceInfo.Create(service));
 
-			foreach (var errorSetInfo in service.ErrorSets)
+			foreach (var errorSetInfo in service.ErrorSets.Where(x => x.Errors.Count != 0))
 				outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
 
-			foreach (var enumInfo in service.Enums)
+			foreach (var enumInfo in service.Enums.Where(x => x.Values.Count != 0))
 				outputFiles.Add(GenerateEnum(enumInfo, context));
 
 			foreach (var dtoInfo in service.Dtos)
@@ -140,6 +140,8 @@ namespace Facility.CodeGen.CSharp
 				var usings = new List<string>
 				{
 					"System",
+					"System.Collections.Generic",
+					"System.Collections.ObjectModel",
 					"Facility.Core",
 					"Newtonsoft.Json",
 				};
@@ -174,72 +176,39 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates an instance.");
-						code.WriteLine($"public {enumName}(string value)");
-						using (code.Block())
-							code.WriteLine("m_value = value;");
+						code.WriteLine($"public {enumName}(string value) => m_value = value;");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Converts the instance to a string.");
-						code.WriteLine("public override string ToString()");
-						using (code.Block())
-							code.WriteLine("return m_value ?? \"\";");
+						code.WriteLine("public override string ToString() => m_value ?? \"\";");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine($"public bool Equals({enumName} other)");
-						using (code.Block())
-							code.WriteLine("return StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());");
+						code.WriteLine($"public bool Equals({enumName} other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine("public override bool Equals(object obj)");
-						using (code.Block())
-							code.WriteLine($"return obj is {enumName} && Equals(({enumName}) obj);");
+						code.WriteLine($"public override bool Equals(object obj) => obj is {enumName} && Equals(({enumName}) obj);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the hash code.");
-						code.WriteLine("public override int GetHashCode()");
-						using (code.Block())
-							code.WriteLine("return StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());");
+						code.WriteLine("public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine($"public static bool operator ==({enumName} left, {enumName} right)");
-						using (code.Block())
-							code.WriteLine("return left.Equals(right);");
+						code.WriteLine($"public static bool operator ==({enumName} left, {enumName} right) => left.Equals(right);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for inequality.");
-						code.WriteLine($"public static bool operator !=({enumName} left, {enumName} right)");
-						using (code.Block())
-							code.WriteLine("return !left.Equals(right);");
+						code.WriteLine($"public static bool operator !=({enumName} left, {enumName} right) => !left.Equals(right);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns true if the instance is equal to one of the defined values.");
-						code.WriteLine("public bool IsDefined()");
-						using (code.Block())
-						{
-							int count = enumInfo.Values.Count;
-							if (count == 0)
-							{
-								code.WriteLine("return false;");
-							}
-							else
-							{
-								IDisposable indent = null;
-								for (int index = 0; index < count; index++)
-								{
-									if (index == 0)
-									{
-										code.Write("return ");
-										indent = code.Indent();
-									}
-									code.Write($"Equals({CSharpUtility.GetEnumValueName(enumInfo.Values[index])})");
-									code.WriteLine(index == count - 1 ? ";" : " ||");
-								}
-								indent?.Dispose();
-							}
-						}
+						code.WriteLine("public bool IsDefined() => s_values.Contains(this);");
+
+						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Returns all of the defined values.");
+						code.WriteLine($"public static IReadOnlyList<{enumName}> GetValues() => s_values;");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
@@ -247,9 +216,19 @@ namespace Facility.CodeGen.CSharp
 						using (code.Block())
 						{
 							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
-							code.WriteLine($"protected override {enumName} CreateCore(string value)");
-							using (code.Block())
-								code.WriteLine($"return new {enumName}(value);");
+							code.WriteLine($"protected override {enumName} CreateCore(string value) => new {enumName}(value);");
+						}
+
+						code.WriteLine();
+						code.WriteLine($"private static readonly ReadOnlyCollection<{enumName}> s_values = new ReadOnlyCollection<{enumName}>(");
+						using (code.Indent())
+						{
+							code.WriteLine("new[]");
+							using (code.Block("{", "});"))
+							{
+								foreach (var value in enumInfo.Values)
+									code.WriteLine($"{CSharpUtility.GetEnumValueName(value)},");
+							}
 						}
 
 						code.WriteLine();
