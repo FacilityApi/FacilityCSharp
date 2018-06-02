@@ -10,7 +10,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// The name of the test.
 		/// </summary>
-		public string TestName { get; set; }
+		public string Test { get; set; }
 
 		/// <summary>
 		/// The API method being called.

@@ -63,7 +63,7 @@ namespace Facility.ConformanceApi.Testing
 				var request = ServiceJsonUtility.FromJToken(testInfo.Request, methodInfo.GetParameters()[0].ParameterType);
 				var requestRoundTrip = ServiceJsonUtility.ToJToken(request);
 				if (!JToken.DeepEquals(testInfo.Request, requestRoundTrip))
-					return failure($"Request round trip failed for test {testInfo.TestName}. expected={ServiceJsonUtility.ToJson(testInfo.Request)} actual={ServiceJsonUtility.ToJson(requestRoundTrip)}");
+					return failure($"Request round trip failed for test {testInfo.Test}. expected={ServiceJsonUtility.ToJson(testInfo.Request)} actual={ServiceJsonUtility.ToJson(requestRoundTrip)}");
 
 				var task = (Task) methodInfo.Invoke(api, new[] { request, cancellationToken });
 				await task.ConfigureAwait(false);

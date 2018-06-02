@@ -14,16 +14,12 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a test provider from the specified directory path.
 		/// </summary>
-		public ConformanceTestProvider(string testsDirectoryPath)
+		public ConformanceTestProvider(string testsFilePath)
 		{
 			var conformanceTests = new Dictionary<string, ConformanceTestInfo>();
-			foreach (var file in Directory.GetFiles(testsDirectoryPath, "*.json", SearchOption.TopDirectoryOnly))
-			{
-				var info = ServiceJsonUtility.FromJson<ConformanceTestInfo>(File.ReadAllText(file));
-				info.TestName = Path.GetFileNameWithoutExtension(file);
-				conformanceTests.Add(info.TestName, info);
-			}
-
+			var testsInfo = ServiceJsonUtility.FromJson<ConformanceTestsInfo>(File.ReadAllText(testsFilePath));
+			foreach (var testInfo in testsInfo.Tests)
+				conformanceTests.Add(testInfo.Test, testInfo);
 			m_conformanceTests = conformanceTests;
 		}
 

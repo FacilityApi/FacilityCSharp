@@ -1,0 +1,447 @@
+{
+  "tests": [
+    {
+      "test": "checkPath",
+      "method": "checkPath",
+      "request": {
+        "string": "string",
+        "boolean": true,
+        "double": 6.022E+23,
+        "int32": 42,
+        "int64": 12345678910,
+        "decimal": 3.14,
+        "enum": "yes"
+      },
+      "response": {}
+    },
+    {
+      "test": "checkQuery",
+      "method": "checkQuery",
+      "request": {
+        "string": "string",
+        "boolean": true,
+        "double": 6.022E+23,
+        "int32": 42,
+        "int64": 12345678910,
+        "decimal": 3.14,
+        "enum": "yes"
+      },
+      "response": {}
+    },
+    {
+      "test": "createWidget",
+      "method": "createWidget",
+      "request": {
+        "widget": {
+          "name": "shiny"
+        }
+      },
+      "response": {
+        "widget": {
+          "id": 1337,
+          "name": "shiny"
+        },
+        "url": "/widgets/1337",
+        "eTag": "\"initial\""
+      }
+    },
+    {
+      "test": "createWidgetNoName",
+      "method": "createWidget",
+      "request": {
+        "widget": {}
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "The widget name is required."
+      }
+    },
+    {
+      "test": "createWidgetNoWidget",
+      "method": "createWidget",
+      "request": {},
+      "error": {
+        "code": "InvalidRequest",
+        "message": "The request field 'widget' is required."
+      }
+    },
+    {
+      "test": "deleteWidget",
+      "method": "deleteWidget",
+      "request": {
+        "id": 1337
+      },
+      "response": {}
+    },
+    {
+      "test": "deleteWidgetConflict",
+      "method": "deleteWidget",
+      "request": {
+        "id": 1337,
+        "ifETag": "\"not-initial\""
+      },
+      "response": {
+        "conflict": true
+      }
+    },
+    {
+      "test": "deleteWidgetNotFound",
+      "method": "deleteWidget",
+      "request": {
+        "id": 1337
+      },
+      "response": {
+        "notFound": true
+      }
+    },
+    {
+      "test": "getApiInfo",
+      "method": "getApiInfo",
+      "request": {},
+      "response": {
+        "service": "ConformanceApi",
+        "version": "0.1.0"
+      }
+    },
+    {
+      "test": "getWidget",
+      "method": "getWidget",
+      "request": {
+        "id": 1337
+      },
+      "response": {
+        "widget": {
+          "id": 1337,
+          "name": "shiny"
+        },
+        "eTag": "\"initial\""
+      }
+    },
+    {
+      "test": "getWidgetBatch",
+      "method": "getWidgetBatch",
+      "request": {
+        "ids": [
+          1337,
+          42
+        ]
+      },
+      "response": {
+        "results": [
+          {
+            "value": {
+              "id": 1337,
+              "name": "shiny"
+            }
+          },
+          {
+            "error": {
+              "code": "NotFound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "test": "getWidgetNotFound",
+      "method": "getWidget",
+      "request": {
+        "id": 1337
+      },
+      "error": {
+        "code": "NotFound",
+        "message": "The specified widget was not found."
+      }
+    },
+    {
+      "test": "getWidgetNotModified",
+      "method": "getWidget",
+      "request": {
+        "id": 1337,
+        "ifNotETag": "\"initial\""
+      },
+      "response": {
+        "notModified": true
+      }
+    },
+    {
+      "test": "getWidgets",
+      "method": "getWidgets",
+      "request": {
+        "query": "shiny"
+      },
+      "response": {
+        "widgets": [
+          {
+            "id": 1337,
+            "name": "shiny"
+          },
+          {
+            "id": 7331,
+            "name": "shinier"
+          }
+        ]
+      }
+    },
+    {
+      "test": "getWidgetsNone",
+      "method": "getWidgets",
+      "request": {
+        "query": "none"
+      },
+      "response": {
+        "widgets": []
+      }
+    },
+    {
+      "test": "mirrorArrayFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "array": {
+            "string": ["string", "\n"],
+            "boolean": [true, false],
+            "double": [6.022E23, -3.14159],
+            "int32": [42, 24],
+            "int64": [12345678910, -987654321],
+            "decimal": [3.14, 6.875],
+            "bytes": ["aGk=", ""],
+            "object": [{ "": null, " ": [null] }, {}],
+            "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
+            "data": [{ "data": { "data": {} } }, {}],
+            "enum": ["yes", "no"],
+            "array": [[42, 24], [24, 42]],
+            "map": [{ "": 42 }, { " ": 24 }],
+            "result": [{ "value": 42 }, { "error": { "code": "code" } }]
+          }
+        },
+        "matrix": [[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]]
+      },
+      "response": {
+        "field": {
+          "array": {
+            "string": ["string", "\n"],
+            "boolean": [true, false],
+            "double": [6.022E23, -3.14159],
+            "int32": [42, 24],
+            "int64": [12345678910, -987654321],
+            "decimal": [3.14, 6.875],
+            "bytes": ["aGk=", ""],
+            "object": [{ "": null, " ": [null] }, {}],
+            "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
+            "data": [{ "data": { "data": {} } }, {}],
+            "enum": ["yes", "no"],
+            "array": [[42, 24], [24, 42]],
+            "map": [{ "": 42 }, { " ": 24 }],
+            "result": [{ "value": 42 }, { "error": { "code": "code" } }]
+          }
+        },
+        "matrix": [[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]]
+      }
+    },
+    {
+      "test": "mirrorFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "string": "string",
+          "boolean": true,
+          "double": 6.022E23,
+          "int32": 42,
+          "int64": 12345678910,
+          "decimal": 3.14,
+          "bytes": "aGk=",
+          "object": { "": null, " ": [null] },
+          "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+          "data": { "data": { "data": {} } },
+          "enum": "yes"
+        }
+      },
+      "response": {
+        "field": {
+          "string": "string",
+          "boolean": true,
+          "double": 6.022E23,
+          "int32": 42,
+          "int64": 12345678910,
+          "decimal": 3.14,
+          "bytes": "aGk=",
+          "object": { "": null, " ": [null] },
+          "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+          "data": { "data": { "data": {} } },
+          "enum": "yes"
+        }
+      }
+    },
+    {
+      "test": "mirrorHeaders",
+      "method": "mirrorHeaders",
+      "request": {
+        "string": "string",
+        "boolean": true,
+        "double": 6.022E+23,
+        "int32": 42,
+        "int64": 12345678910,
+        "decimal": 3.14,
+        "enum": "yes"
+      },
+      "response": {
+        "string": "string",
+        "boolean": true,
+        "double": 6.022E+23,
+        "int32": 42,
+        "int64": 12345678910,
+        "decimal": 3.14,
+        "enum": "yes"
+      }
+    },
+    {
+      "test": "mirrorHeadersEmpty",
+      "method": "mirrorHeaders",
+      "request": {
+        "string": ""
+      },
+      "response": {
+        "string": ""
+      }
+    },
+    {
+      "test": "mirrorHeadersMissing",
+      "method": "mirrorHeaders",
+      "request": {},
+      "response": {}
+    },
+    {
+      "test": "mirrorMapFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "map": {
+            "string": { "": "string", " ": "\n" },
+            "boolean": { "": true, " ": false },
+            "double": { "": 6.022E23, " ": -3.14159 },
+            "int32": { "": 42, " ": 24 },
+            "int64": { "": 12345678910, " ": -987654321 },
+            "decimal": { "": 3.14, " ": 6.875 },
+            "bytes": { "": "aGk=", " ": "" },
+            "object": { "": { "": null, " ": [null] }, " ": {} },
+            "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
+            "data": { "": { "data": { "data": {} } }, " ": {} },
+            "enum": { "": "yes", " ": "no" },
+            "array": { "": [42, 24], " ": [24, 42] },
+            "map": { "": { "": 42 }, " ": { " ": 24 } },
+            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } }
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "map": {
+            "string": { "": "string", " ": "\n" },
+            "boolean": { "": true, " ": false },
+            "double": { "": 6.022E23, " ": -3.14159 },
+            "int32": { "": 42, " ": 24 },
+            "int64": { "": 12345678910, " ": -987654321 },
+            "decimal": { "": 3.14, " ": 6.875 },
+            "bytes": { "": "aGk=", " ": "" },
+            "object": { "": { "": null, " ": [null] }, " ": {} },
+            "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
+            "data": { "": { "data": { "data": {} } }, " ": {} },
+            "enum": { "": "yes", " ": "no" },
+            "array": { "": [42, 24], " ": [24, 42] },
+            "map": { "": { "": 42 }, " ": { " ": 24 } },
+            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } }
+          }
+        }
+      }
+    },
+    {
+      "test": "mirrorResultErrorFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "result": {
+            "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "result": {
+            "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
+          }
+        }
+      }
+    },
+    {
+      "test": "mirrorResultValueFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "result": {
+            "string": { "value": "string" },
+            "boolean": { "value": true },
+            "double": { "value": 6.022E23 },
+            "int32": { "value": 42 },
+            "int64": { "value": 12345678910 },
+            "decimal": { "value": 3.14 },
+            "bytes": { "value": "aGk=" },
+            "object": { "value": { "": null, " ": [null] } },
+            "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "data": { "value": { "data": { "data": {} } } },
+            "enum": { "value": "yes" },
+            "array": { "value": [42] },
+            "map": { "value": { "": 42 } },
+            "result": { "value": { "value": 42 } }
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "result": {
+            "string": { "value": "string" },
+            "boolean": { "value": true },
+            "double": { "value": 6.022E23 },
+            "int32": { "value": 42 },
+            "int64": { "value": 12345678910 },
+            "decimal": { "value": 3.14 },
+            "bytes": { "value": "aGk=" },
+            "object": { "value": { "": null, " ": [null] } },
+            "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "data": { "value": { "data": { "data": {} } } },
+            "enum": { "value": "yes" },
+            "array": { "value": [42] },
+            "map": { "value": { "": 42 } },
+            "result": { "value": { "value": 42 } }
+          }
+        }
+      }
+    }
+  ]
+}

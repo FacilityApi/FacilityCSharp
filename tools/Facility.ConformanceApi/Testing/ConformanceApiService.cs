@@ -70,18 +70,18 @@ namespace Facility.ConformanceApi.Testing
 			string uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 			string methodName = uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
 			if (methodName != m_testInfo.Method)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unexpected method name for test {m_testInfo.TestName}. expected={m_testInfo.Method} actual={methodName}"));
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unexpected method name for test {m_testInfo.Test}. expected={m_testInfo.Method} actual={methodName}"));
 
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
 			if (!JToken.DeepEquals(m_testInfo.Request, actualRequest))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Request)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {m_testInfo.Test}. expected={ServiceJsonUtility.ToJson(m_testInfo.Request)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
 
 			if (m_testInfo.Error != null)
 			{
 				var error = ServiceJsonUtility.FromJToken<ServiceErrorDto>(m_testInfo.Error);
 				var errorRoundTrip = ServiceJsonUtility.ToJToken(error);
 				if (!JToken.DeepEquals(m_testInfo.Error, errorRoundTrip))
-					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Error round trip failed for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Error)} actual={ServiceJsonUtility.ToJson(errorRoundTrip)}"));
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Error round trip failed for test {m_testInfo.Test}. expected={ServiceJsonUtility.ToJson(m_testInfo.Error)} actual={ServiceJsonUtility.ToJson(errorRoundTrip)}"));
 				return ServiceResult.Failure(error);
 			}
 			else
@@ -89,7 +89,7 @@ namespace Facility.ConformanceApi.Testing
 				var response = ServiceJsonUtility.FromJToken<T>(m_testInfo.Response);
 				var responseRoundTrip = ServiceJsonUtility.ToJToken(response);
 				if (!JToken.DeepEquals(m_testInfo.Response, responseRoundTrip))
-					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {m_testInfo.TestName}. expected={ServiceJsonUtility.ToJson(m_testInfo.Response)} actual={ServiceJsonUtility.ToJson(responseRoundTrip)}"));
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {m_testInfo.Test}. expected={ServiceJsonUtility.ToJson(m_testInfo.Response)} actual={ServiceJsonUtility.ToJson(responseRoundTrip)}"));
 				return ServiceResult.Success(response);
 			}
 		}

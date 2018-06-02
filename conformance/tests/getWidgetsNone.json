@@ -1,9 +1,0 @@
-{
-  "method": "getWidgets",
-  "request": {
-    "query": "none"
-  },
-  "response": {
-    "widgets": []
-  }
-}

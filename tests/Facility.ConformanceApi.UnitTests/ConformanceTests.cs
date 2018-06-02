@@ -36,30 +36,7 @@ namespace Facility.ConformanceApi.UnitTests
 		}
 
 		private static IConformanceTestProvider CreateTestProvider() =>
-			new ConformanceTestProvider(Path.Combine(GetSolutionDirectory(), "conformance", "tests"));
-
-		protected static string GetSolutionDirectory()
-		{
-			const string solutionName = "FacilityCSharp.sln";
-
-			string solutionFilePath = NCrunchEnvironment.GetOriginalSolutionPath();
-			if (solutionFilePath != null && Path.GetFileName(solutionFilePath) == solutionName)
-				return Path.GetDirectoryName(solutionFilePath);
-
-			string solutionDirectoryPath = AssemblyHelper.GetDirectoryName(typeof(ConformanceTests).Assembly);
-			while (solutionDirectoryPath != null)
-			{
-				if (File.Exists(Path.Combine(solutionDirectoryPath, solutionName)))
-					return solutionDirectoryPath;
-				solutionDirectoryPath = Path.GetDirectoryName(solutionDirectoryPath);
-			}
-
-			solutionDirectoryPath = Environment.CurrentDirectory;
-			if (File.Exists(Path.Combine(solutionDirectoryPath, solutionName)))
-				return solutionDirectoryPath;
-
-			throw new InvalidOperationException("Failed to locate solution directory.");
-		}
+			new ConformanceTestProvider(Path.Combine(TestUtility.GetSolutionDirectory(), "conformance", "tests.json"));
 
 		private static HttpClient CreateHttpClient()
 		{
