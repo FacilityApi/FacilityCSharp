@@ -1,5 +1,13 @@
 service EdgeCases
 {
+	/// An old method.
+	[obsolete]
+	method oldMethod
+	{
+	}:
+	{
+	}
+
 	/// An old DTO.
 	[obsolete]
 	data OldEmptyDto
