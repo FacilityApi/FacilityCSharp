@@ -442,8 +442,7 @@ namespace Facility.CodeGen.CSharp
 							using (code.Indent())
 							{
 								code.WriteLine($"new HttpMethodMapping<{requestTypeName}, {responseTypeName}>.Builder");
-								code.WriteLine("{");
-								using (code.Indent())
+								using (code.Block("{", "}.Build();"))
 								{
 									string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
 									code.WriteLine($"HttpMethod = HttpMethod.{httpMethodName},");
@@ -453,8 +452,7 @@ namespace Facility.CodeGen.CSharp
 									if (httpMethodInfo.PathFields.Count != 0 || httpMethodInfo.RequestBodyField != null)
 									{
 										code.WriteLine("ValidateRequest = request =>");
-										code.WriteLine("{");
-										using (code.Indent())
+										using (code.Block("{", "},"))
 										{
 											foreach (var pathField in httpMethodInfo.PathFields)
 											{
@@ -480,7 +478,6 @@ namespace Facility.CodeGen.CSharp
 
 											code.WriteLine("return ServiceResult.Success();");
 										}
-										code.WriteLine("},");
 									}
 
 									if (httpMethodInfo.PathFields.Count != 0 || httpMethodInfo.QueryFields.Count != 0)
@@ -489,8 +486,7 @@ namespace Facility.CodeGen.CSharp
 										using (code.Indent())
 										{
 											code.WriteLine("new Dictionary<string, string>");
-											code.WriteLine("{");
-											using (code.Indent())
+											using (code.Block("{", "},"))
 											{
 												foreach (var pathField in httpMethodInfo.PathFields)
 												{
@@ -505,12 +501,10 @@ namespace Facility.CodeGen.CSharp
 													code.WriteLine($"[\"{queryField.Name}\"] = {fieldValue},");
 												}
 											}
-											code.WriteLine("},");
 										}
 
 										code.WriteLine("SetUriParameters = (request, parameters) =>");
-										code.WriteLine("{");
-										using (code.Indent())
+										using (code.Block("{", "},"))
 										{
 											foreach (var queryField in httpMethodInfo.QueryFields)
 											{
@@ -530,7 +524,6 @@ namespace Facility.CodeGen.CSharp
 
 											code.WriteLine("return request;");
 										}
-										code.WriteLine("},");
 									}
 
 									if (httpMethodInfo.RequestHeaderFields.Count != 0)
@@ -539,8 +532,7 @@ namespace Facility.CodeGen.CSharp
 										using (code.Indent())
 										{
 											code.WriteLine("new Dictionary<string, string>");
-											code.WriteLine("{");
-											using (code.Indent())
+											using (code.Block("{", "},"))
 											{
 												foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 												{
@@ -549,12 +541,10 @@ namespace Facility.CodeGen.CSharp
 													code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 												}
 											}
-											code.WriteLine("},");
 										}
 
 										code.WriteLine("SetRequestHeaders = (request, headers) =>");
-										code.WriteLine("{");
-										using (code.Indent())
+										using (code.Block("{", "},"))
 										{
 											foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 											{
@@ -566,7 +556,6 @@ namespace Facility.CodeGen.CSharp
 
 											code.WriteLine("return request;");
 										}
-										code.WriteLine("},");
 									}
 
 									if (httpMethodInfo.RequestBodyField != null)
@@ -589,8 +578,7 @@ namespace Facility.CodeGen.CSharp
 											using (code.Indent())
 											{
 												code.WriteLine($"new {requestTypeName}");
-												code.WriteLine("{");
-												using (code.Indent())
+												using (code.Block("{", "},"))
 												{
 													foreach (var field in httpMethodInfo.RequestNormalFields)
 													{
@@ -598,15 +586,13 @@ namespace Facility.CodeGen.CSharp
 														code.WriteLine($"{fieldName} = request.{fieldName},");
 													}
 												}
-												code.WriteLine("},");
 											}
 
 											code.WriteLine("CreateRequest = body =>");
 											using (code.Indent())
 											{
 												code.WriteLine($"new {requestTypeName}");
-												code.WriteLine("{");
-												using (code.Indent())
+												using (code.Block("{", "},"))
 												{
 													foreach (var field in httpMethodInfo.RequestNormalFields)
 													{
@@ -614,21 +600,17 @@ namespace Facility.CodeGen.CSharp
 														code.WriteLine($"{fieldName} = (({requestTypeName}) body).{fieldName},");
 													}
 												}
-												code.WriteLine("},");
 											}
 										}
 									}
 
 									code.WriteLine("ResponseMappings =");
-									code.WriteLine("{");
-									using (code.Indent())
+									using (code.Block("{", "},"))
 									{
 										foreach (var validResponse in httpMethodInfo.ValidResponses)
 										{
 											code.WriteLine($"new HttpResponseMapping<{responseTypeName}>.Builder");
-											code.WriteLine("{");
-
-											using (code.Indent())
+											using (code.Block("{", "}.Build(),"))
 											{
 												string statusCode = ((int) validResponse.StatusCode).ToString(CultureInfo.InvariantCulture);
 												code.WriteLine($"StatusCode = (HttpStatusCode) {statusCode},");
@@ -664,8 +646,7 @@ namespace Facility.CodeGen.CSharp
 														using (code.Indent())
 														{
 															code.WriteLine($"new {responseTypeName}");
-															code.WriteLine("{");
-															using (code.Indent())
+															using (code.Block("{", "},"))
 															{
 																foreach (var field in validResponse.NormalFields)
 																{
@@ -673,15 +654,13 @@ namespace Facility.CodeGen.CSharp
 																	code.WriteLine($"{fieldName} = response.{fieldName},");
 																}
 															}
-															code.WriteLine("},");
 														}
 
 														code.WriteLine("CreateResponse = body =>");
 														using (code.Indent())
 														{
 															code.WriteLine($"new {responseTypeName}");
-															code.WriteLine("{");
-															using (code.Indent())
+															using (code.Block("{", "},"))
 															{
 																foreach (var field in validResponse.NormalFields)
 																{
@@ -689,16 +668,12 @@ namespace Facility.CodeGen.CSharp
 																	code.WriteLine($"{fieldName} = (({responseTypeName}) body).{fieldName},");
 																}
 															}
-															code.WriteLine("},");
 														}
 													}
 												}
 											}
-
-											code.WriteLine("}.Build(),");
 										}
 									}
-									code.WriteLine("},");
 
 									if (httpMethodInfo.ResponseHeaderFields.Count != 0)
 									{
@@ -706,8 +681,7 @@ namespace Facility.CodeGen.CSharp
 										using (code.Indent())
 										{
 											code.WriteLine("new Dictionary<string, string>");
-											code.WriteLine("{");
-											using (code.Indent())
+											using (code.Block("{", "},"))
 											{
 												foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 												{
@@ -716,12 +690,10 @@ namespace Facility.CodeGen.CSharp
 													code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 												}
 											}
-											code.WriteLine("},");
 										}
 
 										code.WriteLine("SetResponseHeaders = (response, headers) =>");
-										code.WriteLine("{");
-										using (code.Indent())
+										using (code.Block("{", "},"))
 										{
 											foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 											{
@@ -733,10 +705,8 @@ namespace Facility.CodeGen.CSharp
 
 											code.WriteLine("return response;");
 										}
-										code.WriteLine("},");
 									}
 								}
-								code.WriteLine("}.Build();");
 							}
 						}
 					}
