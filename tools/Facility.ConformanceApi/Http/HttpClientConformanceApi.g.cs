@@ -68,5 +68,8 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<MirrorHeadersResponseDto>> MirrorHeadersAsync(MirrorHeadersRequestDto request, CancellationToken cancellationToken) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, request, cancellationToken);
+
+		public Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, CancellationToken cancellationToken) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.MixedMapping, request, cancellationToken);
 	}
 }

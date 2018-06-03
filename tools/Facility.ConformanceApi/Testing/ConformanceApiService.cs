@@ -59,6 +59,10 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<MirrorHeadersResponseDto>> MirrorHeadersAsync(MirrorHeadersRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<MirrorHeadersResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<MixedResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

@@ -442,6 +442,48 @@
           }
         }
       }
+    },
+    {
+      "test": "mixedOk",
+      "method": "mixed",
+      "request": {
+        "path": "string",
+        "query": "string",
+        "header": "string",
+        "normal": "string"
+      },
+      "response": {
+        "header": "string",
+        "normal": "string"
+      }
+    },
+    {
+      "test": "mixedAccepted",
+      "method": "mixed",
+      "request": {
+        "path": "string",
+        "query": "string",
+        "header": "string",
+        "normal": "string"
+      },
+      "response": {
+        "header": "string",
+        "body": {}
+      }
+    },
+    {
+      "test": "mixedNoContent",
+      "method": "mixed",
+      "request": {
+        "path": "string",
+        "query": "string",
+        "header": "string",
+        "normal": "string"
+      },
+      "response": {
+        "header": "string",
+        "empty": true
+      }
     }
   ]
 }

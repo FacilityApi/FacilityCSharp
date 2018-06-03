@@ -185,6 +185,21 @@ service ConformanceApi
 		[http(from: header)] enum: Answer;
 	}
 
+	[http(path: "/mixed/{path}")]
+	method mixed
+	{
+		[http(from: path)] path: string;
+		[http(from: query)] query: string;
+		[http(from: header)] header: string;
+		[http(from: normal)] normal: string;
+	}:
+	{
+		[http(from: header)] header: string;
+		[http(from: normal)] normal: string;
+		[http(from: body, code: 202)] body: object;
+		[http(from: body, code: 204)] empty: boolean;
+	}
+
 	data Any
 	{
 		string: string;

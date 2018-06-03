@@ -453,5 +453,97 @@ namespace Facility.ConformanceApi.Http
 					return response;
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<MixedRequestDto, MixedResponseDto> MixedMapping =
+			new HttpMethodMapping<MixedRequestDto, MixedResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/mixed/{path}",
+				ValidateRequest = request =>
+				{
+					if (string.IsNullOrEmpty(request.Path))
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("path"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string>
+					{
+						["path"] = request.Path,
+						["query"] = request.Query,
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("query", out var queryParameterQuery);
+					request.Query = queryParameterQuery;
+					parameters.TryGetValue("path", out var queryParameterPath);
+					request.Path = queryParameterPath;
+					return request;
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string>
+					{
+						["header"] = request.Header,
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					headers.TryGetValue("header", out var headerHeader);
+					request.Header = headerHeader;
+					return request;
+				},
+				RequestBodyType = typeof(MixedRequestDto),
+				GetRequestBody = request =>
+					new MixedRequestDto
+					{
+						Normal = request.Normal,
+					},
+				CreateRequest = body =>
+					new MixedRequestDto
+					{
+						Normal = ((MixedRequestDto) body).Normal,
+					},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MixedResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(MixedResponseDto),
+						GetResponseBody = response =>
+							new MixedResponseDto
+							{
+								Normal = response.Normal,
+							},
+						CreateResponse = body =>
+							new MixedResponseDto
+							{
+								Normal = ((MixedResponseDto) body).Normal,
+							},
+					}.Build(),
+					new HttpResponseMapping<MixedResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 202,
+						ResponseBodyType = typeof(JObject),
+						MatchesResponse = response => response.Body != null,
+						GetResponseBody = response => response.Body,
+						CreateResponse = body => new MixedResponseDto { Body = (JObject) body },
+					}.Build(),
+					new HttpResponseMapping<MixedResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 204,
+						MatchesResponse = response => response.Empty.GetValueOrDefault(),
+						CreateResponse = body => new MixedResponseDto { Empty = true },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string>
+					{
+						["header"] = response.Header,
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					headers.TryGetValue("header", out var headerHeader);
+					response.Header = headerHeader;
+					return response;
+				},
+			}.Build();
 	}
 }
