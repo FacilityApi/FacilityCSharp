@@ -1,9 +1,26 @@
 service EdgeCases
 {
-	/// Some old errors.
-	errors OldErrors
+	/// An old DTO.
+	[obsolete]
+	data OldEmptyDto
 	{
-		/// An old error.
+	}
+
+	/// An old DTO.
+	data OldDto
+	{
+		/// An old field.
+		[obsolete]
+		old: string;
+
+		[obsolete]
+		older: string;
+	}
+
+	/// Some old values.
+	enum OldValues
+	{
+		/// An old value.
 		[obsolete]
 		old,
 
@@ -11,10 +28,10 @@ service EdgeCases
 		older,
 	}
 
-	/// Some old values.
-	enum OldValues
+	/// Some old errors.
+	errors OldErrors
 	{
-		/// An old value.
+		/// An old error.
 		[obsolete]
 		old,
 
