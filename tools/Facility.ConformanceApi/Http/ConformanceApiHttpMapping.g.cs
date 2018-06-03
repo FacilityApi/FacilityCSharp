@@ -47,12 +47,11 @@ namespace Facility.ConformanceApi.Http
 				GetUriParameters = request =>
 					new Dictionary<string, string>
 					{
-						{ "q", request.Query },
+						["q"] = request.Query,
 					},
 				SetUriParameters = (request, parameters) =>
 				{
-					string queryParameterQuery;
-					parameters.TryGetValue("q", out queryParameterQuery);
+					parameters.TryGetValue("q", out var queryParameterQuery);
 					request.Query = queryParameterQuery;
 					return request;
 				},
@@ -97,16 +96,14 @@ namespace Facility.ConformanceApi.Http
 				GetResponseHeaders = response =>
 					new Dictionary<string, string>
 					{
-						{ "Location", response.Url },
-						{ "eTag", response.ETag },
+						["Location"] = response.Url,
+						["eTag"] = response.ETag,
 					},
 				SetResponseHeaders = (response, headers) =>
 				{
-					string headerUrl;
-					headers.TryGetValue("Location", out headerUrl);
+					headers.TryGetValue("Location", out var headerUrl);
 					response.Url = headerUrl;
-					string headerETag;
-					headers.TryGetValue("eTag", out headerETag);
+					headers.TryGetValue("eTag", out var headerETag);
 					response.ETag = headerETag;
 					return response;
 				},
@@ -129,24 +126,22 @@ namespace Facility.ConformanceApi.Http
 				GetUriParameters = request =>
 					new Dictionary<string, string>
 					{
-						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+						["id"] = request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture),
 					},
 				SetUriParameters = (request, parameters) =>
 				{
-					string queryParameterId;
-					parameters.TryGetValue("id", out queryParameterId);
+					parameters.TryGetValue("id", out var queryParameterId);
 					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
 					return request;
 				},
 				GetRequestHeaders = request =>
 					new Dictionary<string, string>
 					{
-						{ "If-None-Match", request.IfNotETag },
+						["If-None-Match"] = request.IfNotETag,
 					},
 				SetRequestHeaders = (request, headers) =>
 				{
-					string headerIfNotETag;
-					headers.TryGetValue("If-None-Match", out headerIfNotETag);
+					headers.TryGetValue("If-None-Match", out var headerIfNotETag);
 					request.IfNotETag = headerIfNotETag;
 					return request;
 				},
@@ -170,12 +165,11 @@ namespace Facility.ConformanceApi.Http
 				GetResponseHeaders = response =>
 					new Dictionary<string, string>
 					{
-						{ "eTag", response.ETag },
+						["eTag"] = response.ETag,
 					},
 				SetResponseHeaders = (response, headers) =>
 				{
-					string headerETag;
-					headers.TryGetValue("eTag", out headerETag);
+					headers.TryGetValue("eTag", out var headerETag);
 					response.ETag = headerETag;
 					return response;
 				},
@@ -198,24 +192,22 @@ namespace Facility.ConformanceApi.Http
 				GetUriParameters = request =>
 					new Dictionary<string, string>
 					{
-						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+						["id"] = request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture),
 					},
 				SetUriParameters = (request, parameters) =>
 				{
-					string queryParameterId;
-					parameters.TryGetValue("id", out queryParameterId);
+					parameters.TryGetValue("id", out var queryParameterId);
 					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
 					return request;
 				},
 				GetRequestHeaders = request =>
 					new Dictionary<string, string>
 					{
-						{ "If-Match", request.IfETag },
+						["If-Match"] = request.IfETag,
 					},
 				SetRequestHeaders = (request, headers) =>
 				{
-					string headerIfETag;
-					headers.TryGetValue("If-Match", out headerIfETag);
+					headers.TryGetValue("If-Match", out var headerIfETag);
 					request.IfETag = headerIfETag;
 					return request;
 				},
@@ -294,36 +286,29 @@ namespace Facility.ConformanceApi.Http
 				GetUriParameters = request =>
 					new Dictionary<string, string>
 					{
-						{ "string", request.String },
-						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
-						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						["string"] = request.String,
+						["boolean"] = request.Boolean == null ? null : request.Boolean.Value.ToString(),
+						["double"] = request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture),
+						["int32"] = request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture),
+						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
+						["decimal"] = request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture),
+						["enum"] = request.Enum == null ? null : request.Enum.Value.ToString(),
 					},
 				SetUriParameters = (request, parameters) =>
 				{
-					string queryParameterString;
-					parameters.TryGetValue("string", out queryParameterString);
+					parameters.TryGetValue("string", out var queryParameterString);
 					request.String = queryParameterString;
-					string queryParameterBoolean;
-					parameters.TryGetValue("boolean", out queryParameterBoolean);
+					parameters.TryGetValue("boolean", out var queryParameterBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
-					string queryParameterDouble;
-					parameters.TryGetValue("double", out queryParameterDouble);
+					parameters.TryGetValue("double", out var queryParameterDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
-					string queryParameterInt32;
-					parameters.TryGetValue("int32", out queryParameterInt32);
+					parameters.TryGetValue("int32", out var queryParameterInt32);
 					request.Int32 = ServiceDataUtility.TryParseInt32(queryParameterInt32);
-					string queryParameterInt64;
-					parameters.TryGetValue("int64", out queryParameterInt64);
+					parameters.TryGetValue("int64", out var queryParameterInt64);
 					request.Int64 = ServiceDataUtility.TryParseInt64(queryParameterInt64);
-					string queryParameterDecimal;
-					parameters.TryGetValue("decimal", out queryParameterDecimal);
+					parameters.TryGetValue("decimal", out var queryParameterDecimal);
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
-					string queryParameterEnum;
-					parameters.TryGetValue("enum", out queryParameterEnum);
+					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
 					return request;
 				},
@@ -362,36 +347,29 @@ namespace Facility.ConformanceApi.Http
 				GetUriParameters = request =>
 					new Dictionary<string, string>
 					{
-						{ "string", request.String },
-						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
-						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						["string"] = request.String,
+						["boolean"] = request.Boolean == null ? null : request.Boolean.Value.ToString(),
+						["double"] = request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture),
+						["int32"] = request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture),
+						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
+						["decimal"] = request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture),
+						["enum"] = request.Enum == null ? null : request.Enum.Value.ToString(),
 					},
 				SetUriParameters = (request, parameters) =>
 				{
-					string queryParameterString;
-					parameters.TryGetValue("string", out queryParameterString);
+					parameters.TryGetValue("string", out var queryParameterString);
 					request.String = queryParameterString;
-					string queryParameterBoolean;
-					parameters.TryGetValue("boolean", out queryParameterBoolean);
+					parameters.TryGetValue("boolean", out var queryParameterBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
-					string queryParameterDouble;
-					parameters.TryGetValue("double", out queryParameterDouble);
+					parameters.TryGetValue("double", out var queryParameterDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
-					string queryParameterInt32;
-					parameters.TryGetValue("int32", out queryParameterInt32);
+					parameters.TryGetValue("int32", out var queryParameterInt32);
 					request.Int32 = ServiceDataUtility.TryParseInt32(queryParameterInt32);
-					string queryParameterInt64;
-					parameters.TryGetValue("int64", out queryParameterInt64);
+					parameters.TryGetValue("int64", out var queryParameterInt64);
 					request.Int64 = ServiceDataUtility.TryParseInt64(queryParameterInt64);
-					string queryParameterDecimal;
-					parameters.TryGetValue("decimal", out queryParameterDecimal);
+					parameters.TryGetValue("decimal", out var queryParameterDecimal);
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
-					string queryParameterEnum;
-					parameters.TryGetValue("enum", out queryParameterEnum);
+					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
 					return request;
 				},
@@ -412,36 +390,29 @@ namespace Facility.ConformanceApi.Http
 				GetRequestHeaders = request =>
 					new Dictionary<string, string>
 					{
-						{ "string", request.String },
-						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
-						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						["string"] = request.String,
+						["boolean"] = request.Boolean == null ? null : request.Boolean.Value.ToString(),
+						["double"] = request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture),
+						["int32"] = request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture),
+						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
+						["decimal"] = request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture),
+						["enum"] = request.Enum == null ? null : request.Enum.Value.ToString(),
 					},
 				SetRequestHeaders = (request, headers) =>
 				{
-					string headerString;
-					headers.TryGetValue("string", out headerString);
+					headers.TryGetValue("string", out var headerString);
 					request.String = headerString;
-					string headerBoolean;
-					headers.TryGetValue("boolean", out headerBoolean);
+					headers.TryGetValue("boolean", out var headerBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
-					string headerDouble;
-					headers.TryGetValue("double", out headerDouble);
+					headers.TryGetValue("double", out var headerDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(headerDouble);
-					string headerInt32;
-					headers.TryGetValue("int32", out headerInt32);
+					headers.TryGetValue("int32", out var headerInt32);
 					request.Int32 = ServiceDataUtility.TryParseInt32(headerInt32);
-					string headerInt64;
-					headers.TryGetValue("int64", out headerInt64);
+					headers.TryGetValue("int64", out var headerInt64);
 					request.Int64 = ServiceDataUtility.TryParseInt64(headerInt64);
-					string headerDecimal;
-					headers.TryGetValue("decimal", out headerDecimal);
+					headers.TryGetValue("decimal", out var headerDecimal);
 					request.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
-					string headerEnum;
-					headers.TryGetValue("enum", out headerEnum);
+					headers.TryGetValue("enum", out var headerEnum);
 					request.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
 					return request;
 				},
@@ -455,36 +426,29 @@ namespace Facility.ConformanceApi.Http
 				GetResponseHeaders = response =>
 					new Dictionary<string, string>
 					{
-						{ "string", response.String },
-						{ "boolean", response.Boolean == null ? null : response.Boolean.Value.ToString() },
-						{ "double", response.Double == null ? null : response.Double.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int32", response.Int32 == null ? null : response.Int32.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "int64", response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "decimal", response.Decimal == null ? null : response.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
-						{ "enum", response.Enum == null ? null : response.Enum.Value.ToString() },
+						["string"] = response.String,
+						["boolean"] = response.Boolean == null ? null : response.Boolean.Value.ToString(),
+						["double"] = response.Double == null ? null : response.Double.Value.ToString(CultureInfo.InvariantCulture),
+						["int32"] = response.Int32 == null ? null : response.Int32.Value.ToString(CultureInfo.InvariantCulture),
+						["int64"] = response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture),
+						["decimal"] = response.Decimal == null ? null : response.Decimal.Value.ToString(CultureInfo.InvariantCulture),
+						["enum"] = response.Enum == null ? null : response.Enum.Value.ToString(),
 					},
 				SetResponseHeaders = (response, headers) =>
 				{
-					string headerString;
-					headers.TryGetValue("string", out headerString);
+					headers.TryGetValue("string", out var headerString);
 					response.String = headerString;
-					string headerBoolean;
-					headers.TryGetValue("boolean", out headerBoolean);
+					headers.TryGetValue("boolean", out var headerBoolean);
 					response.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
-					string headerDouble;
-					headers.TryGetValue("double", out headerDouble);
+					headers.TryGetValue("double", out var headerDouble);
 					response.Double = ServiceDataUtility.TryParseDouble(headerDouble);
-					string headerInt32;
-					headers.TryGetValue("int32", out headerInt32);
+					headers.TryGetValue("int32", out var headerInt32);
 					response.Int32 = ServiceDataUtility.TryParseInt32(headerInt32);
-					string headerInt64;
-					headers.TryGetValue("int64", out headerInt64);
+					headers.TryGetValue("int64", out var headerInt64);
 					response.Int64 = ServiceDataUtility.TryParseInt64(headerInt64);
-					string headerDecimal;
-					headers.TryGetValue("decimal", out headerDecimal);
+					headers.TryGetValue("decimal", out var headerDecimal);
 					response.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
-					string headerEnum;
-					headers.TryGetValue("enum", out headerEnum);
+					headers.TryGetValue("enum", out var headerEnum);
 					response.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
 					return response;
 				},

@@ -496,13 +496,13 @@ namespace Facility.CodeGen.CSharp
 												{
 													string fieldName = context.GetFieldPropertyName(pathField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"{{ \"{pathField.Name}\", {fieldValue} }},");
+													code.WriteLine($"[\"{pathField.Name}\"] = {fieldValue},");
 												}
 												foreach (var queryField in httpMethodInfo.QueryFields)
 												{
 													string fieldName = context.GetFieldPropertyName(queryField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"{{ \"{queryField.Name}\", {fieldValue} }},");
+													code.WriteLine($"[\"{queryField.Name}\"] = {fieldValue},");
 												}
 											}
 											code.WriteLine("},");
@@ -516,8 +516,7 @@ namespace Facility.CodeGen.CSharp
 											{
 												string dtoFieldName = context.GetFieldPropertyName(queryField.ServiceField);
 												string queryParameterName = $"queryParameter{dtoFieldName}";
-												code.WriteLine($"string {queryParameterName};");
-												code.WriteLine($"parameters.TryGetValue(\"{queryField.Name}\", out {queryParameterName});");
+												code.WriteLine($"parameters.TryGetValue(\"{queryField.Name}\", out var {queryParameterName});");
 												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(queryField.ServiceField), queryParameterName)};");
 											}
 
@@ -525,8 +524,7 @@ namespace Facility.CodeGen.CSharp
 											{
 												string dtoFieldName = context.GetFieldPropertyName(pathField.ServiceField);
 												string queryParameterName = $"queryParameter{dtoFieldName}";
-												code.WriteLine($"string {queryParameterName};");
-												code.WriteLine($"parameters.TryGetValue(\"{pathField.Name}\", out {queryParameterName});");
+												code.WriteLine($"parameters.TryGetValue(\"{pathField.Name}\", out var {queryParameterName});");
 												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(pathField.ServiceField), queryParameterName)};");
 											}
 
@@ -548,7 +546,7 @@ namespace Facility.CodeGen.CSharp
 												{
 													string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
+													code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 												}
 											}
 											code.WriteLine("},");
@@ -562,8 +560,7 @@ namespace Facility.CodeGen.CSharp
 											{
 												string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
 												string headerVariableName = $"header{dtoFieldName}";
-												code.WriteLine($"string {headerVariableName};");
-												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
+												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out var {headerVariableName});");
 												code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 											}
 
@@ -716,7 +713,7 @@ namespace Facility.CodeGen.CSharp
 												{
 													string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
-													code.WriteLine($"{{ \"{headerField.Name}\", {fieldValue} }},");
+													code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 												}
 											}
 											code.WriteLine("},");
@@ -730,8 +727,7 @@ namespace Facility.CodeGen.CSharp
 											{
 												string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
 												string headerVariableName = $"header{dtoFieldName}";
-												code.WriteLine($"string {headerVariableName};");
-												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out {headerVariableName});");
+												code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out var {headerVariableName});");
 												code.WriteLine($"response.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 											}
 
@@ -845,9 +841,9 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken)");
-							using (code.Block())
-								code.WriteLine($"return TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken) =>");
+							using (code.Indent())
+								code.WriteLine($"TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
 						}
 					}
 				}
@@ -953,27 +949,25 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public Task<HttpResponseMessage> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
-							using (code.Block())
-								code.WriteLine($"return TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
+							code.WriteLine($"public Task<HttpResponseMessage> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>");
+							using (code.Indent())
+								code.WriteLine($"TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
 						}
 
 						if (httpServiceInfo.ErrorSets.Count != 0)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Returns the HTTP status code for a custom error code.");
-							code.WriteLine("protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode)");
-							using (code.Block())
+							code.WriteLine("protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode) =>");
+							using (code.Indent())
 							{
 								string tryGetCustomHttpStatusCode = string.Join(" ?? ", httpServiceInfo.ErrorSets.Select(x => $"Http{x.ServiceErrorSet.Name}.TryGetHttpStatusCode(errorCode)"));
-								code.WriteLine($"return {tryGetCustomHttpStatusCode};");
+								code.WriteLine($"{tryGetCustomHttpStatusCode};");
 							}
 						}
 
 						code.WriteLine();
-						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest)");
-						using (code.Block())
-							code.WriteLine("return m_service ?? m_getService(httpRequest);");
+						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService(httpRequest);");
 
 						code.WriteLine();
 						code.WriteLine($"readonly {fullInterfaceName} m_service;");

@@ -58,83 +58,58 @@ namespace Facility.ConformanceApi.Http
 		/// <summary>
 		/// Gets API information.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetApiInfoMapping, httpRequest, GetService(httpRequest).GetApiInfoAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetApiInfoMapping, httpRequest, GetService(httpRequest).GetApiInfoAsync, cancellationToken);
 
 		/// <summary>
 		/// Gets widgets.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetsMapping, httpRequest, GetService(httpRequest).GetWidgetsAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetsMapping, httpRequest, GetService(httpRequest).GetWidgetsAsync, cancellationToken);
 
 		/// <summary>
 		/// Creates a new widget.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CreateWidgetMapping, httpRequest, GetService(httpRequest).CreateWidgetAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CreateWidgetMapping, httpRequest, GetService(httpRequest).CreateWidgetAsync, cancellationToken);
 
 		/// <summary>
 		/// Gets the specified widget.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetMapping, httpRequest, GetService(httpRequest).GetWidgetAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetMapping, httpRequest, GetService(httpRequest).GetWidgetAsync, cancellationToken);
 
 		/// <summary>
 		/// Deletes the specified widget.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, httpRequest, GetService(httpRequest).DeleteWidgetAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.DeleteWidgetMapping, httpRequest, GetService(httpRequest).DeleteWidgetAsync, cancellationToken);
 
 		/// <summary>
 		/// Gets the specified widgets.
 		/// </summary>
-		public Task<HttpResponseMessage> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, httpRequest, GetService(httpRequest).GetWidgetBatchAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, httpRequest, GetService(httpRequest).GetWidgetBatchAsync, cancellationToken);
 
-		public Task<HttpResponseMessage> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, httpRequest, GetService(httpRequest).MirrorFieldsAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, httpRequest, GetService(httpRequest).MirrorFieldsAsync, cancellationToken);
 
-		public Task<HttpResponseMessage> TryHandleCheckQueryAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckQueryMapping, httpRequest, GetService(httpRequest).CheckQueryAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleCheckQueryAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckQueryMapping, httpRequest, GetService(httpRequest).CheckQueryAsync, cancellationToken);
 
-		public Task<HttpResponseMessage> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckPathMapping, httpRequest, GetService(httpRequest).CheckPathAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CheckPathMapping, httpRequest, GetService(httpRequest).CheckPathAsync, cancellationToken);
 
-		public Task<HttpResponseMessage> TryHandleMirrorHeadersAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
-		{
-			return TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, httpRequest, GetService(httpRequest).MirrorHeadersAsync, cancellationToken);
-		}
+		public Task<HttpResponseMessage> TryHandleMirrorHeadersAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorHeadersMapping, httpRequest, GetService(httpRequest).MirrorHeadersAsync, cancellationToken);
 
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.
 		/// </summary>
-		protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode)
-		{
-			return HttpApiErrors.TryGetHttpStatusCode(errorCode);
-		}
+		protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode) =>
+			HttpApiErrors.TryGetHttpStatusCode(errorCode);
 
-		private IConformanceApi GetService(HttpRequestMessage httpRequest)
-		{
-			return m_service ?? m_getService(httpRequest);
-		}
+		private IConformanceApi GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService(httpRequest);
 
 		readonly IConformanceApi m_service;
 		readonly Func<HttpRequestMessage, IConformanceApi> m_getService;
