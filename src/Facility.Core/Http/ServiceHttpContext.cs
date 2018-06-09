@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
 namespace Facility.Core.Http
 {
@@ -22,8 +22,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		public static ServiceHttpContext TryGetContext(HttpRequestMessage httpRequest)
 		{
-			object context;
-			httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out context);
+			httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out var context);
 			return context as ServiceHttpContext;
 		}
 

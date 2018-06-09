@@ -43,18 +43,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Determines if the specified media type is supported.
 		/// </summary>
-		protected override bool IsSupportedMediaTypeCore(string mediaType)
-		{
-			return SupportedMediaTypes?.Contains(mediaType) ?? false;
-		}
+		protected override bool IsSupportedMediaTypeCore(string mediaType) => SupportedMediaTypes?.Contains(mediaType) ?? false;
 
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		protected override HttpContent CreateHttpContentCore(object content, string mediaType)
-		{
-			return new DelegateHttpContent(mediaType ?? DefaultMediaType, stream => ServiceJsonUtility.ToJsonStream(content, stream));
-		}
+		protected override HttpContent CreateHttpContentCore(object content, string mediaType) =>
+			new DelegateHttpContent(mediaType ?? DefaultMediaType, stream => ServiceJsonUtility.ToJsonStream(content, stream));
 
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.

@@ -12,50 +12,38 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates an error DTO for the specified status code.
 		/// </summary>
-		public static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode)
-		{
-			return CreateErrorForStatusCode(statusCode, null);
-		}
+		public static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode) =>
+			CreateErrorForStatusCode(statusCode, null);
 
 		/// <summary>
 		/// HTTP content missing Content-Type.
 		/// </summary>
-		public static ServiceErrorDto CreateMissingContentType()
-		{
-			return ServiceErrors.CreateInvalidRequest("HTTP content missing Content-Type.");
-		}
+		public static ServiceErrorDto CreateMissingContentType() =>
+			ServiceErrors.CreateInvalidRequest("HTTP content missing Content-Type.");
 
 		/// <summary>
 		/// HTTP content has unsupported Content-Type.
 		/// </summary>
-		public static ServiceErrorDto CreateUnsupportedContentType(string contentType)
-		{
-			return ServiceErrors.CreateInvalidRequest($"HTTP content has unsupported Content-Type: {contentType}");
-		}
+		public static ServiceErrorDto CreateUnsupportedContentType(string contentType) =>
+			ServiceErrors.CreateInvalidRequest($"HTTP content has unsupported Content-Type: {contentType}");
 
 		/// <summary>
 		/// HTTP content is invalid.
 		/// </summary>
-		public static ServiceErrorDto CreateInvalidContent(string message)
-		{
-			return ServiceErrors.CreateInvalidRequest($"HTTP content is invalid: {message}");
-		}
+		public static ServiceErrorDto CreateInvalidContent(string message) =>
+			ServiceErrors.CreateInvalidRequest($"HTTP content is invalid: {message}");
 
 		/// <summary>
 		/// HTTP header has an invalid format.
 		/// </summary>
-		public static ServiceErrorDto CreateHeaderInvalidFormat(string headerName)
-		{
-			return ServiceErrors.CreateInvalidRequest($"HTTP header '{headerName}' has an invalid format.");
-		}
+		public static ServiceErrorDto CreateHeaderInvalidFormat(string headerName) =>
+			ServiceErrors.CreateInvalidRequest($"HTTP header '{headerName}' has an invalid format.");
 
 		/// <summary>
 		/// The HTTP header is not supported.
 		/// </summary>
-		public static ServiceErrorDto CreateHeaderNotSupported(string headerName)
-		{
-			return ServiceErrors.CreateInvalidRequest($"HTTP header '{headerName}' is not supported.");
-		}
+		public static ServiceErrorDto CreateHeaderNotSupported(string headerName) =>
+			ServiceErrors.CreateInvalidRequest($"HTTP header '{headerName}' is not supported.");
 
 		internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string reasonPhrase)
 		{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +18,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Determines if the specified media type is supported.
 		/// </summary>
-		public bool IsSupportedMediaType(string mediaType)
-		{
-			return IsSupportedMediaTypeCore(mediaType);
-		}
+		public bool IsSupportedMediaType(string mediaType) => IsSupportedMediaTypeCore(mediaType);
 
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.

@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,18 +12,14 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		public Task RequestReadyAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
-		{
-			return RequestReadyAsyncCore(httpRequest, requestDto, cancellationToken);
-		}
+		public Task RequestReadyAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) =>
+			RequestReadyAsyncCore(httpRequest, requestDto, cancellationToken);
 
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		public Task ResponseReceivedAsync(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken)
-		{
-			return ResponseReceivedAsyncCore(httpResponse, requestDto, cancellationToken);
-		}
+		public Task ResponseReceivedAsync(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken) =>
+			ResponseReceivedAsyncCore(httpResponse, requestDto, cancellationToken);
 
 		/// <summary>
 		/// Creates an aspect.
@@ -35,17 +31,11 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		protected virtual Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
-		{
-			return Task.FromResult<object>(null);
-		}
+		protected virtual Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => HttpServiceUtility.CompletedTask;
 
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken)
-		{
-			return Task.FromResult<object>(null);
-		}
+		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken) => HttpServiceUtility.CompletedTask;
 	}
 }

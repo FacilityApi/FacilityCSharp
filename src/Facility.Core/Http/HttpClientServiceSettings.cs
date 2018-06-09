@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -20,12 +20,12 @@ namespace Facility.Core.Http
 		public HttpClient HttpClient { get; set; }
 
 		/// <summary>
-		/// The content serializer used by requests and responses.
+		/// The content serializer used by requests and responses (optional).
 		/// </summary>
 		public HttpContentSerializer ContentSerializer { get; set; }
 
 		/// <summary>
-		/// The aspects used when sending requests and receiving responses.
+		/// The aspects used when sending requests and receiving responses (optional).
 		/// </summary>
 		public IReadOnlyList<HttpClientServiceAspect> Aspects { get; set; }
 

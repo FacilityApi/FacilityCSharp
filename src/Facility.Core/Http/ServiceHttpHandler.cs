@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -135,10 +135,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.
 		/// </summary>
-		protected virtual HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode)
-		{
-			return null;
-		}
+		protected virtual HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode) => null;
 
 		/// <summary>
 		/// Handle or delegate the HTTP request.
@@ -158,7 +155,7 @@ namespace Facility.Core.Http
 				return task;
 
 			task.GetAwaiter().GetResult();
-			return Task.FromResult<object>(null);
+			return HttpServiceUtility.CompletedTask;
 		}
 
 		/// <summary>

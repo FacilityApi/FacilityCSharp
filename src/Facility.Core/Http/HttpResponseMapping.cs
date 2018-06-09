@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 
 namespace Facility.Core.Http
@@ -17,10 +17,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// True if the response should result in this status code and body.
 		/// </summary>
-		public bool? MatchesResponse(TResponse response)
-		{
-			return m_matchesResponse?.Invoke(response);
-		}
+		public bool? MatchesResponse(TResponse response) => m_matchesResponse?.Invoke(response);
 
 		/// <summary>
 		/// The type of the response body, if any.
@@ -30,18 +27,14 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the HTTP response content body from the response.
 		/// </summary>
-		public object GetResponseBody(TResponse response)
-		{
-			return m_getResponseBody != null ? m_getResponseBody(response) : ResponseBodyType == typeof(TResponse) ? response : null;
-		}
+		public object GetResponseBody(TResponse response) =>
+			m_getResponseBody != null ? m_getResponseBody(response) : ResponseBodyType == typeof(TResponse) ? response : null;
 
 		/// <summary>
 		/// Creates a response with an optional body.
 		/// </summary>
-		public TResponse CreateResponse(object responseBody)
-		{
-			return m_createResponse?.Invoke(responseBody) ?? responseBody as TResponse ?? new TResponse();
-		}
+		public TResponse CreateResponse(object responseBody) =>
+			m_createResponse?.Invoke(responseBody) ?? responseBody as TResponse ?? new TResponse();
 
 		/// <summary>
 		/// Used to build instances of this class.
@@ -76,10 +69,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Builds the mapping.
 			/// </summary>
-			public HttpResponseMapping<TResponse> Build()
-			{
-				return new HttpResponseMapping<TResponse>(this);
-			}
+			public HttpResponseMapping<TResponse> Build() => new HttpResponseMapping<TResponse>(this);
 		}
 
 		private HttpResponseMapping(Builder builder)

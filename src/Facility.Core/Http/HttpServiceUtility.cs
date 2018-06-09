@@ -28,10 +28,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		public const string JsonMediaType = "application/json";
 
-		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers)
-		{
-			return new DictionaryFromHeaders(headers);
-		}
+		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers) => new DictionaryFromHeaders(headers);
 
 		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string>> headers)
 		{
@@ -73,15 +70,11 @@ namespace Facility.Core.Http
 
 			public IEnumerable<string> Values => this.Select(x => x.Value);
 
-			public bool ContainsKey(string key)
-			{
-				return m_httpHeaders.Contains(key);
-			}
+			public bool ContainsKey(string key) => m_httpHeaders.Contains(key);
 
 			public bool TryGetValue(string key, out string value)
 			{
-				IEnumerable<string> values;
-				if (m_httpHeaders.TryGetValues(key, out values))
+				if (m_httpHeaders.TryGetValues(key, out var values))
 				{
 					value = JoinHeaderValues(values);
 					return true;
@@ -93,31 +86,14 @@ namespace Facility.Core.Http
 				}
 			}
 
-			public string this[string key]
-			{
-				get
-				{
-					string value;
-					if (!TryGetValue(key, out value))
-						throw new KeyNotFoundException();
-					return value;
-				}
-			}
+			public string this[string key] => TryGetValue(key, out var value) ? value : throw new KeyNotFoundException();
 
-			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-			{
-				return m_httpHeaders.Select(x => new KeyValuePair<string, string>(x.Key, JoinHeaderValues(x.Value))).GetEnumerator();
-			}
+			public IEnumerator<KeyValuePair<string, string>> GetEnumerator() =>
+				m_httpHeaders.Select(x => new KeyValuePair<string, string>(x.Key, JoinHeaderValues(x.Value))).GetEnumerator();
 
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return GetEnumerator();
-			}
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-			private static string JoinHeaderValues(IEnumerable<string> values)
-			{
-				return string.Join(", ", values);
-			}
+			private static string JoinHeaderValues(IEnumerable<string> values) => string.Join(", ", values);
 
 			readonly HttpHeaders m_httpHeaders;
 		}

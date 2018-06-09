@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,26 +26,20 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Returns a failure if the request is invalid.
 		/// </summary>
-		public ServiceResult ValidateRequest(TRequest request)
-		{
-			return m_validateRequest?.Invoke(request) ?? ServiceResult.Success();
-		}
+		public ServiceResult ValidateRequest(TRequest request) =>
+			m_validateRequest?.Invoke(request) ?? ServiceResult.Success();
 
 		/// <summary>
 		/// Extracts the path and query parameters from the request.
 		/// </summary>
-		public IReadOnlyDictionary<string, string> GetUriParameters(TRequest request)
-		{
-			return m_getUriParameters?.Invoke(request);
-		}
+		public IReadOnlyDictionary<string, string> GetUriParameters(TRequest request) =>
+			m_getUriParameters?.Invoke(request);
 
 		/// <summary>
 		/// Writes the path and query parameters to the request.
 		/// </summary>
-		public TRequest SetUriParameters(TRequest request, IReadOnlyDictionary<string, string> uriParameters)
-		{
-			return m_setUriParameters?.Invoke(request, uriParameters) ?? request;
-		}
+		public TRequest SetUriParameters(TRequest request, IReadOnlyDictionary<string, string> uriParameters) =>
+			m_setUriParameters?.Invoke(request, uriParameters) ?? request;
 
 		/// <summary>
 		/// The type of the request body, if any.
@@ -55,34 +49,26 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the HTTP request content body from the request.
 		/// </summary>
-		public object GetRequestBody(TRequest request)
-		{
-			return m_getRequestBody != null ? m_getRequestBody(request) : RequestBodyType == typeof(TRequest) ? request : null;
-		}
+		public object GetRequestBody(TRequest request) =>
+			m_getRequestBody != null ? m_getRequestBody(request) : RequestBodyType == typeof(TRequest) ? request : null;
 
 		/// <summary>
 		/// Extracts the headers from the request.
 		/// </summary>
-		public IReadOnlyDictionary<string, string> GetRequestHeaders(TRequest request)
-		{
-			return m_getRequestHeaders?.Invoke(request);
-		}
+		public IReadOnlyDictionary<string, string> GetRequestHeaders(TRequest request) =>
+			m_getRequestHeaders?.Invoke(request);
 
 		/// <summary>
 		/// Writes the headers to the request.
 		/// </summary>
-		public TRequest SetRequestHeaders(TRequest request, IReadOnlyDictionary<string, string> requestHeaders)
-		{
-			return m_setRequestHeaders?.Invoke(request, requestHeaders) ?? request;
-		}
+		public TRequest SetRequestHeaders(TRequest request, IReadOnlyDictionary<string, string> requestHeaders) =>
+			m_setRequestHeaders?.Invoke(request, requestHeaders) ?? request;
 
 		/// <summary>
 		/// Creates a request with an optional body.
 		/// </summary>
-		public TRequest CreateRequest(object requestBody)
-		{
-			return m_createRequest?.Invoke(requestBody) ?? requestBody as TRequest ?? new TRequest();
-		}
+		public TRequest CreateRequest(object requestBody) =>
+			m_createRequest?.Invoke(requestBody) ?? requestBody as TRequest ?? new TRequest();
 
 		/// <summary>
 		/// The response mappings.
@@ -92,18 +78,14 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the headers from the response.
 		/// </summary>
-		public IReadOnlyDictionary<string, string> GetResponseHeaders(TResponse response)
-		{
-			return m_getResponseHeaders?.Invoke(response);
-		}
+		public IReadOnlyDictionary<string, string> GetResponseHeaders(TResponse response) =>
+			m_getResponseHeaders?.Invoke(response);
 
 		/// <summary>
 		/// Writes the headers to the response.
 		/// </summary>
-		public TResponse SetResponseHeaders(TResponse response, IReadOnlyDictionary<string, string> responseHeaders)
-		{
-			return m_setResponseHeaders?.Invoke(response, responseHeaders) ?? response;
-		}
+		public TResponse SetResponseHeaders(TResponse response, IReadOnlyDictionary<string, string> responseHeaders) =>
+			m_setResponseHeaders?.Invoke(response, responseHeaders) ?? response;
 
 		/// <summary>
 		/// Used to build instances of this class.
@@ -178,10 +160,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Builds the mapping.
 			/// </summary>
-			public HttpMethodMapping<TRequest, TResponse> Build()
-			{
-				return new HttpMethodMapping<TRequest, TResponse>(this);
-			}
+			public HttpMethodMapping<TRequest, TResponse> Build() => new HttpMethodMapping<TRequest, TResponse>(this);
 		}
 
 		private HttpMethodMapping(Builder builder)
