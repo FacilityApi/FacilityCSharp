@@ -111,12 +111,36 @@ namespace Facility.CodeGen.CSharp
 			builder.Append('\"');
 			foreach (char ch in text)
 			{
-				if (ch == '"' || ch == '\\')
-					builder.Append('\\').Append(ch);
-				else if (ch >= 0x20 && ch <= 0x7E)
-					builder.Append(ch);
-				else
-					builder.Append("\\u").Append(((int) ch).ToString("x4", CultureInfo.InvariantCulture));
+				switch (ch)
+				{
+				case '"':
+					builder.Append("\\\"");
+					break;
+				case '\\':
+					builder.Append("\\\\");
+					break;
+				case '\n':
+					builder.Append("\\n");
+					break;
+				case '\r':
+					builder.Append("\\r");
+					break;
+				case '\t':
+					builder.Append("\\t");
+					break;
+				case '\0':
+					builder.Append("\\0");
+					break;
+				case ' ':
+					builder.Append(' ');
+					break;
+				default:
+					if (ch < 0x20 || char.IsWhiteSpace(ch))
+						builder.Append("\\u").Append(((int) ch).ToString("x4", CultureInfo.InvariantCulture));
+					else
+						builder.Append(ch);
+					break;
+				}
 			}
 			builder.Append('\"');
 			return builder.ToString();

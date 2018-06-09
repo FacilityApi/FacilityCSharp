@@ -25,6 +25,7 @@ namespace Facility.ConformanceApi.Http
 			switch ((int) statusCode)
 			{
 				case 403: return ApiErrors.NotAdmin;
+				case 500: return ApiErrors.TooHappy;
 				default: return null;
 			}
 		}
@@ -32,6 +33,7 @@ namespace Facility.ConformanceApi.Http
 		private static readonly IReadOnlyDictionary<string, int> s_errorToStatus = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
 		{
 			[ApiErrors.NotAdmin] = 403,
+			[ApiErrors.TooHappy] = 500,
 		};
 	}
 }

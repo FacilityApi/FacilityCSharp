@@ -16,8 +16,18 @@ namespace Facility.ConformanceApi
 		public const string NotAdmin = "NotAdmin";
 
 		/// <summary>
+		/// I'm "too" 😄!
+		/// </summary>
+		public const string TooHappy = "TooHappy";
+
+		/// <summary>
 		/// The user is not an administrator.
 		/// </summary>
 		public static ServiceErrorDto CreateNotAdmin(string message = null) => new ServiceErrorDto(NotAdmin, message ?? "The user is not an administrator.");
+
+		/// <summary>
+		/// I'm "too" 😄!
+		/// </summary>
+		public static ServiceErrorDto CreateTooHappy(string message = null) => new ServiceErrorDto(TooHappy, message ?? "I'm \"too\" 😄!");
 	}
 }
