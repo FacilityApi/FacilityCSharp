@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+    <ProjectReference Include="..\..\tools\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
   </ItemGroup>
 
 </Project>
