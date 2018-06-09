@@ -16,26 +16,17 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the DTOs are equivalent.
 		/// </summary>
-		public static bool AreEquivalentDtos(ServiceDto first, ServiceDto second)
-		{
-			return first == second || first != null && first.IsEquivalentTo(second);
-		}
+		public static bool AreEquivalentDtos(ServiceDto first, ServiceDto second) => first == second || first != null && first.IsEquivalentTo(second);
 
 		/// <summary>
 		/// True if the results are equivalent.
 		/// </summary>
-		public static bool AreEquivalentResults(ServiceResult first, ServiceResult second)
-		{
-			return first == second || first != null && first.IsEquivalentTo(second);
-		}
+		public static bool AreEquivalentResults(ServiceResult first, ServiceResult second) => first == second || first != null && first.IsEquivalentTo(second);
 
 		/// <summary>
 		/// True if the objects are equivalent.
 		/// </summary>
-		public static bool AreEquivalentObjects(JObject first, JObject second)
-		{
-			return JToken.DeepEquals(first, second);
-		}
+		public static bool AreEquivalentObjects(JObject first, JObject second) => JToken.DeepEquals(first, second);
 
 		/// <summary>
 		/// True if the bytes are equivalent.
@@ -84,8 +75,7 @@ namespace Facility.Core
 				return false;
 			foreach (var pair in first)
 			{
-				T value;
-				if (!second.TryGetValue(pair.Key, out value) || !areEquivalent(pair.Value, value))
+				if (!second.TryGetValue(pair.Key, out var value) || !areEquivalent(pair.Value, value))
 					return false;
 			}
 			return true;
@@ -94,63 +84,37 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the field values are equal.
 		/// </summary>
-		public static bool AreEquivalentFieldValues<T>(T x, T y)
-		{
-			return EquivalenceComparerCache<T>.Instance.Equals(x, y);
-		}
+		public static bool AreEquivalentFieldValues<T>(T x, T y) => EquivalenceComparerCache<T>.Instance.Equals(x, y);
 
 		/// <summary>
 		/// Clones the data element.
 		/// </summary>
-		public static T Clone<T>(T value)
-		{
-			return value == null ? default(T) : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
-		}
+		public static T Clone<T>(T value) => value == null ? default : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
 
 		/// <summary>
 		/// Attempts to parse a Boolean.
 		/// </summary>
-		public static bool? TryParseBoolean(string text)
-		{
-			bool value;
-			return bool.TryParse(text, out value) ? value : default(bool?);
-		}
+		public static bool? TryParseBoolean(string text) => bool.TryParse(text, out var value) ? value : default(bool?);
 
 		/// <summary>
 		/// Attempts to parse an Int32.
 		/// </summary>
-		public static int? TryParseInt32(string text)
-		{
-			int value;
-			return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value) ? value : default(int?);
-		}
+		public static int? TryParseInt32(string text) => int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(int?);
 
 		/// <summary>
 		/// Attempts to parse an Int64.
 		/// </summary>
-		public static long? TryParseInt64(string text)
-		{
-			long value;
-			return long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value) ? value : default(long?);
-		}
+		public static long? TryParseInt64(string text) => long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(long?);
 
 		/// <summary>
 		/// Attempts to parse a Double.
 		/// </summary>
-		public static double? TryParseDouble(string text)
-		{
-			double value;
-			return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(double?);
-		}
+		public static double? TryParseDouble(string text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(double?);
 
 		/// <summary>
 		/// Attempts to parse a Decimal.
 		/// </summary>
-		public static decimal? TryParseDecimal(string text)
-		{
-			decimal value;
-			return decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) ? value : default(decimal?);
-		}
+		public static decimal? TryParseDecimal(string text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
 
 		internal static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
 
@@ -200,54 +164,36 @@ namespace Facility.Core
 
 		private abstract class NoHashCodeEqualityComparer<T> : EqualityComparer<T>
 		{
-			public sealed override int GetHashCode(T obj)
-			{
-				throw new NotImplementedException();
-			}
+			public sealed override int GetHashCode(T obj) => throw new NotImplementedException();
 		}
 
 		private sealed class ServiceDtoEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
 			where T : ServiceDto
 		{
-			public override bool Equals(T x, T y)
-			{
-				return AreEquivalentDtos(x, y);
-			}
+			public override bool Equals(T x, T y) => AreEquivalentDtos(x, y);
 		}
 
 		private sealed class ServiceResultEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
 			where T : ServiceResult
 		{
-			public override bool Equals(T x, T y)
-			{
-				return AreEquivalentResults(x, y);
-			}
+			public override bool Equals(T x, T y) => AreEquivalentResults(x, y);
 		}
 
 		private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>
 		{
-			public override bool Equals(JObject x, JObject y)
-			{
-				return AreEquivalentObjects(x, y);
-			}
+			public override bool Equals(JObject x, JObject y) => AreEquivalentObjects(x, y);
 		}
 
 		private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
 			where T : IReadOnlyList<TItem>
 		{
-			public override bool Equals(T x, T y)
-			{
-				return AreEquivalentArrays(x, y, EquivalenceComparerCache<TItem>.Instance.Equals);
-			}
+			public override bool Equals(T x, T y) => AreEquivalentArrays(x, y, EquivalenceComparerCache<TItem>.Instance.Equals);
 		}
 
 		private sealed class MapEquivalenceComparer<T, TValue> : NoHashCodeEqualityComparer<T>
 			where T : IReadOnlyDictionary<string, TValue>
 		{
-			public override bool Equals(T x, T y)
-			{
-				return AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
-			}
+			public override bool Equals(T x, T y) => AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
 		}
 	}
 }

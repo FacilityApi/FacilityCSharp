@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -14,29 +14,17 @@ namespace Facility.Core
 		/// <summary>
 		/// Creates a successful result.
 		/// </summary>
-		public static ServiceResult Success()
-		{
-			return new ServiceResult(null);
-		}
+		public static ServiceResult Success() => new ServiceResult(null);
 
 		/// <summary>
 		/// Creates a successful result.
 		/// </summary>
-		public static ServiceResult<T> Success<T>(T value)
-		{
-			return new ServiceResult<T>(value);
-		}
+		public static ServiceResult<T> Success<T>(T value) => new ServiceResult<T>(value);
 
 		/// <summary>
 		/// Creates a failed result.
 		/// </summary>
-		public static ServiceResultFailure Failure(ServiceErrorDto error)
-		{
-			if (error == null)
-				throw new ArgumentNullException(nameof(error));
-
-			return new ServiceResultFailure(error);
-		}
+		public static ServiceResultFailure Failure(ServiceErrorDto error) => new ServiceResultFailure(error ?? throw new ArgumentNullException(nameof(error)));
 
 		/// <summary>
 		/// True if the result has a value.
@@ -79,10 +67,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The service result as a failure; null if it is a success.
 		/// </summary>
-		public ServiceResultFailure AsFailure()
-		{
-			return this as ServiceResultFailure ?? (IsFailure ? Failure(m_error) : null);
-		}
+		public ServiceResultFailure AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(m_error) : null);
 
 		/// <summary>
 		/// Check service results for equivalence.
@@ -105,10 +90,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Render result as a string.
 		/// </summary>
-		public override string ToString()
-		{
-			return IsSuccess ? "<Success>" : $"<Failure={m_error}>";
-		}
+		public override string ToString() => IsSuccess ? "<Success>" : $"<Failure={m_error}>";
 
 		/// <summary>
 		/// Used for JSON serialization.
@@ -118,10 +100,7 @@ namespace Facility.Core
 			/// <summary>
 			/// Determines whether this instance can convert the specified object type.
 			/// </summary>
-			public override bool CanConvert(Type objectType)
-			{
-				return objectType.GetTypeInfo().IsAssignableFrom(typeof(ServiceResult).GetTypeInfo());
-			}
+			public override bool CanConvert(Type objectType) => objectType.GetTypeInfo().IsAssignableFrom(typeof(ServiceResult).GetTypeInfo());
 
 			/// <summary>
 			/// Reads the JSON representation of the object.
@@ -227,15 +206,9 @@ namespace Facility.Core
 
 		internal virtual Type InternalValueType => null;
 
-		internal virtual object InternalValue
-		{
-			get { throw new InvalidCastException("A successful result without a value cannot be cast."); }
-		}
+		internal virtual object InternalValue => throw new InvalidCastException("A successful result without a value cannot be cast.");
 
-		internal virtual bool IsInternalValueEquivalent(ServiceResult result)
-		{
-			return false;
-		}
+		internal virtual bool IsInternalValueEquivalent(ServiceResult result) => false;
 
 		readonly ServiceErrorDto m_error;
 	}
@@ -248,10 +221,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Implicitly create a failed result from an error.
 		/// </summary>
-		public static implicit operator ServiceResult<T>(ServiceResultFailure failure)
-		{
-			return new ServiceResult<T>(failure.Error);
-		}
+		public static implicit operator ServiceResult<T>(ServiceResultFailure failure) => new ServiceResult<T>(failure.Error);
 
 		/// <summary>
 		/// The value. (Throws a ServiceException on failure.)
@@ -268,10 +238,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The value. (Returns null on failure.)
 		/// </summary>
-		public T GetValueOrDefault()
-		{
-			return m_value;
-		}
+		public T GetValueOrDefault() => m_value;
 
 		/// <summary>
 		/// Maps a ServiceResult from one type to another.
@@ -279,10 +246,7 @@ namespace Facility.Core
 		/// <remarks>If the result is a success, the function is called on the input value to produce
 		/// a successful service result matching the type of the output value. If the result is a failure,
 		/// the function is not called, and a failed service result using the output type is returned.</remarks>
-		public ServiceResult<TOutput> Map<TOutput>(Func<T, TOutput> func)
-		{
-			return Map(x => new ServiceResult<TOutput>(func(x)));
-		}
+		public ServiceResult<TOutput> Map<TOutput>(Func<T, TOutput> func) => Map(x => new ServiceResult<TOutput>(func(x)));
 
 		/// <summary>
 		/// Maps a ServiceResult from one type to another.
@@ -290,26 +254,17 @@ namespace Facility.Core
 		/// <remarks>If the result is a success, the function is called on the input value to produce
 		/// a service result matching the type of the output value. If the result is a failure,
 		/// the function is not called, and a failed service result using the output type is returned.</remarks>
-		public ServiceResult<TOutput> Map<TOutput>(Func<T, ServiceResult<TOutput>> func)
-		{
-			return IsFailure ? new ServiceResult<TOutput>(Error) : func(m_value);
-		}
+		public ServiceResult<TOutput> Map<TOutput>(Func<T, ServiceResult<TOutput>> func) => IsFailure ? new ServiceResult<TOutput>(Error) : func(m_value);
 
 		/// <summary>
 		/// Check service results for equivalence.
 		/// </summary>
-		public bool IsEquivalentTo(ServiceResult<T> other)
-		{
-			return base.IsEquivalentTo(other);
-		}
+		public bool IsEquivalentTo(ServiceResult<T> other) => base.IsEquivalentTo(other);
 
 		/// <summary>
 		/// Render result as a string.
 		/// </summary>
-		public override string ToString()
-		{
-			return IsSuccess ? $"<Success={m_value}>" : base.ToString();
-		}
+		public override string ToString() => IsSuccess ? $"<Success={m_value}>" : base.ToString();
 
 		internal ServiceResult(T value)
 			: base(null)
@@ -351,9 +306,6 @@ namespace Facility.Core
 		/// <summary>
 		/// Check service results for equivalence.
 		/// </summary>
-		public bool IsEquivalentTo(ServiceResultFailure other)
-		{
-			return base.IsEquivalentTo(other);
-		}
+		public bool IsEquivalentTo(ServiceResultFailure other) => base.IsEquivalentTo(other);
 	}
 }

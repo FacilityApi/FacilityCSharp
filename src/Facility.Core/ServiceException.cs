@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Facility.Core
 {
@@ -12,10 +12,7 @@ namespace Facility.Core
 		/// </summary>
 		public ServiceException(ServiceErrorDto error)
 		{
-			if (error == null)
-				throw new ArgumentNullException(nameof(error));
-
-			m_error = error;
+			m_error = error ?? throw new ArgumentNullException(nameof(error));
 		}
 
 		/// <summary>
@@ -24,10 +21,7 @@ namespace Facility.Core
 		public ServiceException(ServiceErrorDto error, Exception innerException)
 			: base(null, innerException)
 		{
-			if (error == null)
-				throw new ArgumentNullException(nameof(error));
-
-			m_error = error;
+			m_error = error ?? throw new ArgumentNullException(nameof(error));
 		}
 
 		/// <summary>

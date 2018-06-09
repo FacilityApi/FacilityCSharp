@@ -1,4 +1,4 @@
-﻿namespace Facility.Core
+namespace Facility.Core
 {
 	/// <summary>
 	/// Base class for data objects used by services.
@@ -8,10 +8,7 @@
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
-		public override string ToString()
-		{
-			return ServiceJsonUtility.ToJson(this);
-		}
+		public override string ToString() => ServiceJsonUtility.ToJson(this);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
@@ -28,10 +25,7 @@
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public sealed override bool IsEquivalentTo(ServiceDto other)
-		{
-			return IsEquivalentTo(other as T);
-		}
+		public sealed override bool IsEquivalentTo(ServiceDto other) => IsEquivalentTo(other as T);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Newtonsoft.Json;
 
@@ -17,10 +17,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Implements CanConvert.
 		/// </summary>
-		public override bool CanConvert(Type objectType)
-		{
-			return objectType == typeof(T) || (s_nullableType != null && objectType == s_nullableType);
-		}
+		public override bool CanConvert(Type objectType) => objectType == typeof(T) || (s_nullableType != null && objectType == s_nullableType);
 
 		/// <summary>
 		/// Implements ReadJson.
@@ -40,10 +37,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Implements WriteJson.
 		/// </summary>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-		{
-			WriteCore(writer, (T) value, serializer);
-		}
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => WriteCore(writer, (T) value, serializer);
 
 		/// <summary>
 		/// Reads the JSON representation of the value.
