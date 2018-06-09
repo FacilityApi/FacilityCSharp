@@ -5,40 +5,28 @@ using Facility.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-#pragma warning disable 612, 618 // member is obsolete
-
 namespace EdgeCases
 {
 	/// <summary>
 	/// An old DTO.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class OldDtoDto : ServiceDto<OldDtoDto>
+	[Obsolete]
+	public sealed partial class OldEmptyDataDto : ServiceDto<OldEmptyDataDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public OldDtoDto()
+		public OldEmptyDataDto()
 		{
 		}
 
 		/// <summary>
-		/// An old field.
-		/// </summary>
-		[Obsolete]
-		public string Old { get; set; }
-
-		[Obsolete]
-		public string Older { get; set; }
-
-		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(OldDtoDto other)
+		public override bool IsEquivalentTo(OldEmptyDataDto other)
 		{
-			return other != null &&
-				Old == other.Old &&
-				Older == other.Older;
+			return other != null;
 		}
 	}
 }

@@ -10,12 +10,12 @@ service EdgeCases
 
 	/// An old DTO.
 	[obsolete]
-	data OldEmptyDto
+	data OldEmptyData
 	{
 	}
 
 	/// An old DTO.
-	data OldDto
+	data OldData
 	{
 		/// An old field.
 		[obsolete]
