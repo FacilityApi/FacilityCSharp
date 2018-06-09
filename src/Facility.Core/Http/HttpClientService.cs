@@ -24,9 +24,8 @@ namespace Facility.Core.Http
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
 
-			m_baseUri = settings.BaseUri ?? defaultBaseUri;
-			if (m_baseUri == null || !m_baseUri.IsAbsoluteUri)
-				throw new ArgumentException("BaseUri must be specified and absolute.", nameof(settings));
+			var baseUri = settings.BaseUri ?? defaultBaseUri;
+			m_baseUrl = baseUri == null ? "" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString);
 
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 		}
@@ -152,15 +151,15 @@ namespace Facility.Core.Http
 			return httpResponse;
 		}
 
-		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUriPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
+		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
 		{
-			string uriText = m_baseUri.AbsoluteUri;
+			string url = m_baseUrl;
+			if (!string.IsNullOrEmpty(relativeUrlPattern))
+				url = url.TrimEnd('/') + "/" + relativeUrlPattern.TrimStart('/');
+			if (uriParameters != null)
+				url = GetUrlFromPattern(url, uriParameters);
 
-			if (!string.IsNullOrEmpty(relativeUriPattern))
-				uriText = uriText.TrimEnd('/') + "/" + relativeUriPattern.TrimStart('/');
-
-			Uri uri = uriParameters != null ? GetUriFromPattern(uriText, uriParameters) : new Uri(uriText);
-			var requestMessage = new HttpRequestMessage(httpMethod, uri);
+			var requestMessage = new HttpRequestMessage(httpMethod, url);
 
 			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
 			if (headersResult.IsFailure)
@@ -169,30 +168,30 @@ namespace Facility.Core.Http
 			return ServiceResult.Success(requestMessage);
 		}
 
-		private static Uri GetUriFromPattern(string uriPattern, IEnumerable<KeyValuePair<string, string>> parameters)
+		private static string GetUrlFromPattern(string url, IEnumerable<KeyValuePair<string, string>> parameters)
 		{
-			bool hasQuery = uriPattern.IndexOf('?') != -1;
+			bool hasQuery = url.IndexOf('?') != -1;
 
 			foreach (KeyValuePair<string, string> parameter in parameters)
 			{
 				if (parameter.Key != null && parameter.Value != null)
 				{
 					string bracketedKey = "{" + parameter.Key + "}";
-					int bracketedKeyIndex = uriPattern.IndexOf(bracketedKey, StringComparison.Ordinal);
+					int bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
 					if (bracketedKeyIndex != -1)
 					{
-						uriPattern = uriPattern.Substring(0, bracketedKeyIndex) +
-							Uri.EscapeDataString(parameter.Value) + uriPattern.Substring(bracketedKeyIndex + bracketedKey.Length);
+						url = url.Substring(0, bracketedKeyIndex) +
+							Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);
 					}
 					else
 					{
-						uriPattern += (hasQuery ? "&" : "?") + Uri.EscapeDataString(parameter.Key) + "=" + Uri.EscapeDataString(parameter.Value);
+						url += (hasQuery ? "&" : "?") + Uri.EscapeDataString(parameter.Key) + "=" + Uri.EscapeDataString(parameter.Value);
 						hasQuery = true;
 					}
 				}
 			}
 
-			return new Uri(uriPattern);
+			return url;
 		}
 
 		private Task AdaptTask(Task task)
@@ -217,6 +216,6 @@ namespace Facility.Core.Http
 		readonly HttpClient m_httpClient;
 		readonly IReadOnlyList<HttpClientServiceAspect> m_aspects;
 		readonly bool m_synchronous;
-		readonly Uri m_baseUri;
+		readonly string m_baseUrl;
 	}
 }

@@ -22,7 +22,6 @@ namespace Facility.ConformanceApi.UnitTests
 				return new HttpClientConformanceApi(
 					new HttpClientServiceSettings
 					{
-						BaseUri = new Uri("https://example.com/"),
 						Aspects = new[] { FacilityTestClientAspect.Create(testName) },
 						HttpClient = s_httpClient,
 					});
@@ -45,7 +44,7 @@ namespace Facility.ConformanceApi.UnitTests
 			}
 
 			var handler = new ConformanceApiHttpHandler(getApiForRequest, new ServiceHttpHandlerSettings()) { InnerHandler = new NotFoundHttpHandler() };
-			return new HttpClient(handler);
+			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 		}
 
 		private sealed class NotFoundHttpHandler : HttpMessageHandler
