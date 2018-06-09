@@ -42,6 +42,8 @@ namespace Facility.Core.Http
 			where TRequest : ServiceDto, new()
 			where TResponse : ServiceDto, new()
 		{
+			if (mapping == null)
+				throw new ArgumentNullException(nameof(mapping));
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
 

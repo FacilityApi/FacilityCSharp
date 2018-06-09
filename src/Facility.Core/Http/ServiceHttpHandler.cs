@@ -40,6 +40,15 @@ namespace Facility.Core.Http
 			where TRequest : ServiceDto, new()
 			where TResponse : ServiceDto, new()
 		{
+			if (mapping == null)
+				throw new ArgumentNullException(nameof(mapping));
+			if (httpRequest == null)
+				throw new ArgumentNullException(nameof(httpRequest));
+			if (invokeMethodAsync == null)
+				throw new ArgumentNullException(nameof(invokeMethodAsync));
+			if (httpRequest.RequestUri == null)
+				throw new ArgumentException("RequestUri must be specified.", nameof(httpRequest));
+
 			if (httpRequest.Method != mapping.HttpMethod)
 				return null;
 
