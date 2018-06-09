@@ -1125,10 +1125,7 @@ namespace Facility.CodeGen.CSharp
 			}
 		}
 
-		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType)
-		{
-			return RenderNullableFieldType(fieldType).TrimEnd('?');
-		}
+		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType) => RenderNullableFieldType(fieldType).TrimEnd('?');
 
 		private string RenderNullableFieldType(ServiceTypeInfo fieldType)
 		{
