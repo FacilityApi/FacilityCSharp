@@ -1,5 +1,12 @@
 service EdgeCases
 {
+	/// A DTO.
+	data Data
+	{
+		[csharp(name: Field)]
+		f: string;
+	}
+
 	/// An old method.
 	[obsolete]
 	method oldMethod
