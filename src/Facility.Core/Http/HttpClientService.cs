@@ -127,10 +127,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called to create an error object from an unexpected exception.
 		/// </summary>
-		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception)
-		{
-			return ServiceErrorUtility.CreateInternalErrorForException(exception);
-		}
+		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception) => ServiceErrorUtility.CreateInternalErrorForException(exception);
 
 		private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
@@ -153,9 +150,7 @@ namespace Facility.Core.Http
 
 		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
 		{
-			string url = m_baseUrl;
-			if (!string.IsNullOrEmpty(relativeUrlPattern))
-				url = url.TrimEnd('/') + "/" + relativeUrlPattern.TrimStart('/');
+			string url = m_baseUrl.TrimEnd('/') + "/" + relativeUrlPattern.TrimStart('/');
 			if (uriParameters != null)
 				url = GetUrlFromPattern(url, uriParameters);
 
@@ -200,7 +195,7 @@ namespace Facility.Core.Http
 				return task;
 
 			task.GetAwaiter().GetResult();
-			return Task.FromResult<object>(null);
+			return HttpServiceUtility.CompletedTask;
 		}
 
 		private Task<T> AdaptTask<T>(Task<T> task)
