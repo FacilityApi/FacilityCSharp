@@ -32,7 +32,7 @@ namespace Facility.CodeGen.CSharp
 		{
 			var outputFiles = new List<CodeGenFile>();
 
-			var context = new Context(GeneratorName, CSharpServiceInfo.Create(service));
+			var context = new Context(GeneratorName, CSharpServiceInfo.Create(service), NamespaceName);
 
 			foreach (var errorSetInfo in service.ErrorSets.Where(x => x.Errors.Count != 0))
 				outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
@@ -1166,15 +1166,16 @@ namespace Facility.CodeGen.CSharp
 
 		private sealed class Context
 		{
-			public Context(string generatorName, CSharpServiceInfo csharpServiceInfo)
+			public Context(string generatorName, CSharpServiceInfo csharpServiceInfo, string namespaceName)
 			{
 				m_csharpServiceInfo = csharpServiceInfo;
 				GeneratorName = generatorName;
+				NamespaceName = namespaceName ?? m_csharpServiceInfo.Namespace;
 			}
 
 			public string GeneratorName { get; }
 
-			public string NamespaceName => m_csharpServiceInfo.Namespace;
+			public string NamespaceName { get; }
 
 			public string GetFieldPropertyName(ServiceFieldInfo field) => m_csharpServiceInfo.GetFieldPropertyName(field);
 

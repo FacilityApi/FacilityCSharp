@@ -61,6 +61,22 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			generator.GenerateOutput(service);
 		}
 
+		[Test]
+		public void OverrideNamespace()
+		{
+			var definition = "[csharp(namespace: DefinitionNamespace)] service TestApi { method do {}: {} }";
+			var parser = new FsdParser();
+			var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), NamespaceName = "OverrideNamespace" };
+			var output = generator.GenerateOutput(service);
+			foreach (var file in output.Files)
+			{
+				StringAssert.Contains("namespace OverrideNamespace", file.Text);
+				StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
+			}
+
+		}
+
 		private void ThrowsServiceDefinitionException(string definition, string message)
 		{
 			var parser = new FsdParser();
