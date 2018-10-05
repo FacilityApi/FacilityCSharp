@@ -11,3 +11,4 @@ release/
 *.user
 nCrunchTemp*
 *.log
+_ReSharper*
