@@ -7,6 +7,7 @@ Add changes here when they're committed to the `master` branch. To publish, upda
 Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in accordance with [SemVer](http://semver.org).
 
 * [major] Upgrade to .NET Standard 2.0 and .NET 4.6.1. Upgrade NuGet dependencies.
+* [patch] Fix NRE when creating request DTOs caused by deserializing the empty string as JSON.
 
 ## Released
 
