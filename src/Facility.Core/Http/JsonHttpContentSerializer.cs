@@ -65,7 +65,10 @@ namespace Facility.Core.Http
 			{
 				using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
 				using (var textReader = new StreamReader(stream))
-					return ServiceResult.Success(ServiceJsonUtility.FromJsonTextReader(textReader, dtoType));
+				{
+					var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
+					return deserializedContent != null ? ServiceResult.Success(deserializedContent) : ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
+				}
 			}
 			catch (JsonException exception)
 			{
