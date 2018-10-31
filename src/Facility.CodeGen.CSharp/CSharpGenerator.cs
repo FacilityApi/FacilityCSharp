@@ -171,7 +171,8 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLineSkipOnce();
 							CSharpUtility.WriteSummary(code, enumValue.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, enumValue);
-							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}(\"{enumValue.Name}\");");
+							code.WriteLine($"public const string {memberName}Value = \"{enumValue.Name}\";");
+							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}({memberName}Value);");
 						}
 
 						code.WriteLine();

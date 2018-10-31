@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Facility.Definition;
 using Facility.Definition.Fsd;
 using FluentAssertions;
@@ -75,6 +76,19 @@ namespace Facility.CodeGen.CSharp.UnitTests
 				StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
 			}
 
+		}
+
+		[Test]
+		public void EnumValues()
+		{
+			var definition = "service TestApi { method do {}: {} enum ValueTest { item1, item2 } }";
+			var parser = new FsdParser();
+			var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+			var output = generator.GenerateOutput(service);
+			var enumFile = output.Files.FirstOrDefault(f => f.Name.Contains("ValueTest"));
+			StringAssert.Contains("Item1Value = \"item1\"", enumFile.Text);
+			StringAssert.Contains("Item2Value = \"item2\"", enumFile.Text);
 		}
 
 		private void ThrowsServiceDefinitionException(string definition, string message)
