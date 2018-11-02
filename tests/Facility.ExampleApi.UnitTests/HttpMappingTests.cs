@@ -117,5 +117,13 @@ namespace Facility.ExampleApi.UnitTests
 			var response = await httpClient.PostAsync("http://local.example.com/v1/kitchen", new ByteArrayContent(new byte[0]));
 			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
+
+		[Test]
+		public async Task MissingBodyWithJsonContentType_BadRequest()
+		{
+			var httpClient = TestUtility.CreateTestHttpClient();
+			var response = await httpClient.PostAsync("http://local.example.com/v1/widgets/123/edit", new StringContent(string.Empty, Encoding.UTF8, HttpServiceUtility.JsonMediaType));
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
 	}
 }
