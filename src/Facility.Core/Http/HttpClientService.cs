@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -103,7 +103,7 @@ namespace Facility.Core.Http
 				// HttpClient timeout
 				return ServiceResult.Failure(ServiceErrors.CreateTimeout());
 			}
-			catch (Exception exception) when (exception is ArgumentException || exception is HttpRequestException || exception is IOException)
+			catch (Exception exception) when (ShouldCreateErrorFromException(exception))
 			{
 				// cancellation can cause the wrong exception
 				cancellationToken.ThrowIfCancellationRequested();
@@ -124,6 +124,21 @@ namespace Facility.Core.Http
 				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
 
 			return result.Value;
+		}
+
+		/// <summary>
+		/// Called to determine if an error object should be created from an unexpected exception.
+		/// </summary>
+		protected virtual bool ShouldCreateErrorFromException(Exception exception)
+		{
+			if (exception is ArgumentException || exception is ObjectDisposedException || exception is AggregateException)
+				return true;
+
+			string exceptionTypeName = exception.GetType().FullName;
+			return exceptionTypeName != null && (
+				exceptionTypeName.StartsWith("System.Net.", StringComparison.Ordinal) ||
+				exceptionTypeName.StartsWith("System.IO.", StringComparison.Ordinal) ||
+				exceptionTypeName.StartsWith("System.Web.", StringComparison.Ordinal));
 		}
 
 		/// <summary>
