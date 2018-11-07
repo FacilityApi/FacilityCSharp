@@ -174,7 +174,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception)
 		{
-			return ServiceErrors.CreateInternalError();
+			return ServiceErrors.CreateInvalidRequest("Unexpected error while reading request body.");
 		}
 
 		/// <summary>
