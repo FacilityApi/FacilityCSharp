@@ -19,13 +19,11 @@ New-Item -Path $CakeDirPath -Type Directory -ErrorAction SilentlyContinue | Out-
 
 # create packages.config
 $PackagesConfigPath = Join-Path $CakeDirPath "packages.config"
-If (!(Test-Path $PackagesConfigPath)) {
-    [System.IO.File]::WriteAllLines($PackagesConfigPath, @(
-        "<?xml version=`"1.0`" encoding=`"utf-8`"?>",
-        "<packages>",
-        "`t<package id=`"Cake`" version=`"0.27.1`" />",
-        "</packages>"))
-}
+[System.IO.File]::WriteAllLines($PackagesConfigPath, @(
+    "<?xml version=`"1.0`" encoding=`"utf-8`"?>",
+    "<packages>",
+    "`t<package id=`"Cake`" version=`"0.32.1`" />",
+    "</packages>"))
 
 # download nuget.exe if not in path and not already downloaded
 $NuGetExe = Get-Command "nuget.exe" -ErrorAction SilentlyContinue
