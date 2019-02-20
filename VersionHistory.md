@@ -8,6 +8,8 @@ Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in
 
 * [major] Upgrade to .NET Standard 2.0 and .NET 4.6.1. Upgrade NuGet dependencies.
 
+* Use a netstandard compatible mechansim HttpMethod that supports all HTTP methods
+
 ## Released
 
 ### 1.3.2
