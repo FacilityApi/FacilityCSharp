@@ -23,7 +23,7 @@ namespace EdgeCases.Http
 		public static readonly HttpMethodMapping<OldMethodRequestDto, OldMethodResponseDto> OldMethodMapping =
 			new HttpMethodMapping<OldMethodRequestDto, OldMethodResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Post,
+				HttpMethod = new HttpMethod("POST"),
 				Path = "/oldMethod",
 				ResponseMappings =
 				{

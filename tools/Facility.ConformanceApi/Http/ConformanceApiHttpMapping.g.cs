@@ -25,7 +25,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<GetApiInfoRequestDto, GetApiInfoResponseDto> GetApiInfoMapping =
 			new HttpMethodMapping<GetApiInfoRequestDto, GetApiInfoResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/",
 				ResponseMappings =
 				{
@@ -43,7 +43,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<GetWidgetsRequestDto, GetWidgetsResponseDto> GetWidgetsMapping =
 			new HttpMethodMapping<GetWidgetsRequestDto, GetWidgetsResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/widgets",
 				GetUriParameters = request =>
 					new Dictionary<string, string>
@@ -72,7 +72,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto> CreateWidgetMapping =
 			new HttpMethodMapping<CreateWidgetRequestDto, CreateWidgetResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Post,
+				HttpMethod = new HttpMethod("POST"),
 				Path = "/widgets",
 				ValidateRequest = request =>
 				{
@@ -116,7 +116,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<GetWidgetRequestDto, GetWidgetResponseDto> GetWidgetMapping =
 			new HttpMethodMapping<GetWidgetRequestDto, GetWidgetResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/widgets/{id}",
 				ValidateRequest = request =>
 				{
@@ -182,7 +182,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<DeleteWidgetRequestDto, DeleteWidgetResponseDto> DeleteWidgetMapping =
 			new HttpMethodMapping<DeleteWidgetRequestDto, DeleteWidgetResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Delete,
+				HttpMethod = new HttpMethod("DELETE"),
 				Path = "/widgets/{id}",
 				ValidateRequest = request =>
 				{
@@ -239,7 +239,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<GetWidgetBatchRequestDto, GetWidgetBatchResponseDto> GetWidgetBatchMapping =
 			new HttpMethodMapping<GetWidgetBatchRequestDto, GetWidgetBatchResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Post,
+				HttpMethod = new HttpMethod("POST"),
 				Path = "/widgets/get",
 				ValidateRequest = request =>
 				{
@@ -266,7 +266,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto> MirrorFieldsMapping =
 			new HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Post,
+				HttpMethod = new HttpMethod("POST"),
 				Path = "/mirrorFields",
 				RequestBodyType = typeof(MirrorFieldsRequestDto),
 				ResponseMappings =
@@ -282,7 +282,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<CheckQueryRequestDto, CheckQueryResponseDto> CheckQueryMapping =
 			new HttpMethodMapping<CheckQueryRequestDto, CheckQueryResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/checkQuery",
 				GetUriParameters = request =>
 					new Dictionary<string, string>
@@ -325,7 +325,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto> CheckPathMapping =
 			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/mirror/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
 				ValidateRequest = request =>
 				{
@@ -386,7 +386,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<MirrorHeadersRequestDto, MirrorHeadersResponseDto> MirrorHeadersMapping =
 			new HttpMethodMapping<MirrorHeadersRequestDto, MirrorHeadersResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Get,
+				HttpMethod = new HttpMethod("GET"),
 				Path = "/mirrorHeaders",
 				GetRequestHeaders = request =>
 					new Dictionary<string, string>
@@ -458,7 +458,7 @@ namespace Facility.ConformanceApi.Http
 		public static readonly HttpMethodMapping<MixedRequestDto, MixedResponseDto> MixedMapping =
 			new HttpMethodMapping<MixedRequestDto, MixedResponseDto>.Builder
 			{
-				HttpMethod = HttpMethod.Post,
+				HttpMethod = new HttpMethod("POST"),
 				Path = "/mixed/{path}",
 				ValidateRequest = request =>
 				{

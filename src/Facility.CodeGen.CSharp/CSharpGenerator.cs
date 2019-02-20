@@ -444,8 +444,8 @@ namespace Facility.CodeGen.CSharp
 								code.WriteLine($"new HttpMethodMapping<{requestTypeName}, {responseTypeName}>.Builder");
 								using (code.Block("{", "}.Build();"))
 								{
-									string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
-									code.WriteLine($"HttpMethod = HttpMethod.{httpMethodName},");
+									string httpMethodName = httpMethodInfo.Method.ToString().ToUpperInvariant();
+									code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethodName}\"),");
 
 									code.WriteLine($"Path = \"{httpPath}\",");
 
