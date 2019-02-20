@@ -1,4 +1,4 @@
-#addin nuget:?package=Cake.Git&version=0.17.0
+#addin nuget:?package=Cake.Git&version=0.19.0
 #addin nuget:?package=Cake.XmlDocMarkdown&version=1.4.0
 
 using System.Text.RegularExpressions;
