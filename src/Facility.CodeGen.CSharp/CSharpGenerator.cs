@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
@@ -444,8 +445,22 @@ namespace Facility.CodeGen.CSharp
 								code.WriteLine($"new HttpMethodMapping<{requestTypeName}, {responseTypeName}>.Builder");
 								using (code.Block("{", "}.Build();"))
 								{
-									string httpMethodName = httpMethodInfo.Method.ToString().ToUpperInvariant();
-									code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethodName}\"),");
+									string httpMethod = httpMethodInfo.Method;
+									if (httpMethod == HttpMethod.Get.Method    ||
+									    httpMethod == HttpMethod.Put.Method    ||
+									    httpMethod == HttpMethod.Head.Method   ||
+									    httpMethod == HttpMethod.Post.Method   ||
+									    httpMethod == HttpMethod.Trace.Method  ||
+									    httpMethod == HttpMethod.Delete.Method ||
+									    httpMethod == HttpMethod.Options.Method)
+									{
+										string httpMethodCapitalized = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
+										code.WriteLine($"HttpMethod = HttpMethod.{httpMethodCapitalized},");
+									}
+									else
+									{
+										code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethod}\"),");
+									}
 
 									code.WriteLine($"Path = \"{httpPath}\",");
 
