@@ -446,13 +446,10 @@ namespace Facility.CodeGen.CSharp
 								using (code.Block("{", "}.Build();"))
 								{
 									string httpMethod = httpMethodInfo.Method;
-									if (httpMethod == HttpMethod.Get.Method    ||
-									    httpMethod == HttpMethod.Put.Method    ||
-									    httpMethod == HttpMethod.Head.Method   ||
-									    httpMethod == HttpMethod.Post.Method   ||
-									    httpMethod == HttpMethod.Trace.Method  ||
-									    httpMethod == HttpMethod.Delete.Method ||
-									    httpMethod == HttpMethod.Options.Method)
+									if (httpMethod == HttpMethod.Get.Method ||
+									    httpMethod == HttpMethod.Put.Method ||
+									    httpMethod == HttpMethod.Post.Method ||
+									    httpMethod == HttpMethod.Delete.Method)
 									{
 										string httpMethodCapitalized = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
 										code.WriteLine($"HttpMethod = HttpMethod.{httpMethodCapitalized},");
