@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Microsoft.IO;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -115,8 +114,6 @@ namespace Facility.Core
 		/// Attempts to parse a Decimal.
 		/// </summary>
 		public static decimal? TryParseDecimal(string text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
-
-		internal static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
 
 		private static class EquivalenceComparerCache<T>
 		{

@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.IO;
 using Newtonsoft.Json;
 
 namespace Facility.Core.Http
@@ -17,6 +16,11 @@ namespace Facility.Core.Http
 	/// </summary>
 	public class JsonHttpContentSerializer : HttpContentSerializer
 	{
+		/// <summary>
+		/// An instance of JsonHttpContentSerializer.
+		/// </summary>
+		public static JsonHttpContentSerializer Instance = new JsonHttpContentSerializer();
+
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
@@ -31,9 +35,9 @@ namespace Facility.Core.Http
 		public IReadOnlyList<string> SupportedMediaTypes { get; }
 
 		/// <summary>
-		/// An instance of JsonHttpContentSerializer.
+		/// Creates a memory stream.
 		/// </summary>
-		public static JsonHttpContentSerializer Instance = new JsonHttpContentSerializer();
+		protected virtual Stream CreateMemoryStream() => new MemoryStream();
 
 		/// <summary>
 		/// The media type for requests.
@@ -48,8 +52,12 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		protected override HttpContent CreateHttpContentCore(object content, string mediaType) =>
-			new DelegateHttpContent(mediaType ?? DefaultMediaType, stream => ServiceJsonUtility.ToJsonStream(content, stream));
+		protected override HttpContent CreateHttpContentCore(object content, string mediaType)
+		{
+			var memoryStream = CreateMemoryStream();
+			ServiceJsonUtility.ToJsonStream(content, memoryStream);
+			return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
+		}
 
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
@@ -76,12 +84,11 @@ namespace Facility.Core.Http
 
 		private sealed class DelegateHttpContent : HttpContent
 		{
-			public DelegateHttpContent(string mediaType, Action<Stream> writeToStream)
+			public DelegateHttpContent(string mediaType, Stream memoryStream)
 			{
 				Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
 
-				m_memoryStream = new RecyclableMemoryStream(ServiceDataUtility.RecyclableMemoryStreamManager);
-				writeToStream(m_memoryStream);
+				m_memoryStream = memoryStream;
 			}
 
 			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
@@ -109,7 +116,7 @@ namespace Facility.Core.Http
 				}
 			}
 
-			readonly MemoryStream m_memoryStream;
+			readonly Stream m_memoryStream;
 		}
 	}
 }
