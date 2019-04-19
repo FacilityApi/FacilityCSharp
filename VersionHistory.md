@@ -6,7 +6,11 @@ Describe changes here when they're committed to the `master` branch. To publish,
 
 Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
 
-* [major] Upgrade to .NET Standard 2.0 and .NET 4.6.1. Upgrade NuGet dependencies.
+* [major] Upgrade to .NET Standard 2.0 and .NET 4.6.1.
+* [major] Upgrade NuGet dependencies, including `Facility.Definition` and `Facility.CodeGen.Console`.
+* [major] Convert `fsdgencsharp` to a .NET Core Global Tool.
+* [major] Drop `--csproj` support from `fsdgencsharp` (SDK-style projects don't need it.)
+* [minor] Support static `CSharpGenerator.GenerateCSharp` for C# build scripts.
 
 ## Released
 
