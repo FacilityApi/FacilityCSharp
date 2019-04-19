@@ -70,11 +70,22 @@ namespace Facility.Core.Http
 			object requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
-				var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
-				if (requestResult.IsFailure)
-					error = requestResult.Error;
-				else
-					requestBody = requestResult.Value;
+				try
+				{
+					var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
+					if (requestResult.IsFailure)
+						error = requestResult.Error;
+					else
+						requestBody = requestResult.Value;
+				}
+				catch (Exception exception) when (ShouldCreateErrorFromException(exception))
+				{
+					// cancellation can cause the wrong exception
+					cancellationToken.ThrowIfCancellationRequested();
+
+					// error reading request body
+					error = CreateErrorFromException(exception);
+				}
 			}
 
 			TResponse response = null;
@@ -153,6 +164,23 @@ namespace Facility.Core.Http
 		{
 			return await TryHandleHttpRequestAsync(request, cancellationToken).ConfigureAwait(true) ??
 				await base.SendAsync(request, cancellationToken).ConfigureAwait(true);
+		}
+
+		/// <summary>
+		/// Called to determine if an error object should be created from an unexpected exception.
+		/// </summary>
+		protected virtual bool ShouldCreateErrorFromException(Exception exception)
+		{
+			string exceptionTypeName = exception.GetType().FullName;
+			return exceptionTypeName != null && exceptionTypeName.StartsWith("System.Web.", StringComparison.Ordinal);
+		}
+
+		/// <summary>
+		/// Called to create an error object from an unexpected exception.
+		/// </summary>
+		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception)
+		{
+			return ServiceErrors.CreateInvalidRequest("Unexpected error while reading request body.");
 		}
 
 		/// <summary>
