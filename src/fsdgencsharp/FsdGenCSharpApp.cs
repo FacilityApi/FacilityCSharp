@@ -25,41 +25,11 @@ namespace fsdgencsharp
 		{
 			"   --namespace <name>",
 			"      The namespace used by the generated C#.",
-			"   --csproj",
-			"      Update any .csproj files in the output directory.",
 		};
 
-		protected override CodeGenerator CreateGenerator(ArgsReader args)
-		{
-			m_updateCsproj = args.ReadFlag("csproj");
+		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
 
-			return new CSharpGenerator
-			{
-				NamespaceName = args.ReadOption("namespace"),
-			};
-		}
-
-		protected override void PrepareGenerator(CodeGenerator generator, ServiceInfo service, string outputPath)
-		{
-			if (m_updateCsproj)
-			{
-				var csprojFiles = new List<CodeGenFile>();
-
-				var outputDirectoryInfo = new DirectoryInfo(outputPath);
-				if (outputDirectoryInfo.Exists)
-				{
-					foreach (var csprojFileInfo in outputDirectoryInfo.GetFiles("*.csproj"))
-						csprojFiles.Add(new CodeGenFile(Path.GetFileName(csprojFileInfo.FullName), File.ReadAllText(csprojFileInfo.FullName)));
-				}
-
-				((CSharpGenerator) generator).CsprojFiles = csprojFiles;
-			}
-		}
-
-		protected override bool ShouldWriteByteOrderMark(string name) => name.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase);
-
-		protected override bool SupportsClean => true;
-
-		bool m_updateCsproj;
+		protected override FileGeneratorSettings CreateSettings(ArgsReader argsReader) =>
+			new CSharpGeneratorSettings { NamespaceName = argsReader.ReadOption("namespace") };
 	}
 }

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Http;
@@ -16,19 +14,22 @@ namespace Facility.CodeGen.CSharp
 	public sealed class CSharpGenerator : CodeGenerator
 	{
 		/// <summary>
+		/// Generates C#.
+		/// </summary>
+		/// <param name="settings">The settings.</param>
+		/// <returns>The number of updated files.</returns>
+		public static int GenerateCSharp(CSharpGeneratorSettings settings) =>
+			FileGenerator.GenerateFiles(new CSharpGenerator { GeneratorName = nameof(CSharpGenerator) }, settings);
+
+		/// <summary>
 		/// The name of the namespace (optional).
 		/// </summary>
 		public string NamespaceName { get; set; }
 
 		/// <summary>
-		/// The .csproj files to update.
-		/// </summary>
-		public IReadOnlyList<CodeGenFile> CsprojFiles { get; set; }
-
-		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
-		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
+		public override CodeGenOutput GenerateOutput(ServiceInfo service)
 		{
 			var outputFiles = new List<CodeGenFile>();
 
@@ -63,12 +64,6 @@ namespace Facility.CodeGen.CSharp
 				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 			}
 
-			if (CsprojFiles != null && CsprojFiles.Count != 0)
-			{
-				foreach (var csprojFile in CsprojFiles)
-					outputFiles.Add(UpdateCsprojFile(csprojFile, outputFiles.Select(x => x.Name)));
-			}
-
 			string codeGenComment = CodeGenUtility.GetCodeGenComment(GeneratorName);
 			var patternsToClean = new[]
 			{
@@ -77,6 +72,13 @@ namespace Facility.CodeGen.CSharp
 			};
 			return new CodeGenOutput(outputFiles, patternsToClean);
 		}
+
+		public override void ApplySettings(FileGeneratorSettings settings)
+		{
+			NamespaceName = ((CSharpGeneratorSettings) settings).NamespaceName;
+		}
+
+		public override bool HasPatternsToClean => true;
 
 		private CodeGenFile GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
 		{
@@ -1036,93 +1038,6 @@ namespace Facility.CodeGen.CSharp
 					}
 				}
 			});
-		}
-
-		private CodeGenFile UpdateCsprojFile(CodeGenFile csprojFile, IEnumerable<string> outputFileNames)
-		{
-			// read .csproj
-			List<string> lines = new List<string>();
-			using (var textReader = new StringReader(csprojFile.Text))
-			{
-				string line;
-				while ((line = textReader.ReadLine()) != null)
-					lines.Add(line);
-			}
-
-			bool isEdited = false;
-
-			// remove old generated files
-			var neededFileNames = outputFileNames.ToList();
-			for (int index = lines.Count - 1; index >= 0; index--)
-			{
-				Match match = Regex.Match(lines[index], @"^\s*<Compile\s*Include=""([^""]*\.g\.cs)""\s*/>\s*$");
-				if (match.Success)
-				{
-					string fileName = match.Groups[1].ToString().Replace('\\', '/');
-					if (neededFileNames.Contains(fileName))
-					{
-						neededFileNames.Remove(fileName);
-					}
-					else
-					{
-						lines.RemoveAt(index);
-						isEdited = true;
-					}
-				}
-			}
-
-			// add new generated files
-			if (neededFileNames.Count != 0)
-			{
-				// skip past first Compile
-				int insertIndex = 0;
-				while (insertIndex < lines.Count)
-				{
-					if (Regex.IsMatch(lines[insertIndex], @"^\s*<Compile\s"))
-						break;
-					insertIndex++;
-				}
-
-				// skip to next ItemGroup close
-				while (insertIndex < lines.Count)
-				{
-					if (Regex.IsMatch(lines[insertIndex], @"^\s*</ItemGroup>\s*$"))
-						break;
-					insertIndex++;
-				}
-
-				lines.InsertRange(insertIndex,
-					neededFileNames.Select(x => $"    <Compile Include=\"{x.Replace('/', '\\')}\" />"));
-				isEdited = true;
-			}
-
-			if (!isEdited)
-				return csprojFile;
-
-			// remove empty item groups
-			for (int index = lines.Count - 1; index >= 1; index--)
-			{
-				if (Regex.IsMatch(lines[index - 1], @"^\s*<ItemGroup>\s*$") && Regex.IsMatch(lines[index], @"^\s*</ItemGroup>\s*$"))
-				{
-					lines.RemoveAt(index - 1);
-					lines.RemoveAt(index - 1);
-					index--;
-				}
-			}
-
-			using (var textWriter = new StringWriter())
-			{
-				for (int index = 0; index < lines.Count; index++)
-				{
-					string line = lines[index];
-					if (index != lines.Count - 1)
-						textWriter.WriteLine(line);
-					else
-						textWriter.Write(line);
-				}
-
-				return new CodeGenFile(name: csprojFile.Name, text: textWriter.ToString());
-			}
 		}
 
 		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType) => RenderNullableFieldType(fieldType).TrimEnd('?');
