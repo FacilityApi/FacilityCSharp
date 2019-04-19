@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <FrameworkPathOverride Condition="'$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.7.2-api/</FrameworkPathOverride>
     <Description>A library for consuming/implementing Facility APIs.</Description>
     <PackageTags>Facility FSD Core</PackageTags>
   </PropertyGroup>
