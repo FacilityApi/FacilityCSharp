@@ -8,7 +8,7 @@ service EdgeCases
 	}
 
 	/// An old method.
-	[obsolete]
+	[obsolete, http(method: PATCH)]
 	method oldMethod
 	{
 	}:
