@@ -74,11 +74,17 @@ namespace Facility.CodeGen.CSharp
 			return new CodeGenOutput(outputFiles, patternsToClean);
 		}
 
+		/// <summary>
+		/// Applies generator-specific settings.
+		/// </summary>
 		public override void ApplySettings(FileGeneratorSettings settings)
 		{
 			NamespaceName = ((CSharpGeneratorSettings) settings).NamespaceName;
 		}
 
+		/// <summary>
+		/// Patterns to clean are returned with the output.
+		/// </summary>
 		public override bool HasPatternsToClean => true;
 
 		private CodeGenFile GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
