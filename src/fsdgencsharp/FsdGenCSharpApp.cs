@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using ArgsReading;
 using Facility.CodeGen.Console;
 using Facility.CodeGen.CSharp;
-using Facility.Definition;
 using Facility.Definition.CodeGen;
 
 namespace fsdgencsharp
