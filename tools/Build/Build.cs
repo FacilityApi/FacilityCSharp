@@ -21,13 +21,27 @@ internal static class Build
 			{
 				GitLogin = new GitLoginInfo("FacilityApiBot", Environment.GetEnvironmentVariable("BUILD_BOT_PASSWORD") ?? ""),
 				GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
-				SourceCodeUrl = "https://github.com/FacilityApi/Facility/tree/master/src",
+				SourceCodeUrl = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src",
 			},
 			DotNetTools = dotNetTools,
 			ProjectUsesSourceLink = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
+
+		build.Target("codegen")
+			.DependsOn("build")
+			.Does(() => codeGen(verify: false));
+
+		build.Target("verify-codegen")
+			.DependsOn("build")
+			.Does(() => codeGen(verify: true));
+
+		build.Target("test")
+			.DependsOn("verify-codegen");
+
+		build.Target("default")
+			.DependsOn("build");
 
 		void codeGen(bool verify)
 		{
@@ -46,19 +60,5 @@ internal static class Build
 			RunApp(toolPath, "conformance/ConformanceApi.fsd", "tools/Facility.ConformanceApi/", "--clean", verifyOption);
 			RunApp(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--clean", verifyOption);
 		}
-
-		build.Target("codegen")
-			.DependsOn("build")
-			.Does(() => codeGen(verify: false));
-
-		build.Target("verify-codegen")
-			.DependsOn("build")
-			.Does(() => codeGen(verify: true));
-
-		build.Target("test")
-			.DependsOn("verify-codegen");
-
-		build.Target("default")
-			.DependsOn("build");
 	});
 }
