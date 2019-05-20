@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Facility.Definition;
 using Facility.Definition.Fsd;
 using FluentAssertions;
@@ -47,18 +46,6 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			ThrowsServiceDefinitionException(
 				"service TestApi { method do { [csharp(namespace: hmm)] something: string; }: {} }",
 				"TestApi.fsd(1,39): Unexpected 'csharp' parameter 'namespace'.");
-		}
-
-		[Test]
-		public void GenerateEdgeCases()
-		{
-			string fileName = Path.Combine(TestUtility.GetSolutionDirectory(), "tools", "EdgeCases.fsd");
-			var parser = new FsdParser();
-			var service = parser.ParseDefinition(
-				new ServiceDefinitionText(Path.GetFileName(fileName), File.ReadAllText(fileName)));
-
-			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
-			generator.GenerateOutput(service);
 		}
 
 		[Test]
