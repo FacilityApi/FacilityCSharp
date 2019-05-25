@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\conformance\ConformanceApi.fsd" Link="ConformanceApi.fsd" />
     <EmbeddedResource Include="..\..\conformance\ConformanceTests.json" Link="ConformanceTests.json" />
   </ItemGroup>
 

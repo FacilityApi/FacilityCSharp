@@ -36,7 +36,8 @@ namespace FacilityConformance
 				Console.WriteLine("Usage:");
 				Console.WriteLine("  host [--url <url>]".PadRight(columnWidth) + "Hosts a conformance server");
 				Console.WriteLine("  test [--url <url>] [<test> ...]".PadRight(columnWidth) + "Tests a conformance server");
-				Console.WriteLine("  json [--output <path>]".PadRight(columnWidth) + "Writes the test data");
+				Console.WriteLine("  fsd [--output <path>]".PadRight(columnWidth) + "Writes the Conformance API FSD");
+				Console.WriteLine("  json [--output <path>]".PadRight(columnWidth) + "Writes the conformance test data");
 				return -1;
 			}
 			catch (Exception exception)
@@ -48,8 +49,12 @@ namespace FacilityConformance
 
 		public FacilityConformanceApp()
 		{
+			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceApi.fsd")))
+				m_fsdText = fsdTextReader.ReadToEnd();
+
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
 				m_testsJson = testsJsonReader.ReadToEnd();
+
 			m_testProvider = new ConformanceTestProvider(m_testsJson);
 		}
 
@@ -109,15 +114,19 @@ namespace FacilityConformance
 
 				return failureCount == 0 ? 0 : 1;
 			}
+			else if (command == "fsd")
+			{
+				string outputPath = argsReader.ReadOption("output");
+				argsReader.VerifyComplete();
+
+				WriteText(path: outputPath, contents: m_fsdText);
+			}
 			else if (command == "json")
 			{
 				string outputPath = argsReader.ReadOption("output");
 				argsReader.VerifyComplete();
 
-				if (outputPath != null)
-					File.WriteAllText(path: outputPath, contents: m_testsJson);
-				else
-					Console.Write(m_testsJson);
+				WriteText(path: outputPath, contents: m_testsJson);
 			}
 			else if (command != null)
 			{
@@ -129,6 +138,14 @@ namespace FacilityConformance
 			}
 
 			return 0;
+		}
+
+		private static void WriteText(string path, string contents)
+		{
+			if (path != null)
+				File.WriteAllText(path: path, contents: contents);
+			else
+				Console.Write(contents);
 		}
 
 		private async Task HostAsync(HttpContext httpContext)
@@ -220,6 +237,7 @@ namespace FacilityConformance
 			}
 		}
 
+		private readonly string m_fsdText;
 		private readonly string m_testsJson;
 		private readonly ConformanceTestProvider m_testProvider;
 	}
