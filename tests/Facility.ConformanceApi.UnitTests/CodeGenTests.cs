@@ -13,10 +13,13 @@ namespace Facility.ConformanceApi.UnitTests
 		[Test]
 		public void GenerateConformanceApi()
 		{
-			string fileName = Path.Combine(TestUtility.GetSolutionDirectory(), "conformance", "ConformanceApi.fsd");
+			string fsdText;
+			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceApi.fsd")))
+				fsdText = fsdTextReader.ReadToEnd();
+
 			var parser = new FsdParser();
 			var service = parser.ParseDefinition(
-				new ServiceDefinitionText(Path.GetFileName(fileName), File.ReadAllText(fileName)));
+				new ServiceDefinitionText("ConformanceApi.fsd", fsdText));
 
 			var generator = new CSharpGenerator { GeneratorName = "CodeGenTests" };
 			var output = generator.GenerateOutput(service);

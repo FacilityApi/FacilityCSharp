@@ -32,8 +32,14 @@ namespace Facility.ConformanceApi.UnitTests
 				Assert.Fail(result.Message);
 		}
 
-		private static IConformanceTestProvider CreateTestProvider() =>
-			new ConformanceTestProvider(File.ReadAllText(Path.Combine(TestUtility.GetSolutionDirectory(), "conformance", "tests.json")));
+		private static IConformanceTestProvider CreateTestProvider()
+		{
+			string testsJson;
+			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.tests.json")))
+				testsJson = testsJsonReader.ReadToEnd();
+
+			return new ConformanceTestProvider(testsJson);
+		}
 
 		private static HttpClient CreateHttpClient()
 		{

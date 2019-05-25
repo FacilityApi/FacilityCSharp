@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\conformance\tests.json" Link="tests.json" />
+    <EmbeddedResource Include="..\..\conformance\ConformanceApi.fsd" Link="ConformanceApi.fsd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
     <PackageReference Include="NCrunch.Framework" Version="3.17.0" />
