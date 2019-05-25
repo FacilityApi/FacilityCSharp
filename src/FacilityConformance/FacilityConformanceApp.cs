@@ -27,9 +27,15 @@ namespace FacilityConformance
 			{
 				return await new FacilityConformanceApp().RunAsync(args);
 			}
-			catch (Exception exception) when (exception is ArgsReaderException || exception is ApplicationException)
+			catch (ArgsReaderException exception)
 			{
 				Console.WriteLine(exception.Message);
+				Console.WriteLine();
+
+				const int columnWidth = 40;
+				Console.WriteLine("Usage:");
+				Console.WriteLine("  host [--url <url>]".PadRight(columnWidth) + "Hosts a conformance server");
+				Console.WriteLine("  test [--url <url>] [<test> ...]".PadRight(columnWidth) + "Tests a conformance server");
 				return -1;
 			}
 			catch (Exception exception)
@@ -49,19 +55,23 @@ namespace FacilityConformance
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
 		{
+			const string defaultUrl = "http://localhost:4117/";
+
 			var argsReader = new ArgsReader(args);
-
 			string command = argsReader.ReadArgument();
-			string url = argsReader.ReadOption("url") ?? "http://localhost:4117/";
-			var testNames = argsReader.ReadArguments();
-			argsReader.VerifyComplete();
-
-			if (command == "host" && testNames.Count == 0)
+			if (command == "host")
 			{
+				string url = argsReader.ReadOption("url") ?? defaultUrl;
+				argsReader.VerifyComplete();
+
 				new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().Run();
 			}
 			else if (command == "test")
 			{
+				string url = argsReader.ReadOption("url") ?? defaultUrl;
+				var testNames = argsReader.ReadArguments();
+				argsReader.VerifyComplete();
+
 				var httpClient = new HttpClient();
 
 				IConformanceApi getApiForTest(string testName)
@@ -99,9 +109,13 @@ namespace FacilityConformance
 
 				return failureCount == 0 ? 0 : 1;
 			}
+			else if (command != null)
+			{
+				throw new ArgsReaderException($"Invalid command: {command}");
+			}
 			else
 			{
-				throw new ApplicationException("Usage:\n  host [--url <url>]\n  test [--url <url>] [<test> ...]");
+				throw new ArgsReaderException("Missing command.");
 			}
 
 			return 0;
