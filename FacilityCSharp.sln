@@ -56,7 +56,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conformance", "conformance", "{5F8024B2-530D-4ABF-A99A-D2D0BF50FCCC}"
 	ProjectSection(SolutionItems) = preProject
 		conformance\ConformanceApi.fsd = conformance\ConformanceApi.fsd
-		conformance\tests.json = conformance\tests.json
+		conformance\ConformanceTests.json = conformance\ConformanceTests.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{1430A6FE-CD2A-4632-8451-305F715A5368}"

@@ -35,7 +35,7 @@ namespace Facility.ConformanceApi.UnitTests
 		private static IConformanceTestProvider CreateTestProvider()
 		{
 			string testsJson;
-			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.tests.json")))
+			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")))
 				testsJson = testsJsonReader.ReadToEnd();
 
 			return new ConformanceTestProvider(testsJson);

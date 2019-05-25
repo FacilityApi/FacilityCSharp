@@ -42,7 +42,7 @@ namespace FacilityConformance
 		public FacilityConformanceApp()
 		{
 			string testsJson;
-			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.tests.json")))
+			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
 				testsJson = testsJsonReader.ReadToEnd();
 			m_testProvider = new ConformanceTestProvider(testsJson);
 		}
