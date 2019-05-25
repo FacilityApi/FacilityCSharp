@@ -29,11 +29,14 @@ namespace FacilityConformance
 			}
 			catch (ArgsReaderException exception)
 			{
-				Console.WriteLine(exception.Message);
-				Console.WriteLine();
+				if (!string.IsNullOrWhiteSpace(exception.Message))
+				{
+					Console.WriteLine(exception.Message);
+					Console.WriteLine();
+				}
 
 				const int columnWidth = 40;
-				Console.WriteLine("Usage:");
+				Console.WriteLine("Commands:");
 				Console.WriteLine("  host [--url <url>]".PadRight(columnWidth) + "Hosts a conformance server");
 				Console.WriteLine("  test [--url <url>] [<test> ...]".PadRight(columnWidth) + "Tests a conformance server");
 				Console.WriteLine("  fsd [--output <path>]".PadRight(columnWidth) + "Writes the Conformance API FSD");
@@ -63,6 +66,9 @@ namespace FacilityConformance
 			const string defaultUrl = "http://localhost:4117/";
 
 			var argsReader = new ArgsReader(args);
+			if (argsReader.ReadFlag("?|h|help"))
+				throw new ArgsReaderException("");
+
 			string command = argsReader.ReadArgument();
 			if (command == "host")
 			{
