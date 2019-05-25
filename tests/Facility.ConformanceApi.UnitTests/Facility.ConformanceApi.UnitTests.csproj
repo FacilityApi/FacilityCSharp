@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
-    <ProjectReference Include="..\..\tools\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+    <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
   </ItemGroup>
 
 </Project>
