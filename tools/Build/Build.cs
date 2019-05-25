@@ -26,7 +26,7 @@ internal static class Build
 				SourceCodeUrl = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src",
 			},
 			DotNetTools = dotNetTools,
-			ProjectUsesSourceLink = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
+			ProjectUsesSourceLink = name => name != "FacilityConformance" && !name.StartsWith("fsdgen", StringComparison.Ordinal),
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
