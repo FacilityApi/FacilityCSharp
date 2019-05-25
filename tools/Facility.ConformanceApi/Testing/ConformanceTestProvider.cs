@@ -12,12 +12,12 @@ namespace Facility.ConformanceApi.Testing
 	public sealed class ConformanceTestProvider : IConformanceTestProvider
 	{
 		/// <summary>
-		/// Creates a test provider from the specified directory path.
+		/// Creates a test provider from the specified JSON.
 		/// </summary>
-		public ConformanceTestProvider(string testsFilePath)
+		public ConformanceTestProvider(string json)
 		{
 			var conformanceTests = new Dictionary<string, ConformanceTestInfo>();
-			var testsInfo = ServiceJsonUtility.FromJson<ConformanceTestsInfo>(File.ReadAllText(testsFilePath));
+			var testsInfo = ServiceJsonUtility.FromJson<ConformanceTestsInfo>(json);
 			foreach (var testInfo in testsInfo.Tests)
 				conformanceTests.Add(testInfo.Test, testInfo);
 			m_conformanceTests = conformanceTests;

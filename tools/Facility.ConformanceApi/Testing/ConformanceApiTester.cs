@@ -52,6 +52,8 @@ namespace Facility.ConformanceApi.Testing
 				ConformanceTestResult failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
 
 				var testInfo = m_testProvider.TryGetTestInfo(testName);
+				if (testInfo == null)
+					return failure("Test not found.");
 
 				var api = m_getApiForTest(testName);
 

@@ -296,16 +296,6 @@
       }
     },
     {
-      "test": "mirrorHeadersEmpty",
-      "method": "mirrorHeaders",
-      "request": {
-        "string": ""
-      },
-      "response": {
-        "string": ""
-      }
-    },
-    {
       "test": "mirrorHeadersMissing",
       "method": "mirrorHeaders",
       "request": {},

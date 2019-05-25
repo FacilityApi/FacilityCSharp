@@ -33,7 +33,7 @@ namespace Facility.ConformanceApi.UnitTests
 		}
 
 		private static IConformanceTestProvider CreateTestProvider() =>
-			new ConformanceTestProvider(Path.Combine(TestUtility.GetSolutionDirectory(), "conformance", "tests.json"));
+			new ConformanceTestProvider(File.ReadAllText(Path.Combine(TestUtility.GetSolutionDirectory(), "conformance", "tests.json")));
 
 		private static HttpClient CreateHttpClient()
 		{

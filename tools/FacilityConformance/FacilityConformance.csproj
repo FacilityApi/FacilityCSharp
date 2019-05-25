@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Description>A .NET Core Global Tool that checks Facility conformance.</Description>
+    <PackageTags>Facility conformance</PackageTags>
+    <PackAsTool>True</PackAsTool>
+    <NoWarn>$(NoWarn);1998</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\conformance\tests.json" Link="tests.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ArgsReading" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
