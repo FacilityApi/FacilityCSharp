@@ -36,6 +36,7 @@ namespace FacilityConformance
 				Console.WriteLine("Usage:");
 				Console.WriteLine("  host [--url <url>]".PadRight(columnWidth) + "Hosts a conformance server");
 				Console.WriteLine("  test [--url <url>] [<test> ...]".PadRight(columnWidth) + "Tests a conformance server");
+				Console.WriteLine("  json [--output <path>]".PadRight(columnWidth) + "Writes the test data");
 				return -1;
 			}
 			catch (Exception exception)
@@ -47,10 +48,9 @@ namespace FacilityConformance
 
 		public FacilityConformanceApp()
 		{
-			string testsJson;
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
-				testsJson = testsJsonReader.ReadToEnd();
-			m_testProvider = new ConformanceTestProvider(testsJson);
+				m_testsJson = testsJsonReader.ReadToEnd();
+			m_testProvider = new ConformanceTestProvider(m_testsJson);
 		}
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -108,6 +108,16 @@ namespace FacilityConformance
 				Console.WriteLine($"{results.Count} tests: {results.Count - failureCount} passed, {failureCount} failed.");
 
 				return failureCount == 0 ? 0 : 1;
+			}
+			else if (command == "json")
+			{
+				string outputPath = argsReader.ReadOption("output");
+				argsReader.VerifyComplete();
+
+				if (outputPath != null)
+					File.WriteAllText(path: outputPath, contents: m_testsJson);
+				else
+					Console.Write(m_testsJson);
 			}
 			else if (command != null)
 			{
@@ -210,6 +220,7 @@ namespace FacilityConformance
 			}
 		}
 
+		private readonly string m_testsJson;
 		private readonly ConformanceTestProvider m_testProvider;
 	}
 }
