@@ -11,6 +11,7 @@ Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in 
 * [major] Convert `fsdgencsharp` to a .NET Core Global Tool.
 * [major] Drop `--csproj` support from `fsdgencsharp` (SDK-style projects don't need it.)
 * [minor] Support static `CSharpGenerator.GenerateCSharp` for C# build scripts.
+* [major] Publish `Facility.ConformanceApi` library and `FacilityConformance` tool.
 
 ## Released
 
