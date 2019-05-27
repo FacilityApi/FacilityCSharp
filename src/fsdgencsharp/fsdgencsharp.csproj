@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Description>A .NET Core Global Tool that generates C# for a Facility Service Definition.</Description>
+    <Description>A tool that generates C# for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD C# CodeGen</PackageTags>
     <PackAsTool>True</PackAsTool>
   </PropertyGroup>
