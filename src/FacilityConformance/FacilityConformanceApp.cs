@@ -39,8 +39,8 @@ namespace FacilityConformance
 				Console.WriteLine("Commands:");
 				Console.WriteLine("  host [--url <url>]".PadRight(columnWidth) + "Hosts a conformance server");
 				Console.WriteLine("  test [--url <url>] [<test> ...]".PadRight(columnWidth) + "Tests a conformance server");
-				Console.WriteLine("  fsd [--output <path>]".PadRight(columnWidth) + "Writes the Conformance API FSD");
-				Console.WriteLine("  json [--output <path>]".PadRight(columnWidth) + "Writes the conformance test data");
+				Console.WriteLine("  fsd [--output <path> [--verify]]".PadRight(columnWidth) + "Writes the Conformance API FSD");
+				Console.WriteLine("  json [--output <path> [--verify]]".PadRight(columnWidth) + "Writes the conformance test data");
 				return -1;
 			}
 			catch (Exception exception)
@@ -76,6 +76,8 @@ namespace FacilityConformance
 				argsReader.VerifyComplete();
 
 				new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().Run();
+
+				return 0;
 			}
 			else if (command == "test")
 			{
@@ -123,16 +125,18 @@ namespace FacilityConformance
 			else if (command == "fsd")
 			{
 				string outputPath = argsReader.ReadOption("output");
+				bool shouldVerify = argsReader.ReadFlag("verify");
 				argsReader.VerifyComplete();
 
-				WriteText(path: outputPath, contents: m_fsdText);
+				return WriteText(path: outputPath, contents: m_fsdText, shouldVerify: shouldVerify);
 			}
 			else if (command == "json")
 			{
 				string outputPath = argsReader.ReadOption("output");
+				bool shouldVerify = argsReader.ReadFlag("verify");
 				argsReader.VerifyComplete();
 
-				WriteText(path: outputPath, contents: m_testsJson);
+				return WriteText(path: outputPath, contents: m_testsJson, shouldVerify: shouldVerify);
 			}
 			else if (command != null)
 			{
@@ -142,24 +146,35 @@ namespace FacilityConformance
 			{
 				throw new ArgsReaderException("Missing command.");
 			}
-
-			return 0;
 		}
 
-		private static void WriteText(string path, string contents)
+		private static int WriteText(string path, string contents, bool shouldVerify)
 		{
 			if (path != null)
 			{
-				var directory = Path.GetDirectoryName(path);
-				if (directory != null && !Directory.Exists(directory))
-					Directory.CreateDirectory(directory);
+				if (shouldVerify)
+				{
+					if (!File.Exists(path: path) || File.ReadAllText(path: path) != contents)
+						return 1;
+				}
+				else
+				{
+					var directory = Path.GetDirectoryName(path);
+					if (directory != null && !Directory.Exists(directory))
+						Directory.CreateDirectory(directory);
 
-				File.WriteAllText(path: path, contents: contents);
+					File.WriteAllText(path: path, contents: contents);
+				}
 			}
 			else
 			{
+				if (shouldVerify)
+					throw new ArgsReaderException("--verify requires --output.");
+
 				Console.Write(contents);
 			}
+
+			return 0;
 		}
 
 		private async Task HostAsync(HttpContext httpContext)
