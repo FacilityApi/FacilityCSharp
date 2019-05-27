@@ -149,9 +149,17 @@ namespace FacilityConformance
 		private static void WriteText(string path, string contents)
 		{
 			if (path != null)
+			{
+				var directory = Path.GetDirectoryName(path);
+				if (directory != null && !Directory.Exists(directory))
+					Directory.CreateDirectory(directory);
+
 				File.WriteAllText(path: path, contents: contents);
+			}
 			else
+			{
 				Console.Write(contents);
+			}
 		}
 
 		private async Task HostAsync(HttpContext httpContext)
