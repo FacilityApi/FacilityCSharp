@@ -24,13 +24,10 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected ServiceHttpHandler(ServiceHttpHandlerSettings settings)
 		{
-			if (settings == null)
-				throw new ArgumentNullException(nameof(settings));
-
-			m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
-			m_synchronous = settings.Synchronous;
-			m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
-			m_aspects = settings.Aspects;
+			m_rootPath = (settings?.RootPath ?? "").TrimEnd('/');
+			m_synchronous = settings?.Synchronous ?? false;
+			m_contentSerializer = settings?.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+			m_aspects = settings?.Aspects;
 		}
 
 		/// <summary>

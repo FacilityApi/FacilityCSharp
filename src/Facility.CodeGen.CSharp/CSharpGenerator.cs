@@ -880,7 +880,7 @@ namespace Facility.CodeGen.CSharp
 					using (code.Block())
 					{
 						CSharpUtility.WriteSummary(code, "Creates the handler.");
-						code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings settings)");
+						code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings settings = null)");
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())
@@ -895,7 +895,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates the handler.");
-						code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings settings)");
+						code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings settings = null)");
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())

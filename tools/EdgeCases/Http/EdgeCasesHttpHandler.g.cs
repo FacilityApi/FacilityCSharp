@@ -17,7 +17,7 @@ namespace EdgeCases.Http
 		/// <summary>
 		/// Creates the handler.
 		/// </summary>
-		public EdgeCasesHttpHandler(IEdgeCases service, ServiceHttpHandlerSettings settings)
+		public EdgeCasesHttpHandler(IEdgeCases service, ServiceHttpHandlerSettings settings = null)
 			: base(settings)
 		{
 			if (service == null)
@@ -29,7 +29,7 @@ namespace EdgeCases.Http
 		/// <summary>
 		/// Creates the handler.
 		/// </summary>
-		public EdgeCasesHttpHandler(Func<HttpRequestMessage, IEdgeCases> getService, ServiceHttpHandlerSettings settings)
+		public EdgeCasesHttpHandler(Func<HttpRequestMessage, IEdgeCases> getService, ServiceHttpHandlerSettings settings = null)
 			: base(settings)
 		{
 			if (getService == null)

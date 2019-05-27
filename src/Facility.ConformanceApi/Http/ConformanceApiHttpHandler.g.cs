@@ -18,7 +18,7 @@ namespace Facility.ConformanceApi.Http
 		/// <summary>
 		/// Creates the handler.
 		/// </summary>
-		public ConformanceApiHttpHandler(IConformanceApi service, ServiceHttpHandlerSettings settings)
+		public ConformanceApiHttpHandler(IConformanceApi service, ServiceHttpHandlerSettings settings = null)
 			: base(settings)
 		{
 			if (service == null)
@@ -30,7 +30,7 @@ namespace Facility.ConformanceApi.Http
 		/// <summary>
 		/// Creates the handler.
 		/// </summary>
-		public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, ServiceHttpHandlerSettings settings)
+		public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, ServiceHttpHandlerSettings settings = null)
 			: base(settings)
 		{
 			if (getService == null)
