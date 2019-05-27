@@ -156,50 +156,39 @@ namespace FacilityConformance
 
 		private async Task HostAsync(HttpContext httpContext)
 		{
-			HttpResponseMessage responseMessage = null;
-			ServiceErrorDto error = null;
-
 			var httpRequest = httpContext.Request;
 			var requestUrl = httpRequest.GetEncodedUrl();
 
-			string testName = httpRequest.Headers[FacilityTestClientAspect.HeaderName];
-			if (testName == null)
+			var testName = httpRequest.Headers[FacilityTestClientAspect.HeaderName];
+			var apiService = new ConformanceApiService(m_testProvider, testName);
+			var apiHandler = new ConformanceApiHttpHandler(apiService, new ServiceHttpHandlerSettings());
+
+			var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 			{
-				error = ServiceErrors.CreateInvalidRequest("Facility test name is missing; set the FacilityTest HTTP header.");
+				Content = new StreamContent(httpRequest.Body),
+			};
+
+			foreach (var header in httpRequest.Headers)
+			{
+				// Every header should be able to fit into one of the two header collections.
+				// Try message.Headers first since that accepts more of them.
+				if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.AsEnumerable()))
+					requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.AsEnumerable());
 			}
-			else if (!(m_testProvider.TryGetTestInfo(testName) is ConformanceTestInfo testInfo))
+
+			HttpResponseMessage responseMessage = null;
+			ServiceErrorDto error = null;
+
+			try
 			{
-				error = ServiceErrors.CreateInvalidRequest($"Facility test name is invalid: {testName}");
+				responseMessage = await apiHandler.TryHandleHttpRequestAsync(requestMessage, httpContext.RequestAborted).ConfigureAwait(false);
+
+				if (responseMessage == null)
+					error = ServiceErrors.CreateInvalidRequest($"Incorrect HTTP method and/or URL for test {testName}: {httpRequest.Method} {requestUrl}");
 			}
-			else
+			catch (Exception exception)
 			{
-				var apiService = new ConformanceApiService(testInfo);
-				var apiHandler = new ConformanceApiHttpHandler(apiService, new ServiceHttpHandlerSettings());
-
-				var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
-				{
-					Content = new StreamContent(httpRequest.Body),
-				};
-
-				foreach (var header in httpRequest.Headers)
-				{
-					// Every header should be able to fit into one of the two header collections.
-					// Try message.Headers first since that accepts more of them.
-					if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.AsEnumerable()))
-						requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.AsEnumerable());
-				}
-
-				try
-				{
-					responseMessage = await apiHandler.TryHandleHttpRequestAsync(requestMessage, httpContext.RequestAborted).ConfigureAwait(false);
-
-					if (responseMessage == null)
-						error = ServiceErrors.CreateInvalidRequest($"Incorrect HTTP method and/or URL for test {testName}: {httpRequest.Method} {requestUrl}");
-				}
-				catch (Exception exception)
-				{
-					error = ServiceErrorUtility.CreateInternalErrorForException(exception);
-				}
+				error = ServiceErrorUtility.CreateInternalErrorForException(exception);
 			}
 
 			if (error != null)

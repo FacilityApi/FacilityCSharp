@@ -46,7 +46,7 @@ namespace Facility.ConformanceApi.UnitTests
 			IConformanceApi getApiForRequest(HttpRequestMessage httpRequest)
 			{
 				string testName = httpRequest.Headers.TryGetValues(FacilityTestClientAspect.HeaderName, out var values) ? string.Join(",", values) : null;
-				return new ConformanceApiService(s_testProvider.TryGetTestInfo(testName));
+				return new ConformanceApiService(s_testProvider, testName);
 			}
 
 			var handler = new ConformanceApiHttpHandler(getApiForRequest, new ServiceHttpHandlerSettings()) { InnerHandler = new NotFoundHttpHandler() };
