@@ -57,9 +57,9 @@ internal static class Build
 
 			string verifyOption = verify ? "--verify" : null;
 
-			RunApp(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", verifyOption);
-			RunApp(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--clean", verifyOption);
-			RunApp(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--clean", verifyOption);
+			RunApp(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--newline", "lf", verifyOption);
+			RunApp(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--newline", "lf", "--clean", verifyOption);
+			RunApp(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--newline", "lf", "--clean", verifyOption);
 		}
 	});
 }
