@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Description>A .NET Core Global Tool that checks Facility conformance.</Description>
+    <Description>A tool that checks Facility conformance.</Description>
     <PackageTags>Facility conformance</PackageTags>
     <PackAsTool>True</PackAsTool>
     <NoWarn>$(NoWarn);1998</NoWarn>
