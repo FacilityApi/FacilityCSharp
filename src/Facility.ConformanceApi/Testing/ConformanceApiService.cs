@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
@@ -14,10 +16,9 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a service for the specified test.
 		/// </summary>
-		public ConformanceApiService(IConformanceTestProvider testProvider, string testName)
+		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
 		{
-			m_testProvider = testProvider ?? throw new ArgumentNullException(nameof(testProvider));
-			m_testName = testName;
+			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
 		}
 
 		/// <inheritdoc />
@@ -69,21 +70,17 @@ namespace Facility.ConformanceApi.Testing
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
 
-			if (m_testName == null)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Facility test name is missing; set the FacilityTest HTTP header."));
-
-			var testInfo = m_testProvider.TryGetTestInfo(m_testName);
-			if (testInfo == null)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unknown Facility test: {m_testName}"));
-
 			string uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 			string methodName = uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
-			if (methodName != testInfo.Method)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Unexpected method name for test {testInfo.Test}. expected={testInfo.Method} actual={methodName}"));
+			var testsWithMethodName = m_tests.Where(x => x.Method == methodName).ToList();
+			if (testsWithMethodName.Count == 0)
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"No tests found for method {methodName}."));
 
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
-			if (!JToken.DeepEquals(testInfo.Request, actualRequest))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Request did not match for test {testInfo.Test}. expected={ServiceJsonUtility.ToJson(testInfo.Request)} actual={ServiceJsonUtility.ToJson(actualRequest)}"));
+			var testsWithMatchingRequest = testsWithMethodName.Where(x => JToken.DeepEquals(x.Request, actualRequest)).ToList();
+			if (testsWithMatchingRequest.Count != 1)
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: {ServiceJsonUtility.ToJson(actualRequest)}"));
+			var testInfo = testsWithMatchingRequest[0];
 
 			if (testInfo.Error != null)
 			{
@@ -103,7 +100,6 @@ namespace Facility.ConformanceApi.Testing
 			}
 		}
 
-		private readonly IConformanceTestProvider m_testProvider;
-		private readonly string m_testName;
+		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	}
 }

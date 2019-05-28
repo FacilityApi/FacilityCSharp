@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -15,41 +16,26 @@ namespace Facility.ConformanceApi.UnitTests
 	public class ConformanceTests
 	{
 		[TestCaseSource(nameof(TestNames))]
-		public async Task RunTest(string test)
+		public async Task RunTest(string testName)
 		{
-			IConformanceApi getApiForTest(string testName)
-			{
-				return new HttpClientConformanceApi(
-					new HttpClientServiceSettings
-					{
-						Aspects = new[] { FacilityTestClientAspect.Create(testName) },
-						HttpClient = s_httpClient,
-					});
-			}
-
-			var result = await new ConformanceApiTester(s_testProvider, getApiForTest).RunTestAsync(test, CancellationToken.None).ConfigureAwait(false);
+			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = s_httpClient });
+			var test = s_tests.Single(x => x.Test == testName);
+			var result = await new ConformanceApiTester(s_tests, api).RunTestAsync(test, CancellationToken.None).ConfigureAwait(false);
 			if (result.Status != ConformanceTestStatus.Pass)
 				Assert.Fail(result.Message);
 		}
 
-		private static IConformanceTestProvider CreateTestProvider()
+		private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider()
 		{
-			string testsJson;
 			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")))
-				testsJson = testsJsonReader.ReadToEnd();
-
-			return new ConformanceTestProvider(testsJson);
+				return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests;
 		}
 
 		private static HttpClient CreateHttpClient()
 		{
-			IConformanceApi getApiForRequest(HttpRequestMessage httpRequest)
-			{
-				string testName = httpRequest.Headers.TryGetValues(FacilityTestClientAspect.HeaderName, out var values) ? string.Join(",", values) : null;
-				return new ConformanceApiService(s_testProvider, testName);
-			}
-
-			var handler = new ConformanceApiHttpHandler(getApiForRequest, new ServiceHttpHandlerSettings()) { InnerHandler = new NotFoundHttpHandler() };
+			var handler = new ConformanceApiHttpHandler(
+				service: new ConformanceApiService(s_tests),
+				settings: new ServiceHttpHandlerSettings()) { InnerHandler = new NotFoundHttpHandler() };
 			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 		}
 
@@ -59,9 +45,9 @@ namespace Facility.ConformanceApi.UnitTests
 				Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 		}
 
-		private static readonly IConformanceTestProvider s_testProvider = CreateTestProvider();
+		private static readonly IReadOnlyList<ConformanceTestInfo> s_tests = CreateTestProvider();
 
-		private static IReadOnlyList<string> TestNames => s_testProvider.GetTestNames();
+		private static IReadOnlyList<string> TestNames => s_tests.Select(x => x.Test).ToList();
 
 		private static readonly HttpClient s_httpClient = CreateHttpClient();
 	}

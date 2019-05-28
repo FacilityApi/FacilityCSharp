@@ -88,7 +88,7 @@
       "test": "deleteWidgetNotFound",
       "method": "deleteWidget",
       "request": {
-        "id": 1337
+        "id": 1338
       },
       "response": {
         "notFound": true
@@ -146,7 +146,7 @@
       "test": "getWidgetNotFound",
       "method": "getWidget",
       "request": {
-        "id": 1337
+        "id": 1338
       },
       "error": {
         "code": "NotFound",
@@ -440,7 +440,7 @@
         "path": "string",
         "query": "string",
         "header": "string",
-        "normal": "string"
+        "normal": "ok"
       },
       "response": {
         "header": "string",
@@ -454,7 +454,7 @@
         "path": "string",
         "query": "string",
         "header": "string",
-        "normal": "string"
+        "normal": "accepted"
       },
       "response": {
         "header": "string",
@@ -468,7 +468,7 @@
         "path": "string",
         "query": "string",
         "header": "string",
-        "normal": "string"
+        "normal": "noContent"
       },
       "response": {
         "header": "string",

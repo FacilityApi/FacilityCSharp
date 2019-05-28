@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,18 +17,29 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a tester.
 		/// </summary>
-		/// <param name="testProvider">Provides the conformance tests.</param>
-		/// <param name="getApiForTest">Creates an API interface for the specified test.</param>
-		public ConformanceApiTester(IConformanceTestProvider testProvider, Func<string, IConformanceApi> getApiForTest)
+		/// <param name="tests">The conformance tests.</param>
+		/// <param name="api">The API interface to test.</param>
+		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
 		{
-			m_getApiForTest = getApiForTest;
-			m_testProvider = testProvider;
-		}
+			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
+			m_api = api ?? throw new ArgumentNullException(nameof(api));
 
-		/// <summary>
-		/// The test names.
-		/// </summary>
-		public IReadOnlyList<string> GetTestNames() => m_testProvider.GetTestNames();
+			var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
+			if (sameNameTests != null)
+				throw new ArgumentException($"Multiple tests have the name {sameNameTests.First().Test}");
+
+			foreach (var testsPerMethod in m_tests.GroupBy(x => x.Method).Select(x => x.ToList()))
+			{
+				for (int i = 0; i < testsPerMethod.Count; i++)
+				{
+					for (int j = i + 1; j < testsPerMethod.Count; j++)
+					{
+						if (JToken.DeepEquals(testsPerMethod[i].Request, testsPerMethod[j].Request))
+							throw new ArgumentException($"Tests must not have the same method name and request data, e.g. {testsPerMethod[i].Test} and {testsPerMethod[j].Test}.");
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Runs all tests.
@@ -36,8 +48,8 @@ namespace Facility.ConformanceApi.Testing
 		{
 			var results = new List<ConformanceTestResult>();
 
-			foreach (var testName in GetTestNames())
-				results.Add(await RunTestAsync(testName, cancellationToken).ConfigureAwait(false));
+			foreach (var test in m_tests)
+				results.Add(await RunTestAsync(test, cancellationToken).ConfigureAwait(false));
 
 			return new ConformanceTestRun(results);
 		}
@@ -45,36 +57,31 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Runs the test with the specified name.
 		/// </summary>
-		public async Task<ConformanceTestResult> RunTestAsync(string testName, CancellationToken cancellationToken)
+		public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken)
 		{
+			string testName = test.Test;
+			ConformanceTestResult failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
+
 			try
 			{
-				ConformanceTestResult failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
-
-				var testInfo = m_testProvider.TryGetTestInfo(testName);
-				if (testInfo == null)
-					return failure("Test not found.");
-
-				var api = m_getApiForTest(testName);
-
 				string capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
-				var methodInfo = typeof(IConformanceApi).GetMethod(capitalize(testInfo.Method) + "Async", BindingFlags.Public | BindingFlags.Instance);
+				var methodInfo = typeof(IConformanceApi).GetMethod(capitalize(test.Method) + "Async", BindingFlags.Public | BindingFlags.Instance);
 				if (methodInfo == null)
-					return failure($"Missing API method for {testInfo.Method}");
+					return failure($"Missing API method for {test.Method}");
 
-				var requestJObject = testInfo.Request;
+				var requestJObject = test.Request;
 				var requestDto = ServiceJsonUtility.FromJToken(requestJObject, methodInfo.GetParameters()[0].ParameterType);
 				var requestRoundTripJObject = ServiceJsonUtility.ToJToken(requestDto);
 				if (!JToken.DeepEquals(requestJObject, requestRoundTripJObject))
 					return failure($"Request round trip failed. expected={ServiceJsonUtility.ToJson(requestJObject)} actual={ServiceJsonUtility.ToJson(requestRoundTripJObject)}");
 
-				var task = (Task) methodInfo.Invoke(api, new[] { requestDto, cancellationToken });
+				var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
 				await task.ConfigureAwait(false);
 
 				dynamic result = ((dynamic) task).Result;
-				ServiceDto actualResponseDto = (ServiceDto) result.GetValueOrDefault();
-				var expectedResponseJObject = testInfo.Response;
-				var expectedErrorJObject = testInfo.Error;
+				var actualResponseDto = (ServiceDto) result.GetValueOrDefault();
+				var expectedResponseJObject = test.Response;
+				var expectedErrorJObject = test.Error;
 				if (actualResponseDto != null)
 				{
 					var actualResponseJObject = (JObject) ServiceJsonUtility.ToJToken(actualResponseDto);
@@ -90,7 +97,7 @@ namespace Facility.ConformanceApi.Testing
 				}
 				else
 				{
-					ServiceErrorDto actualErrorDto = result.Error;
+					var actualErrorDto = (ServiceErrorDto) result.Error;
 					var actualErrorJObject = (JObject) ServiceJsonUtility.ToJToken(actualErrorDto);
 
 					if (expectedErrorJObject == null)
@@ -106,12 +113,11 @@ namespace Facility.ConformanceApi.Testing
 			}
 			catch (Exception exception)
 			{
-				return new ConformanceTestResult(testName, ConformanceTestStatus.Fail,
-					$"Unhandled exception {exception.GetType().FullName}: {exception.Message}");
+				return failure($"Unhandled exception {exception.GetType().FullName}: {exception.Message}");
 			}
 		}
 
-		private readonly IConformanceTestProvider m_testProvider;
-		private readonly Func<string, IConformanceApi> m_getApiForTest;
+		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
+		private readonly IConformanceApi m_api;
 	}
 }

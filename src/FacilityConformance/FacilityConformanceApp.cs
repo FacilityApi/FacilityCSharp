@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using ArgsReading;
-using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
@@ -58,7 +57,7 @@ namespace FacilityConformance
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
 				m_testsJson = testsJsonReader.ReadToEnd();
 
-			m_testProvider = new ConformanceTestProvider(m_testsJson);
+			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests;
 		}
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -85,22 +84,16 @@ namespace FacilityConformance
 				var testNames = argsReader.ReadArguments();
 				argsReader.VerifyComplete();
 
-				var httpClient = new HttpClient();
+				var api = new HttpClientConformanceApi(
+					new HttpClientServiceSettings
+					{
+						BaseUri = new Uri(url),
+					});
 
-				IConformanceApi getApiForTest(string testName)
-				{
-					return new HttpClientConformanceApi(
-						new HttpClientServiceSettings
-						{
-							BaseUri = new Uri(url),
-							Aspects = new[] { FacilityTestClientAspect.Create(testName) },
-							HttpClient = httpClient,
-						});
-				}
-
-				var tester = new ConformanceApiTester(m_testProvider, getApiForTest);
+				var tester = new ConformanceApiTester(m_tests, api);
 
 				var results = new List<ConformanceTestResult>();
+
 				if (testNames.Count == 0)
 				{
 					results.AddRange((await tester.RunAllTestsAsync(CancellationToken.None)).Results);
@@ -108,7 +101,16 @@ namespace FacilityConformance
 				else
 				{
 					foreach (var testName in testNames)
-						results.Add(await tester.RunTestAsync(testName, CancellationToken.None));
+					{
+						var testInfo = m_tests.SingleOrDefault(x => x.Test == testName);
+						if (testInfo == null)
+						{
+							Console.WriteLine($"Test not found: {testName}");
+							return -1;
+						}
+
+						results.Add(await tester.RunTestAsync(testInfo, CancellationToken.None));
+					}
 				}
 
 				int failureCount = 0;
@@ -182,9 +184,7 @@ namespace FacilityConformance
 			var httpRequest = httpContext.Request;
 			var requestUrl = httpRequest.GetEncodedUrl();
 
-			var testName = httpRequest.Headers[FacilityTestClientAspect.HeaderName];
-			var apiService = new ConformanceApiService(m_testProvider, testName);
-			var apiHandler = new ConformanceApiHttpHandler(apiService, new ServiceHttpHandlerSettings());
+			var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests));
 
 			var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 			{
@@ -207,7 +207,7 @@ namespace FacilityConformance
 				responseMessage = await apiHandler.TryHandleHttpRequestAsync(requestMessage, httpContext.RequestAborted).ConfigureAwait(false);
 
 				if (responseMessage == null)
-					error = ServiceErrors.CreateInvalidRequest($"Incorrect HTTP method and/or URL for test {testName}: {httpRequest.Method} {requestUrl}");
+					error = ServiceErrors.CreateInvalidRequest($"Test not found for {httpRequest.Method} {requestUrl}");
 			}
 			catch (Exception exception)
 			{
@@ -257,6 +257,6 @@ namespace FacilityConformance
 
 		private readonly string m_fsdText;
 		private readonly string m_testsJson;
-		private readonly ConformanceTestProvider m_testProvider;
+		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	}
 }
