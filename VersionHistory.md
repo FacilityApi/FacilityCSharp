@@ -6,6 +6,10 @@ Describe changes here when they're committed to the `master` branch. To publish,
 
 Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
 
+## Released
+
+### 2.0.2
+
 * [major] Upgrade to .NET Standard 2.0.
 * [major] Upgrade NuGet dependencies, including `Facility.Definition` and `Facility.CodeGen.Console`.
 * [major] Convert `fsdgencsharp` to a .NET Core Global Tool.
@@ -13,8 +17,6 @@ Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in 
 * [minor] Support static `CSharpGenerator.GenerateCSharp` for C# build scripts.
 * [major] Publish `Facility.ConformanceApi` library and `FacilityConformance` tool.
 * [minor] Allow null `ServiceHttpHandlerSettings`.
-
-## Released
 
 ### 1.3.2
 
