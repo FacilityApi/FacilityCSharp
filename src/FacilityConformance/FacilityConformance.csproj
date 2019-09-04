@@ -5,7 +5,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Description>A tool that checks Facility conformance.</Description>
     <PackageTags>Facility conformance</PackageTags>
-    <PackAsTool>True</PackAsTool>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
     <NoWarn>$(NoWarn);1998</NoWarn>
   </PropertyGroup>
 

@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>A library for consuming/implementing Facility APIs.</Description>
     <PackageTags>Facility FSD Core</PackageTags>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

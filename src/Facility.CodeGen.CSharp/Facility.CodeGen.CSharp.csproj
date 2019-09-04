@@ -4,10 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Used by fsdgencsharp to generate C# for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD C# CodeGen</PackageTags>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Facility.Definition" Version="2.0.2-alpha6" />
+    <PackageReference Include="Facility.Definition" Version="2.0.2" />
   </ItemGroup>
 
 </Project>

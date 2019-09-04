@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj" />
+    <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
+  </ItemGroup>
+
+</Project>
