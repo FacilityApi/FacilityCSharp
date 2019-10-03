@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Facility.Definition;
 using Facility.Definition.Fsd;
 using FluentAssertions;
@@ -62,6 +63,30 @@ namespace Facility.CodeGen.CSharp.UnitTests
 				StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
 			}
 
+		}
+
+		[Test]
+		public void ValidateRequiredNormalParameter()
+		{
+			var definition = "[http(url: \"https://testapi.com\")] [csharp(namespace: Test)] service TestApi { [http(method: POST, path: \"/do\")] method do { [required]\nfield: string; }: {} }";
+			var parser = new FsdParser();
+			var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), NamespaceName = "Test" };
+			var output = generator.GenerateOutput(service);
+			var file = output.Files.Single(x => x.Name == "DoRequestDto.g.cs");
+			StringAssert.Contains("if (Field == null)", file.Text);
+		}
+
+		[Test]
+		public void ValidateRequiredQueryParameter()
+		{
+			var definition = "[http(url: \"https://testapi.com\")] [csharp(namespace: Test)] service TestApi { [http(method: GET, path: \"/do\")] method do { [required]\nfield: string; }: {} }";
+			var parser = new FsdParser();
+			var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), NamespaceName = "Test" };
+			var output = generator.GenerateOutput(service);
+			var file = output.Files.Single(x => x.Name == "DoRequestDto.g.cs");
+			StringAssert.Contains("if (Field == null)", file.Text);
 		}
 
 		private void ThrowsServiceDefinitionException(string definition, string message)
