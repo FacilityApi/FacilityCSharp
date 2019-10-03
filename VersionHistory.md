@@ -1,5 +1,8 @@
 # Version History
 
+* [major] Validate parmeters with the `[required]` attribute in generated code
+
+## Released
 ### 2.1.0
 
 * Expose `BaseUri` to derived `HttpClientService`.
