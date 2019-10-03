@@ -259,6 +259,7 @@ namespace Facility.CodeGen.CSharp
 				{
 					"System",
 					"System.Collections.Generic",
+					"System.Linq",
 					"Facility.Core",
 					"Newtonsoft.Json",
 					"Newtonsoft.Json.Linq",
@@ -287,6 +288,36 @@ namespace Facility.CodeGen.CSharp
 
 						var fieldInfos = dtoInfo.Fields;
 						GenerateFieldProperties(code, fieldInfos, context);
+
+						var requiredFields = dtoInfo.Fields.Where(x => x.IsRequired).ToList();
+						if (requiredFields.Count > 0)
+						{
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, "Validate required attributes.");
+							code.WriteLine($"public override IEnumerable<string> GetVerificationErrors()");
+							using (code.Block())
+							{
+								code.WriteLine("var errors = new List<string>();");
+								foreach (var field in requiredFields)
+								{
+									var propertyName = context.GetFieldPropertyName(field);
+									code.WriteLine($"if ({propertyName} == null)");
+									using (code.Block())
+										code.WriteLine($"errors.Add(\"The field '{field.Name}' is required.\");");
+
+									var type = context.GetFieldType(field);
+									if (type.Kind == ServiceTypeKind.Dto)
+									{
+										code.WriteLine("else");
+										using (code.Block())
+											code.WriteLine($"errors.Concat({propertyName}.GetVerificationErrors());");
+									}
+								}
+
+								code.WriteLine();
+								code.WriteLine("return errors;");
+							}
+						}
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
@@ -494,6 +525,15 @@ namespace Facility.CodeGen.CSharp
 													code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
 											}
 
+											code.WriteLine();
+											code.WriteLine("var errors = request.GetValidationErrors();");
+											code.WriteLine("if (errors.Any())");
+											using (code.Block())
+											{
+												code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(string.Join(\"\\n\", errors)));");
+											}
+
+											code.WriteLine();
 											code.WriteLine("return ServiceResult.Success();");
 										}
 									}
