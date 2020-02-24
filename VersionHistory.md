@@ -1,22 +1,18 @@
 # Version History
 
-## Pending
+### 2.0.3
 
-Describe changes here when they're committed to the `master` branch. To publish, update the version number in [Directory.Build.props](src/Directory.Build.props), move the pending changes below to a new [Released](#released) section, and push a git tag using the version number, e.g. `v2.3.4`.
-
-Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
-
-## Released
+* Stop using `System.Net.Http` NuGet package.
 
 ### 2.0.2
 
-* [major] Upgrade to .NET Standard 2.0.
-* [major] Upgrade NuGet dependencies, including `Facility.Definition` and `Facility.CodeGen.Console`.
-* [major] Convert `fsdgencsharp` to a .NET Core Global Tool.
-* [major] Drop `--csproj` support from `fsdgencsharp` (SDK-style projects don't need it.)
-* [minor] Support static `CSharpGenerator.GenerateCSharp` for C# build scripts.
-* [major] Publish `Facility.ConformanceApi` library and `FacilityConformance` tool.
-* [minor] Allow null `ServiceHttpHandlerSettings`.
+* Upgrade to .NET Standard 2.0.
+* Upgrade NuGet dependencies, including `Facility.Definition` and `Facility.CodeGen.Console`.
+* Convert `fsdgencsharp` to a .NET Core Global Tool.
+* Drop `--csproj` support from `fsdgencsharp` (SDK-style projects don't need it.)
+* Support static `CSharpGenerator.GenerateCSharp` for C# build scripts.
+* Publish `Facility.ConformanceApi` library and `FacilityConformance` tool.
+* Allow null `ServiceHttpHandlerSettings`.
 
 ### 1.3.2
 
