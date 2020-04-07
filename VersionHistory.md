@@ -1,5 +1,11 @@
 # Version History
 
+### 2.1.0
+
+* Expose `BaseUri` to derived `HttpClientService`.
+* Stop using `System.Net.Http` reference.
+* Minor optimization in `HttpClientService`.
+
 ### 2.0.3
 
 * Stop using `System.Net.Http` NuGet package.
