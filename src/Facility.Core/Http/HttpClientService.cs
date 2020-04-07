@@ -26,6 +26,7 @@ namespace Facility.Core.Http
 			var baseUri = settings.BaseUri ?? defaultBaseUri;
 			m_baseUrl = baseUri == null ? "" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString);
 
+			BaseUri = baseUri;
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 		}
 
@@ -33,6 +34,11 @@ namespace Facility.Core.Http
 		/// The HTTP content serializer.
 		/// </summary>
 		protected HttpContentSerializer ContentSerializer { get; }
+
+		/// <summary>
+		/// The base URI.
+		/// </summary>
+		protected Uri BaseUri { get; }
 
 		/// <summary>
 		/// Sends an HTTP request and processes the response.
