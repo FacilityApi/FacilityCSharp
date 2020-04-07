@@ -11,6 +11,7 @@ public abstract class HttpClientService
 | name | description |
 | --- | --- |
 | [HttpClientService](HttpClientService/HttpClientService.md)(…) | Creates an instance with the specified settings. |
+| [BaseUri](HttpClientService/BaseUri.md) { get; } | The base URI. |
 | [ContentSerializer](HttpClientService/ContentSerializer.md) { get; } | The HTTP content serializer. |
 | virtual [CreateErrorFromException](HttpClientService/CreateErrorFromException.md)(…) | Called to create an error object from an unexpected exception. |
 | virtual [CreateErrorFromHttpResponseAsync](HttpClientService/CreateErrorFromHttpResponseAsync.md)(…) | Called to create an error object from an unhandled HTTP response. |
