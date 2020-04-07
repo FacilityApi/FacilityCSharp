@@ -24,7 +24,7 @@ namespace Facility.Core.Http
 			m_synchronous = settings.Synchronous;
 
 			var baseUri = settings.BaseUri ?? defaultBaseUri;
-			m_baseUrl = baseUri == null ? "" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString);
+			m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
 
 			BaseUri = baseUri;
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
@@ -172,7 +172,7 @@ namespace Facility.Core.Http
 
 		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
 		{
-			string url = m_baseUrl.TrimEnd('/') + "/" + relativeUrlPattern.TrimStart('/');
+			string url = m_baseUrl + relativeUrlPattern.TrimStart('/');
 			if (uriParameters != null)
 				url = GetUrlFromPattern(url, uriParameters);
 
