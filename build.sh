@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-dotnet run --project "$SCRIPT_DIR/tools/Build/Build.csproj" -- "$@"
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+dotnet publish tools/Build/Build.csproj --output tools/bin/Build --nologo --verbosity quiet
+dotnet tools/bin/Build/Build.dll "$@"

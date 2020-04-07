@@ -1,9 +1,6 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Faithlife.Build;
-using static Faithlife.Build.AppRunner;
 using static Faithlife.Build.BuildUtility;
 using static Faithlife.Build.DotNetRunner;
 
@@ -12,8 +9,6 @@ internal static class Build
 	public static int Main(string[] args) => BuildRunner.Execute(args, build =>
 	{
 		var codegen = "fsdgencsharp";
-
-		var dotNetTools = new DotNetTools(Path.Combine("tools", "bin")).AddSource(Path.Combine("tools", "bin"));
 
 		var dotNetBuildSettings = new DotNetBuildSettings
 		{
@@ -25,11 +20,6 @@ internal static class Build
 				GitBranchName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH"),
 				SourceCodeUrl = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src",
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
-			},
-			DotNetTools = dotNetTools,
-			SourceLinkSettings = new SourceLinkSettings
-			{
-				ShouldTestPackage = name => name != "FacilityConformance" && !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
 		};
 
@@ -50,20 +40,14 @@ internal static class Build
 
 		void codeGen(bool verify)
 		{
-			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
-			string versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
-			RunDotNet("pack", Path.Combine("src", codegen, $"{codegen}.csproj"), "-c", configuration, "--no-build",
-				"--output", Path.GetFullPath(Path.Combine("tools", "bin")), "--version-suffix", versionSuffix);
+			var configuration = dotNetBuildSettings.BuildOptions!.ConfigurationOption!.Value;
+			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
 
-			string packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
-			string packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
-			string toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
+			var verifyOption = verify ? "--verify" : null;
 
-			string verifyOption = verify ? "--verify" : null;
-
-			RunApp(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--newline", "lf", verifyOption);
-			RunApp(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--newline", "lf", "--clean", verifyOption);
-			RunApp(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--newline", "lf", "--clean", verifyOption);
+			RunDotNet(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--newline", "lf", verifyOption);
+			RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--newline", "lf", "--clean", verifyOption);
+			RunDotNet(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--newline", "lf", "--clean", verifyOption);
 		}
 	});
 }
