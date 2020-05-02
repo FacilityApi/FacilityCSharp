@@ -25,7 +25,7 @@ namespace Facility.CodeGen.CSharp
 		/// <summary>
 		/// The name of the namespace (optional).
 		/// </summary>
-		public string NamespaceName { get; set; }
+		public string? NamespaceName { get; set; }
 
 		/// <summary>
 		/// Generates the C# output.
@@ -34,7 +34,7 @@ namespace Facility.CodeGen.CSharp
 		{
 			var outputFiles = new List<CodeGenFile>();
 
-			var context = new Context(GeneratorName, CSharpServiceInfo.Create(service), NamespaceName);
+			var context = new Context(GeneratorName ?? "", CSharpServiceInfo.Create(service), NamespaceName);
 
 			foreach (var errorSetInfo in service.ErrorSets.Where(x => x.Errors.Count != 0))
 				outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
@@ -65,7 +65,7 @@ namespace Facility.CodeGen.CSharp
 				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 			}
 
-			string codeGenComment = CodeGenUtility.GetCodeGenComment(GeneratorName);
+			string codeGenComment = CodeGenUtility.GetCodeGenComment(context.GeneratorName);
 			var patternsToClean = new[]
 			{
 				new CodeGenPattern("*.g.cs", codeGenComment),
@@ -307,7 +307,7 @@ namespace Facility.CodeGen.CSharp
 										var fieldInfo = fieldInfos[fieldIndex];
 										string propertyName = context.GetFieldPropertyName(fieldInfo);
 										var fieldType = context.GetFieldType(fieldInfo);
-										string areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
+										var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType!.Kind);
 										code.Write(areEquivalentMethodName != null ?
 											$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
 											$"{propertyName} == other.{propertyName}");
@@ -653,7 +653,7 @@ namespace Facility.CodeGen.CSharp
 														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
 													}
 												}
-												else if (validResponse.NormalFields.Count != 0)
+												else if (validResponse.NormalFields!.Count != 0)
 												{
 													code.WriteLine($"ResponseBodyType = typeof({responseTypeName}),");
 
@@ -756,7 +756,7 @@ namespace Facility.CodeGen.CSharp
 			switch (serviceType.Kind)
 			{
 			case ServiceTypeKind.Enum:
-				string enumName = CSharpUtility.GetEnumName(serviceType.Enum);
+				string enumName = CSharpUtility.GetEnumName(serviceType.Enum!);
 				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
 			case ServiceTypeKind.Boolean:
 				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
@@ -813,7 +813,7 @@ namespace Facility.CodeGen.CSharp
 						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings = null)");
 						using (code.Indent())
 						{
-							string url = httpServiceInfo.Url;
+							var url = httpServiceInfo.Url;
 							string urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
 							code.WriteLine($": base(settings, defaultBaseUri: {urlCode})");
 						}
@@ -914,7 +914,7 @@ namespace Facility.CodeGen.CSharp
 						using (code.Block())
 						{
 							// check 'widgets/get' before 'widgets/{id}'
-							IDisposable indent = null;
+							IDisposable? indent = null;
 							code.Write("return ");
 							foreach (var httpServiceMethod in httpServiceInfo.Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer))
 							{
@@ -965,7 +965,7 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private static string TryGetAreEquivalentMethodName(ServiceTypeKind kind)
+		private static string? TryGetAreEquivalentMethodName(ServiceTypeKind kind)
 		{
 			switch (kind)
 			{
@@ -1081,15 +1081,15 @@ namespace Facility.CodeGen.CSharp
 			case ServiceTypeKind.Error:
 				return "ServiceErrorDto";
 			case ServiceTypeKind.Dto:
-				return CSharpUtility.GetDtoName(fieldType.Dto);
+				return CSharpUtility.GetDtoName(fieldType.Dto!);
 			case ServiceTypeKind.Enum:
-				return CSharpUtility.GetEnumName(fieldType.Enum) + "?";
+				return CSharpUtility.GetEnumName(fieldType.Enum!) + "?";
 			case ServiceTypeKind.Result:
-				return $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType)}>";
+				return $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType!)}>";
 			case ServiceTypeKind.Array:
-				return $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType)}>";
+				return $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType!)}>";
 			case ServiceTypeKind.Map:
-				return $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType)}>";
+				return $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType!)}>";
 			default:
 				throw new NotSupportedException("Unknown field type " + fieldType.Kind);
 			}
@@ -1097,7 +1097,7 @@ namespace Facility.CodeGen.CSharp
 
 		private sealed class Context
 		{
-			public Context(string generatorName, CSharpServiceInfo csharpServiceInfo, string namespaceName)
+			public Context(string generatorName, CSharpServiceInfo csharpServiceInfo, string? namespaceName)
 			{
 				m_csharpServiceInfo = csharpServiceInfo;
 				GeneratorName = generatorName;
@@ -1110,7 +1110,7 @@ namespace Facility.CodeGen.CSharp
 
 			public string GetFieldPropertyName(ServiceFieldInfo field) => m_csharpServiceInfo.GetFieldPropertyName(field);
 
-			public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => m_csharpServiceInfo.Service.GetFieldType(field);
+			public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => m_csharpServiceInfo.Service.GetFieldType(field) ?? throw new InvalidOperationException("Missing field.");
 
 			private readonly CSharpServiceInfo m_csharpServiceInfo;
 		}

@@ -45,7 +45,7 @@ namespace Facility.Core.Http
 		public static ServiceErrorDto CreateHeaderNotSupported(string headerName) =>
 			ServiceErrors.CreateInvalidRequest($"HTTP header '{headerName}' is not supported.");
 
-		internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string reasonPhrase)
+		internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string? reasonPhrase)
 		{
 			int statusCodeNumber = (int) statusCode;
 			bool isClientError = statusCodeNumber >= 400 && statusCodeNumber <= 499;

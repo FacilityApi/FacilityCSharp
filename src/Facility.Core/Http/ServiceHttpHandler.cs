@@ -22,7 +22,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		protected ServiceHttpHandler(ServiceHttpHandlerSettings settings)
+		protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
 		{
 			m_rootPath = (settings?.RootPath ?? "").TrimEnd('/');
 			m_synchronous = settings?.Synchronous ?? false;
@@ -33,7 +33,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Attempts to handle a service method.
 		/// </summary>
-		protected async Task<HttpResponseMessage> TryHandleServiceMethodAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, Func<TRequest, CancellationToken, Task<ServiceResult<TResponse>>> invokeMethodAsync, CancellationToken cancellationToken)
+		protected async Task<HttpResponseMessage?> TryHandleServiceMethodAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, Func<TRequest, CancellationToken, Task<ServiceResult<TResponse>>> invokeMethodAsync, CancellationToken cancellationToken)
 			where TRequest : ServiceDto, new()
 			where TResponse : ServiceDto, new()
 		{
@@ -62,9 +62,9 @@ namespace Facility.Core.Http
 
 			string mediaType = GetResponseMediaType(httpRequest);
 
-			ServiceErrorDto error = null;
+			ServiceErrorDto? error = null;
 
-			object requestBody = null;
+			object? requestBody = null;
 			if (mapping.RequestBodyType != null)
 			{
 				try
@@ -85,7 +85,7 @@ namespace Facility.Core.Http
 				}
 			}
 
-			TResponse response = null;
+			TResponse? response = null;
 			if (error == null)
 			{
 				var request = mapping.CreateRequest(requestBody);
@@ -106,14 +106,14 @@ namespace Facility.Core.Http
 				else
 					response = methodResult.Value;
 
-				context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response);
+				context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response!);
 			}
 
 			HttpResponseMessage httpResponse;
 			if (error == null)
 			{
 				var responseMappingGroups = mapping.ResponseMappings
-					.GroupBy(x => x.MatchesResponse(response))
+					.GroupBy(x => x.MatchesResponse(response!))
 					.Where(x => x.Key != false)
 					.OrderByDescending(x => x.Key)
 					.ToList();
@@ -122,12 +122,12 @@ namespace Facility.Core.Http
 					var responseMapping = responseMappingGroups[0].Single();
 					httpResponse = new HttpResponseMessage(responseMapping.StatusCode);
 
-					var headersResult = HttpServiceUtility.TryAddHeaders(httpResponse.Headers, mapping.GetResponseHeaders(response));
+					var headersResult = HttpServiceUtility.TryAddHeaders(httpResponse.Headers, mapping.GetResponseHeaders(response!));
 					if (headersResult.IsFailure)
-						throw new InvalidOperationException(headersResult.Error.Message);
+						throw new InvalidOperationException(headersResult.Error!.Message);
 
 					if (responseMapping.ResponseBodyType != null)
-						httpResponse.Content = m_contentSerializer.CreateHttpContent(responseMapping.GetResponseBody(response), mediaType);
+						httpResponse.Content = m_contentSerializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
 				}
 				else
 				{
@@ -189,7 +189,7 @@ namespace Facility.Core.Http
 				return task;
 
 			task.GetAwaiter().GetResult();
-			return HttpServiceUtility.CompletedTask;
+			return Task.CompletedTask;
 		}
 
 		/// <summary>
@@ -203,7 +203,7 @@ namespace Facility.Core.Http
 			return Task.FromResult(task.GetAwaiter().GetResult());
 		}
 
-		private static IReadOnlyDictionary<string, string> TryMatchHttpRoute(Uri requestUri, string routePath)
+		private static IReadOnlyDictionary<string, string>? TryMatchHttpRoute(Uri requestUri, string routePath)
 		{
 			string requestPath = requestUri.AbsolutePath.Trim('/');
 			routePath = routePath.Trim('/');
@@ -244,7 +244,7 @@ namespace Facility.Core.Http
 				.FirstOrDefault(m_contentSerializer.IsSupportedMediaType) ?? m_contentSerializer.DefaultMediaType;
 		}
 
-		private async Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
 			if (m_aspects != null)
 			{
@@ -274,6 +274,6 @@ namespace Facility.Core.Http
 		readonly string m_rootPath;
 		readonly bool m_synchronous;
 		readonly HttpContentSerializer m_contentSerializer;
-		readonly IReadOnlyList<ServiceHttpHandlerAspect> m_aspects;
+		readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
 	}
 }

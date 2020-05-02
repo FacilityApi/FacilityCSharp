@@ -15,22 +15,22 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the DTOs are equivalent.
 		/// </summary>
-		public static bool AreEquivalentDtos(ServiceDto first, ServiceDto second) => first == second || first != null && first.IsEquivalentTo(second);
+		public static bool AreEquivalentDtos(ServiceDto? first, ServiceDto? second) => first == second || first != null && first.IsEquivalentTo(second);
 
 		/// <summary>
 		/// True if the results are equivalent.
 		/// </summary>
-		public static bool AreEquivalentResults(ServiceResult first, ServiceResult second) => first == second || first != null && first.IsEquivalentTo(second);
+		public static bool AreEquivalentResults(ServiceResult? first, ServiceResult? second) => first == second || first != null && first.IsEquivalentTo(second);
 
 		/// <summary>
 		/// True if the objects are equivalent.
 		/// </summary>
-		public static bool AreEquivalentObjects(JObject first, JObject second) => JToken.DeepEquals(first, second);
+		public static bool AreEquivalentObjects(JObject? first, JObject? second) => JToken.DeepEquals(first, second);
 
 		/// <summary>
 		/// True if the bytes are equivalent.
 		/// </summary>
-		public static bool AreEquivalentBytes(byte[] first, byte[] second)
+		public static bool AreEquivalentBytes(byte[]? first, byte[]? second)
 		{
 			if (first == null)
 				return second == null;
@@ -38,7 +38,7 @@ namespace Facility.Core
 				return false;
 			if (first.Length != second.Length)
 				return false;
-			for (int i = 0; i < first.Length; i++)
+			for (var i = 0; i < first.Length; i++)
 			{
 				if (first[i] != second[i])
 					return false;
@@ -49,13 +49,13 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the arrays are equivalent.
 		/// </summary>
-		public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second, Func<T, T, bool> areEquivalent)
+		public static bool AreEquivalentArrays<T>(IReadOnlyList<T>? first, IReadOnlyList<T>? second, Func<T, T, bool> areEquivalent)
 		{
 			if (ReferenceEquals(first, second))
 				return true;
 			if (first == null || second == null || first.Count != second.Count)
 				return false;
-			for (int i = 0; i < first.Count; i++)
+			for (var i = 0; i < first.Count; i++)
 			{
 				if (!areEquivalent(first[i], second[i]))
 					return false;
@@ -66,7 +66,7 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the maps are equivalent.
 		/// </summary>
-		public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T> first, IReadOnlyDictionary<string, T> second, Func<T, T, bool> areEquivalent)
+		public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T>? first, IReadOnlyDictionary<string, T>? second, Func<T, T, bool> areEquivalent)
 		{
 			if (ReferenceEquals(first, second))
 				return true;
@@ -88,7 +88,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Clones the data element.
 		/// </summary>
-		public static T Clone<T>(T value) => value == null ? default : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
+		public static T Clone<T>(T value) => value is null ? default! : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
 
 		/// <summary>
 		/// Attempts to parse a Boolean.

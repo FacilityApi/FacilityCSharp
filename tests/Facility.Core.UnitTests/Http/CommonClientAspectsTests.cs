@@ -56,7 +56,7 @@ namespace Facility.Core.UnitTests.Http
 
 		private class TestDto : ServiceDto<TestDto>
 		{
-			public override bool IsEquivalentTo(TestDto other) => other != null;
+			public override bool IsEquivalentTo(TestDto? other) => other != null;
 		}
 	}
 }

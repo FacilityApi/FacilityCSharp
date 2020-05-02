@@ -31,11 +31,11 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		protected virtual Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => HttpServiceUtility.CompletedTask;
+		protected virtual Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => Task.CompletedTask;
 
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken) => HttpServiceUtility.CompletedTask;
+		protected virtual Task ResponseReceivedAsyncCore(HttpResponseMessage httpResponse, ServiceDto requestDto, CancellationToken cancellationToken) => Task.CompletedTask;
 	}
 }

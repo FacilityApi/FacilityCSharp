@@ -16,6 +16,6 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// The name of the test.
 		/// </summary>
-		public IReadOnlyList<ConformanceTestInfo> Tests { get; set; }
+		public IReadOnlyList<ConformanceTestInfo>? Tests { get; set; }
 	}
 }

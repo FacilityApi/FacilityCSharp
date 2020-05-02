@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <VersionPrefix>2.1.0</VersionPrefix>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NeutralLanguage>en-US</NeutralLanguage>
     <NoWarn>$(NoWarn);1591</NoWarn>

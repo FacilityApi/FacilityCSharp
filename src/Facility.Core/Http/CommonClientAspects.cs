@@ -55,7 +55,7 @@ namespace Facility.Core.Http
 			protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
 			{
 				m_action(request);
-				return HttpServiceUtility.CompletedTask;
+				return Task.CompletedTask;
 			}
 
 			private readonly Action<HttpRequestMessage> m_action;

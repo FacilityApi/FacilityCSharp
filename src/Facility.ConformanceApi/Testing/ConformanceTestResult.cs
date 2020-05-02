@@ -8,7 +8,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a conformance test result.
 		/// </summary>
-		public ConformanceTestResult(string testName, ConformanceTestStatus status, string message = null)
+		public ConformanceTestResult(string testName, ConformanceTestStatus status, string? message = null)
 		{
 			TestName = testName;
 			Status = status;
@@ -28,6 +28,6 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// The test message, if any.
 		/// </summary>
-		public string Message { get; }
+		public string? Message { get; }
 	}
 }

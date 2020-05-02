@@ -17,7 +17,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected HttpClientService(HttpClientServiceSettings settings, Uri defaultBaseUri)
 		{
-			settings = settings ?? new HttpClientServiceSettings();
+			settings ??= new HttpClientServiceSettings();
 
 			m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 			m_aspects = settings.Aspects;
@@ -38,7 +38,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// The base URI.
 		/// </summary>
-		protected Uri BaseUri { get; }
+		protected Uri? BaseUri { get; }
 
 		/// <summary>
 		/// Sends an HTTP request and processes the response.
@@ -57,12 +57,12 @@ namespace Facility.Core.Http
 				// validate the request DTO
 				var requestValidation = mapping.ValidateRequest(request);
 				if (requestValidation.IsFailure)
-					return requestValidation.AsFailure();
+					return requestValidation.ToFailure();
 
 				// create the HTTP request with the right method, path, query string, and headers
 				var httpRequestResult = TryCreateHttpRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), mapping.GetRequestHeaders(request));
 				if (httpRequestResult.IsFailure)
-					return httpRequestResult.AsFailure();
+					return httpRequestResult.ToFailure();
 				using (var httpRequest = httpRequestResult.Value)
 				{
 					// create the request body if necessary
@@ -82,14 +82,14 @@ namespace Facility.Core.Http
 							return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
 
 						// read the response body if necessary
-						object responseBody = null;
+						object? responseBody = null;
 						if (responseMapping.ResponseBodyType != null)
 						{
 							ServiceResult<object> responseResult = await ContentSerializer.ReadHttpContentAsync(
 								responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 							if (responseResult.IsFailure)
 							{
-								var error = responseResult.Error;
+								var error = responseResult.Error!;
 								error.Code = ServiceErrors.InvalidResponse;
 								return ServiceResult.Failure(error);
 							}
@@ -125,7 +125,7 @@ namespace Facility.Core.Http
 		{
 			var result = await ContentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
 
-			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value?.Code))
+			if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value.Code))
 				return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
 
 			return result.Value;
@@ -170,7 +170,7 @@ namespace Facility.Core.Http
 			return httpResponse;
 		}
 
-		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>> uriParameters, IEnumerable<KeyValuePair<string, string>> requestHeaders)
+		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>>? uriParameters, IEnumerable<KeyValuePair<string, string>>? requestHeaders)
 		{
 			string url = m_baseUrl + relativeUrlPattern.TrimStart('/');
 			if (uriParameters != null)
@@ -180,7 +180,7 @@ namespace Facility.Core.Http
 
 			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
 			if (headersResult.IsFailure)
-				return headersResult.AsFailure();
+				return headersResult.ToFailure();
 
 			return ServiceResult.Success(requestMessage);
 		}
@@ -217,7 +217,7 @@ namespace Facility.Core.Http
 				return task;
 
 			task.GetAwaiter().GetResult();
-			return HttpServiceUtility.CompletedTask;
+			return Task.CompletedTask;
 		}
 
 		private Task<T> AdaptTask<T>(Task<T> task)
@@ -231,7 +231,7 @@ namespace Facility.Core.Http
 		static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
 		readonly HttpClient m_httpClient;
-		readonly IReadOnlyList<HttpClientServiceAspect> m_aspects;
+		readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
 		readonly bool m_synchronous;
 		readonly string m_baseUrl;
 	}

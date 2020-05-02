@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using NUnit.Framework;
@@ -48,11 +48,11 @@ namespace Facility.Core.UnitTests
 		{
 			public int? Id { get; set; }
 
-			public string Name { get; set; }
+			public string? Name { get; set; }
 
-			public IReadOnlyList<TestDto> Children { get; set; }
+			public IReadOnlyList<TestDto>? Children { get; set; }
 
-			public override bool IsEquivalentTo(TestDto other)
+			public override bool IsEquivalentTo(TestDto? other)
 			{
 				return other != null &&
 					other.Id == Id &&

@@ -27,7 +27,7 @@ namespace Facility.Core.Http
 		{
 			if (m_authorizationHeader != null)
 				request.Headers.Authorization = m_authorizationHeader;
-			return Task.FromResult<object>(null);
+			return Task.CompletedTask;
 		}
 
 		private AuthorizationClientAspect(string authorizationHeader)
@@ -36,6 +36,6 @@ namespace Facility.Core.Http
 				m_authorizationHeader = AuthenticationHeaderValue.Parse(authorizationHeader);
 		}
 
-		readonly AuthenticationHeaderValue m_authorizationHeader;
+		readonly AuthenticationHeaderValue? m_authorizationHeader;
 	}
 }

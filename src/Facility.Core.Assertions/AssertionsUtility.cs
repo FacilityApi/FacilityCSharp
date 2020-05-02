@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentAssertions.Collections;
 
 namespace Facility.Core.Assertions
@@ -11,7 +11,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Returns a <see cref="ServiceDtoAssertions" /> object that can be used to assert the current <see cref="ServiceDto" />.
 		/// </summary>
-		public static ServiceDtoAssertions Should(this ServiceDto dto)
+		public static ServiceDtoAssertions Should(this ServiceDto? dto)
 		{
 			return new ServiceDtoAssertions(dto);
 		}
@@ -19,7 +19,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Returns a <see cref="ServiceDtoAssertions{T}" /> object that can be used to assert the current <see cref="ServiceDto{T}" />.
 		/// </summary>
-		public static ServiceDtoAssertions<T> Should<T>(this ServiceDto<T> dto)
+		public static ServiceDtoAssertions<T> Should<T>(this ServiceDto<T>? dto)
 			where T : ServiceDto<T>
 		{
 			return new ServiceDtoAssertions<T>(dto);
@@ -28,7 +28,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Returns a <see cref="ServiceResultAssertions" /> object that can be used to assert the current <see cref="ServiceResult" />.
 		/// </summary>
-		public static ServiceResultAssertions Should(this ServiceResult result)
+		public static ServiceResultAssertions Should(this ServiceResult? result)
 		{
 			return new ServiceResultAssertions(result);
 		}
@@ -36,7 +36,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Returns a <see cref="ServiceResultAssertions{T}" /> object that can be used to assert the current <see cref="ServiceResult{T}" />.
 		/// </summary>
-		public static ServiceResultAssertions<T> Should<T>(this ServiceResult<T> result)
+		public static ServiceResultAssertions<T> Should<T>(this ServiceResult<T>? result)
 		{
 			return new ServiceResultAssertions<T>(result);
 		}

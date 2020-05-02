@@ -59,13 +59,13 @@ namespace Facility.ConformanceApi.Testing
 		/// </summary>
 		public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken)
 		{
-			string testName = test.Test;
+			string testName = test.Test!;
 			ConformanceTestResult failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
 
 			try
 			{
 				string capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
-				var methodInfo = typeof(IConformanceApi).GetMethod(capitalize(test.Method) + "Async", BindingFlags.Public | BindingFlags.Instance);
+				var methodInfo = typeof(IConformanceApi).GetMethod(capitalize(test.Method!) + "Async", BindingFlags.Public | BindingFlags.Instance);
 				if (methodInfo == null)
 					return failure($"Missing API method for {test.Method}");
 
@@ -91,7 +91,7 @@ namespace Facility.ConformanceApi.Testing
 					if (!JToken.DeepEquals(expectedResponseJObject, actualResponseJObject))
 						return failure($"Response JSON did not match. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
 					var responseType = methodInfo.ReturnType.GetGenericArguments()[0].GetGenericArguments()[0];
-					var expectedResponseDto = (ServiceDto) ServiceJsonUtility.FromJToken(expectedResponseJObject, responseType);
+					var expectedResponseDto = (ServiceDto) ServiceJsonUtility.FromJToken(expectedResponseJObject, responseType)!;
 					if (!expectedResponseDto.IsEquivalentTo(actualResponseDto))
 						return failure($"Response DTO did not match. expected={expectedResponseDto} actual={ServiceJsonUtility.ToJson(actualResponseDto)}");
 				}

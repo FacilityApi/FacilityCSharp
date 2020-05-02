@@ -13,7 +13,7 @@ namespace Facility.Core.Http
 		/// Called when the request is received.
 		/// </summary>
 		/// <remarks>If a non-null response message is returned, it is used instead, bypassing any remaining aspects.</remarks>
-		public Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+		public Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
 			RequestReceivedAsyncCore(httpRequest, cancellationToken);
 
 		/// <summary>
@@ -32,11 +32,11 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		protected virtual Task<HttpResponseMessage> RequestReceivedAsyncCore(HttpRequestMessage httpRequest, CancellationToken cancellationToken) => Task.FromResult<HttpResponseMessage>(null);
+		protected virtual Task<HttpResponseMessage?> RequestReceivedAsyncCore(HttpRequestMessage httpRequest, CancellationToken cancellationToken) => Task.FromResult<HttpResponseMessage?>(null);
 
 		/// <summary>
 		/// Called right after the response is received.
 		/// </summary>
-		protected virtual Task ResponseReadyAsyncCore(HttpResponseMessage httpResponse, CancellationToken cancellationToken) => HttpServiceUtility.CompletedTask;
+		protected virtual Task ResponseReadyAsyncCore(HttpResponseMessage httpResponse, CancellationToken cancellationToken) => Task.CompletedTask;
 	}
 }

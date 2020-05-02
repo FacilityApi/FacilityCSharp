@@ -10,17 +10,17 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// The current service request.
 		/// </summary>
-		public ServiceDto Request { get; internal set; }
+		public ServiceDto? Request { get; internal set; }
 
 		/// <summary>
 		/// The current service result.
 		/// </summary>
-		public ServiceResult<ServiceDto> Result { get; internal set; }
+		public ServiceResult<ServiceDto>? Result { get; internal set; }
 
 		/// <summary>
 		/// Attempts to get the context from the specified HTTP request.
 		/// </summary>
-		public static ServiceHttpContext TryGetContext(HttpRequestMessage httpRequest)
+		public static ServiceHttpContext? TryGetContext(HttpRequestMessage httpRequest)
 		{
 			httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out var context);
 			return context as ServiceHttpContext;
@@ -29,7 +29,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Attempts to get the context from the specified HTTP response.
 		/// </summary>
-		public static ServiceHttpContext TryGetContext(HttpResponseMessage httpResponse)
+		public static ServiceHttpContext? TryGetContext(HttpResponseMessage httpResponse)
 		{
 			var httpRequest = httpResponse.RequestMessage;
 			return httpRequest != null ? TryGetContext(httpRequest) : null;

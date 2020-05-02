@@ -26,6 +26,6 @@ namespace Facility.Core
 		/// <summary>
 		/// Writes the JSON representation of the value.
 		/// </summary>
-		protected sealed override void WriteCore(JsonWriter writer, T value, JsonSerializer serializer) => writer.WriteValue(value.ToString());
+		protected sealed override void WriteCore(JsonWriter writer, T value, JsonSerializer serializer) => writer.WriteValue(value!.ToString());
 	}
 }

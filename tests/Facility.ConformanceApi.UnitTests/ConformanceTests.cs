@@ -28,14 +28,15 @@ namespace Facility.ConformanceApi.UnitTests
 		private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider()
 		{
 			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")))
-				return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests;
+				return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
 		}
 
 		private static HttpClient CreateHttpClient()
 		{
 			var handler = new ConformanceApiHttpHandler(
 				service: new ConformanceApiService(s_tests),
-				settings: new ServiceHttpHandlerSettings()) { InnerHandler = new NotFoundHttpHandler() };
+				settings: new ServiceHttpHandlerSettings())
+			{ InnerHandler = new NotFoundHttpHandler() };
 			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 		}
 
@@ -47,7 +48,7 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static readonly IReadOnlyList<ConformanceTestInfo> s_tests = CreateTestProvider();
 
-		private static IReadOnlyList<string> TestNames => s_tests.Select(x => x.Test).ToList();
+		private static IReadOnlyList<string> TestNames => s_tests.Select(x => x.Test!).ToList();
 
 		private static readonly HttpClient s_httpClient = CreateHttpClient();
 	}

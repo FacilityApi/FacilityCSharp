@@ -42,7 +42,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// The media type for requests.
 		/// </summary>
-		protected override string DefaultMediaTypeCore => SupportedMediaTypes?.FirstOrDefault();
+		protected override string DefaultMediaTypeCore => SupportedMediaTypes[0];
 
 		/// <summary>
 		/// Determines if the specified media type is supported.
@@ -52,7 +52,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		protected override HttpContent CreateHttpContentCore(object content, string mediaType)
+		protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 		{
 			var memoryStream = CreateMemoryStream();
 			ServiceJsonUtility.ToJsonStream(content, memoryStream);

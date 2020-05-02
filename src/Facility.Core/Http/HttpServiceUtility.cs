@@ -30,7 +30,7 @@ namespace Facility.Core.Http
 
 		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers) => new DictionaryFromHeaders(headers);
 
-		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string>> headers)
+		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string>>? headers)
 		{
 			if (headers != null)
 			{
@@ -54,8 +54,6 @@ namespace Facility.Core.Http
 
 			return ServiceResult.Success();
 		}
-
-		internal static readonly Task<object> CompletedTask = Task.FromResult<object>(null);
 
 		private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
 		{
@@ -81,7 +79,7 @@ namespace Facility.Core.Http
 				}
 				else
 				{
-					value = null;
+					value = null!;
 					return false;
 				}
 			}

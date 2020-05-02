@@ -27,7 +27,7 @@ namespace Facility.Core.Http
 		{
 			if (m_acceptHeader != null)
 				request.Headers.Accept.Add(m_acceptHeader);
-			return Task.FromResult<object>(null);
+			return Task.CompletedTask;
 		}
 
 		private AcceptClientAspect(string acceptHeader)
@@ -36,6 +36,6 @@ namespace Facility.Core.Http
 				m_acceptHeader = MediaTypeWithQualityHeaderValue.Parse(acceptHeader);
 		}
 
-		readonly MediaTypeWithQualityHeaderValue m_acceptHeader;
+		readonly MediaTypeWithQualityHeaderValue? m_acceptHeader;
 	}
 }

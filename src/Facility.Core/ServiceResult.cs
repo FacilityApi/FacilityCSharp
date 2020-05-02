@@ -39,7 +39,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The error.
 		/// </summary>
-		public ServiceErrorDto Error => m_error;
+		public ServiceErrorDto? Error => m_error;
 
 		/// <summary>
 		/// Throws a ServiceException if the result is an error.
@@ -59,20 +59,25 @@ namespace Facility.Core
 		public ServiceResult<T> Cast<T>()
 		{
 			if (IsFailure)
-				return Failure(m_error);
+				return Failure(m_error!);
 			else
-				return Success((T) InternalValue);
+				return Success((T) InternalValue!);
 		}
 
 		/// <summary>
 		/// The service result as a failure; null if it is a success.
 		/// </summary>
-		public ServiceResultFailure AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(m_error) : null);
+		public ServiceResultFailure? AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(m_error!) : null);
+
+		/// <summary>
+		/// The service result as a failure; throws if it is a success.
+		/// </summary>
+		public ServiceResultFailure ToFailure() => AsFailure() ?? throw new InvalidOperationException("Result is not a failure.");
 
 		/// <summary>
 		/// Check service results for equivalence.
 		/// </summary>
-		public bool IsEquivalentTo(ServiceResult other)
+		public bool IsEquivalentTo(ServiceResult? other)
 		{
 			if (other == null)
 				return false;
@@ -80,7 +85,7 @@ namespace Facility.Core
 			if (IsFailure)
 				return other.IsFailure && ServiceDataUtility.AreEquivalentDtos(m_error, other.m_error);
 
-			Type valueType = InternalValueType;
+			var valueType = InternalValueType;
 			if (valueType == null)
 				return other.InternalValueType == null;
 
@@ -105,7 +110,7 @@ namespace Facility.Core
 			/// <summary>
 			/// Reads the JSON representation of the object.
 			/// </summary>
-			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+			public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 			{
 				if (reader.TokenType == JsonToken.Null)
 					return null;
@@ -113,9 +118,9 @@ namespace Facility.Core
 				MatchTokenOrThrow(reader, JsonToken.StartObject);
 				ReadOrThrow(reader);
 
-				Type valueType = objectType.IsConstructedGenericType ? objectType.GenericTypeArguments[0] : null;
-				object value = null;
-				ServiceErrorDto error = null;
+				var valueType = objectType.IsConstructedGenericType ? objectType.GenericTypeArguments[0] : null;
+				object? value = null;
+				ServiceErrorDto? error = null;
 
 				while (reader.TokenType == JsonToken.PropertyName)
 				{
@@ -163,8 +168,8 @@ namespace Facility.Core
 			/// </summary>
 			public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 			{
-				ServiceResult serviceResult = (ServiceResult) value;
-				Type valueType = serviceResult.InternalValueType;
+				var serviceResult = (ServiceResult) value;
+				var valueType = serviceResult.InternalValueType;
 
 				writer.WriteStartObject();
 				if (serviceResult.IsFailure)
@@ -199,18 +204,18 @@ namespace Facility.Core
 			static readonly MethodInfo s_genericCastMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Cast" && !x.IsStatic && x.IsGenericMethodDefinition);
 		}
 
-		internal ServiceResult(ServiceErrorDto error)
+		internal ServiceResult(ServiceErrorDto? error)
 		{
 			m_error = error;
 		}
 
-		internal virtual Type InternalValueType => null;
+		internal virtual Type? InternalValueType => null;
 
-		internal virtual object InternalValue => throw new InvalidCastException("A successful result without a value cannot be cast.");
+		internal virtual object? InternalValue => throw new InvalidCastException("A successful result without a value cannot be cast.");
 
 		internal virtual bool IsInternalValueEquivalent(ServiceResult result) => false;
 
-		readonly ServiceErrorDto m_error;
+		readonly ServiceErrorDto? m_error;
 	}
 
 	/// <summary>
@@ -272,9 +277,9 @@ namespace Facility.Core
 			m_value = value;
 		}
 
-		internal override Type InternalValueType => typeof(T);
+		internal override Type? InternalValueType => typeof(T);
 
-		internal override object InternalValue => m_value;
+		internal override object? InternalValue => m_value;
 
 		internal override bool IsInternalValueEquivalent(ServiceResult other)
 		{
@@ -285,12 +290,12 @@ namespace Facility.Core
 			return ServiceDataUtility.AreEquivalentFieldValues(m_value, otherOfT.m_value);
 		}
 
-		private ServiceResult(ServiceErrorDto error)
+		private ServiceResult(ServiceErrorDto? error)
 			: base(error)
 		{
 		}
 
-		readonly T m_value;
+		readonly T m_value = default!;
 	}
 
 	/// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -39,8 +39,8 @@ namespace Facility.Core.UnitTests
 		[Test]
 		public void RequireError()
 		{
-			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null); });
-			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null, new ArgumentException()); });
+			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null!); });
+			Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null!, new ArgumentException()); });
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -14,7 +14,7 @@ namespace Facility.Core.UnitTests
 			var result = ServiceResult.Success();
 			result.IsSuccess.Should().BeTrue();
 			result.IsFailure.Should().BeFalse();
-			result.Error.Should().BeNull();
+			result.Error!.Should().BeNull();
 			result.Verify();
 		}
 
@@ -24,7 +24,7 @@ namespace Facility.Core.UnitTests
 			var result = ServiceResult.Success(1);
 			result.IsSuccess.Should().BeTrue();
 			result.IsFailure.Should().BeFalse();
-			result.Error.Should().BeNull();
+			result.Error!.Should().BeNull();
 			result.Verify();
 			result.Value.Should().Be(1);
 			result.GetValueOrDefault().Should().Be(1);
@@ -33,10 +33,10 @@ namespace Facility.Core.UnitTests
 		[Test]
 		public void NullSuccess()
 		{
-			var result = ServiceResult.Success((string) null);
+			var result = ServiceResult.Success((string?) null);
 			result.IsSuccess.Should().BeTrue();
 			result.IsFailure.Should().BeFalse();
-			result.Error.Should().BeNull();
+			result.Error!.Should().BeNull();
 			result.Verify();
 			result.Value.Should().BeNull();
 			result.GetValueOrDefault().Should().BeNull();
@@ -45,7 +45,7 @@ namespace Facility.Core.UnitTests
 		[Test]
 		public void FailureErrorMustNotBeNull()
 		{
-			Assert.Throws<ArgumentNullException>(() => ServiceResult.Failure(null));
+			Assert.Throws<ArgumentNullException>(() => ServiceResult.Failure(null!));
 		}
 
 		[Test]
@@ -54,7 +54,7 @@ namespace Facility.Core.UnitTests
 			var result = ServiceResult.Failure(new ServiceErrorDto());
 			result.IsSuccess.Should().BeFalse();
 			result.IsFailure.Should().BeTrue();
-			result.Error.Should().BeDto(new ServiceErrorDto());
+			result.Error!.Should().BeDto(new ServiceErrorDto());
 			try
 			{
 				result.Verify();
@@ -72,7 +72,7 @@ namespace Facility.Core.UnitTests
 			ServiceResult<int> result = ServiceResult.Failure(new ServiceErrorDto("Int32Failure"));
 			result.IsSuccess.Should().BeFalse();
 			result.IsFailure.Should().BeTrue();
-			result.Error.Should().BeDto(new ServiceErrorDto("Int32Failure"));
+			result.Error!.Should().BeDto(new ServiceErrorDto("Int32Failure"));
 			try
 			{
 				result.Verify();
@@ -97,11 +97,11 @@ namespace Facility.Core.UnitTests
 		public void AlwaysCastFailure()
 		{
 			ServiceResultFailure failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
-			failure.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("Failure"));
+			failure.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("Failure"));
 			ServiceResult noValue = ServiceResult.Failure(new ServiceErrorDto("NoValue"));
-			noValue.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("NoValue"));
+			noValue.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("NoValue"));
 			ServiceResult<string> stringValue = ServiceResult.Failure(new ServiceErrorDto("StringValue"));
-			stringValue.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("StringValue"));
+			stringValue.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("StringValue"));
 		}
 
 		[Test]
@@ -128,7 +128,7 @@ namespace Facility.Core.UnitTests
 		[Test]
 		public void NullCasts()
 		{
-			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(null);
+			ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(null!);
 			result.Cast<InvalidOperationException>().Value.Should().BeNull();
 			result.Cast<long?>().Value.Should().BeNull();
 		}
@@ -145,11 +145,11 @@ namespace Facility.Core.UnitTests
 		{
 			var error = new ServiceErrorDto("Error");
 			ServiceResultFailure failure = ServiceResult.Failure(error);
-			failure.AsFailure().Error.Should().BeDto(error);
+			failure.AsFailure()!.Error!.Should().BeDto(error);
 			ServiceResult failedResult = ServiceResult.Failure(error);
-			failedResult.AsFailure().Error.Should().BeDto(error);
+			failedResult.AsFailure()!.Error!.Should().BeDto(error);
 			ServiceResult<int> failedValue = ServiceResult.Failure(error);
-			failedValue.AsFailure().Error.Should().BeDto(error);
+			failedValue.AsFailure()!.Error!.Should().BeDto(error);
 		}
 
 		[Test]

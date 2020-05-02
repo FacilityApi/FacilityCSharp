@@ -87,7 +87,7 @@ namespace Facility.CodeGen.CSharp
 
 			var typeName = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { CSharpUtility.GetInterfaceName(serviceInfo) };
 
-			void checkTypeName(string name, ServiceDefinitionPosition position)
+			void checkTypeName(string name, ServiceDefinitionPosition? position)
 			{
 				if (!typeName.Add(name))
 					validationErrors.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
@@ -121,7 +121,7 @@ namespace Facility.CodeGen.CSharp
 			errors = validationErrors;
 		}
 
-		private readonly string m_namespace;
+		private readonly string? m_namespace;
 		private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
 	}
 }

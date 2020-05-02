@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Facility.Core.UnitTests
 {
@@ -31,15 +31,15 @@ namespace Facility.Core.UnitTests
 
 		public bool? BooleanValue { get; set; }
 
-		public string StringValue { get; set; }
+		public string? StringValue { get; set; }
 
-		public IReadOnlyList<ServiceErrorDto> ErrorArrayValue { get; set; }
+		public IReadOnlyList<ServiceErrorDto>? ErrorArrayValue { get; set; }
 
-		public IReadOnlyDictionary<string, bool> BooleanMapValue { get; set; }
+		public IReadOnlyDictionary<string, bool>? BooleanMapValue { get; set; }
 
-		public IReadOnlyDictionary<string, ServiceErrorDto> ErrorMapValue { get; set; }
+		public IReadOnlyDictionary<string, ServiceErrorDto>? ErrorMapValue { get; set; }
 
-		public override bool IsEquivalentTo(ValueDto other)
+		public override bool IsEquivalentTo(ValueDto? other)
 		{
 			return other != null &&
 				BooleanValue == other.BooleanValue &&

@@ -16,7 +16,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static string ToJson(object value)
+		public static string ToJson(object? value)
 		{
 			using (var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture))
 			{
@@ -28,7 +28,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static void ToJsonStream(object value, Stream outputStream)
+		public static void ToJsonStream(object? value, Stream outputStream)
 		{
 			// don't dispose the StreamWriter to avoid closing the stream
 			var textWriter = new StreamWriter(outputStream);
@@ -39,7 +39,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static void ToJsonTextWriter(object value, TextWriter textWriter)
+		public static void ToJsonTextWriter(object? value, TextWriter textWriter)
 		{
 			using (var jsonTextWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.None, CloseOutput = false })
 				ToJsonWriter(value, jsonTextWriter);
@@ -48,17 +48,17 @@ namespace Facility.Core
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static void ToJsonWriter(object value, JsonWriter jsonWriter) => JsonSerializer.Create(s_jsonSerializerSettings).Serialize(jsonWriter, value);
+		public static void ToJsonWriter(object? value, JsonWriter jsonWriter) => JsonSerializer.Create(s_jsonSerializerSettings).Serialize(jsonWriter, value);
 
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static T FromJson<T>(string json) => (T) FromJson(json, typeof(T));
+		public static T FromJson<T>(string json) => (T) FromJson(json, typeof(T))!;
 
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static object FromJson(string json, Type type)
+		public static object? FromJson(string json, Type type)
 		{
 			using (var stringReader = new StringReader(json))
 				return FromJsonTextReader(stringReader, type);
@@ -67,12 +67,12 @@ namespace Facility.Core
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static T FromJsonTextReader<T>(TextReader textReader) => (T) FromJsonTextReader(textReader, typeof(T));
+		public static T FromJsonTextReader<T>(TextReader textReader) => (T) FromJsonTextReader(textReader, typeof(T))!;
 
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static object FromJsonTextReader(TextReader textReader, Type type)
+		public static object? FromJsonTextReader(TextReader textReader, Type type)
 		{
 			using (var reader = new JsonTextReader(textReader))
 				return FromJsonReader(reader, type);
@@ -81,15 +81,15 @@ namespace Facility.Core
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static T FromJsonReader<T>(JsonReader reader) => (T) FromJsonReader(reader, typeof(T));
+		public static T FromJsonReader<T>(JsonReader reader) => (T) FromJsonReader(reader, typeof(T))!;
 
 		/// <summary>
 		/// Deserializes a value from JSON.
 		/// </summary>
-		public static object FromJsonReader(JsonReader reader, Type type)
+		public static object? FromJsonReader(JsonReader reader, Type type)
 		{
 			var serializer = JsonSerializer.Create(s_jsonSerializerSettings);
-			object value = serializer.Deserialize(reader, type);
+			var value = serializer.Deserialize(reader, type);
 			if (reader.Read() && reader.TokenType != JsonToken.Comment)
 				throw new JsonSerializationException("Additional text found in JSON after deserializing.");
 			if (value == null && type == typeof(JToken))
@@ -100,12 +100,12 @@ namespace Facility.Core
 		/// <summary>
 		/// Deserializes a value from a JToken.
 		/// </summary>
-		public static T FromJToken<T>(JToken jToken) => (T) FromJToken(jToken, typeof(T));
+		public static T FromJToken<T>(JToken? jToken) => (T) FromJToken(jToken, typeof(T))!;
 
 		/// <summary>
 		/// Deserializes a value from a JToken.
 		/// </summary>
-		public static object FromJToken(JToken jToken, Type type)
+		public static object? FromJToken(JToken? jToken, Type type)
 		{
 			if (jToken == null || JToken.DeepEquals(jToken, null))
 				return null;
@@ -119,7 +119,7 @@ namespace Facility.Core
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The JToken.</returns>
-		public static JToken ToJToken(object value)
+		public static JToken ToJToken(object? value)
 		{
 			// use JSON to avoid unusual types like byte arrays in the JToken
 			return FromJson<JToken>(ToJson(value));
@@ -128,7 +128,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Clones a JToken.
 		/// </summary>
-		public static T CloneToken<T>(T token) where T : JToken => (T) token?.DeepClone();
+		public static T CloneToken<T>(T token) where T : JToken => (T) token?.DeepClone()!;
 
 		/// <summary>
 		/// Creates a JSON serializer with standard settings.

@@ -26,7 +26,7 @@ namespace Facility.Core.Http
 		{
 			if (!string.IsNullOrWhiteSpace(m_userAgent))
 				request.Headers.Add("User-Agent", m_userAgent);
-			return Task.FromResult<object>(null);
+			return Task.CompletedTask;
 		}
 
 		private UserAgentClientAspect(string userAgent)

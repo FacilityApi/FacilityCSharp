@@ -115,7 +115,7 @@ namespace Facility.Core.UnitTests.Http
 			var clientApi = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = httpClient });
 			var result = await clientApi.GetApiInfoAsync(new GetApiInfoRequestDto(), CancellationToken.None);
 			result.Should().BeFailure(code);
-			result.Error.Message.Should().StartWith(message);
+			result.Error!.Message.Should().StartWith(message);
 		}
 
 		private sealed class FakeHttpHandler : HttpMessageHandler

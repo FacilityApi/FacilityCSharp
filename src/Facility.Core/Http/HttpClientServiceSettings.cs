@@ -12,22 +12,22 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// The base URI of the service (optional if the service has a default base URI).
 		/// </summary>
-		public Uri BaseUri { get; set; }
+		public Uri? BaseUri { get; set; }
 
 		/// <summary>
 		/// The HttpClient to use (optional).
 		/// </summary>
-		public HttpClient HttpClient { get; set; }
+		public HttpClient? HttpClient { get; set; }
 
 		/// <summary>
 		/// The content serializer used by requests and responses (optional).
 		/// </summary>
-		public HttpContentSerializer ContentSerializer { get; set; }
+		public HttpContentSerializer? ContentSerializer { get; set; }
 
 		/// <summary>
 		/// The aspects used when sending requests and receiving responses (optional).
 		/// </summary>
-		public IReadOnlyList<HttpClientServiceAspect> Aspects { get; set; }
+		public IReadOnlyList<HttpClientServiceAspect>? Aspects { get; set; }
 
 		/// <summary>
 		/// True to call services synchronously, allowing tasks to be safely blocked.

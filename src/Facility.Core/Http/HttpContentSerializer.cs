@@ -23,7 +23,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		public HttpContent CreateHttpContent(object content, string mediaType = null)
+		public HttpContent CreateHttpContent(object content, string? mediaType = null)
 		{
 			if (mediaType != null && !IsSupportedMediaType(mediaType))
 				throw new ArgumentException($"Unsupported media type '{mediaType}'.");
@@ -43,7 +43,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			var contentType = content?.Headers.ContentType;
 			if (contentType == null)
@@ -53,7 +53,7 @@ namespace Facility.Core.Http
 			if (!IsSupportedMediaType(mediaType))
 				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 
-			return await ReadHttpContentAsyncCore(dtoType, content, cancellationToken).ConfigureAwait(false);
+			return await ReadHttpContentAsyncCore(dtoType, content!, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		protected abstract HttpContent CreateHttpContentCore(object content, string mediaType);
+		protected abstract HttpContent CreateHttpContentCore(object content, string? mediaType);
 
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.

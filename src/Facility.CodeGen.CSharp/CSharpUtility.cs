@@ -31,7 +31,7 @@ namespace Facility.CodeGen.CSharp
 		{
 			if (element.IsObsolete)
 			{
-				string message = element.ObsoleteMessage;
+				var message = element.ObsoleteMessage;
 				code.WriteLine(message != null ? $"[Obsolete({CreateString(message)})]" : "[Obsolete]");
 			}
 		}

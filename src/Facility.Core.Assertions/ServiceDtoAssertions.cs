@@ -7,14 +7,14 @@ namespace Facility.Core.Assertions
 	/// <summary>
 	/// Contains assertions for <see cref="ServiceDto" />.
 	/// </summary>
-	public abstract class ServiceDtoAssertionsBase<TServiceDto, TAssertions> : ReferenceTypeAssertions<TServiceDto, TAssertions>
+	public abstract class ServiceDtoAssertionsBase<TServiceDto, TAssertions> : ReferenceTypeAssertions<TServiceDto?, TAssertions>
 		where TAssertions : ServiceDtoAssertionsBase<TServiceDto, TAssertions>
 		where TServiceDto : ServiceDto
 	{
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		protected ServiceDtoAssertionsBase(TServiceDto subject)
+		protected ServiceDtoAssertionsBase(TServiceDto? subject)
 		{
 			Subject = subject;
 		}
@@ -44,7 +44,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		public ServiceDtoAssertions(ServiceDto subject)
+		public ServiceDtoAssertions(ServiceDto? subject)
 			: base(subject)
 		{
 		}
@@ -59,7 +59,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		public ServiceDtoAssertions(ServiceDto<T> subject)
+		public ServiceDtoAssertions(ServiceDto<T>? subject)
 			: base(subject)
 		{
 		}

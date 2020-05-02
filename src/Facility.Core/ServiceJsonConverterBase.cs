@@ -22,7 +22,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Implements ReadJson.
 		/// </summary>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.Null)
 			{
@@ -49,6 +49,6 @@ namespace Facility.Core
 		/// </summary>
 		protected abstract void WriteCore(JsonWriter writer, T value, JsonSerializer serializer);
 
-		static readonly Type s_nullableType = typeof(T).GetTypeInfo().IsValueType && Nullable.GetUnderlyingType(typeof(T)) == null ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
+		static readonly Type? s_nullableType = typeof(T).GetTypeInfo().IsValueType && Nullable.GetUnderlyingType(typeof(T)) == null ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
 	}
 }

@@ -13,7 +13,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public abstract bool IsEquivalentTo(ServiceDto other);
+		public abstract bool IsEquivalentTo(ServiceDto? other);
 	}
 
 	/// <summary>
@@ -25,11 +25,11 @@ namespace Facility.Core
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public sealed override bool IsEquivalentTo(ServiceDto other) => IsEquivalentTo(other as T);
+		public sealed override bool IsEquivalentTo(ServiceDto? other) => IsEquivalentTo(other as T);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public abstract bool IsEquivalentTo(T other);
+		public abstract bool IsEquivalentTo(T? other);
 	}
 }

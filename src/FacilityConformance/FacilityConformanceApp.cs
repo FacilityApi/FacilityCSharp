@@ -57,7 +57,7 @@ namespace FacilityConformance
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
 				m_testsJson = testsJsonReader.ReadToEnd();
 
-			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests;
+			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests!;
 		}
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -199,8 +199,8 @@ namespace FacilityConformance
 					requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.AsEnumerable());
 			}
 
-			HttpResponseMessage responseMessage = null;
-			ServiceErrorDto error = null;
+			HttpResponseMessage? responseMessage = null;
+			ServiceErrorDto? error = null;
 
 			try
 			{

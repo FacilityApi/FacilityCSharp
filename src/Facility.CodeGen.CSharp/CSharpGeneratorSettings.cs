@@ -10,6 +10,6 @@ namespace Facility.CodeGen.CSharp
 		/// <summary>
 		/// The name of the namespace (optional).
 		/// </summary>
-		public string NamespaceName { get; set; }
+		public string? NamespaceName { get; set; }
 	}
 }

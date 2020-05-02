@@ -7,14 +7,14 @@ namespace Facility.Core.Assertions
 	/// <summary>
 	/// Contains assertions for <see cref="ServiceResult" />.
 	/// </summary>
-	public abstract class ServiceResultAssertionsBase<TServiceResult, TAssertions> : ReferenceTypeAssertions<TServiceResult, TAssertions>
+	public abstract class ServiceResultAssertionsBase<TServiceResult, TAssertions> : ReferenceTypeAssertions<TServiceResult?, TAssertions>
 		where TAssertions : ServiceResultAssertionsBase<TServiceResult, TAssertions>
 		where TServiceResult : ServiceResult
 	{
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		protected ServiceResultAssertionsBase(TServiceResult subject)
+		protected ServiceResultAssertionsBase(TServiceResult? subject)
 		{
 			Subject = subject;
 		}
@@ -36,7 +36,10 @@ namespace Facility.Core.Assertions
 		public AndConstraint<TAssertions> BeSuccess()
 		{
 			Execute.Assertion
-				.ForCondition(Subject.IsSuccess)
+				.ForCondition(Subject != null)
+				.FailWith("Expected {context:service result} to be success but found null\n {0}", Subject);
+			Execute.Assertion
+				.ForCondition(Subject!.IsSuccess)
 				.FailWith("Expected {context:service result} to be success but found failure\n {0}", Subject);
 			return new AndConstraint<TAssertions>((TAssertions) this);
 		}
@@ -47,7 +50,10 @@ namespace Facility.Core.Assertions
 		public AndConstraint<TAssertions> BeFailure()
 		{
 			Execute.Assertion
-				.ForCondition(Subject.IsFailure)
+				.ForCondition(Subject != null)
+				.FailWith("Expected {context:service result} to be failure but found null\n {0}", Subject);
+			Execute.Assertion
+				.ForCondition(Subject!.IsFailure)
 				.FailWith("Expected {context:service result} to be failure but found success\n {0}", Subject);
 			return new AndConstraint<TAssertions>((TAssertions) this);
 		}
@@ -59,8 +65,8 @@ namespace Facility.Core.Assertions
 		{
 			BeFailure();
 			Execute.Assertion
-				.ForCondition(Subject.Error.IsEquivalentTo(expectedError))
-				.FailWith("Expected {context:service result} to be failure with error\n {0}\n  but found error\n {1}", expectedError, Subject.Error);
+				.ForCondition(Subject!.Error?.IsEquivalentTo(expectedError) == true)
+				.FailWith("Expected {context:service result} to be failure with error\n {0}\n  but found error\n {1}", expectedError, Subject!.Error);
 			return new AndConstraint<TAssertions>((TAssertions) this);
 		}
 
@@ -71,8 +77,8 @@ namespace Facility.Core.Assertions
 		{
 			BeFailure();
 			Execute.Assertion
-				.ForCondition(Subject.Error.Code == expectedErrorCode)
-				.FailWith("Expected {context:service result} to be failure with error code\n {0}\n  but found error\n {1}", expectedErrorCode, Subject.Error);
+				.ForCondition(Subject!.Error?.Code == expectedErrorCode)
+				.FailWith("Expected {context:service result} to be failure with error code\n {0}\n  but found error\n {1}", expectedErrorCode, Subject!.Error);
 			return new AndConstraint<TAssertions>((TAssertions) this);
 		}
 
@@ -90,7 +96,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		public ServiceResultAssertions(ServiceResult subject)
+		public ServiceResultAssertions(ServiceResult? subject)
 			: base(subject)
 		{
 		}
@@ -104,7 +110,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Creates an instance with the specified subject.
 		/// </summary>
-		public ServiceResultAssertions(ServiceResult<T> subject)
+		public ServiceResultAssertions(ServiceResult<T>? subject)
 			: base(subject)
 		{
 		}
@@ -116,8 +122,8 @@ namespace Facility.Core.Assertions
 		{
 			BeSuccess();
 			Execute.Assertion
-				.ForCondition(Subject.IsEquivalentTo(ServiceResult.Success(expectedValue)))
-				.FailWith("Expected {context:service result} to be success with value\n {0}\n  but found value\n {1}", expectedValue, Subject.Value);
+				.ForCondition(Subject!.IsEquivalentTo(ServiceResult.Success(expectedValue)))
+				.FailWith("Expected {context:service result} to be success with value\n {0}\n  but found value\n {1}", expectedValue, Subject!.Value);
 			return new AndConstraint<ServiceResultAssertions<T>>(this);
 		}
 	}
