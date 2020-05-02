@@ -108,7 +108,7 @@ namespace Facility.Core.UnitTests.Http
 				ServiceErrors.Timeout, ServiceErrors.CreateTimeout().Message);
 		}
 
-		private async Task GetApiInfoInvalidResponse(Func<HttpRequestMessage, HttpResponseMessage> send, string code, string message)
+		private async Task GetApiInfoInvalidResponse(Func<HttpRequestMessage, HttpResponseMessage> send, string code, string? message)
 		{
 			var handler = new FakeHttpHandler(send);
 			var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };

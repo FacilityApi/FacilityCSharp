@@ -8,7 +8,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Creates a service error.
 		/// </summary>
-		public ServiceErrorDto(string code)
+		public ServiceErrorDto(string? code)
 		{
 			Code = code;
 		}
@@ -16,7 +16,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Creates a service error.
 		/// </summary>
-		public ServiceErrorDto(string code, string message)
+		public ServiceErrorDto(string? code, string? message)
 		{
 			Code = code;
 			Message = message;

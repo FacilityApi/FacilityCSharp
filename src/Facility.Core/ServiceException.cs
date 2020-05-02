@@ -32,7 +32,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The message.
 		/// </summary>
-		public override string Message => m_error.Message;
+		public override string? Message => m_error.Message;
 
 		/// <summary>
 		/// The exception type name, full error, inner exception, and stack trace.
