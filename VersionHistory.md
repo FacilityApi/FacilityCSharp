@@ -2,6 +2,12 @@
 
 ### 2.1.0
 
+* Support nullable references.
+* Use `--nullable` to generate code with nullable references.
+* Add `ServiceResult.ToFailure`.
+
+### 2.1.0
+
 * Expose `BaseUri` to derived `HttpClientService`.
 * Stop using `System.Net.Http` reference.
 * Minor optimization in `HttpClientService`.
