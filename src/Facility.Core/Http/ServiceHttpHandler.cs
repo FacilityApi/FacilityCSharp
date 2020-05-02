@@ -17,7 +17,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Attempts to handle the HTTP request.
 		/// </summary>
-		public abstract Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken);
+		public abstract Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Creates an instance.
@@ -60,7 +60,7 @@ namespace Facility.Core.Http
 			if (aspectHttpResponse != null)
 				return aspectHttpResponse;
 
-			string mediaType = GetResponseMediaType(httpRequest);
+			var mediaType = GetResponseMediaType(httpRequest);
 
 			ServiceErrorDto? error = null;
 
@@ -168,17 +168,15 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected virtual bool ShouldCreateErrorFromException(Exception exception)
 		{
-			string exceptionTypeName = exception.GetType().FullName;
+			var exceptionTypeName = exception.GetType().FullName;
 			return exceptionTypeName != null && exceptionTypeName.StartsWith("System.Web.", StringComparison.Ordinal);
 		}
 
 		/// <summary>
 		/// Called to create an error object from an unexpected exception.
 		/// </summary>
-		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception)
-		{
-			return ServiceErrors.CreateInvalidRequest("Unexpected error while reading request body.");
-		}
+		protected virtual ServiceErrorDto CreateErrorFromException(Exception exception) =>
+			ServiceErrors.CreateInvalidRequest("Unexpected error while reading request body.");
 
 		/// <summary>
 		/// Makes a task synchronous if necessary.

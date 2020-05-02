@@ -47,7 +47,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Determines if the specified media type is supported.
 		/// </summary>
-		protected override bool IsSupportedMediaTypeCore(string mediaType) => SupportedMediaTypes?.Contains(mediaType) ?? false;
+		protected override bool IsSupportedMediaTypeCore(string mediaType) => SupportedMediaTypes.Contains(mediaType);
 
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
@@ -66,15 +66,13 @@ namespace Facility.Core.Http
 		{
 			try
 			{
-				using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
-				using (var textReader = new StreamReader(stream))
-				{
-					var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
-					if (deserializedContent != null)
-						return ServiceResult.Success(deserializedContent);
-					else
-						return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
-				}
+				using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+				using var textReader = new StreamReader(stream);
+				var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
+				if (deserializedContent != null)
+					return ServiceResult.Success(deserializedContent);
+				else
+					return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 			}
 			catch (JsonException exception)
 			{

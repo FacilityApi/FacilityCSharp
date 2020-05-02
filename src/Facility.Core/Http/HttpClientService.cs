@@ -15,7 +15,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates an instance with the specified settings.
 		/// </summary>
-		protected HttpClientService(HttpClientServiceSettings settings, Uri defaultBaseUri)
+		protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
 		{
 			settings ??= new HttpClientServiceSettings();
 
@@ -63,45 +63,43 @@ namespace Facility.Core.Http
 				var httpRequestResult = TryCreateHttpRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), mapping.GetRequestHeaders(request));
 				if (httpRequestResult.IsFailure)
 					return httpRequestResult.ToFailure();
-				using (var httpRequest = httpRequestResult.Value)
+
+				// create the request body if necessary
+				using var httpRequest = httpRequestResult.Value;
+				var requestBody = mapping.GetRequestBody(request);
+				if (requestBody != null)
+					httpRequest.Content = ContentSerializer.CreateHttpContent(requestBody);
+
+				// send the HTTP request and get the HTTP response
+				using var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
+
+				// find the response mapping for the status code
+				var statusCode = httpResponse.StatusCode;
+				var responseMapping = mapping.ResponseMappings.FirstOrDefault(x => x.StatusCode == statusCode);
+
+				// fail if no response mapping can be found for the status code
+				if (responseMapping == null)
+					return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
+
+				// read the response body if necessary
+				object? responseBody = null;
+				if (responseMapping.ResponseBodyType != null)
 				{
-					// create the request body if necessary
-					var requestBody = mapping.GetRequestBody(request);
-					if (requestBody != null)
-						httpRequest.Content = ContentSerializer.CreateHttpContent(requestBody);
-
-					// send the HTTP request and get the HTTP response
-					using (var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false))
+					ServiceResult<object> responseResult = await ContentSerializer.ReadHttpContentAsync(
+						responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
+					if (responseResult.IsFailure)
 					{
-						// find the response mapping for the status code
-						var statusCode = httpResponse.StatusCode;
-						var responseMapping = mapping.ResponseMappings.FirstOrDefault(x => x.StatusCode == statusCode);
-
-						// fail if no response mapping can be found for the status code
-						if (responseMapping == null)
-							return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
-
-						// read the response body if necessary
-						object? responseBody = null;
-						if (responseMapping.ResponseBodyType != null)
-						{
-							ServiceResult<object> responseResult = await ContentSerializer.ReadHttpContentAsync(
-								responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
-							if (responseResult.IsFailure)
-							{
-								var error = responseResult.Error!;
-								error.Code = ServiceErrors.InvalidResponse;
-								return ServiceResult.Failure(error);
-							}
-							responseBody = responseResult.Value;
-						}
-
-						// create the response DTO
-						var response = responseMapping.CreateResponse(responseBody);
-						response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers));
-						return ServiceResult.Success(response);
+						var error = responseResult.Error!;
+						error.Code = ServiceErrors.InvalidResponse;
+						return ServiceResult.Failure(error);
 					}
+					responseBody = responseResult.Value;
 				}
+
+				// create the response DTO
+				var response = responseMapping.CreateResponse(responseBody);
+				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers));
+				return ServiceResult.Success(response);
 			}
 			catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
 			{
@@ -187,14 +185,14 @@ namespace Facility.Core.Http
 
 		private static string GetUrlFromPattern(string url, IEnumerable<KeyValuePair<string, string>> parameters)
 		{
-			bool hasQuery = url.IndexOf('?') != -1;
+			var hasQuery = url.IndexOf('?') != -1;
 
-			foreach (KeyValuePair<string, string> parameter in parameters)
+			foreach (var parameter in parameters)
 			{
 				if (parameter.Key != null && parameter.Value != null)
 				{
 					string bracketedKey = "{" + parameter.Key + "}";
-					int bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
+					var bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
 					if (bracketedKeyIndex != -1)
 					{
 						url = url.Substring(0, bracketedKeyIndex) +

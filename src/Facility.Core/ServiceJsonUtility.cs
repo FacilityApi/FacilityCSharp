@@ -18,11 +18,9 @@ namespace Facility.Core
 		/// </summary>
 		public static string ToJson(object? value)
 		{
-			using (var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture))
-			{
-				ToJsonTextWriter(value, stringWriter);
-				return stringWriter.ToString();
-			}
+			using var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
+			ToJsonTextWriter(value, stringWriter);
+			return stringWriter.ToString();
 		}
 
 		/// <summary>
@@ -41,8 +39,8 @@ namespace Facility.Core
 		/// </summary>
 		public static void ToJsonTextWriter(object? value, TextWriter textWriter)
 		{
-			using (var jsonTextWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.None, CloseOutput = false })
-				ToJsonWriter(value, jsonTextWriter);
+			using var jsonTextWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.None, CloseOutput = false };
+			ToJsonWriter(value, jsonTextWriter);
 		}
 
 		/// <summary>
@@ -60,8 +58,8 @@ namespace Facility.Core
 		/// </summary>
 		public static object? FromJson(string json, Type type)
 		{
-			using (var stringReader = new StringReader(json))
-				return FromJsonTextReader(stringReader, type);
+			using var stringReader = new StringReader(json);
+			return FromJsonTextReader(stringReader, type);
 		}
 
 		/// <summary>
@@ -74,8 +72,8 @@ namespace Facility.Core
 		/// </summary>
 		public static object? FromJsonTextReader(TextReader textReader, Type type)
 		{
-			using (var reader = new JsonTextReader(textReader))
-				return FromJsonReader(reader, type);
+			using var reader = new JsonTextReader(textReader);
+			return FromJsonReader(reader, type);
 		}
 
 		/// <summary>
@@ -92,7 +90,7 @@ namespace Facility.Core
 			var value = serializer.Deserialize(reader, type);
 			if (reader.Read() && reader.TokenType != JsonToken.Comment)
 				throw new JsonSerializationException("Additional text found in JSON after deserializing.");
-			if (value == null && type == typeof(JToken))
+			if (value is null && type == typeof(JToken))
 				value = JValue.CreateNull();
 			return value;
 		}
@@ -107,11 +105,11 @@ namespace Facility.Core
 		/// </summary>
 		public static object? FromJToken(JToken? jToken, Type type)
 		{
-			if (jToken == null || JToken.DeepEquals(jToken, null))
+			if (jToken is null || JToken.DeepEquals(jToken, null))
 				return null;
 
-			using (var reader = new JTokenReader(jToken))
-				return FromJsonReader(reader, type);
+			using var reader = new JTokenReader(jToken);
+			return FromJsonReader(reader, type);
 		}
 
 		/// <summary>

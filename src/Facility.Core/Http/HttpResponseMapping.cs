@@ -22,7 +22,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// The type of the response body, if any.
 		/// </summary>
-		public Type ResponseBodyType { get; }
+		public Type? ResponseBodyType { get; }
 
 		/// <summary>
 		/// Extracts the HTTP response content body from the response.
@@ -75,14 +75,14 @@ namespace Facility.Core.Http
 		private HttpResponseMapping(Builder builder)
 		{
 			StatusCode = builder.StatusCode ?? throw new InvalidOperationException("StatusCode is required.");
-			ResponseBodyType = builder.ResponseBodyType!;
-			m_matchesResponse = builder.MatchesResponse!;
-			m_getResponseBody = builder.GetResponseBody!;
-			m_createResponse = builder.CreateResponse!;
+			ResponseBodyType = builder.ResponseBodyType;
+			m_matchesResponse = builder.MatchesResponse;
+			m_getResponseBody = builder.GetResponseBody;
+			m_createResponse = builder.CreateResponse;
 		}
 
-		readonly Func<TResponse, bool> m_matchesResponse;
-		readonly Func<TResponse, object> m_getResponseBody;
-		readonly Func<object?, TResponse> m_createResponse;
+		readonly Func<TResponse, bool>? m_matchesResponse;
+		readonly Func<TResponse, object>? m_getResponseBody;
+		readonly Func<object?, TResponse>? m_createResponse;
 	}
 }

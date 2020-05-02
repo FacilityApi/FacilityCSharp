@@ -29,25 +29,25 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the result has a value.
 		/// </summary>
-		public bool IsSuccess => m_error == null;
+		public bool IsSuccess => Error == null;
 
 		/// <summary>
 		/// True if the result has an error.
 		/// </summary>
-		public bool IsFailure => m_error != null;
+		public bool IsFailure => Error != null;
 
 		/// <summary>
 		/// The error.
 		/// </summary>
-		public ServiceErrorDto? Error => m_error;
+		public ServiceErrorDto? Error { get; }
 
 		/// <summary>
 		/// Throws a ServiceException if the result is an error.
 		/// </summary>
 		public void Verify()
 		{
-			if (m_error != null)
-				throw new ServiceException(m_error);
+			if (Error != null)
+				throw new ServiceException(Error);
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Facility.Core
 		public ServiceResult<T> Cast<T>()
 		{
 			if (IsFailure)
-				return Failure(m_error!);
+				return Failure(Error!);
 			else
 				return Success((T) InternalValue!);
 		}
@@ -67,7 +67,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The service result as a failure; null if it is a success.
 		/// </summary>
-		public ServiceResultFailure? AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(m_error!) : null);
+		public ServiceResultFailure? AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(Error!) : null);
 
 		/// <summary>
 		/// The service result as a failure; throws if it is a success.
@@ -83,7 +83,7 @@ namespace Facility.Core
 				return false;
 
 			if (IsFailure)
-				return other.IsFailure && ServiceDataUtility.AreEquivalentDtos(m_error, other.m_error);
+				return other.IsFailure && ServiceDataUtility.AreEquivalentDtos(Error, other.Error);
 
 			var valueType = InternalValueType;
 			if (valueType == null)
@@ -95,7 +95,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Render result as a string.
 		/// </summary>
-		public override string ToString() => IsSuccess ? "<Success>" : $"<Failure={m_error}>";
+		public override string ToString() => IsSuccess ? "<Success>" : $"<Failure={Error}>";
 
 		/// <summary>
 		/// Used for JSON serialization.
@@ -206,7 +206,7 @@ namespace Facility.Core
 
 		internal ServiceResult(ServiceErrorDto? error)
 		{
-			m_error = error;
+			Error = error;
 		}
 
 		internal virtual Type? InternalValueType => null;
@@ -214,8 +214,6 @@ namespace Facility.Core
 		internal virtual object? InternalValue => throw new InvalidCastException("A successful result without a value cannot be cast.");
 
 		internal virtual bool IsInternalValueEquivalent(ServiceResult result) => false;
-
-		readonly ServiceErrorDto? m_error;
 	}
 
 	/// <summary>
@@ -264,7 +262,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Check service results for equivalence.
 		/// </summary>
-		public bool IsEquivalentTo(ServiceResult<T> other) => base.IsEquivalentTo(other);
+		public bool IsEquivalentTo(ServiceResult<T>? other) => base.IsEquivalentTo(other);
 
 		/// <summary>
 		/// Render result as a string.
@@ -311,6 +309,6 @@ namespace Facility.Core
 		/// <summary>
 		/// Check service results for equivalence.
 		/// </summary>
-		public bool IsEquivalentTo(ServiceResultFailure other) => base.IsEquivalentTo(other);
+		public bool IsEquivalentTo(ServiceResultFailure? other) => base.IsEquivalentTo(other);
 	}
 }

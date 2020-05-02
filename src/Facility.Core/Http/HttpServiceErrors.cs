@@ -47,12 +47,12 @@ namespace Facility.Core.Http
 
 		internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string? reasonPhrase)
 		{
-			int statusCodeNumber = (int) statusCode;
-			bool isClientError = statusCodeNumber >= 400 && statusCodeNumber <= 499;
-			bool isServerError = statusCodeNumber >= 500 && statusCodeNumber <= 599;
-			string errorCode = TryGetErrorCode(statusCode) ?? (isClientError ? ServiceErrors.InvalidRequest : ServiceErrors.InvalidResponse);
-			string message = isServerError ? "HTTP server error" : isClientError ? "HTTP client error" : "Unexpected HTTP status code";
-			string statusCodeString = statusCodeNumber.ToString(CultureInfo.InvariantCulture);
+			var statusCodeNumber = (int) statusCode;
+			var isClientError = statusCodeNumber >= 400 && statusCodeNumber <= 499;
+			var isServerError = statusCodeNumber >= 500 && statusCodeNumber <= 599;
+			var errorCode = TryGetErrorCode(statusCode) ?? (isClientError ? ServiceErrors.InvalidRequest : ServiceErrors.InvalidResponse);
+			var message = isServerError ? "HTTP server error" : isClientError ? "HTTP client error" : "Unexpected HTTP status code";
+			var statusCodeString = statusCodeNumber.ToString(CultureInfo.InvariantCulture);
 			if (string.IsNullOrEmpty(reasonPhrase))
 				reasonPhrase = new HttpResponseMessage(statusCode).ReasonPhrase;
 			return new ServiceErrorDto(errorCode, $"{message}: {statusCodeString} {reasonPhrase}");

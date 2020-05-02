@@ -13,17 +13,17 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Sets the Accept header of the request.
 		/// </summary>
-		public static HttpClientServiceAspect RequestAccept(string accept) => RequestHeader("Accept", accept);
+		public static HttpClientServiceAspect RequestAccept(string? accept) => RequestHeader("Accept", accept);
 
 		/// <summary>
 		/// Sets the Authorization header of the request.
 		/// </summary>
-		public static HttpClientServiceAspect RequestAuthorization(string authorization) => RequestHeader("Authorization", authorization);
+		public static HttpClientServiceAspect RequestAuthorization(string? authorization) => RequestHeader("Authorization", authorization);
 
 		/// <summary>
 		/// Sets a request header.
 		/// </summary>
-		public static HttpClientServiceAspect RequestHeader(string headerName, string headerValue)
+		public static HttpClientServiceAspect RequestHeader(string headerName, string? headerValue)
 		{
 			if (string.IsNullOrWhiteSpace(headerName))
 				throw new ArgumentException("Invalid header name.", nameof(headerName));
@@ -43,7 +43,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Sets the User-Agent header of the request.
 		/// </summary>
-		public static HttpClientServiceAspect RequestUserAgent(string userAgent) => RequestHeader("User-Agent", userAgent);
+		public static HttpClientServiceAspect RequestUserAgent(string? userAgent) => RequestHeader("User-Agent", userAgent);
 
 		private sealed class RequestReadyClientAspect : HttpClientServiceAspect
 		{

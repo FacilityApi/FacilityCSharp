@@ -12,34 +12,34 @@ namespace Facility.Core
 		/// </summary>
 		public ServiceException(ServiceErrorDto error)
 		{
-			m_error = error ?? throw new ArgumentNullException(nameof(error));
+			Error = error ?? throw new ArgumentNullException(nameof(error));
 		}
 
 		/// <summary>
 		/// Creates an exception from an error data object and an inner exception.
 		/// </summary>
-		public ServiceException(ServiceErrorDto error, Exception innerException)
+		public ServiceException(ServiceErrorDto error, Exception? innerException)
 			: base(null, innerException)
 		{
-			m_error = error ?? throw new ArgumentNullException(nameof(error));
+			Error = error ?? throw new ArgumentNullException(nameof(error));
 		}
 
 		/// <summary>
 		/// The error.
 		/// </summary>
-		public ServiceErrorDto Error => m_error;
+		public ServiceErrorDto Error { get; }
 
 		/// <summary>
 		/// The message.
 		/// </summary>
-		public override string? Message => m_error.Message;
+		public override string? Message => Error.Message;
 
 		/// <summary>
 		/// The exception type name, full error, inner exception, and stack trace.
 		/// </summary>
 		public override string ToString()
 		{
-			string text = GetType().Name + ": " + GetErrorString(m_error);
+			string text = GetType().Name + ": " + GetErrorString(Error);
 
 			var innerException = InnerException;
 			if (innerException != null)
@@ -67,7 +67,5 @@ namespace Facility.Core
 
 			return text;
 		}
-
-		readonly ServiceErrorDto m_error;
 	}
 }

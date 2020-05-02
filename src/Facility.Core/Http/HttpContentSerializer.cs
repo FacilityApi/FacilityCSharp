@@ -34,7 +34,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent? content, CancellationToken cancellationToken = default)
 			where T : ServiceDto
 		{
 			return (await ReadHttpContentAsync(typeof(T), content, cancellationToken).ConfigureAwait(false)).Map(x => (T) x);
@@ -43,7 +43,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, CancellationToken cancellationToken = default)
 		{
 			var contentType = content?.Headers.ContentType;
 			if (contentType == null)
