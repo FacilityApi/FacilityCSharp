@@ -17,15 +17,11 @@ namespace Facility.CodeGen.CSharp
 			code.WriteLine("// </auto-generated>");
 		}
 
-		public static void WriteCodeGenAttribute(CodeWriter code, string generatorName)
-		{
+		public static void WriteCodeGenAttribute(CodeWriter code, string generatorName) =>
 			code.WriteLine($"[System.CodeDom.Compiler.GeneratedCode(\"{generatorName}\", \"\")]");
-		}
 
-		public static void WriteObsoletePragma(CodeWriter code)
-		{
+		public static void WriteObsoletePragma(CodeWriter code) =>
 			code.WriteLine("#pragma warning disable 612, 618 // member is obsolete");
-		}
 
 		public static void WriteObsoleteAttribute(CodeWriter code, ServiceElementWithAttributesInfo element)
 		{
@@ -62,56 +58,29 @@ namespace Facility.CodeGen.CSharp
 
 		public const string HttpDirectoryName = "Http";
 
-		public static string GetInterfaceName(ServiceInfo serviceInfo)
-		{
-			return $"I{CodeGenUtility.Capitalize(serviceInfo.Name)}";
-		}
+		public static string GetInterfaceName(ServiceInfo serviceInfo) => $"I{CodeGenUtility.Capitalize(serviceInfo.Name)}";
 
-		public static string GetMethodName(ServiceMethodInfo methodInfo)
-		{
-			return CodeGenUtility.Capitalize(methodInfo.Name);
-		}
+		public static string GetMethodName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name);
 
-		public static string GetDtoName(ServiceDtoInfo dtoInfo)
-		{
-			return CodeGenUtility.Capitalize(dtoInfo.Name) + "Dto";
-		}
+		public static string GetDtoName(ServiceDtoInfo dtoInfo) => CodeGenUtility.Capitalize(dtoInfo.Name) + "Dto";
 
-		public static string GetRequestDtoName(ServiceMethodInfo methodInfo)
-		{
-			return CodeGenUtility.Capitalize(methodInfo.Name) + "RequestDto";
-		}
+		public static string GetRequestDtoName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name) + "RequestDto";
 
-		public static string GetResponseDtoName(ServiceMethodInfo methodInfo)
-		{
-			return CodeGenUtility.Capitalize(methodInfo.Name) + "ResponseDto";
-		}
+		public static string GetResponseDtoName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name) + "ResponseDto";
 
-		public static string GetEnumName(ServiceEnumInfo enumInfo)
-		{
-			return CodeGenUtility.Capitalize(enumInfo.Name);
-		}
+		public static string GetEnumName(ServiceEnumInfo enumInfo) => CodeGenUtility.Capitalize(enumInfo.Name);
 
-		public static string GetEnumValueName(ServiceEnumValueInfo enumValue)
-		{
-			return CodeGenUtility.Capitalize(enumValue.Name);
-		}
+		public static string GetEnumValueName(ServiceEnumValueInfo enumValue) => CodeGenUtility.Capitalize(enumValue.Name);
 
-		public static string GetErrorSetName(ServiceErrorSetInfo errorSetInfo)
-		{
-			return CodeGenUtility.Capitalize(errorSetInfo.Name);
-		}
+		public static string GetErrorSetName(ServiceErrorSetInfo errorSetInfo) => CodeGenUtility.Capitalize(errorSetInfo.Name);
 
-		public static string GetErrorName(ServiceErrorInfo errorInfo)
-		{
-			return CodeGenUtility.Capitalize(errorInfo.Name);
-		}
+		public static string GetErrorName(ServiceErrorInfo errorInfo) => CodeGenUtility.Capitalize(errorInfo.Name);
 
 		public static string CreateString(string text)
 		{
 			var builder = new StringBuilder(text.Length + 2);
 			builder.Append('\"');
-			foreach (char ch in text)
+			foreach (var ch in text)
 			{
 				switch (ch)
 				{
@@ -150,18 +119,13 @@ namespace Facility.CodeGen.CSharp
 
 		private static int CompareUsings(string left, string right)
 		{
-			int leftGroup = GetUsingGroup(left);
-			int rightGroup = GetUsingGroup(right);
-			int result = leftGroup.CompareTo(rightGroup);
-			if (result != 0)
-				return result;
-
-			return string.CompareOrdinal(left, right);
+			var leftGroup = GetUsingGroup(left);
+			var rightGroup = GetUsingGroup(right);
+			var result = leftGroup.CompareTo(rightGroup);
+			return result != 0 ? result : string.CompareOrdinal(left, right);
 		}
 
-		private static int GetUsingGroup(string namespaceName)
-		{
-			return namespaceName == "System" || namespaceName.StartsWith("System.", StringComparison.Ordinal) ? 1 : 2;
-		}
+		private static int GetUsingGroup(string namespaceName) =>
+			namespaceName == "System" || namespaceName.StartsWith("System.", StringComparison.Ordinal) ? 1 : 2;
 	}
 }

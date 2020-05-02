@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
-using Facility.Definition.Http;
 
 namespace Facility.CodeGen.CSharp
 {
@@ -89,8 +85,8 @@ namespace Facility.CodeGen.CSharp
 
 			void checkTypeName(string name, ServiceDefinitionPosition? position)
 			{
-				if (!typeName.Add(name))
-					validationErrors.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
+				if (!typeName!.Add(name))
+					validationErrors!.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
 			}
 
 			foreach (var member in serviceInfo.Members)

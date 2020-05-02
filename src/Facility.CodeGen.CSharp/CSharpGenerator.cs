@@ -302,7 +302,7 @@ namespace Facility.CodeGen.CSharp
 								code.WriteLine("return other != null &&");
 								using (code.Indent())
 								{
-									for (int fieldIndex = 0; fieldIndex < fieldInfos.Count; fieldIndex++)
+									for (var fieldIndex = 0; fieldIndex < fieldInfos.Count; fieldIndex++)
 									{
 										var fieldInfo = fieldInfos[fieldIndex];
 										string propertyName = context.GetFieldPropertyName(fieldInfo);
@@ -456,12 +456,12 @@ namespace Facility.CodeGen.CSharp
 									if (httpMethodInfo.Method == HttpMethod.Delete.ToString() || httpMethodInfo.Method == HttpMethod.Get.ToString() ||
 										httpMethodInfo.Method == HttpMethod.Post.ToString() || httpMethodInfo.Method == HttpMethod.Put.ToString())
 									{
-										string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToString().ToLowerInvariant());
+										string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToLowerInvariant());
 										code.WriteLine($"HttpMethod = HttpMethod.{httpMethodName},");
 									}
 									else
 									{
-										string httpMethodName = httpMethodInfo.Method.ToString();
+										string httpMethodName = httpMethodInfo.Method;
 										code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethodName}\"),");
 									}
 
@@ -922,8 +922,7 @@ namespace Facility.CodeGen.CSharp
 									code.WriteLine(" ??");
 								string methodName = CSharpUtility.GetMethodName(httpServiceMethod.ServiceMethod);
 								code.Write($"await AdaptTask(TryHandle{methodName}Async(httpRequest, cancellationToken)).ConfigureAwait(true)");
-								if (indent == null)
-									indent = code.Indent();
+								indent ??= code.Indent();
 							}
 							code.WriteLine(";");
 							indent?.Dispose();

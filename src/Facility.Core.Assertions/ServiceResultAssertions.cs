@@ -22,7 +22,7 @@ namespace Facility.Core.Assertions
 		/// <summary>
 		/// Asserts that the subject result is equivalent to the expected result.
 		/// </summary>
-		public AndConstraint<TAssertions> BeResult(TServiceResult expected)
+		public AndConstraint<TAssertions> BeResult(TServiceResult? expected)
 		{
 			Execute.Assertion
 				.ForCondition(ServiceDataUtility.AreEquivalentResults(Subject, expected))

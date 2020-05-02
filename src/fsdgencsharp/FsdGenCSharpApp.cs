@@ -8,10 +8,7 @@ namespace fsdgencsharp
 {
 	public sealed class FsdGenCSharpApp : CodeGeneratorApp
 	{
-		public static int Main(string[] args)
-		{
-			return new FsdGenCSharpApp().Run(args);
-		}
+		public static int Main(string[] args) => new FsdGenCSharpApp().Run(args);
 
 		protected override IReadOnlyList<string> Description => new[]
 		{

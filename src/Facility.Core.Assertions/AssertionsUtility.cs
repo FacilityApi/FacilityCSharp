@@ -4,7 +4,7 @@ using FluentAssertions.Collections;
 namespace Facility.Core.Assertions
 {
 	/// <summary>
-	/// Extention methods for use with FluentAssertions and Facility.
+	/// Extension methods for use with FluentAssertions and Facility.
 	/// </summary>
 	public static class AssertionsUtility
 	{

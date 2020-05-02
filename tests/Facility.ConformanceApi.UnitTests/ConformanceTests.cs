@@ -27,8 +27,8 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider()
 		{
-			using (var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")))
-				return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
+			using var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json"));
+			return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
 		}
 
 		private static HttpClient CreateHttpClient()
