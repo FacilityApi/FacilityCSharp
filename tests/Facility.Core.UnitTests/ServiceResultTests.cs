@@ -3,6 +3,7 @@ using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using static FluentAssertions.FluentActions;
 
 namespace Facility.Core.UnitTests
 {
@@ -159,6 +160,27 @@ namespace Facility.Core.UnitTests
 			successResult.AsFailure().Should().BeNull();
 			ServiceResult<int> successValue = ServiceResult.Success(1);
 			successValue.AsFailure().Should().BeNull();
+		}
+
+		[Test]
+		public void FailureToFailure()
+		{
+			var error = new ServiceErrorDto("Error");
+			ServiceResultFailure failure = ServiceResult.Failure(error);
+			failure.ToFailure().Error!.Should().BeDto(error);
+			ServiceResult failedResult = ServiceResult.Failure(error);
+			failedResult.ToFailure().Error!.Should().BeDto(error);
+			ServiceResult<int> failedValue = ServiceResult.Failure(error);
+			failedValue.ToFailure().Error!.Should().BeDto(error);
+		}
+
+		[Test]
+		public void SuccessToFailure()
+		{
+			ServiceResult successResult = ServiceResult.Success();
+			Invoking(() => successResult.ToFailure()).Should().Throw<InvalidOperationException>();
+			ServiceResult<int> successValue = ServiceResult.Success(1);
+			Invoking(() => successValue.ToFailure()).Should().Throw<InvalidOperationException>();
 		}
 
 		[Test]
