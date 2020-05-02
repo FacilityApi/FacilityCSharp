@@ -59,7 +59,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the HTTP response content body from the response.
 			/// </summary>
-			public Func<TResponse, object>? GetResponseBody { get; set; }
+			public Func<TResponse, object?>? GetResponseBody { get; set; }
 
 			/// <summary>
 			/// Creates a response with an optional body.
@@ -82,7 +82,7 @@ namespace Facility.Core.Http
 		}
 
 		readonly Func<TResponse, bool>? m_matchesResponse;
-		readonly Func<TResponse, object>? m_getResponseBody;
+		readonly Func<TResponse, object?>? m_getResponseBody;
 		readonly Func<object?, TResponse>? m_createResponse;
 	}
 }

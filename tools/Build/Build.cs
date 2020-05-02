@@ -45,9 +45,9 @@ internal static class Build
 
 			var verifyOption = verify ? "--verify" : null;
 
-			RunDotNet(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--newline", "lf", verifyOption);
-			RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--newline", "lf", "--clean", verifyOption);
-			RunDotNet(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--newline", "lf", "--clean", verifyOption);
+			RunDotNet(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable", "--newline", "lf", verifyOption);
+			RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--newline", "lf", "--clean", verifyOption);
+			RunDotNet(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--newline", "lf", "--clean", verifyOption);
 		}
 	});
 }

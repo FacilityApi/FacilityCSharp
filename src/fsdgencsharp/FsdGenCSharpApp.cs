@@ -19,11 +19,17 @@ namespace fsdgencsharp
 		{
 			"   --namespace <name>",
 			"      The namespace used by the generated C#.",
+			"   --nullable",
+			"      Use nullable reference syntax in the generated C#.",
 		};
 
 		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
 
 		protected override FileGeneratorSettings CreateSettings(ArgsReader argsReader) =>
-			new CSharpGeneratorSettings { NamespaceName = argsReader.ReadOption("namespace") };
+			new CSharpGeneratorSettings
+			{
+				NamespaceName = argsReader.ReadOption("namespace"),
+				UseNullableReferences = argsReader.ReadFlag("nullable"),
+			};
 	}
 }

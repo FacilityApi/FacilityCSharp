@@ -11,5 +11,10 @@ namespace Facility.CodeGen.CSharp
 		/// The name of the namespace (optional).
 		/// </summary>
 		public string? NamespaceName { get; set; }
+
+		/// <summary>
+		/// True if the code should use nullable reference syntax.
+		/// </summary>
+		public bool UseNullableReferences { get; set; }
 	}
 }

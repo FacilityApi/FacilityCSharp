@@ -28,6 +28,11 @@ namespace Facility.CodeGen.CSharp
 		public string? NamespaceName { get; set; }
 
 		/// <summary>
+		/// True if the code should use nullable reference syntax.
+		/// </summary>
+		public bool UseNullableReferences { get; set; }
+
+		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
 		public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -79,7 +84,9 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public override void ApplySettings(FileGeneratorSettings settings)
 		{
-			NamespaceName = ((CSharpGeneratorSettings) settings).NamespaceName;
+			var csharpSettings = (CSharpGeneratorSettings) settings;
+			NamespaceName = csharpSettings.NamespaceName;
+			UseNullableReferences = csharpSettings.UseNullableReferences;
 		}
 
 		/// <summary>
@@ -93,7 +100,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile(fullErrorSetName + CSharpUtility.FileExtension, code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				var usings = new List<string>
 				{
@@ -129,7 +136,7 @@ namespace Facility.CodeGen.CSharp
 							string memberName = CSharpUtility.GetErrorName(errorInfo);
 							CSharpUtility.WriteSummary(code, errorInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, errorInfo);
-							code.WriteLine($"public static ServiceErrorDto Create{memberName}(string message = null) => " +
+							code.WriteLine($"public static ServiceErrorDto Create{memberName}(string{NullableReferenceSuffix} message = null) => " +
 								$"new ServiceErrorDto({memberName}, message" +
 								$"{(string.IsNullOrWhiteSpace(errorInfo.Summary) ? "" : $" ?? {CSharpUtility.CreateString(errorInfo.Summary)}")});");
 						}
@@ -144,7 +151,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile(enumName + CSharpUtility.FileExtension, code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				var usings = new List<string>
 				{
@@ -253,7 +260,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile(fullDtoName + CSharpUtility.FileExtension, code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				var usings = new List<string>
 				{
@@ -290,7 +297,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
-						code.WriteLine($"public override bool IsEquivalentTo({fullDtoName} other)");
+						code.WriteLine($"public override bool IsEquivalentTo({NullableReference(fullDtoName)} other)");
 						using (code.Block())
 						{
 							if (fieldInfos.Count == 0)
@@ -334,7 +341,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{className}{CSharpUtility.FileExtension}", code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				var usings = new List<string>
 				{
@@ -361,27 +368,31 @@ namespace Facility.CodeGen.CSharp
 					using (code.Block())
 					{
 						CSharpUtility.WriteSummary(code, "Gets the HTTP status code that corresponds to the specified error code.");
-						code.WriteLine("public static HttpStatusCode? TryGetHttpStatusCode(string errorCode) =>");
+						code.WriteLine($"public static HttpStatusCode? TryGetHttpStatusCode(string{NullableReferenceSuffix} errorCode) =>");
 						using (code.Indent())
-							code.WriteLine("s_errorToStatus.TryGetValue(errorCode, out var statusCode) ? (HttpStatusCode?) statusCode : null;");
+							code.WriteLine("s_errorToStatus.TryGetValue(errorCode ?? \"\", out var statusCode) ? (HttpStatusCode?) statusCode : null;");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the error code that corresponds to the specified HTTP status code.");
-						code.WriteLine("public static string TryGetErrorCode(HttpStatusCode statusCode)");
+						code.WriteLine($"public static string{NullableReferenceSuffix} TryGetErrorCode(HttpStatusCode statusCode)");
 						using (code.Block())
 						{
 							code.WriteLine("switch ((int) statusCode)");
-							using (code.Block())
-							{
-								foreach (var errorAndCodeGroup in errorsAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
-								{
-									string statusCode = errorAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
-									code.WriteLine($"case {statusCode}: " +
-										$"return {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndCodeGroup.First().ServiceError)};");
-								}
+							code.WriteLine("{");
 
-								code.WriteLine("default: return null;");
+							foreach (var errorAndCodeGroup in errorsAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
+							{
+								string statusCode = errorAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
+								code.WriteLine($"case {statusCode}:");
+								using (code.Indent())
+									code.WriteLine($"return {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndCodeGroup.First().ServiceError)};");
 							}
+
+							code.WriteLine("default:");
+							using (code.Indent())
+								code.WriteLine("return null;");
+
+							code.WriteLine("}");
 						}
 
 						code.WriteLine();
@@ -391,7 +402,7 @@ namespace Facility.CodeGen.CSharp
 							foreach (var errorAndStatusCode in errorsAndStatusCodes)
 							{
 								string statusCode = ((int) errorAndStatusCode.StatusCode).ToString(CultureInfo.InvariantCulture);
-								code.WriteLine($"[{CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndStatusCode.ServiceError)}] = {statusCode},");
+								code.WriteLine($"{{ {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndStatusCode.ServiceError)}, {statusCode} }},");
 							}
 						}
 					}
@@ -408,7 +419,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				List<string> usings = new List<string>
 				{
@@ -503,20 +514,20 @@ namespace Facility.CodeGen.CSharp
 										code.WriteLine("GetUriParameters = request =>");
 										using (code.Indent())
 										{
-											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine($"new Dictionary<string, string{NullableReferenceSuffix}>");
 											using (code.Block("{", "},"))
 											{
 												foreach (var pathField in httpMethodInfo.PathFields)
 												{
 													string fieldName = context.GetFieldPropertyName(pathField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"[\"{pathField.Name}\"] = {fieldValue},");
+													code.WriteLine($"{{ \"{pathField.Name}\", {fieldValue} }},");
 												}
 												foreach (var queryField in httpMethodInfo.QueryFields)
 												{
 													string fieldName = context.GetFieldPropertyName(queryField.ServiceField);
 													string fieldValue = GenerateFieldToStringCode(context.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
-													code.WriteLine($"[\"{queryField.Name}\"] = {fieldValue},");
+													code.WriteLine($"{{ \"{queryField.Name}\", {fieldValue} }},");
 												}
 											}
 										}
@@ -549,7 +560,7 @@ namespace Facility.CodeGen.CSharp
 										code.WriteLine("GetRequestHeaders = request =>");
 										using (code.Indent())
 										{
-											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine($"new Dictionary<string, string{NullableReferenceSuffix}>");
 											using (code.Block("{", "},"))
 											{
 												foreach (var headerField in httpMethodInfo.RequestHeaderFields)
@@ -578,12 +589,14 @@ namespace Facility.CodeGen.CSharp
 
 									if (httpMethodInfo.RequestBodyField != null)
 									{
-										string requestBodyFieldName = context.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
-										string requestBodyFieldTypeName = RenderNullableFieldType(context.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField));
+										var requestBodyFieldName = context.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
+										var requestBodyFieldInfo = context.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField);
+										var requestBodyFieldTypeName = RenderNullableFieldType(requestBodyFieldInfo);
+										var requestNullableBodyFieldTypeName = RenderNullableReferenceFieldType(requestBodyFieldInfo);
 
 										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
 										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
-										code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
+										code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestNullableBodyFieldTypeName}) body }},");
 									}
 									else if (httpMethodInfo.RequestNormalFields.Any())
 									{
@@ -615,7 +628,7 @@ namespace Facility.CodeGen.CSharp
 													foreach (var field in httpMethodInfo.RequestNormalFields)
 													{
 														string fieldName = context.GetFieldPropertyName(field.ServiceField);
-														code.WriteLine($"{fieldName} = (({requestTypeName}) body).{fieldName},");
+														code.WriteLine($"{fieldName} = (({requestTypeName}) body{NullableReferenceBang}).{fieldName},");
 													}
 												}
 											}
@@ -646,11 +659,12 @@ namespace Facility.CodeGen.CSharp
 													}
 													else
 													{
-														string responseBodyFieldTypeName = RenderNullableFieldType(bodyFieldType);
+														var responseBodyFieldTypeName = RenderNullableFieldType(bodyFieldType);
+														var responseNullableBodyFieldTypeName = RenderNullableReferenceFieldType(bodyFieldType);
 														code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
 														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
 														code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
-														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
+														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseNullableBodyFieldTypeName}) body }},");
 													}
 												}
 												else if (validResponse.NormalFields!.Count != 0)
@@ -683,7 +697,7 @@ namespace Facility.CodeGen.CSharp
 																foreach (var field in validResponse.NormalFields)
 																{
 																	string fieldName = context.GetFieldPropertyName(field.ServiceField);
-																	code.WriteLine($"{fieldName} = (({responseTypeName}) body).{fieldName},");
+																	code.WriteLine($"{fieldName} = (({responseTypeName}) body{NullableReferenceBang}).{fieldName},");
 																}
 															}
 														}
@@ -698,7 +712,7 @@ namespace Facility.CodeGen.CSharp
 										code.WriteLine("GetResponseHeaders = response =>");
 										using (code.Indent())
 										{
-											code.WriteLine("new Dictionary<string, string>");
+											code.WriteLine($"new Dictionary<string, string{NullableReferenceSuffix}>");
 											using (code.Block("{", "},"))
 											{
 												foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
@@ -787,7 +801,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				List<string> usings = new List<string>
 				{
@@ -810,7 +824,7 @@ namespace Facility.CodeGen.CSharp
 					using (code.Block())
 					{
 						CSharpUtility.WriteSummary(code, "Creates the service.");
-						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings settings = null)");
+						code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings{NullableReferenceSuffix} settings = null)");
 						using (code.Indent())
 						{
 							var url = httpServiceInfo.Url;
@@ -850,7 +864,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				List<string> usings = new List<string>
 				{
@@ -880,7 +894,7 @@ namespace Facility.CodeGen.CSharp
 					using (code.Block())
 					{
 						CSharpUtility.WriteSummary(code, "Creates the handler.");
-						code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings settings = null)");
+						code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())
@@ -895,7 +909,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates the handler.");
-						code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings settings = null)");
+						code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())
@@ -910,7 +924,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Attempts to handle the HTTP request.");
-						code.WriteLine("public override async Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
+						code.WriteLine($"public override async Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
 						using (code.Block())
 						{
 							// check 'widgets/get' before 'widgets/{id}'
@@ -936,7 +950,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public Task<HttpResponseMessage> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>");
+							code.WriteLine($"public Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>");
 							using (code.Indent())
 								code.WriteLine($"TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
 						}
@@ -954,11 +968,11 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService(httpRequest);");
+						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService{NullableReferenceBang}(httpRequest);");
 
 						code.WriteLine();
-						code.WriteLine($"readonly {fullInterfaceName} m_service;");
-						code.WriteLine($"readonly Func<HttpRequestMessage, {fullInterfaceName}> m_getService;");
+						code.WriteLine($"readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
+						code.WriteLine($"readonly Func<HttpRequestMessage, {fullInterfaceName}>{NullableReferenceSuffix} m_getService;");
 					}
 				}
 			});
@@ -1004,7 +1018,7 @@ namespace Facility.CodeGen.CSharp
 			{
 				string propertyName = context.GetFieldPropertyName(fieldInfo);
 				string normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
-				string nullableFieldType = RenderNullableFieldType(context.GetFieldType(fieldInfo));
+				string nullableFieldType = RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo));
 
 				code.WriteLine();
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
@@ -1021,7 +1035,7 @@ namespace Facility.CodeGen.CSharp
 
 			return CreateFile(interfaceName + CSharpUtility.FileExtension, code =>
 			{
-				CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+				WriteFileHeader(code, context);
 
 				var usings = new List<string>
 				{
@@ -1056,6 +1070,9 @@ namespace Facility.CodeGen.CSharp
 		}
 
 		private string RenderNonNullableFieldType(ServiceTypeInfo fieldType) => RenderNullableFieldType(fieldType).TrimEnd('?');
+
+		private string RenderNullableReferenceFieldType(ServiceTypeInfo fieldType) =>
+			UseNullableReferences ? (RenderNonNullableFieldType(fieldType) + "?") : RenderNullableFieldType(fieldType);
 
 		private string RenderNullableFieldType(ServiceTypeInfo fieldType)
 		{
@@ -1093,6 +1110,20 @@ namespace Facility.CodeGen.CSharp
 				throw new NotSupportedException("Unknown field type " + fieldType.Kind);
 			}
 		}
+
+		private void WriteFileHeader(CodeWriter code, Context context)
+		{
+			CSharpUtility.WriteFileHeader(code, context.GeneratorName);
+
+			if (UseNullableReferences)
+				code.WriteLine("#nullable enable");
+		}
+
+		private string NullableReference(string value) => $"{value}{NullableReferenceSuffix}";
+
+		private string NullableReferenceSuffix => UseNullableReferences ? "?" : "";
+
+		private string NullableReferenceBang => UseNullableReferences ? "!" : "";
 
 		private sealed class Context
 		{

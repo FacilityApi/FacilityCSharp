@@ -32,13 +32,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the path and query parameters from the request.
 		/// </summary>
-		public IReadOnlyDictionary<string, string>? GetUriParameters(TRequest request) =>
+		public IReadOnlyDictionary<string, string?>? GetUriParameters(TRequest request) =>
 			m_getUriParameters?.Invoke(request);
 
 		/// <summary>
 		/// Writes the path and query parameters to the request.
 		/// </summary>
-		public TRequest SetUriParameters(TRequest request, IReadOnlyDictionary<string, string> uriParameters) =>
+		public TRequest SetUriParameters(TRequest request, IReadOnlyDictionary<string, string?> uriParameters) =>
 			m_setUriParameters?.Invoke(request, uriParameters) ?? request;
 
 		/// <summary>
@@ -55,13 +55,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the headers from the request.
 		/// </summary>
-		public IReadOnlyDictionary<string, string>? GetRequestHeaders(TRequest request) =>
+		public IReadOnlyDictionary<string, string?>? GetRequestHeaders(TRequest request) =>
 			m_getRequestHeaders?.Invoke(request);
 
 		/// <summary>
 		/// Writes the headers to the request.
 		/// </summary>
-		public TRequest SetRequestHeaders(TRequest request, IReadOnlyDictionary<string, string> requestHeaders) =>
+		public TRequest SetRequestHeaders(TRequest request, IReadOnlyDictionary<string, string?> requestHeaders) =>
 			m_setRequestHeaders?.Invoke(request, requestHeaders) ?? request;
 
 		/// <summary>
@@ -78,13 +78,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Extracts the headers from the response.
 		/// </summary>
-		public IReadOnlyDictionary<string, string>? GetResponseHeaders(TResponse response) =>
+		public IReadOnlyDictionary<string, string?>? GetResponseHeaders(TResponse response) =>
 			m_getResponseHeaders?.Invoke(response);
 
 		/// <summary>
 		/// Writes the headers to the response.
 		/// </summary>
-		public TResponse SetResponseHeaders(TResponse response, IReadOnlyDictionary<string, string> responseHeaders) =>
+		public TResponse SetResponseHeaders(TResponse response, IReadOnlyDictionary<string, string?> responseHeaders) =>
 			m_setResponseHeaders?.Invoke(response, responseHeaders) ?? response;
 
 		/// <summary>
@@ -110,12 +110,12 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the path and query parameters from the request.
 			/// </summary>
-			public Func<TRequest, IReadOnlyDictionary<string, string>>? GetUriParameters { get; set; }
+			public Func<TRequest, IReadOnlyDictionary<string, string?>>? GetUriParameters { get; set; }
 
 			/// <summary>
 			/// Writes the path and query parameters to the request.
 			/// </summary>
-			public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest>? SetUriParameters { get; set; }
+			public Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? SetUriParameters { get; set; }
 
 			/// <summary>
 			/// The type of the request body, if any.
@@ -125,17 +125,17 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the HTTP request content body from the request.
 			/// </summary>
-			public Func<TRequest, object>? GetRequestBody { get; set; }
+			public Func<TRequest, object?>? GetRequestBody { get; set; }
 
 			/// <summary>
 			/// Extracts the headers from the request.
 			/// </summary>
-			public Func<TRequest, IReadOnlyDictionary<string, string>>? GetRequestHeaders { get; set; }
+			public Func<TRequest, IReadOnlyDictionary<string, string?>>? GetRequestHeaders { get; set; }
 
 			/// <summary>
 			/// Writes the headers to the request.
 			/// </summary>
-			public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest>? SetRequestHeaders { get; set; }
+			public Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? SetRequestHeaders { get; set; }
 
 			/// <summary>
 			/// Creates a request with an optional body.
@@ -150,12 +150,12 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Extracts the headers from the response.
 			/// </summary>
-			public Func<TResponse, IReadOnlyDictionary<string, string>>? GetResponseHeaders { get; set; }
+			public Func<TResponse, IReadOnlyDictionary<string, string?>>? GetResponseHeaders { get; set; }
 
 			/// <summary>
 			/// Writes the headers to the response.
 			/// </summary>
-			public Func<TResponse, IReadOnlyDictionary<string, string>, TResponse>? SetResponseHeaders { get; set; }
+			public Func<TResponse, IReadOnlyDictionary<string, string?>, TResponse>? SetResponseHeaders { get; set; }
 
 			/// <summary>
 			/// Builds the mapping.
@@ -181,13 +181,13 @@ namespace Facility.Core.Http
 		}
 
 		readonly Func<TRequest, ServiceResult>? m_validateRequest;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string>>? m_getUriParameters;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string>, TRequest>? m_setUriParameters;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string>>? m_getRequestHeaders;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string>, TRequest>? m_setRequestHeaders;
-		readonly Func<TRequest, object>? m_getRequestBody;
+		readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getUriParameters;
+		readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setUriParameters;
+		readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getRequestHeaders;
+		readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setRequestHeaders;
+		readonly Func<TRequest, object?>? m_getRequestBody;
 		readonly Func<object?, TRequest>? m_createRequest;
-		readonly Func<TResponse, IReadOnlyDictionary<string, string>>? m_getResponseHeaders;
-		readonly Func<TResponse, IReadOnlyDictionary<string, string>, TResponse>? m_setResponseHeaders;
+		readonly Func<TResponse, IReadOnlyDictionary<string, string?>>? m_getResponseHeaders;
+		readonly Func<TResponse, IReadOnlyDictionary<string, string?>, TResponse>? m_setResponseHeaders;
 	}
 }

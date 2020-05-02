@@ -90,13 +90,13 @@ namespace Facility.Core.Http
 			{
 				var request = mapping.CreateRequest(requestBody);
 
-				var uriParameters = new Dictionary<string, string>();
+				var uriParameters = new Dictionary<string, string?>();
 				foreach (var queryParameter in ParseQueryString(httpRequest.RequestUri.Query))
 					uriParameters[queryParameter.Key] = queryParameter.Value[0];
 				foreach (var pathParameter in pathParameters)
 					uriParameters[pathParameter.Key] = pathParameter.Value;
 				request = mapping.SetUriParameters(request, uriParameters);
-				request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers));
+				request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers)!);
 
 				context.Request = request;
 

@@ -93,27 +93,27 @@ namespace Facility.Core
 		/// <summary>
 		/// Attempts to parse a Boolean.
 		/// </summary>
-		public static bool? TryParseBoolean(string text) => bool.TryParse(text, out var value) ? value : default(bool?);
+		public static bool? TryParseBoolean(string? text) => bool.TryParse(text, out var value) ? value : default(bool?);
 
 		/// <summary>
 		/// Attempts to parse an Int32.
 		/// </summary>
-		public static int? TryParseInt32(string text) => int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(int?);
+		public static int? TryParseInt32(string? text) => int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(int?);
 
 		/// <summary>
 		/// Attempts to parse an Int64.
 		/// </summary>
-		public static long? TryParseInt64(string text) => long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(long?);
+		public static long? TryParseInt64(string? text) => long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(long?);
 
 		/// <summary>
 		/// Attempts to parse a Double.
 		/// </summary>
-		public static double? TryParseDouble(string text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(double?);
+		public static double? TryParseDouble(string? text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(double?);
 
 		/// <summary>
 		/// Attempts to parse a Decimal.
 		/// </summary>
-		public static decimal? TryParseDecimal(string text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
+		public static decimal? TryParseDecimal(string? text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
 
 		private static class EquivalenceComparerCache<T>
 		{

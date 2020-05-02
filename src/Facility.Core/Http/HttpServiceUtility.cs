@@ -29,7 +29,7 @@ namespace Facility.Core.Http
 
 		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers) => new DictionaryFromHeaders(headers);
 
-		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string>>? headers)
+		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string?>>? headers)
 		{
 			if (headers != null)
 			{

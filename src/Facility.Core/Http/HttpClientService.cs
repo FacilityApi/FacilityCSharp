@@ -98,7 +98,7 @@ namespace Facility.Core.Http
 
 				// create the response DTO
 				var response = responseMapping.CreateResponse(responseBody);
-				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers));
+				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers)!);
 				return ServiceResult.Success(response);
 			}
 			catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
@@ -168,7 +168,7 @@ namespace Facility.Core.Http
 			return httpResponse;
 		}
 
-		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string>>? uriParameters, IEnumerable<KeyValuePair<string, string>>? requestHeaders)
+		private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string?>>? uriParameters, IEnumerable<KeyValuePair<string, string?>>? requestHeaders)
 		{
 			string url = m_baseUrl + relativeUrlPattern.TrimStart('/');
 			if (uriParameters != null)
@@ -183,7 +183,7 @@ namespace Facility.Core.Http
 			return ServiceResult.Success(requestMessage);
 		}
 
-		private static string GetUrlFromPattern(string url, IEnumerable<KeyValuePair<string, string>> parameters)
+		private static string GetUrlFromPattern(string url, IEnumerable<KeyValuePair<string, string?>> parameters)
 		{
 			var hasQuery = url.IndexOf('?') != -1;
 
