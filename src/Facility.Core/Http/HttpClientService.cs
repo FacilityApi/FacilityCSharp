@@ -22,6 +22,7 @@ namespace Facility.Core.Http
 			m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
+			m_skipRequestValidation = settings.SkipRequestValidation;
 
 			var baseUri = settings.BaseUri ?? defaultBaseUri;
 			m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
@@ -55,6 +56,10 @@ namespace Facility.Core.Http
 			try
 			{
 				// validate the request DTO
+				if (!m_skipRequestValidation && !request.Validate(out var requestErrorMessage))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(requestErrorMessage));
+
+				// make sure the request DTO doesn't violate any HTTP constraints
 				var requestValidation = mapping.ValidateRequest(request);
 				if (requestValidation.IsFailure)
 					return requestValidation.ToFailure();
@@ -226,11 +231,12 @@ namespace Facility.Core.Http
 			return Task.FromResult(task.GetAwaiter().GetResult());
 		}
 
-		static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
+		private static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
-		readonly HttpClient m_httpClient;
-		readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
-		readonly bool m_synchronous;
-		readonly string m_baseUrl;
+		private readonly HttpClient m_httpClient;
+		private readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
+		private readonly bool m_synchronous;
+		private readonly bool m_skipRequestValidation;
+		private readonly string m_baseUrl;
 	}
 }

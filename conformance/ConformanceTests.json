@@ -62,7 +62,7 @@
       "request": {},
       "error": {
         "code": "InvalidRequest",
-        "message": "The request field 'widget' is required."
+        "message": "The field 'widget' is required."
       }
     },
     {
@@ -473,6 +473,38 @@
       "response": {
         "header": "string",
         "empty": true
+      }
+    },
+    {
+      "test": "requiredSuccess",
+      "method": "required",
+      "request": {
+        "query": "string",
+        "normal": "string"
+      },
+      "response": {
+      }
+    },
+    {
+      "test": "requiredNoQuery",
+      "method": "required",
+      "request": {
+        "normal": "string"
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "The field 'query' is required."
+      }
+    },
+    {
+      "test": "requiredNoNormal",
+      "method": "required",
+      "request": {
+        "query": "string"
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "The field 'normal' is required."
       }
     }
   ]

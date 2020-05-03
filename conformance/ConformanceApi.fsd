@@ -58,6 +58,7 @@ service ConformanceApi
 	method getWidget
 	{
 		/// The widget ID.
+		[required]
 		id: int32;
 
 		/// Don't get the widget if it has this ETag.
@@ -106,7 +107,7 @@ service ConformanceApi
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
-		[http(from: body)]
+		[http(from: body), required]
 		ids: int32[];
 	}:
 	{
@@ -198,6 +199,14 @@ service ConformanceApi
 		[http(from: normal)] normal: string;
 		[http(from: body, code: 202)] body: object;
 		[http(from: body, code: 204)] empty: boolean;
+	}
+
+	method required
+	{
+		[http(from: query), required] query: string;
+		[required] normal: string;
+	}:
+	{
 	}
 
 	data Any

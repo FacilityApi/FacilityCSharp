@@ -8,6 +8,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The specified request field is required.
 		/// </summary>
-		public static ServiceErrorDto CreateRequestFieldRequired(string fieldName) => CreateInvalidRequest($"The request field '{fieldName}' is required.");
+		public static ServiceErrorDto CreateRequestFieldRequired(string fieldName) =>
+			CreateInvalidRequest(ServiceDataUtility.GetRequiredFieldErrorMessage(fieldName));
 	}
 }

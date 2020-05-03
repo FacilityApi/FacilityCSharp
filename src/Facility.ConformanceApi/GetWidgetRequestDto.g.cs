@@ -42,5 +42,22 @@ namespace Facility.ConformanceApi
 				Id == other.Id &&
 				IfNotETag == other.IfNotETag;
 		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			if (Id == null)
+				return ServiceDataUtility.GetRequiredFieldErrorMessage("id");
+
+			return null;
+		}
 	}
 }

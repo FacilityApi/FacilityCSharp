@@ -312,7 +312,7 @@ namespace Facility.CodeGen.CSharp
 									for (var fieldIndex = 0; fieldIndex < fieldInfos.Count; fieldIndex++)
 									{
 										var fieldInfo = fieldInfos[fieldIndex];
-										string propertyName = context.GetFieldPropertyName(fieldInfo);
+										var propertyName = context.GetFieldPropertyName(fieldInfo);
 										var fieldType = context.GetFieldType(fieldInfo);
 										var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType!.Kind);
 										code.Write(areEquivalentMethodName != null ?
@@ -321,6 +321,35 @@ namespace Facility.CodeGen.CSharp
 										code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
 									}
 								}
+							}
+						}
+
+						var requiredFields = fieldInfos.Where(x => x.IsRequired).ToList();
+						if (requiredFields.Count != 0)
+						{
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, "Validates the DTO.");
+							code.WriteLine($"public override bool Validate(out string{NullableReferenceSuffix} errorMessage)");
+							using (code.Block())
+							{
+								code.WriteLine("errorMessage = GetValidationErrorMessage();");
+								code.WriteLine("return errorMessage == null;");
+							}
+
+							code.WriteLine();
+							code.WriteLine($"private string{NullableReferenceSuffix} GetValidationErrorMessage()");
+							using (code.Block())
+							{
+								foreach (var fieldInfo in requiredFields)
+								{
+									var propertyName = context.GetFieldPropertyName(fieldInfo);
+									code.WriteLine($"if ({propertyName} == null)");
+									using (code.Indent())
+										code.WriteLine($"return ServiceDataUtility.GetRequiredFieldErrorMessage(\"{fieldInfo.Name}\");");
+								}
+
+								code.WriteLine();
+								code.WriteLine("return null;");
 							}
 						}
 					}

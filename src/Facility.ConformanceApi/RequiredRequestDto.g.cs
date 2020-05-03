@@ -11,30 +11,30 @@ using Newtonsoft.Json.Linq;
 namespace Facility.ConformanceApi
 {
 	/// <summary>
-	/// Request for GetWidgetBatch.
+	/// Request for Required.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class GetWidgetBatchRequestDto : ServiceDto<GetWidgetBatchRequestDto>
+	public sealed partial class RequiredRequestDto : ServiceDto<RequiredRequestDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public GetWidgetBatchRequestDto()
+		public RequiredRequestDto()
 		{
 		}
 
-		/// <summary>
-		/// The IDs of the widgets to return.
-		/// </summary>
-		public IReadOnlyList<int>? Ids { get; set; }
+		public string? Query { get; set; }
+
+		public string? Normal { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(GetWidgetBatchRequestDto? other)
+		public override bool IsEquivalentTo(RequiredRequestDto? other)
 		{
 			return other != null &&
-				ServiceDataUtility.AreEquivalentFieldValues(Ids, other.Ids);
+				Query == other.Query &&
+				Normal == other.Normal;
 		}
 
 		/// <summary>
@@ -48,8 +48,10 @@ namespace Facility.ConformanceApi
 
 		private string? GetValidationErrorMessage()
 		{
-			if (Ids == null)
-				return ServiceDataUtility.GetRequiredFieldErrorMessage("ids");
+			if (Query == null)
+				return ServiceDataUtility.GetRequiredFieldErrorMessage("query");
+			if (Normal == null)
+				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
 
 			return null;
 		}

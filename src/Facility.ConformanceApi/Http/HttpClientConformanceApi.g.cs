@@ -74,5 +74,8 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, CancellationToken cancellationToken) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.MixedMapping, request, cancellationToken);
+
+		public Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.RequiredMapping, request, cancellationToken);
 	}
 }

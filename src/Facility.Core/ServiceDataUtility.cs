@@ -115,6 +115,11 @@ namespace Facility.Core
 		/// </summary>
 		public static decimal? TryParseDecimal(string? text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
 
+		/// <summary>
+		/// Attempts to parse a Decimal.
+		/// </summary>
+		public static string GetRequiredFieldErrorMessage(string fieldName) => $"The field '{fieldName}' is required.";
+
 		private static class EquivalenceComparerCache<T>
 		{
 			public static readonly IEqualityComparer<T> Instance = CreateInstance();

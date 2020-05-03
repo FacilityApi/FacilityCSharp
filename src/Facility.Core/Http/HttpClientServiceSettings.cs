@@ -33,5 +33,10 @@ namespace Facility.Core.Http
 		/// True to call services synchronously, allowing tasks to be safely blocked.
 		/// </summary>
 		public bool Synchronous { get; set; }
+
+		/// <summary>
+		/// True to prevent the validation of request DTOs before sending.
+		/// </summary>
+		public bool SkipRequestValidation { get; set; }
 	}
 }

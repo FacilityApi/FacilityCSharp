@@ -14,6 +14,17 @@ namespace Facility.Core
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public abstract bool IsEquivalentTo(ServiceDto? other);
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		/// <param name="errorMessage">The error message if the DTO is invalid, <c>null</c> otherwise.</param>
+		/// <returns>True if the DTO is valid.</returns>
+		public virtual bool Validate(out string? errorMessage)
+		{
+			errorMessage = null;
+			return true;
+		}
 	}
 
 	/// <summary>

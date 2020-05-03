@@ -548,5 +548,41 @@ namespace Facility.ConformanceApi.Http
 					return response;
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<RequiredRequestDto, RequiredResponseDto> RequiredMapping =
+			new HttpMethodMapping<RequiredRequestDto, RequiredResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/required",
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "query", request.Query },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("query", out var queryParameterQuery);
+					request.Query = queryParameterQuery;
+					return request;
+				},
+				RequestBodyType = typeof(RequiredRequestDto),
+				GetRequestBody = request =>
+					new RequiredRequestDto
+					{
+						Normal = request.Normal,
+					},
+				CreateRequest = body =>
+					new RequiredRequestDto
+					{
+						Normal = ((RequiredRequestDto) body!).Normal,
+					},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<RequiredResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+			}.Build();
 	}
 }

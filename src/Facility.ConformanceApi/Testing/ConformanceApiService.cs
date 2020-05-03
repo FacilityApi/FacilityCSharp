@@ -65,6 +65,10 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, CancellationToken cancellationToken) =>
 			Task.FromResult(Execute<MixedResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken) =>
+			Task.FromResult(Execute<RequiredResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

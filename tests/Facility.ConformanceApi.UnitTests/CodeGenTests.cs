@@ -14,7 +14,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public void GenerateConformanceApi()
 		{
 			string fsdText;
-			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceApi.fsd")))
+			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceApi.fsd")!))
 				fsdText = fsdTextReader.ReadToEnd();
 
 			var parser = new FsdParser();
