@@ -53,7 +53,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widget' is invalid: The field 'name' is required."
+        "message": "'widget' is invalid: 'name' is required."
       }
     },
     {
@@ -62,7 +62,7 @@
       "request": {},
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widget' is required."
+        "message": "'widget' is required."
       }
     },
     {
@@ -494,7 +494,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'query' is required."
+        "message": "'query' is required."
       }
     },
     {
@@ -505,7 +505,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'normal' is required."
+        "message": "'normal' is required."
       }
     },
     {
@@ -536,7 +536,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widget' is invalid: The field 'name' is required."
+        "message": "'widget' is invalid: 'name' is required."
       }
     },
     {
@@ -549,7 +549,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgets[1]' is invalid: The field 'name' is required."
+        "message": "'widgets[1]' is invalid: 'name' is required."
       }
     },
     {
@@ -562,7 +562,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetMatrix[0][0]' is invalid: The field 'name' is required."
+        "message": "'widgetMatrix[0][0]' is invalid: 'name' is required."
       }
     },
     {
@@ -575,7 +575,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetResult' is invalid: The field 'name' is required."
+        "message": "'widgetResult' is invalid: 'name' is required."
       }
     },
     {
@@ -588,7 +588,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetResults[0]' is invalid: The field 'name' is required."
+        "message": "'widgetResults[0]' is invalid: 'name' is required."
       }
     },
     {
@@ -597,11 +597,11 @@
       "request": {
         "query": "string",
         "normal": "string",
-        "widgetMap": { "name": {} }
+        "widgetMap": { "key": {} }
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetMap.name' is invalid: The field 'name' is required."
+        "message": "'widgetMap.key' is invalid: 'name' is required."
       }
     },
     {
@@ -614,7 +614,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'hasWidget' is invalid: The field 'widget' is invalid: The field 'name' is required."
+        "message": "'hasWidget' is invalid: 'widget' is invalid: 'name' is required."
       }
     }
   ]

@@ -218,9 +218,9 @@ namespace Facility.ConformanceApi.UnitTests
 		public void RequiredWidgetMapNameMissing()
 		{
 			var dto = CreateRequiredRequest();
-			dto.WidgetMap = new Dictionary<string, WidgetDto> { { "name", new WidgetDto() } };
+			dto.WidgetMap = new Dictionary<string, WidgetDto> { { "key", new WidgetDto() } };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap.name", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap.key", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]

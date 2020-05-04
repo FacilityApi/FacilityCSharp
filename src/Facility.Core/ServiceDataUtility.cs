@@ -136,12 +136,12 @@ namespace Facility.Core
 		/// <summary>
 		/// Returns the required field error message.
 		/// </summary>
-		public static string GetRequiredFieldErrorMessage(string fieldName) => $"The field '{fieldName}' is required.";
+		public static string GetRequiredFieldErrorMessage(string fieldName) => $"'{fieldName}' is required.";
 
 		/// <summary>
 		/// Returns the invalid field error message prefix.
 		/// </summary>
-		public static string GetInvalidFieldErrorMessage(string fieldName, string errorMessage) => $"The field '{fieldName}' is invalid: {errorMessage}";
+		public static string GetInvalidFieldErrorMessage(string fieldName, string errorMessage) => $"'{fieldName}' is invalid: {errorMessage}";
 
 		private static class EquivalenceComparerCache<T>
 		{
