@@ -1,6 +1,6 @@
 # Version History
 
-### 2.1.0
+### 2.2.1
 
 * Support nullable references.
 * Use `--nullable` to generate code with nullable references.
