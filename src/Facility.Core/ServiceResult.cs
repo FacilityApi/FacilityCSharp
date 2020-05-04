@@ -93,6 +93,20 @@ namespace Facility.Core
 		}
 
 		/// <summary>
+		/// Validates the server result value.
+		/// </summary>
+		public bool Validate(out string? errorMessage)
+		{
+			if (IsFailure)
+			{
+				errorMessage = null;
+				return true;
+			}
+
+			return ValidateInternalValue(out errorMessage);
+		}
+
+		/// <summary>
 		/// Render result as a string.
 		/// </summary>
 		public override string ToString() => IsSuccess ? "<Success>" : $"<Failure={Error}>";
@@ -214,6 +228,12 @@ namespace Facility.Core
 		internal virtual object? InternalValue => throw new InvalidCastException("A successful result without a value cannot be cast.");
 
 		internal virtual bool IsInternalValueEquivalent(ServiceResult result) => false;
+
+		internal virtual bool ValidateInternalValue(out string? errorMessage)
+		{
+			errorMessage = null;
+			return true;
+		}
 	}
 
 	/// <summary>
@@ -286,6 +306,11 @@ namespace Facility.Core
 				return false;
 
 			return ServiceDataUtility.AreEquivalentFieldValues(m_value, otherOfT.m_value);
+		}
+
+		internal override bool ValidateInternalValue(out string? errorMessage)
+		{
+			return ServiceDataUtility.ValidateFieldValue(m_value, out errorMessage);
 		}
 
 		private ServiceResult(ServiceErrorDto? error)

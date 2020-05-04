@@ -86,6 +86,15 @@ namespace Facility.Core
 		public static bool AreEquivalentFieldValues<T>(T x, T y) => EquivalenceComparerCache<T>.Instance.Equals(x, y);
 
 		/// <summary>
+		/// Validates the field value.
+		/// </summary>
+		public static bool ValidateFieldValue<T>(T value, out string? errorMessage)
+		{
+			errorMessage = ValidatorCache<T>.Instance.GetErrorMessage(value);
+			return errorMessage is null;
+		}
+
+		/// <summary>
 		/// Clones the data element.
 		/// </summary>
 		public static T Clone<T>(T value) => value is null ? default! : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
@@ -196,6 +205,124 @@ namespace Facility.Core
 			where T : IReadOnlyDictionary<string, TValue>
 		{
 			public override bool Equals(T x, T y) => AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
+		}
+
+		private interface IValidator<in T>
+		{
+			string? GetErrorMessage(T value);
+		}
+
+		private static class ValidatorCache<T>
+		{
+			public static readonly IValidator<T> Instance = CreateInstance();
+
+			private static IValidator<T> CreateInstance()
+			{
+				var type = typeof(T);
+				var typeInfo = type.GetTypeInfo();
+
+				if (Nullable.GetUnderlyingType(type) != null || typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return new AlwaysValidValidator<T>();
+
+				if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceDtoValidator<>).MakeGenericType(type));
+
+				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
+					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceResultValidator<>).MakeGenericType(type));
+
+				if (type == typeof(JObject) || type == typeof(byte[]))
+					return new AlwaysValidValidator<T>();
+
+				var interfaces = new[] { type }.Concat(typeInfo.ImplementedInterfaces).ToList();
+
+				var mapInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
+					x.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>) && x.GetTypeInfo().GenericTypeArguments[0] == typeof(string));
+				if (mapInterface != null)
+				{
+					var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
+					var valueType = genericTypeArguments[1];
+					return (IValidator<T>) Activator.CreateInstance(typeof(MapValidator<,>).MakeGenericType(type, valueType));
+				}
+
+				var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
+					x.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+				if (arrayInterface != null)
+				{
+					var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
+					return (IValidator<T>) Activator.CreateInstance(typeof(ArrayValidator<,>).MakeGenericType(type, itemType));
+				}
+
+				throw new InvalidOperationException($"Type not supported for validation: {typeof(T)}");
+			}
+		}
+
+		private sealed class AlwaysValidValidator<T> : IValidator<T>
+		{
+			public string? GetErrorMessage(T value) => null;
+		}
+
+		private sealed class ServiceDtoValidator<T> : IValidator<T>
+			where T : ServiceDto
+		{
+			public string? GetErrorMessage(T value)
+			{
+				if (value is null)
+					return null;
+
+				value.Validate(out var errorMessage);
+				return errorMessage;
+			}
+		}
+
+		private sealed class ServiceResultValidator<T> : IValidator<T>
+			where T : ServiceResult
+		{
+			public string? GetErrorMessage(T value)
+			{
+				if (value is null)
+					return null;
+
+				value.Validate(out var errorMessage);
+				return errorMessage;
+			}
+		}
+
+		private sealed class ArrayValidator<T, TItem> : IValidator<T>
+			where T : IReadOnlyList<TItem>
+		{
+			public string? GetErrorMessage(T value)
+			{
+				if (value is null)
+					return null;
+
+				var itemValidator = ValidatorCache<TItem>.Instance;
+				foreach (var item in value)
+				{
+					if (itemValidator.GetErrorMessage(item) is string errorMessage)
+						return errorMessage;
+				}
+
+				return null;
+			}
+		}
+
+		private sealed class MapValidator<T, TValue> : IValidator<T>
+			where T : IReadOnlyDictionary<string, TValue>
+		{
+			public string? GetErrorMessage(T value)
+			{
+				if (value is null)
+					return null;
+
+				var itemValidator = ValidatorCache<TValue>.Instance;
+				foreach (var keyValuePair in value)
+				{
+					if (itemValidator.GetErrorMessage(keyValuePair.Value) is string errorMessage)
+						return errorMessage;
+				}
+
+				return null;
+			}
 		}
 	}
 }
