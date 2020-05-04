@@ -15,6 +15,7 @@ public sealed class CreateWidgetResponseDto : ServiceDto<CreateWidgetResponseDto
 | [Url](CreateWidgetResponseDto/Url.md) { get; set; } | The URL of the created widget. |
 | [Widget](CreateWidgetResponseDto/Widget.md) { get; set; } | The created widget. |
 | override [IsEquivalentTo](CreateWidgetResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [Validate](CreateWidgetResponseDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also
 

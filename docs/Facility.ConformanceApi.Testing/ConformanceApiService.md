@@ -22,6 +22,7 @@ public sealed class ConformanceApiService : IConformanceApi
 | [MirrorFieldsAsync](ConformanceApiService/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](ConformanceApiService/MirrorHeadersAsync.md)(…) |  |
 | [MixedAsync](ConformanceApiService/MixedAsync.md)(…) |  |
+| [RequiredAsync](ConformanceApiService/RequiredAsync.md)(…) |  |
 
 ## See Also
 

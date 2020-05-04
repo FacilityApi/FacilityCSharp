@@ -22,6 +22,7 @@ public sealed class HttpClientConformanceApi : HttpClientService, IConformanceAp
 | [MirrorFieldsAsync](HttpClientConformanceApi/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](HttpClientConformanceApi/MirrorHeadersAsync.md)(…) |  |
 | [MixedAsync](HttpClientConformanceApi/MixedAsync.md)(…) |  |
+| [RequiredAsync](HttpClientConformanceApi/RequiredAsync.md)(…) |  |
 
 ## See Also
 

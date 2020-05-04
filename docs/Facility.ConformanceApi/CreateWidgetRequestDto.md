@@ -13,6 +13,7 @@ public sealed class CreateWidgetRequestDto : ServiceDto<CreateWidgetRequestDto>
 | [CreateWidgetRequestDto](CreateWidgetRequestDto/CreateWidgetRequestDto.md)() | Creates an instance. |
 | [Widget](CreateWidgetRequestDto/Widget.md) { get; set; } | The widget to create. |
 | override [IsEquivalentTo](CreateWidgetRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [Validate](CreateWidgetRequestDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also
 

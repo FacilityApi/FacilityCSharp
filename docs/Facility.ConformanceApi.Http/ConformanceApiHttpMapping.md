@@ -21,6 +21,7 @@ public static class ConformanceApiHttpMapping
 | static readonly [MirrorFieldsMapping](ConformanceApiHttpMapping/MirrorFieldsMapping.md) |  |
 | static readonly [MirrorHeadersMapping](ConformanceApiHttpMapping/MirrorHeadersMapping.md) |  |
 | static readonly [MixedMapping](ConformanceApiHttpMapping/MixedMapping.md) |  |
+| static readonly [RequiredMapping](ConformanceApiHttpMapping/RequiredMapping.md) |  |
 
 ## See Also
 

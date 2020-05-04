@@ -18,11 +18,14 @@ public static class ServiceDataUtility
 | static [AreEquivalentObjects](ServiceDataUtility/AreEquivalentObjects.md)(…) | True if the objects are equivalent. |
 | static [AreEquivalentResults](ServiceDataUtility/AreEquivalentResults.md)(…) | True if the results are equivalent. |
 | static [Clone&lt;T&gt;](ServiceDataUtility/Clone.md)(…) | Clones the data element. |
+| static [GetInvalidFieldErrorMessage](ServiceDataUtility/GetInvalidFieldErrorMessage.md)(…) | Returns the invalid field error message prefix. |
+| static [GetRequiredFieldErrorMessage](ServiceDataUtility/GetRequiredFieldErrorMessage.md)(…) | Returns the required field error message. |
 | static [TryParseBoolean](ServiceDataUtility/TryParseBoolean.md)(…) | Attempts to parse a Boolean. |
 | static [TryParseDecimal](ServiceDataUtility/TryParseDecimal.md)(…) | Attempts to parse a Decimal. |
 | static [TryParseDouble](ServiceDataUtility/TryParseDouble.md)(…) | Attempts to parse a Double. |
 | static [TryParseInt32](ServiceDataUtility/TryParseInt32.md)(…) | Attempts to parse an Int32. |
 | static [TryParseInt64](ServiceDataUtility/TryParseInt64.md)(…) | Attempts to parse an Int64. |
+| static [ValidateFieldValue&lt;T&gt;](ServiceDataUtility/ValidateFieldValue.md)(…) | Validates the field value. (2 methods) |
 
 ## See Also
 

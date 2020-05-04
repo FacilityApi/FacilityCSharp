@@ -19,6 +19,7 @@ public class ServiceResult
 | [IsEquivalentTo](ServiceResult/IsEquivalentTo.md)(…) | Check service results for equivalence. |
 | [ToFailure](ServiceResult/ToFailure.md)() | The service result as a failure; throws if it is a success. |
 | override [ToString](ServiceResult/ToString.md)() | Render result as a string. |
+| [Validate](ServiceResult/Validate.md)(…) | Validates the server result value. |
 | [Verify](ServiceResult/Verify.md)() | Throws a ServiceException if the result is an error. |
 | static [Failure](ServiceResult/Failure.md)(…) | Creates a failed result. |
 | static [Success&lt;T&gt;](ServiceResult/Success.md)(…) | Creates a successful result. |

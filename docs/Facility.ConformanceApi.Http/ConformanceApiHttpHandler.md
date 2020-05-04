@@ -23,6 +23,7 @@ public sealed class ConformanceApiHttpHandler : ServiceHttpHandler
 | [TryHandleMirrorFieldsAsync](ConformanceApiHttpHandler/TryHandleMirrorFieldsAsync.md)(…) |  |
 | [TryHandleMirrorHeadersAsync](ConformanceApiHttpHandler/TryHandleMirrorHeadersAsync.md)(…) |  |
 | [TryHandleMixedAsync](ConformanceApiHttpHandler/TryHandleMixedAsync.md)(…) |  |
+| [TryHandleRequiredAsync](ConformanceApiHttpHandler/TryHandleRequiredAsync.md)(…) |  |
 
 ## Protected Members
 

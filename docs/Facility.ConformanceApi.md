@@ -26,6 +26,7 @@
 | class [GetWidgetResponseDto](Facility.ConformanceApi/GetWidgetResponseDto.md) | Response for GetWidget. |
 | class [GetWidgetsRequestDto](Facility.ConformanceApi/GetWidgetsRequestDto.md) | Request for GetWidgets. |
 | class [GetWidgetsResponseDto](Facility.ConformanceApi/GetWidgetsResponseDto.md) | Response for GetWidgets. |
+| class [HasWidgetDto](Facility.ConformanceApi/HasWidgetDto.md) |  |
 | interface [IConformanceApi](Facility.ConformanceApi/IConformanceApi.md) | API for a Facility test server. |
 | class [MirrorFieldsRequestDto](Facility.ConformanceApi/MirrorFieldsRequestDto.md) | Request for MirrorFields. |
 | class [MirrorFieldsResponseDto](Facility.ConformanceApi/MirrorFieldsResponseDto.md) | Response for MirrorFields. |
@@ -33,6 +34,8 @@
 | class [MirrorHeadersResponseDto](Facility.ConformanceApi/MirrorHeadersResponseDto.md) | Response for MirrorHeaders. |
 | class [MixedRequestDto](Facility.ConformanceApi/MixedRequestDto.md) | Request for Mixed. |
 | class [MixedResponseDto](Facility.ConformanceApi/MixedResponseDto.md) | Response for Mixed. |
+| class [RequiredRequestDto](Facility.ConformanceApi/RequiredRequestDto.md) | Request for Required. |
+| class [RequiredResponseDto](Facility.ConformanceApi/RequiredResponseDto.md) | Response for Required. |
 | class [WidgetDto](Facility.ConformanceApi/WidgetDto.md) | A widget. |
 
 ## Facility.ConformanceApi.Http namespace

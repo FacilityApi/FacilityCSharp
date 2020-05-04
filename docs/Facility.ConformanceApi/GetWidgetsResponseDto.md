@@ -13,6 +13,7 @@ public sealed class GetWidgetsResponseDto : ServiceDto<GetWidgetsResponseDto>
 | [GetWidgetsResponseDto](GetWidgetsResponseDto/GetWidgetsResponseDto.md)() | Creates an instance. |
 | [Widgets](GetWidgetsResponseDto/Widgets.md) { get; set; } | The widgets. |
 | override [IsEquivalentTo](GetWidgetsResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [Validate](GetWidgetsResponseDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also
 

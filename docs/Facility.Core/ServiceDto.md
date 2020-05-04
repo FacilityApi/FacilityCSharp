@@ -12,6 +12,7 @@ public abstract class ServiceDto
 | --- | --- |
 | abstract [IsEquivalentTo](ServiceDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
 | override [ToString](ServiceDto/ToString.md)() | Returns the DTO as JSON. |
+| virtual [Validate](ServiceDto/Validate.md)(…) | Validates the DTO. |
 
 ## Protected Members
 

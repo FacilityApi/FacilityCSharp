@@ -34,6 +34,7 @@ public static class ServiceErrors
 | static [CreateNotModified](ServiceErrors/CreateNotModified.md)(…) | The specified item was not modified. |
 | static [CreateRequestFieldRequired](ServiceErrors/CreateRequestFieldRequired.md)(…) | The specified request field is required. |
 | static [CreateRequestTooLarge](ServiceErrors/CreateRequestTooLarge.md)(…) | The request is too large. |
+| static [CreateResponseFieldRequired](ServiceErrors/CreateResponseFieldRequired.md)(…) | The specified response field is required. |
 | static [CreateServiceUnavailable](ServiceErrors/CreateServiceUnavailable.md)(…) | The service is unavailable. |
 | static [CreateTimeout](ServiceErrors/CreateTimeout.md)(…) | The service timed out. |
 | static [CreateTooManyRequests](ServiceErrors/CreateTooManyRequests.md)(…) | The client has made too many requests. |

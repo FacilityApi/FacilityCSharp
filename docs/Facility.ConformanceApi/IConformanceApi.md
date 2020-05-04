@@ -21,6 +21,7 @@ public interface IConformanceApi
 | [MirrorFieldsAsync](IConformanceApi/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](IConformanceApi/MirrorHeadersAsync.md)(…) |  |
 | [MixedAsync](IConformanceApi/MixedAsync.md)(…) |  |
+| [RequiredAsync](IConformanceApi/RequiredAsync.md)(…) |  |
 
 ## See Also
 
