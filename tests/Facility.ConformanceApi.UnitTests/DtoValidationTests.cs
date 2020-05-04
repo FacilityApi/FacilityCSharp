@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -168,9 +169,74 @@ namespace Facility.ConformanceApi.UnitTests
 			result.Should().BeSuccess();
 		}
 
+		[Test]
+		public void RequiredWidgetNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.Widget = new WidgetDto();
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widget", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredWidgetsNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.Widgets = new[] { CreateWidget(), new WidgetDto() };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredWidgetMatrixNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.WidgetMatrix = new[] { new[] { new WidgetDto() } };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredWidgetResultNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.WidgetResult = ServiceResult.Success(new WidgetDto());
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResult", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredWidgetResultsNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.WidgetResults = new[] { ServiceResult.Success(new WidgetDto()) };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredWidgetMapNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.WidgetMap = new Dictionary<string, WidgetDto> { { "name", new WidgetDto() } };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+		}
+
+		[Test]
+		public void RequiredHasWidgetNameMissing()
+		{
+			var dto = CreateRequiredRequest();
+			dto.HasWidget = new HasWidgetDto { Widget = new WidgetDto() };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("hasWidget", ServiceDataUtility.GetInvalidFieldErrorMessage("widget", ServiceDataUtility.GetRequiredFieldErrorMessage("name"))));
+		}
+
 		private static RequiredRequestDto CreateRequiredRequest() => new RequiredRequestDto { Query = "query", Normal = "normal" };
 
 		private static RequiredResponseDto CreateRequiredResponse() => new RequiredResponseDto { Normal = "normal" };
+
+		private static WidgetDto CreateWidget() => new WidgetDto { Name = "name" };
 
 		private static HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 		{
@@ -192,9 +258,10 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private sealed class FakeConformanceApiService : IConformanceApi
 		{
-			public FakeConformanceApiService(RequiredResponseDto? requiredResponse = null)
+			public FakeConformanceApiService(RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
 			{
 				m_requiredResponse = requiredResponse ?? CreateRequiredResponse();
+				m_widgetResponse = widgetResponse ?? CreateWidget();
 			}
 
 			public async Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoAsync(GetApiInfoRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -203,7 +270,7 @@ namespace Facility.ConformanceApi.UnitTests
 
 			public async Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(CreateWidgetRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-			public async Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(new GetWidgetResponseDto { Widget = new WidgetDto() });
+			public async Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(new GetWidgetResponseDto { Widget = ServiceDataUtility.Clone(m_widgetResponse) });
 
 			public async Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 
@@ -222,6 +289,7 @@ namespace Facility.ConformanceApi.UnitTests
 			public async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse));
 
 			private readonly RequiredResponseDto m_requiredResponse;
+			private readonly WidgetDto m_widgetResponse;
 		}
 
 		private sealed class NotFoundHttpHandler : HttpMessageHandler

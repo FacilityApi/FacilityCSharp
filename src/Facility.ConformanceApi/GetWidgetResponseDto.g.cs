@@ -48,5 +48,23 @@ namespace Facility.ConformanceApi
 				ETag == other.ETag &&
 				NotModified == other.NotModified;
 		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			string? errorMessage;
+			if (!ServiceDataUtility.ValidateFieldValue(Widget, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widget", errorMessage!);
+
+			return null;
+		}
 	}
 }

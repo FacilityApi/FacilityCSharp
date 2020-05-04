@@ -124,6 +124,7 @@ service ConformanceApi
 		id: int32;
 
 		/// The name of the widget.
+		[required]
 		name: string;
 	}
 
@@ -205,6 +206,13 @@ service ConformanceApi
 	{
 		[http(from: query), required] query: string;
 		[required] normal: string;
+		widget: Widget;
+		widgets: Widget[];
+		widgetMatrix: Widget[][];
+		widgetResult: result<Widget>;
+		widgetResults: result<Widget>[];
+		widgetMap: map<Widget>;
+		hasWidget: HasWidget;
 	}:
 	{
 		[required] normal: string;
@@ -280,6 +288,11 @@ service ConformanceApi
 		array: result<int32[]>;
 		map: result<map<int32>>;
 		result: result<result<int32>>;
+	}
+
+	data HasWidget
+	{
+		widget: Widget;
 	}
 
 	/// One of three answers.

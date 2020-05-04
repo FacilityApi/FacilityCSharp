@@ -10,37 +10,25 @@ using Newtonsoft.Json.Linq;
 
 namespace Facility.ConformanceApi
 {
-	/// <summary>
-	/// A widget.
-	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public sealed partial class WidgetDto : ServiceDto<WidgetDto>
+	public sealed partial class HasWidgetDto : ServiceDto<HasWidgetDto>
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public WidgetDto()
+		public HasWidgetDto()
 		{
 		}
 
-		/// <summary>
-		/// A unique identifier for the widget.
-		/// </summary>
-		public int? Id { get; set; }
-
-		/// <summary>
-		/// The name of the widget.
-		/// </summary>
-		public string? Name { get; set; }
+		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
-		public override bool IsEquivalentTo(WidgetDto? other)
+		public override bool IsEquivalentTo(HasWidgetDto? other)
 		{
 			return other != null &&
-				Id == other.Id &&
-				Name == other.Name;
+				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget);
 		}
 
 		/// <summary>
@@ -54,8 +42,9 @@ namespace Facility.ConformanceApi
 
 		private string? GetValidationErrorMessage()
 		{
-			if (Name == null)
-				return ServiceDataUtility.GetRequiredFieldErrorMessage("name");
+			string? errorMessage;
+			if (!ServiceDataUtility.ValidateFieldValue(Widget, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widget", errorMessage!);
 
 			return null;
 		}

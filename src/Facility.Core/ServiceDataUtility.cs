@@ -125,9 +125,14 @@ namespace Facility.Core
 		public static decimal? TryParseDecimal(string? text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
 
 		/// <summary>
-		/// Attempts to parse a Decimal.
+		/// Returns the required field error message.
 		/// </summary>
 		public static string GetRequiredFieldErrorMessage(string fieldName) => $"The field '{fieldName}' is required.";
+
+		/// <summary>
+		/// Returns the invalid field error message prefix.
+		/// </summary>
+		public static string GetInvalidFieldErrorMessage(string fieldName, string errorMessage) => $"The field '{fieldName}' is invalid: {errorMessage}";
 
 		private static class EquivalenceComparerCache<T>
 		{

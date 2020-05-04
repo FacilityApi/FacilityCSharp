@@ -27,6 +27,20 @@ namespace Facility.ConformanceApi
 
 		public string? Normal { get; set; }
 
+		public WidgetDto? Widget { get; set; }
+
+		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
+
+		public IReadOnlyList<IReadOnlyList<WidgetDto>>? WidgetMatrix { get; set; }
+
+		public ServiceResult<WidgetDto>? WidgetResult { get; set; }
+
+		public IReadOnlyList<ServiceResult<WidgetDto>>? WidgetResults { get; set; }
+
+		public IReadOnlyDictionary<string, WidgetDto>? WidgetMap { get; set; }
+
+		public HasWidgetDto? HasWidget { get; set; }
+
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
@@ -34,7 +48,14 @@ namespace Facility.ConformanceApi
 		{
 			return other != null &&
 				Query == other.Query &&
-				Normal == other.Normal;
+				Normal == other.Normal &&
+				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Widgets, other.Widgets) &&
+				ServiceDataUtility.AreEquivalentFieldValues(WidgetMatrix, other.WidgetMatrix) &&
+				ServiceDataUtility.AreEquivalentResults(WidgetResult, other.WidgetResult) &&
+				ServiceDataUtility.AreEquivalentFieldValues(WidgetResults, other.WidgetResults) &&
+				ServiceDataUtility.AreEquivalentFieldValues(WidgetMap, other.WidgetMap) &&
+				ServiceDataUtility.AreEquivalentDtos(HasWidget, other.HasWidget);
 		}
 
 		/// <summary>
@@ -52,6 +73,22 @@ namespace Facility.ConformanceApi
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("query");
 			if (Normal == null)
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
+
+			string? errorMessage;
+			if (!ServiceDataUtility.ValidateFieldValue(Widget, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widget", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(Widgets, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetMatrix, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetResult, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResult", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetResults, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetMap, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(HasWidget, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("hasWidget", errorMessage!);
 
 			return null;
 		}

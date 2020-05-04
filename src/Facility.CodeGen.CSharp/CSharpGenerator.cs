@@ -325,7 +325,8 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						var requiredFields = fieldInfos.Where(x => x.IsRequired).ToList();
-						if (requiredFields.Count != 0)
+						var validatableFields = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
+						if (requiredFields.Count != 0 || validatableFields.Count != 0)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Validates the DTO.");
@@ -340,12 +341,29 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine($"private string{NullableReferenceSuffix} GetValidationErrorMessage()");
 							using (code.Block())
 							{
-								foreach (var fieldInfo in requiredFields)
+								if (requiredFields.Count != 0)
 								{
-									var propertyName = context.GetFieldPropertyName(fieldInfo);
-									code.WriteLine($"if ({propertyName} == null)");
-									using (code.Indent())
-										code.WriteLine($"return ServiceDataUtility.GetRequiredFieldErrorMessage(\"{fieldInfo.Name}\");");
+									code.WriteLineSkipOnce();
+									foreach (var fieldInfo in requiredFields)
+									{
+										var propertyName = context.GetFieldPropertyName(fieldInfo);
+										code.WriteLine($"if ({propertyName} == null)");
+										using (code.Indent())
+											code.WriteLine($"return ServiceDataUtility.GetRequiredFieldErrorMessage(\"{fieldInfo.Name}\");");
+									}
+								}
+
+								if (validatableFields.Count != 0)
+								{
+									code.WriteLineSkipOnce();
+									code.WriteLine($"string{NullableReferenceSuffix} errorMessage;");
+									foreach (var fieldInfo in validatableFields)
+									{
+										var propertyName = context.GetFieldPropertyName(fieldInfo);
+										code.WriteLine($"if (!ServiceDataUtility.ValidateFieldValue({propertyName}, out errorMessage))");
+										using (code.Indent())
+											code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", errorMessage{NullableReferenceBang});");
+									}
 								}
 
 								code.WriteLine();
@@ -1161,6 +1179,7 @@ namespace Facility.CodeGen.CSharp
 				m_csharpServiceInfo = csharpServiceInfo;
 				GeneratorName = generatorName;
 				NamespaceName = namespaceName ?? m_csharpServiceInfo.Namespace;
+				m_dtosNeedingValidation = FindDtosNeedingValidation(m_csharpServiceInfo.Service);
 			}
 
 			public string GeneratorName { get; }
@@ -1171,7 +1190,50 @@ namespace Facility.CodeGen.CSharp
 
 			public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => m_csharpServiceInfo.Service.GetFieldType(field) ?? throw new InvalidOperationException("Missing field.");
 
+			public bool NeedsValidation(ServiceTypeInfo type) =>
+				type.Kind == ServiceTypeKind.Dto && m_dtosNeedingValidation.Contains(type.Dto!) ||
+				type.ValueType != null && NeedsValidation(type.ValueType!);
+
+			private static ServiceDtoInfo? TryGetDtoInfo(ServiceTypeInfo? type) =>
+				 type is null ? null : type.Kind == ServiceTypeKind.Dto ? type.Dto! : TryGetDtoInfo(type.ValueType);
+
+			private static HashSet<ServiceDtoInfo> FindDtosNeedingValidation(ServiceInfo service)
+			{
+				var dtosNeedingValidation = new HashSet<ServiceDtoInfo>();
+
+				var addedDto = false;
+				foreach (var dto in service.Dtos)
+				{
+					if (dto.Fields.Any(x => x.IsRequired))
+					{
+						dtosNeedingValidation.Add(dto);
+						addedDto = true;
+					}
+				}
+
+				while (addedDto)
+				{
+					addedDto = false;
+
+					foreach (var dto in service.Dtos.Where(x => !dtosNeedingValidation.Contains(x)))
+					{
+						foreach (var field in dto.Fields)
+						{
+							if (TryGetDtoInfo(service.GetFieldType(field)) is ServiceDtoInfo fieldDto && dtosNeedingValidation.Contains(fieldDto))
+							{
+								dtosNeedingValidation.Add(dto);
+								addedDto = true;
+								break;
+							}
+						}
+					}
+				}
+
+				return dtosNeedingValidation;
+			}
+
 			private readonly CSharpServiceInfo m_csharpServiceInfo;
+			private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 		}
 	}
 }

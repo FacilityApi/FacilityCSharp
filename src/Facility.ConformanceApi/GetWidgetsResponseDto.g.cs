@@ -36,5 +36,23 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				ServiceDataUtility.AreEquivalentFieldValues(Widgets, other.Widgets);
 		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			string? errorMessage;
+			if (!ServiceDataUtility.ValidateFieldValue(Widgets, out errorMessage))
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", errorMessage!);
+
+			return null;
+		}
 	}
 }
