@@ -1,6 +1,10 @@
 # Version History
 
-### 2.1.0
+### Pending
+
+* Support DTO validation, specifically for `[required]` fields.
+
+### 2.2.0
 
 * Support nullable references.
 * Use `--nullable` to generate code with nullable references.
