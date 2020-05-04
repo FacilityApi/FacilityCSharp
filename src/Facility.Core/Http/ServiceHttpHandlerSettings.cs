@@ -26,5 +26,15 @@ namespace Facility.Core.Http
 		/// The aspects used when receiving requests and sending responses.
 		/// </summary>
 		public IReadOnlyList<ServiceHttpHandlerAspect>? Aspects { get; set; }
+
+		/// <summary>
+		/// True to prevent the validation of request DTOs after they are received.
+		/// </summary>
+		public bool SkipRequestValidation { get; set; }
+
+		/// <summary>
+		/// True to prevent the validation of response DTOs before they are sent.
+		/// </summary>
+		public bool SkipResponseValidation { get; set; }
 	}
 }

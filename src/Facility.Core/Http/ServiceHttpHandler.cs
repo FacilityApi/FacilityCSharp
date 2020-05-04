@@ -24,10 +24,14 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
 		{
-			m_rootPath = (settings?.RootPath ?? "").TrimEnd('/');
-			m_synchronous = settings?.Synchronous ?? false;
-			m_contentSerializer = settings?.ContentSerializer ?? JsonHttpContentSerializer.Instance;
-			m_aspects = settings?.Aspects;
+			settings ??= new ServiceHttpHandlerSettings();
+
+			m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
+			m_synchronous = settings.Synchronous;
+			m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+			m_aspects = settings.Aspects;
+			m_skipRequestValidation = settings.SkipRequestValidation;
+			m_skipResponseValidation = settings.SkipResponseValidation;
 		}
 
 		/// <summary>
@@ -100,11 +104,28 @@ namespace Facility.Core.Http
 
 				context.Request = request;
 
-				var methodResult = await invokeMethodAsync(request, cancellationToken).ConfigureAwait(true);
-				if (methodResult.IsFailure)
-					error = methodResult.Error;
+				if (!m_skipRequestValidation && !request.Validate(out var requestErrorMessage))
+				{
+					error = ServiceErrors.CreateInvalidRequest(requestErrorMessage);
+				}
 				else
-					response = methodResult.Value;
+				{
+					var methodResult = await invokeMethodAsync(request, cancellationToken).ConfigureAwait(true);
+					if (methodResult.IsFailure)
+					{
+						error = methodResult.Error;
+					}
+					else
+					{
+						response = methodResult.Value;
+
+						if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
+						{
+							error = ServiceErrors.CreateInvalidResponse(responseErrorMessage);
+							response = null;
+						}
+					}
+				}
 
 				context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response!);
 			}
@@ -266,12 +287,14 @@ namespace Facility.Core.Http
 			}
 		}
 
-		static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
-		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
+		private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
+		private static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
 
-		readonly string m_rootPath;
-		readonly bool m_synchronous;
-		readonly HttpContentSerializer m_contentSerializer;
-		readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
+		private readonly string m_rootPath;
+		private readonly bool m_synchronous;
+		private readonly HttpContentSerializer m_contentSerializer;
+		private readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
+		private readonly bool m_skipRequestValidation;
+		private readonly bool m_skipResponseValidation;
 	}
 }
