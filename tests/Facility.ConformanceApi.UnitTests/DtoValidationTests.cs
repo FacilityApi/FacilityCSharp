@@ -184,7 +184,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var dto = CreateRequiredRequest();
 			dto.Widgets = new[] { CreateWidget(), new WidgetDto() };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]
@@ -193,7 +193,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var dto = CreateRequiredRequest();
 			dto.WidgetMatrix = new[] { new[] { new WidgetDto() } };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix[0][0]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]
@@ -211,7 +211,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var dto = CreateRequiredRequest();
 			dto.WidgetResults = new[] { ServiceResult.Success(new WidgetDto()) };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults[0]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]
@@ -220,7 +220,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var dto = CreateRequiredRequest();
 			dto.WidgetMap = new Dictionary<string, WidgetDto> { { "name", new WidgetDto() } };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap.name", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]

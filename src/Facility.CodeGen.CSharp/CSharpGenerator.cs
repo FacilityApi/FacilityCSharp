@@ -360,9 +360,9 @@ namespace Facility.CodeGen.CSharp
 									foreach (var fieldInfo in validatableFields)
 									{
 										var propertyName = context.GetFieldPropertyName(fieldInfo);
-										code.WriteLine($"if (!ServiceDataUtility.ValidateFieldValue({propertyName}, out errorMessage))");
+										code.WriteLine($"if (!ServiceDataUtility.ValidateFieldValue({propertyName}, \"{fieldInfo.Name}\", out errorMessage))");
 										using (code.Indent())
-											code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", errorMessage{NullableReferenceBang});");
+											code.WriteLine($"return errorMessage{NullableReferenceBang};");
 									}
 								}
 

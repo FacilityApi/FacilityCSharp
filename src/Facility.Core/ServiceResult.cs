@@ -308,10 +308,8 @@ namespace Facility.Core
 			return ServiceDataUtility.AreEquivalentFieldValues(m_value, otherOfT.m_value);
 		}
 
-		internal override bool ValidateInternalValue(out string? errorMessage)
-		{
-			return ServiceDataUtility.ValidateFieldValue(m_value, out errorMessage);
-		}
+		internal override bool ValidateInternalValue(out string? errorMessage) =>
+			ServiceDataUtility.ValidateFieldValue(m_value, out errorMessage);
 
 		private ServiceResult(ServiceErrorDto? error)
 			: base(error)

@@ -49,8 +49,8 @@ namespace Facility.ConformanceApi
 		private string? GetValidationErrorMessage()
 		{
 			string? errorMessage;
-			if (!ServiceDataUtility.ValidateFieldValue(Widgets, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(Widgets, "widgets", out errorMessage))
+				return errorMessage!;
 
 			return null;
 		}

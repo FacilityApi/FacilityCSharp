@@ -75,20 +75,20 @@ namespace Facility.ConformanceApi
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
 
 			string? errorMessage;
-			if (!ServiceDataUtility.ValidateFieldValue(Widget, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widget", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(Widgets, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgets", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(WidgetMatrix, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(WidgetResult, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResult", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(WidgetResults, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(WidgetMap, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMap", errorMessage!);
-			if (!ServiceDataUtility.ValidateFieldValue(HasWidget, out errorMessage))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("hasWidget", errorMessage!);
+			if (!ServiceDataUtility.ValidateFieldValue(Widget, "widget", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(Widgets, "widgets", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetMatrix, "widgetMatrix", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetResult, "widgetResult", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetResults, "widgetResults", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(WidgetMap, "widgetMap", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(HasWidget, "hasWidget", out errorMessage))
+				return errorMessage!;
 
 			return null;
 		}

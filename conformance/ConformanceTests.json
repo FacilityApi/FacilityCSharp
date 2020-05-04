@@ -520,7 +520,7 @@
         "widgetResult": { "value": { "name": "string" } },
         "widgetResults": [{ "value": { "name": "string" } }],
         "widgetMap": { "name": { "name": "string" } },
-		"hasWidget": { "widget": { "name": "string" } }
+        "hasWidget": { "widget": { "name": "string" } }
       },
       "response": {
         "normal": "string"
@@ -549,7 +549,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgets' is invalid: The field 'name' is required."
+        "message": "The field 'widgets[1]' is invalid: The field 'name' is required."
       }
     },
     {
@@ -562,7 +562,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetMatrix' is invalid: The field 'name' is required."
+        "message": "The field 'widgetMatrix[0][0]' is invalid: The field 'name' is required."
       }
     },
     {
@@ -588,7 +588,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetResults' is invalid: The field 'name' is required."
+        "message": "The field 'widgetResults[0]' is invalid: The field 'name' is required."
       }
     },
     {
@@ -601,7 +601,7 @@
       },
       "error": {
         "code": "InvalidRequest",
-        "message": "The field 'widgetMap' is invalid: The field 'name' is required."
+        "message": "The field 'widgetMap.name' is invalid: The field 'name' is required."
       }
     },
     {

@@ -90,7 +90,16 @@ namespace Facility.Core
 		/// </summary>
 		public static bool ValidateFieldValue<T>(T value, out string? errorMessage)
 		{
-			errorMessage = ValidatorCache<T>.Instance.GetErrorMessage(value);
+			errorMessage = ValidatorCache<T>.Instance.GetErrorMessage(value, null);
+			return errorMessage is null;
+		}
+
+		/// <summary>
+		/// Validates the field value.
+		/// </summary>
+		public static bool ValidateFieldValue<T>(T value, string fieldName, out string? errorMessage)
+		{
+			errorMessage = ValidatorCache<T>.Instance.GetErrorMessage(value, fieldName);
 			return errorMessage is null;
 		}
 
@@ -214,7 +223,7 @@ namespace Facility.Core
 
 		private interface IValidator<in T>
 		{
-			string? GetErrorMessage(T value);
+			string? GetErrorMessage(T value, string? fieldName);
 		}
 
 		private static class ValidatorCache<T>
@@ -263,47 +272,46 @@ namespace Facility.Core
 
 		private sealed class AlwaysValidValidator<T> : IValidator<T>
 		{
-			public string? GetErrorMessage(T value) => null;
+			public string? GetErrorMessage(T value, string? fieldName) => null;
 		}
 
 		private sealed class ServiceDtoValidator<T> : IValidator<T>
 			where T : ServiceDto
 		{
-			public string? GetErrorMessage(T value)
+			public string? GetErrorMessage(T value, string? fieldName)
 			{
-				if (value is null)
+				if (value is null || value.Validate(out var errorMessage))
 					return null;
 
-				value.Validate(out var errorMessage);
-				return errorMessage;
+				return fieldName is null ? errorMessage : GetInvalidFieldErrorMessage(fieldName, errorMessage!);
 			}
 		}
 
 		private sealed class ServiceResultValidator<T> : IValidator<T>
 			where T : ServiceResult
 		{
-			public string? GetErrorMessage(T value)
+			public string? GetErrorMessage(T value, string? fieldName)
 			{
-				if (value is null)
+				if (value is null || value.Validate(out var errorMessage))
 					return null;
 
-				value.Validate(out var errorMessage);
-				return errorMessage;
+				return fieldName is null ? errorMessage : GetInvalidFieldErrorMessage(fieldName, errorMessage!);
 			}
 		}
 
 		private sealed class ArrayValidator<T, TItem> : IValidator<T>
 			where T : IReadOnlyList<TItem>
 		{
-			public string? GetErrorMessage(T value)
+			public string? GetErrorMessage(T value, string? fieldName)
 			{
 				if (value is null)
 					return null;
 
 				var itemValidator = ValidatorCache<TItem>.Instance;
-				foreach (var item in value)
+				for (var index = 0; index < value.Count; index++)
 				{
-					if (itemValidator.GetErrorMessage(item) is string errorMessage)
+					var item = value[index];
+					if (itemValidator.GetErrorMessage(item, fieldName is null ? null : $"{fieldName}[{index}]") is string errorMessage)
 						return errorMessage;
 				}
 
@@ -314,7 +322,7 @@ namespace Facility.Core
 		private sealed class MapValidator<T, TValue> : IValidator<T>
 			where T : IReadOnlyDictionary<string, TValue>
 		{
-			public string? GetErrorMessage(T value)
+			public string? GetErrorMessage(T value, string? fieldName)
 			{
 				if (value is null)
 					return null;
@@ -322,7 +330,7 @@ namespace Facility.Core
 				var itemValidator = ValidatorCache<TValue>.Instance;
 				foreach (var keyValuePair in value)
 				{
-					if (itemValidator.GetErrorMessage(keyValuePair.Value) is string errorMessage)
+					if (itemValidator.GetErrorMessage(keyValuePair.Value, fieldName is null ? null : $"{fieldName}.{keyValuePair.Key}") is string errorMessage)
 						return errorMessage;
 				}
 
