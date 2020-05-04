@@ -12,6 +12,7 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 | --- | --- |
 | [CSharpGeneratorSettings](CSharpGeneratorSettings/CSharpGeneratorSettings.md)() | The default constructor. |
 | [NamespaceName](CSharpGeneratorSettings/NamespaceName.md) { get; set; } | The name of the namespace (optional). |
+| [UseNullableReferences](CSharpGeneratorSettings/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
 
 ## See Also
 

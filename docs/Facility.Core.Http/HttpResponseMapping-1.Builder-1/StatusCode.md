@@ -3,7 +3,7 @@
 The status code used by this mapping.
 
 ```csharp
-public HttpStatusCode StatusCode { get; set; }
+public HttpStatusCode? StatusCode { get; set; }
 ```
 
 ## See Also

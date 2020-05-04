@@ -13,6 +13,7 @@ public sealed class CSharpGenerator : CodeGenerator
 | [CSharpGenerator](CSharpGenerator/CSharpGenerator.md)() | The default constructor. |
 | override [HasPatternsToClean](CSharpGenerator/HasPatternsToClean.md) { get; } | Patterns to clean are returned with the output. |
 | [NamespaceName](CSharpGenerator/NamespaceName.md) { get; set; } | The name of the namespace (optional). |
+| [UseNullableReferences](CSharpGenerator/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
 | override [ApplySettings](CSharpGenerator/ApplySettings.md)(…) | Applies generator-specific settings. |
 | override [GenerateOutput](CSharpGenerator/GenerateOutput.md)(…) | Generates the C# output. |
 | static [GenerateCSharp](CSharpGenerator/GenerateCSharp.md)(…) | Generates C#. |
