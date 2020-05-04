@@ -1,6 +1,6 @@
 # Version History
 
-### Pending
+### 2.3.0
 
 * Support DTO validation, specifically for `[required]` fields.
 
