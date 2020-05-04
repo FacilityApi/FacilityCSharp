@@ -17,6 +17,7 @@ public class ServiceResult
 | [AsFailure](ServiceResult/AsFailure.md)() | The service result as a failure; null if it is a success. |
 | [Cast&lt;T&gt;](ServiceResult/Cast.md)() | Casts to a ServiceResult with a value. |
 | [IsEquivalentTo](ServiceResult/IsEquivalentTo.md)(…) | Check service results for equivalence. |
+| [ToFailure](ServiceResult/ToFailure.md)() | The service result as a failure; throws if it is a success. |
 | override [ToString](ServiceResult/ToString.md)() | Render result as a string. |
 | [Verify](ServiceResult/Verify.md)() | Throws a ServiceException if the result is an error. |
 | static [Failure](ServiceResult/Failure.md)(…) | Creates a failed result. |

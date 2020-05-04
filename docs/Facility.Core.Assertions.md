@@ -4,7 +4,7 @@
 
 | public type | description |
 | --- | --- |
-| static class [AssertionsUtility](Facility.Core.Assertions/AssertionsUtility.md) | Extention methods for use with FluentAssertions and Facility. |
+| static class [AssertionsUtility](Facility.Core.Assertions/AssertionsUtility.md) | Extension methods for use with FluentAssertions and Facility. |
 | class [ServiceDtoAssertions&lt;T&gt;](Facility.Core.Assertions/ServiceDtoAssertions-1.md) | Contains assertions for ServiceDto. |
 | class [ServiceDtoAssertions](Facility.Core.Assertions/ServiceDtoAssertions.md) | Contains assertions for ServiceDto. |
 | abstract class [ServiceDtoAssertionsBase&lt;TServiceDto,TAssertions&gt;](Facility.Core.Assertions/ServiceDtoAssertionsBase-2.md) | Contains assertions for ServiceDto. |

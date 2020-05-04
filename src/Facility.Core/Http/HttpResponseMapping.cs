@@ -44,7 +44,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// The status code used by this mapping.
 			/// </summary>
-			public HttpStatusCode? StatusCode { get; set; }
+			public HttpStatusCode StatusCode { get; set; }
 
 			/// <summary>
 			/// True if the response should result in this status code and body.
@@ -74,7 +74,7 @@ namespace Facility.Core.Http
 
 		private HttpResponseMapping(Builder builder)
 		{
-			StatusCode = builder.StatusCode ?? throw new InvalidOperationException("StatusCode is required.");
+			StatusCode = builder.StatusCode;
 			ResponseBodyType = builder.ResponseBodyType;
 			m_matchesResponse = builder.MatchesResponse;
 			m_getResponseBody = builder.GetResponseBody;

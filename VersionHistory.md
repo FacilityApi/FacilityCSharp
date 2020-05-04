@@ -4,7 +4,7 @@
 
 * Support DTO validation, specifically for `[required]` fields.
 
-### 2.2.0
+### 2.2.1
 
 * Support nullable references.
 * Use `--nullable` to generate code with nullable references.

@@ -1,6 +1,6 @@
 # AssertionsUtility class
 
-Extention methods for use with FluentAssertions and Facility.
+Extension methods for use with FluentAssertions and Facility.
 
 ```csharp
 public static class AssertionsUtility
