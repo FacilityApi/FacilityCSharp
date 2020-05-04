@@ -23,6 +23,7 @@ namespace Facility.Core.Http
 			m_aspects = settings.Aspects;
 			m_synchronous = settings.Synchronous;
 			m_skipRequestValidation = settings.SkipRequestValidation;
+			m_skipResponseValidation = settings.SkipResponseValidation;
 
 			var baseUri = settings.BaseUri ?? defaultBaseUri;
 			m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
@@ -104,6 +105,11 @@ namespace Facility.Core.Http
 				// create the response DTO
 				var response = responseMapping.CreateResponse(responseBody);
 				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers)!);
+
+				// validate the response DTO
+				if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidResponse(responseErrorMessage));
+
 				return ServiceResult.Success(response);
 			}
 			catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
@@ -237,6 +243,7 @@ namespace Facility.Core.Http
 		private readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
 		private readonly bool m_synchronous;
 		private readonly bool m_skipRequestValidation;
+		private readonly bool m_skipResponseValidation;
 		private readonly string m_baseUrl;
 	}
 }

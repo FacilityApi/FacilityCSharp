@@ -38,5 +38,10 @@ namespace Facility.Core.Http
 		/// True to prevent the validation of request DTOs before sending.
 		/// </summary>
 		public bool SkipRequestValidation { get; set; }
+
+		/// <summary>
+		/// True to prevent the validation of response DTOs after receiving.
+		/// </summary>
+		public bool SkipResponseValidation { get; set; }
 	}
 }

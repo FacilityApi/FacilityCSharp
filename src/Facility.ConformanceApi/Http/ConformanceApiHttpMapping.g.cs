@@ -581,6 +581,7 @@ namespace Facility.ConformanceApi.Http
 					new HttpResponseMapping<RequiredResponseDto>.Builder
 					{
 						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(RequiredResponseDto),
 					}.Build(),
 				},
 			}.Build();

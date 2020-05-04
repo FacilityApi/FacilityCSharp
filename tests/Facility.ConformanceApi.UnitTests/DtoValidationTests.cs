@@ -15,9 +15,17 @@ namespace Facility.ConformanceApi.UnitTests
 	public sealed class DtoValidationTests
 	{
 		[Test]
-		public void RequiredFieldsSpecified()
+		public void RequiredRequestFieldsSpecified()
 		{
 			var dto = CreateRequiredRequest();
+			dto.Validate(out var errorMessage).Should().BeTrue();
+			errorMessage.Should().BeNull();
+		}
+
+		[Test]
+		public void RequiredResponseFieldsSpecified()
+		{
+			var dto = CreateRequiredResponse();
 			dto.Validate(out var errorMessage).Should().BeTrue();
 			errorMessage.Should().BeNull();
 		}
@@ -34,13 +42,13 @@ namespace Facility.ConformanceApi.UnitTests
 		[Test]
 		public async Task HttpRequiredFieldsMissingNoValidation()
 		{
-			var api = CreateHttpApi(skipDtoValidation: true);
+			var api = CreateHttpApi(skipValidation: true, requiredResponse: new RequiredResponseDto());
 			var result = await api.RequiredAsync(new RequiredRequestDto(), CancellationToken.None);
 			result.Should().BeSuccess();
 		}
 
 		[Test]
-		public void RequiredNormalFieldMissing()
+		public void RequiredNormalRequestFieldMissing()
 		{
 			var dto = CreateRequiredRequest();
 			dto.Normal = null;
@@ -49,13 +57,32 @@ namespace Facility.ConformanceApi.UnitTests
 		}
 
 		[Test]
-		public async Task HttpRequiredNormalFieldMissing()
+		public async Task HttpRequiredNormalRequestFieldMissing()
 		{
 			var api = CreateHttpApi();
 			var dto = CreateRequiredRequest();
 			dto.Normal = null;
 			var result = await api.RequiredAsync(dto, CancellationToken.None);
 			result.Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("normal"));
+		}
+
+		[Test]
+		public void RequiredNormalResponseFieldMissing()
+		{
+			var dto = CreateRequiredResponse();
+			dto.Normal = null;
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetRequiredFieldErrorMessage("normal"));
+		}
+
+		[Test]
+		public async Task HttpRequiredNormalResponseFieldMissing()
+		{
+			var dto = CreateRequiredResponse();
+			dto.Normal = null;
+			var api = CreateHttpApi(requiredResponse: dto);
+			var result = await api.RequiredAsync(CreateRequiredRequest(), CancellationToken.None);
+			result.Should().BeFailure(ServiceErrors.CreateResponseFieldRequired("normal"));
 		}
 
 		[Test]
@@ -143,20 +170,31 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static RequiredRequestDto CreateRequiredRequest() => new RequiredRequestDto { Query = "query", Normal = "normal" };
 
-		private static HttpClientConformanceApi CreateHttpApi(bool skipDtoValidation = false) =>
-			new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = s_httpClient, SkipRequestValidation = skipDtoValidation });
+		private static RequiredResponseDto CreateRequiredResponse() => new RequiredResponseDto { Normal = "normal" };
 
-		private static HttpClient CreateHttpClient()
+		private static HttpClientConformanceApi CreateHttpApi(bool skipValidation = false, RequiredResponseDto? requiredResponse = null)
 		{
 			var handler = new ConformanceApiHttpHandler(
-				service: new FakeConformanceApiService(),
+				service: new FakeConformanceApiService(requiredResponse: requiredResponse),
 				settings: new ServiceHttpHandlerSettings())
 			{ InnerHandler = new NotFoundHttpHandler() };
-			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
+			var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
+
+			return new HttpClientConformanceApi(new HttpClientServiceSettings
+			{
+				HttpClient = httpClient,
+				SkipRequestValidation = skipValidation,
+				SkipResponseValidation = skipValidation,
+			});
 		}
 
 		private sealed class FakeConformanceApiService : IConformanceApi
 		{
+			public FakeConformanceApiService(RequiredResponseDto? requiredResponse = null)
+			{
+				m_requiredResponse = requiredResponse ?? CreateRequiredResponse();
+			}
+
 			public async Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoAsync(GetApiInfoRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 
 			public async Task<ServiceResult<GetWidgetsResponseDto>> GetWidgetsAsync(GetWidgetsRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -179,7 +217,9 @@ namespace Facility.ConformanceApi.UnitTests
 
 			public async Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-			public async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(new RequiredResponseDto());
+			public async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse));
+
+			private readonly RequiredResponseDto m_requiredResponse;
 		}
 
 		private sealed class NotFoundHttpHandler : HttpMessageHandler
@@ -187,7 +227,5 @@ namespace Facility.ConformanceApi.UnitTests
 			protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
 				Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 		}
-
-		private static readonly HttpClient s_httpClient = CreateHttpClient();
 	}
 }

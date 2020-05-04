@@ -207,6 +207,7 @@ service ConformanceApi
 		[required] normal: string;
 	}:
 	{
+		[required] normal: string;
 	}
 
 	data Any

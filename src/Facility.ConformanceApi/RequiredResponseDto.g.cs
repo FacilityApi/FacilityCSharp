@@ -23,12 +23,32 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		public string? Normal { get; set; }
+
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(RequiredResponseDto? other)
 		{
-			return other != null;
+			return other != null &&
+				Normal == other.Normal;
+		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			if (Normal == null)
+				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
+
+			return null;
 		}
 	}
 }
