@@ -1,5 +1,9 @@
 # Version History
 
+### 2.4.0
+
+* Support shorthand for required attribute, e.g. `string!`.
+
 ### 2.3.0
 
 * Support DTO validation, specifically for `[required]` fields.

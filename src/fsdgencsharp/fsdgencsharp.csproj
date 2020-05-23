@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Facility.CodeGen.Console" Version="2.1.0" />
+    <PackageReference Include="Facility.CodeGen.Console" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

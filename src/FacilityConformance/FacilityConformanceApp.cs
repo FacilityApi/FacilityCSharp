@@ -68,7 +68,7 @@ namespace FacilityConformance
 			if (argsReader.ReadFlag("?|h|help"))
 				throw new ArgsReaderException("");
 
-			string command = argsReader.ReadArgument();
+			var command = argsReader.ReadArgument();
 			if (command == "host")
 			{
 				string url = argsReader.ReadOption("url") ?? defaultUrl;
@@ -113,7 +113,7 @@ namespace FacilityConformance
 					}
 				}
 
-				int failureCount = 0;
+				var failureCount = 0;
 				foreach (var result in results.Where(x => x.Status == ConformanceTestStatus.Fail))
 				{
 					Console.WriteLine($"{result.TestName} fail: {result.Message}");
@@ -126,16 +126,16 @@ namespace FacilityConformance
 			}
 			else if (command == "fsd")
 			{
-				string outputPath = argsReader.ReadOption("output");
-				bool shouldVerify = argsReader.ReadFlag("verify");
+				var outputPath = argsReader.ReadOption("output");
+				var shouldVerify = argsReader.ReadFlag("verify");
 				argsReader.VerifyComplete();
 
 				return WriteText(path: outputPath, contents: m_fsdText, shouldVerify: shouldVerify);
 			}
 			else if (command == "json")
 			{
-				string outputPath = argsReader.ReadOption("output");
-				bool shouldVerify = argsReader.ReadFlag("verify");
+				var outputPath = argsReader.ReadOption("output");
+				var shouldVerify = argsReader.ReadFlag("verify");
 				argsReader.VerifyComplete();
 
 				return WriteText(path: outputPath, contents: m_testsJson, shouldVerify: shouldVerify);
@@ -150,7 +150,7 @@ namespace FacilityConformance
 			}
 		}
 
-		private static int WriteText(string path, string contents, bool shouldVerify)
+		private static int WriteText(string? path, string contents, bool shouldVerify)
 		{
 			if (path != null)
 			{
