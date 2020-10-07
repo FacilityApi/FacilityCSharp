@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.4.1
+
+* Add .NET Core App 3.1 support to `fsdgencsharp` and `FacilityConformance`.
+* A few nullable reference improvements.
+* Update `Facility.Definition` and `Facility.CodeGen.Console`.
+
 ## 2.4.0
 
 * Support shorthand for required attribute, e.g. `string!`.
