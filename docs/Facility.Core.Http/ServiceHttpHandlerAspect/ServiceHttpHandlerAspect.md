@@ -1,6 +1,6 @@
 # ServiceHttpHandlerAspect constructor
 
-Creates an aspect.
+The default constructor.
 
 ```csharp
 protected ServiceHttpHandlerAspect()

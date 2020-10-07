@@ -17,7 +17,7 @@ public abstract class ServiceHttpHandlerAspect
 
 | name | description |
 | --- | --- |
-| [ServiceHttpHandlerAspect](ServiceHttpHandlerAspect/ServiceHttpHandlerAspect.md)() | Creates an aspect. |
+| [ServiceHttpHandlerAspect](ServiceHttpHandlerAspect/ServiceHttpHandlerAspect.md)() | The default constructor. |
 | virtual [RequestReceivedAsyncCore](ServiceHttpHandlerAspect/RequestReceivedAsyncCore.md)(…) | Called right before the request is sent. |
 | virtual [ResponseReadyAsyncCore](ServiceHttpHandlerAspect/ResponseReadyAsyncCore.md)(…) | Called right after the response is received. |
 

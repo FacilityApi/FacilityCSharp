@@ -3,7 +3,7 @@
 An instance of JsonHttpContentSerializer.
 
 ```csharp
-public static JsonHttpContentSerializer Instance;
+public static readonly JsonHttpContentSerializer Instance;
 ```
 
 ## See Also

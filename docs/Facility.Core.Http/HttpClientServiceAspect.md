@@ -17,7 +17,7 @@ public abstract class HttpClientServiceAspect
 
 | name | description |
 | --- | --- |
-| [HttpClientServiceAspect](HttpClientServiceAspect/HttpClientServiceAspect.md)() | Creates an aspect. |
+| [HttpClientServiceAspect](HttpClientServiceAspect/HttpClientServiceAspect.md)() | The default constructor. |
 | virtual [RequestReadyAsyncCore](HttpClientServiceAspect/RequestReadyAsyncCore.md)(…) | Called right before the request is sent. |
 | virtual [ResponseReceivedAsyncCore](HttpClientServiceAspect/ResponseReceivedAsyncCore.md)(…) | Called right after the response is received. |
 
