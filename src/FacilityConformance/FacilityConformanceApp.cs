@@ -237,6 +237,7 @@ namespace FacilityConformance
 					foreach (var header in responseHeaders)
 						response.Headers.Append(header.Key, header.Value.ToArray());
 
+					// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 					if (responseMessage.Content != null)
 					{
 						var contentHeaders = responseMessage.Content.Headers;

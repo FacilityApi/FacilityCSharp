@@ -60,26 +60,26 @@ namespace Facility.ConformanceApi.Testing
 		public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken)
 		{
 			string testName = test.Test!;
-			ConformanceTestResult failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
+			ConformanceTestResult Failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
 
 			try
 			{
-				string capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
-				var methodInfo = typeof(IConformanceApi).GetMethod(capitalize(test.Method!) + "Async", BindingFlags.Public | BindingFlags.Instance);
+				static string Capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
+				var methodInfo = typeof(IConformanceApi).GetMethod(Capitalize(test.Method!) + "Async", BindingFlags.Public | BindingFlags.Instance);
 				if (methodInfo == null)
-					return failure($"Missing API method for {test.Method}");
+					return Failure($"Missing API method for {test.Method}");
 
 				var requestJObject = test.Request;
 				var requestDto = ServiceJsonUtility.FromJToken(requestJObject, methodInfo.GetParameters()[0].ParameterType);
 				var requestRoundTripJObject = ServiceJsonUtility.ToJToken(requestDto);
 				if (!JToken.DeepEquals(requestJObject, requestRoundTripJObject))
-					return failure($"Request round trip failed. expected={ServiceJsonUtility.ToJson(requestJObject)} actual={ServiceJsonUtility.ToJson(requestRoundTripJObject)}");
+					return Failure($"Request round trip failed. expected={ServiceJsonUtility.ToJson(requestJObject)} actual={ServiceJsonUtility.ToJson(requestRoundTripJObject)}");
 
 				var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
 				await task.ConfigureAwait(false);
 
 				dynamic result = ((dynamic) task).Result;
-				var actualResponseDto = (ServiceDto) result.GetValueOrDefault();
+				var actualResponseDto = (ServiceDto?) result.GetValueOrDefault();
 				var expectedResponseJObject = test.Response;
 				var expectedErrorJObject = test.Error;
 				if (actualResponseDto != null)
@@ -87,13 +87,13 @@ namespace Facility.ConformanceApi.Testing
 					var actualResponseJObject = (JObject) ServiceJsonUtility.ToJToken(actualResponseDto);
 
 					if (expectedErrorJObject != null)
-						return failure($"Got valid response; expected error. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
+						return Failure($"Got valid response; expected error. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
 					if (!JToken.DeepEquals(expectedResponseJObject, actualResponseJObject))
-						return failure($"Response JSON did not match. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
+						return Failure($"Response JSON did not match. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
 					var responseType = methodInfo.ReturnType.GetGenericArguments()[0].GetGenericArguments()[0];
 					var expectedResponseDto = (ServiceDto) ServiceJsonUtility.FromJToken(expectedResponseJObject, responseType)!;
 					if (!expectedResponseDto.IsEquivalentTo(actualResponseDto))
-						return failure($"Response DTO did not match. expected={expectedResponseDto} actual={ServiceJsonUtility.ToJson(actualResponseDto)}");
+						return Failure($"Response DTO did not match. expected={expectedResponseDto} actual={ServiceJsonUtility.ToJson(actualResponseDto)}");
 				}
 				else
 				{
@@ -101,19 +101,19 @@ namespace Facility.ConformanceApi.Testing
 					var actualErrorJObject = (JObject) ServiceJsonUtility.ToJToken(actualErrorDto);
 
 					if (expectedErrorJObject == null)
-						return failure($"Got error; expected valid response. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
+						return Failure($"Got error; expected valid response. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
 					if (!JToken.DeepEquals(expectedErrorJObject, actualErrorJObject))
-						return failure($"Error JSON did not match. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
+						return Failure($"Error JSON did not match. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
 					var expectedErrorDto = ServiceJsonUtility.FromJToken<ServiceErrorDto>(expectedErrorJObject);
 					if (!expectedErrorDto.IsEquivalentTo(actualErrorDto))
-						return failure($"Error DTO did not match. expected={expectedErrorDto} actual={actualErrorDto}");
+						return Failure($"Error DTO did not match. expected={expectedErrorDto} actual={actualErrorDto}");
 				}
 
 				return new ConformanceTestResult(testName, ConformanceTestStatus.Pass);
 			}
 			catch (Exception exception)
 			{
-				return failure($"Unhandled exception {exception.GetType().FullName}: {exception.Message}");
+				return Failure($"Unhandled exception {exception.GetType().FullName}: {exception.Message}");
 			}
 		}
 

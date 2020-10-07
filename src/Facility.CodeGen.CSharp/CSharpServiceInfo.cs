@@ -83,7 +83,7 @@ namespace Facility.CodeGen.CSharp
 
 			var typeName = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { CSharpUtility.GetInterfaceName(serviceInfo) };
 
-			void checkTypeName(string name, ServiceDefinitionPosition? position)
+			void CheckTypeName(string name, ServiceDefinitionPosition? position)
 			{
 				if (!typeName!.Add(name))
 					validationErrors!.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
@@ -93,20 +93,20 @@ namespace Facility.CodeGen.CSharp
 			{
 				if (member is ServiceMethodInfo method)
 				{
-					checkTypeName(CSharpUtility.GetRequestDtoName(method), method.Position);
-					checkTypeName(CSharpUtility.GetResponseDtoName(method), method.Position);
+					CheckTypeName(CSharpUtility.GetRequestDtoName(method), method.Position);
+					CheckTypeName(CSharpUtility.GetResponseDtoName(method), method.Position);
 				}
 				else if (member is ServiceDtoInfo dto)
 				{
-					checkTypeName(CSharpUtility.GetDtoName(dto), dto.Position);
+					CheckTypeName(CSharpUtility.GetDtoName(dto), dto.Position);
 				}
 				else if (member is ServiceEnumInfo @enum)
 				{
-					checkTypeName(CSharpUtility.GetEnumName(@enum), @enum.Position);
+					CheckTypeName(CSharpUtility.GetEnumName(@enum), @enum.Position);
 				}
 				else if (member is ServiceErrorSetInfo errorSet)
 				{
-					checkTypeName(CSharpUtility.GetErrorSetName(errorSet), errorSet.Position);
+					CheckTypeName(CSharpUtility.GetErrorSetName(errorSet), errorSet.Position);
 				}
 				else
 				{

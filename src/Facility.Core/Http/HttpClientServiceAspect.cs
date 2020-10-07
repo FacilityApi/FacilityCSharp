@@ -22,13 +22,6 @@ namespace Facility.Core.Http
 			ResponseReceivedAsyncCore(httpResponse, requestDto, cancellationToken);
 
 		/// <summary>
-		/// Creates an aspect.
-		/// </summary>
-		protected HttpClientServiceAspect()
-		{
-		}
-
-		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
 		protected virtual Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => Task.CompletedTask;

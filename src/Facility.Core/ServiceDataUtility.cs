@@ -278,7 +278,7 @@ namespace Facility.Core
 		private sealed class ServiceDtoValidator<T> : IValidator<T>
 			where T : ServiceDto
 		{
-			public string? GetErrorMessage(T value, string? fieldName)
+			public string? GetErrorMessage(T? value, string? fieldName)
 			{
 				if (value is null || value.Validate(out var errorMessage))
 					return null;
@@ -290,7 +290,7 @@ namespace Facility.Core
 		private sealed class ServiceResultValidator<T> : IValidator<T>
 			where T : ServiceResult
 		{
-			public string? GetErrorMessage(T value, string? fieldName)
+			public string? GetErrorMessage(T? value, string? fieldName)
 			{
 				if (value is null || value.Validate(out var errorMessage))
 					return null;
@@ -300,9 +300,9 @@ namespace Facility.Core
 		}
 
 		private sealed class ArrayValidator<T, TItem> : IValidator<T>
-			where T : IReadOnlyList<TItem>
+			where T : class, IReadOnlyList<TItem>
 		{
-			public string? GetErrorMessage(T value, string? fieldName)
+			public string? GetErrorMessage(T? value, string? fieldName)
 			{
 				if (value is null)
 					return null;
@@ -320,9 +320,9 @@ namespace Facility.Core
 		}
 
 		private sealed class MapValidator<T, TValue> : IValidator<T>
-			where T : IReadOnlyDictionary<string, TValue>
+			where T : class, IReadOnlyDictionary<string, TValue>
 		{
-			public string? GetErrorMessage(T value, string? fieldName)
+			public string? GetErrorMessage(T? value, string? fieldName)
 			{
 				if (value is null)
 					return null;

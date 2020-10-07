@@ -298,7 +298,7 @@ namespace Facility.Core
 			m_value = value;
 		}
 
-		internal override Type? InternalValueType => typeof(T);
+		internal override Type InternalValueType => typeof(T);
 
 		internal override object? InternalValue => m_value;
 
