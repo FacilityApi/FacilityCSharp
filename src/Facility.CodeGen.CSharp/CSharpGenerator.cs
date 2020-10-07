@@ -797,18 +797,18 @@ namespace Facility.CodeGen.CSharp
 		{
 			switch (serviceType.Kind)
 			{
-			case ServiceTypeKind.Enum:
-			case ServiceTypeKind.Boolean:
-				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
-			case ServiceTypeKind.Double:
-			case ServiceTypeKind.Int32:
-			case ServiceTypeKind.Int64:
-			case ServiceTypeKind.Decimal:
-				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString(CultureInfo.InvariantCulture)";
-			case ServiceTypeKind.String:
-				return fieldCode;
-			default:
-				throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
+				case ServiceTypeKind.Enum:
+				case ServiceTypeKind.Boolean:
+					return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
+				case ServiceTypeKind.Double:
+				case ServiceTypeKind.Int32:
+				case ServiceTypeKind.Int64:
+				case ServiceTypeKind.Decimal:
+					return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString(CultureInfo.InvariantCulture)";
+				case ServiceTypeKind.String:
+					return fieldCode;
+				default:
+					throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
 			}
 		}
 
@@ -816,23 +816,23 @@ namespace Facility.CodeGen.CSharp
 		{
 			switch (serviceType.Kind)
 			{
-			case ServiceTypeKind.Enum:
-				string enumName = CSharpUtility.GetEnumName(serviceType.Enum!);
-				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
-			case ServiceTypeKind.Boolean:
-				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
-			case ServiceTypeKind.Double:
-				return $"ServiceDataUtility.TryParseDouble({fieldCode})";
-			case ServiceTypeKind.Int32:
-				return $"ServiceDataUtility.TryParseInt32({fieldCode})";
-			case ServiceTypeKind.Int64:
-				return $"ServiceDataUtility.TryParseInt64({fieldCode})";
-			case ServiceTypeKind.Decimal:
-				return $"ServiceDataUtility.TryParseDecimal({fieldCode})";
-			case ServiceTypeKind.String:
-				return fieldCode;
-			default:
-				throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
+				case ServiceTypeKind.Enum:
+					string enumName = CSharpUtility.GetEnumName(serviceType.Enum!);
+					return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
+				case ServiceTypeKind.Boolean:
+					return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
+				case ServiceTypeKind.Double:
+					return $"ServiceDataUtility.TryParseDouble({fieldCode})";
+				case ServiceTypeKind.Int32:
+					return $"ServiceDataUtility.TryParseInt32({fieldCode})";
+				case ServiceTypeKind.Int64:
+					return $"ServiceDataUtility.TryParseInt64({fieldCode})";
+				case ServiceTypeKind.Decimal:
+					return $"ServiceDataUtility.TryParseDecimal({fieldCode})";
+				case ServiceTypeKind.String:
+					return fieldCode;
+				default:
+					throw new NotSupportedException("Unexpected field type: " + serviceType.Kind);
 			}
 		}
 
@@ -1029,20 +1029,20 @@ namespace Facility.CodeGen.CSharp
 		{
 			switch (kind)
 			{
-			case ServiceTypeKind.Bytes:
-				return "AreEquivalentBytes";
-			case ServiceTypeKind.Object:
-				return "AreEquivalentObjects";
-			case ServiceTypeKind.Error:
-			case ServiceTypeKind.Dto:
-				return "AreEquivalentDtos";
-			case ServiceTypeKind.Result:
-				return "AreEquivalentResults";
-			case ServiceTypeKind.Array:
-			case ServiceTypeKind.Map:
-				return "AreEquivalentFieldValues";
-			default:
-				return null;
+				case ServiceTypeKind.Bytes:
+					return "AreEquivalentBytes";
+				case ServiceTypeKind.Object:
+					return "AreEquivalentObjects";
+				case ServiceTypeKind.Error:
+				case ServiceTypeKind.Dto:
+					return "AreEquivalentDtos";
+				case ServiceTypeKind.Result:
+					return "AreEquivalentResults";
+				case ServiceTypeKind.Array:
+				case ServiceTypeKind.Map:
+					return "AreEquivalentFieldValues";
+				default:
+					return null;
 			}
 		}
 
@@ -1123,39 +1123,24 @@ namespace Facility.CodeGen.CSharp
 
 		private string RenderNullableFieldType(ServiceTypeInfo fieldType)
 		{
-			switch (fieldType.Kind)
+			return fieldType.Kind switch
 			{
-			case ServiceTypeKind.String:
-				return "string";
-			case ServiceTypeKind.Boolean:
-				return "bool?";
-			case ServiceTypeKind.Double:
-				return "double?";
-			case ServiceTypeKind.Int32:
-				return "int?";
-			case ServiceTypeKind.Int64:
-				return "long?";
-			case ServiceTypeKind.Decimal:
-				return "decimal?";
-			case ServiceTypeKind.Bytes:
-				return "byte[]";
-			case ServiceTypeKind.Object:
-				return "JObject";
-			case ServiceTypeKind.Error:
-				return "ServiceErrorDto";
-			case ServiceTypeKind.Dto:
-				return CSharpUtility.GetDtoName(fieldType.Dto!);
-			case ServiceTypeKind.Enum:
-				return CSharpUtility.GetEnumName(fieldType.Enum!) + "?";
-			case ServiceTypeKind.Result:
-				return $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType!)}>";
-			case ServiceTypeKind.Array:
-				return $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType!)}>";
-			case ServiceTypeKind.Map:
-				return $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType!)}>";
-			default:
-				throw new NotSupportedException("Unknown field type " + fieldType.Kind);
-			}
+				ServiceTypeKind.String => "string",
+				ServiceTypeKind.Boolean => "bool?",
+				ServiceTypeKind.Double => "double?",
+				ServiceTypeKind.Int32 => "int?",
+				ServiceTypeKind.Int64 => "long?",
+				ServiceTypeKind.Decimal => "decimal?",
+				ServiceTypeKind.Bytes => "byte[]",
+				ServiceTypeKind.Object => "JObject",
+				ServiceTypeKind.Error => "ServiceErrorDto",
+				ServiceTypeKind.Dto => CSharpUtility.GetDtoName(fieldType.Dto!),
+				ServiceTypeKind.Enum => CSharpUtility.GetEnumName(fieldType.Enum!) + "?",
+				ServiceTypeKind.Result => $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType!)}>",
+				ServiceTypeKind.Array => $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType!)}>",
+				ServiceTypeKind.Map => $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType!)}>",
+				_ => throw new NotSupportedException("Unknown field type " + fieldType.Kind)
+			};
 		}
 
 		private void WriteFileHeader(CodeWriter code, Context context)

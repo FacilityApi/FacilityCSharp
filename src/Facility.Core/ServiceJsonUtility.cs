@@ -127,7 +127,7 @@ namespace Facility.Core
 		/// Clones a JToken.
 		/// </summary>
 		public static T CloneToken<T>(T? token)
-		    where T : JToken =>
+			where T : JToken =>
 			(T) token?.DeepClone()!;
 
 		/// <summary>
