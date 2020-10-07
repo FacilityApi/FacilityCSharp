@@ -34,8 +34,8 @@ namespace Facility.ConformanceApi.UnitTests
 		private static HttpClient CreateHttpClient()
 		{
 			var handler = new ConformanceApiHttpHandler(
-				service: new ConformanceApiService(s_tests),
-				settings: new ServiceHttpHandlerSettings())
+					service: new ConformanceApiService(s_tests),
+					settings: new ServiceHttpHandlerSettings())
 			{ InnerHandler = new NotFoundHttpHandler() };
 			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 		}

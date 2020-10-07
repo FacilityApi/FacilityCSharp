@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -9,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
-using Facility.ConformanceApi.Testing;
 using Facility.Core.Assertions;
 using Facility.Core.Http;
 using FluentAssertions;

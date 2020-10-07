@@ -30,9 +30,9 @@ namespace Facility.ConformanceApi.Testing
 
 			foreach (var testsPerMethod in m_tests.GroupBy(x => x.Method).Select(x => x.ToList()))
 			{
-				for (int i = 0; i < testsPerMethod.Count; i++)
+				for (var i = 0; i < testsPerMethod.Count; i++)
 				{
-					for (int j = i + 1; j < testsPerMethod.Count; j++)
+					for (var j = i + 1; j < testsPerMethod.Count; j++)
 					{
 						if (JToken.DeepEquals(testsPerMethod[i].Request, testsPerMethod[j].Request))
 							throw new ArgumentException($"Tests must not have the same method name and request data, e.g. {testsPerMethod[i].Test} and {testsPerMethod[j].Test}.");

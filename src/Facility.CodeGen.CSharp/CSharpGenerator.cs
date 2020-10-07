@@ -1139,7 +1139,7 @@ namespace Facility.CodeGen.CSharp
 				ServiceTypeKind.Result => $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType!)}>",
 				ServiceTypeKind.Array => $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType!)}>",
 				ServiceTypeKind.Map => $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType!)}>",
-				_ => throw new NotSupportedException("Unknown field type " + fieldType.Kind)
+				_ => throw new NotSupportedException("Unknown field type " + fieldType.Kind),
 			};
 		}
 
@@ -1180,7 +1180,7 @@ namespace Facility.CodeGen.CSharp
 				type.ValueType != null && NeedsValidation(type.ValueType!);
 
 			private static ServiceDtoInfo? TryGetDtoInfo(ServiceTypeInfo? type) =>
-				 type is null ? null : type.Kind == ServiceTypeKind.Dto ? type.Dto! : TryGetDtoInfo(type.ValueType);
+				type is null ? null : type.Kind == ServiceTypeKind.Dto ? type.Dto! : TryGetDtoInfo(type.ValueType);
 
 			private static HashSet<ServiceDtoInfo> FindDtosNeedingValidation(ServiceInfo service)
 			{
