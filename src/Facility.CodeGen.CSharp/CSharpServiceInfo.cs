@@ -121,4 +121,3 @@ namespace Facility.CodeGen.CSharp
 		private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
 	}
 }
-

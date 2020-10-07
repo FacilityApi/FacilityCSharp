@@ -11,7 +11,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 		public void GenerateEdgeCases()
 		{
 			string fsdText;
-			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.CodeGen.CSharp.UnitTests.EdgeCases.fsd")))
+			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.CodeGen.CSharp.UnitTests.EdgeCases.fsd")!))
 				fsdText = fsdTextReader.ReadToEnd();
 
 			var parser = new FsdParser();

@@ -19,7 +19,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// An instance of JsonHttpContentSerializer.
 		/// </summary>
-		public static JsonHttpContentSerializer Instance = new JsonHttpContentSerializer();
+		public static readonly JsonHttpContentSerializer Instance = new JsonHttpContentSerializer();
 
 		/// <summary>
 		/// Creates an instance.
@@ -114,7 +114,7 @@ namespace Facility.Core.Http
 				}
 			}
 
-			readonly Stream m_memoryStream;
+			private readonly Stream m_memoryStream;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -114,6 +115,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Used for JSON serialization.
 		/// </summary>
+		[SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "Legacy.")]
 		public sealed class ServiceResultJsonConverter : JsonConverter
 		{
 			/// <summary>
@@ -167,7 +169,7 @@ namespace Facility.Core
 				}
 				else if (error != null)
 				{
-					return (ServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(Failure(error), new object[0]);
+					return (ServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(Failure(error), Array.Empty<object>());
 				}
 				else
 				{
@@ -211,11 +213,10 @@ namespace Facility.Core
 					throw new JsonSerializationException($"ServiceResult expected {tokenType} but found {reader.TokenType}.");
 			}
 
-			const string c_valuePropertyName = "value";
-			const string c_errorPropertyName = "error";
-
-			static readonly MethodInfo s_genericSuccessMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Success" && x.IsStatic && x.IsGenericMethodDefinition);
-			static readonly MethodInfo s_genericCastMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Cast" && !x.IsStatic && x.IsGenericMethodDefinition);
+			private const string c_valuePropertyName = "value";
+			private const string c_errorPropertyName = "error";
+			private static readonly MethodInfo s_genericSuccessMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Success" && x.IsStatic && x.IsGenericMethodDefinition);
+			private static readonly MethodInfo s_genericCastMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Cast" && !x.IsStatic && x.IsGenericMethodDefinition);
 		}
 
 		internal ServiceResult(ServiceErrorDto? error)
@@ -239,11 +240,13 @@ namespace Facility.Core
 	/// <summary>
 	/// A service result value or error.
 	/// </summary>
+	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 	public sealed class ServiceResult<T> : ServiceResult
 	{
 		/// <summary>
 		/// Implicitly create a failed result from an error.
 		/// </summary>
+		[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Used to create results from failures.")]
 		public static implicit operator ServiceResult<T>(ServiceResultFailure failure) => new ServiceResult<T>(failure.Error);
 
 		/// <summary>
@@ -316,12 +319,13 @@ namespace Facility.Core
 		{
 		}
 
-		readonly T m_value = default!;
+		private readonly T m_value = default!;
 	}
 
 	/// <summary>
 	/// A failed service result.
 	/// </summary>
+	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 	public sealed class ServiceResultFailure : ServiceResult
 	{
 		internal ServiceResultFailure(ServiceErrorDto error)

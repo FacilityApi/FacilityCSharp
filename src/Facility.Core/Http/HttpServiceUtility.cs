@@ -92,7 +92,7 @@ namespace Facility.Core.Http
 
 			private static string JoinHeaderValues(IEnumerable<string> values) => string.Join(", ", values);
 
-			readonly HttpHeaders m_httpHeaders;
+			private readonly HttpHeaders m_httpHeaders;
 		}
 	}
 }

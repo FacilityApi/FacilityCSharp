@@ -36,6 +36,6 @@ namespace Facility.Core.Http
 				m_authorizationHeader = AuthenticationHeaderValue.Parse(authorizationHeader);
 		}
 
-		readonly AuthenticationHeaderValue? m_authorizationHeader;
+		private readonly AuthenticationHeaderValue? m_authorizationHeader;
 	}
 }

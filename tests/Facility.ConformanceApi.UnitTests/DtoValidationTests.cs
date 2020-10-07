@@ -274,7 +274,7 @@ namespace Facility.ConformanceApi.UnitTests
 
 			public async Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(DeleteWidgetRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-			public async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(new GetWidgetBatchResponseDto { Results = new ServiceResult<WidgetDto>[0] });
+			public async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken) => ServiceResult.Success(new GetWidgetBatchResponseDto { Results = Array.Empty<ServiceResult<WidgetDto>>() });
 
 			public async Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken) => throw new NotImplementedException();
 

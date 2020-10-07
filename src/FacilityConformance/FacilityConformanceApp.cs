@@ -51,10 +51,10 @@ namespace FacilityConformance
 
 		public FacilityConformanceApp()
 		{
-			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceApi.fsd")))
+			using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceApi.fsd")!))
 				m_fsdText = fsdTextReader.ReadToEnd();
 
-			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")))
+			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")!))
 				m_testsJson = testsJsonReader.ReadToEnd();
 
 			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests!;

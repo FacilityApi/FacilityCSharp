@@ -31,6 +31,6 @@ namespace Facility.Core.UnitTests
 			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 		}
 
-		static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
+		private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
 	}
 }

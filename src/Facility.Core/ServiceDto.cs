@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Facility.Core
 {
 	/// <summary>
@@ -30,6 +32,7 @@ namespace Facility.Core
 	/// <summary>
 	/// Base class for data objects used by services.
 	/// </summary>
+	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 	public abstract class ServiceDto<T> : ServiceDto
 		where T : ServiceDto<T>
 	{

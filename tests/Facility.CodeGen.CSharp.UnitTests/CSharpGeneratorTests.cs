@@ -61,7 +61,6 @@ namespace Facility.CodeGen.CSharp.UnitTests
 				StringAssert.Contains("namespace OverrideNamespace", file.Text);
 				StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
 			}
-
 		}
 
 		private void ThrowsServiceDefinitionException(string definition, string message)

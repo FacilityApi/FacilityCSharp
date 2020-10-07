@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -188,14 +189,14 @@ namespace Facility.Core.UnitTests
 		{
 			var error = new ServiceErrorDto("Error");
 			ServiceResult<int> failedValue = ServiceResult.Failure(error);
-			failedValue.Map(x => x.ToString()).Error.Should().BeDto(error);
+			failedValue.Map(x => x.ToString(CultureInfo.InvariantCulture)).Error.Should().BeDto(error);
 		}
 
 		[Test]
 		public void MapSuccess()
 		{
 			ServiceResult<int> successValue = ServiceResult.Success(1);
-			successValue.Map(x => x.ToString()).Value.Should().Be("1");
+			successValue.Map(x => x.ToString(CultureInfo.InvariantCulture)).Value.Should().Be("1");
 		}
 
 		[Test]

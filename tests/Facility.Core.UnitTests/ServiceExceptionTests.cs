@@ -31,7 +31,7 @@ namespace Facility.Core.UnitTests
 				{
 					outerException.Error.Code.Should().Be(outerCode);
 					outerException.Message.Should().Be(outerMessage);
-					outerException.InnerException.Message.Should().Be(message);
+					outerException.InnerException!.Message.Should().Be(message);
 				}
 			}
 		}

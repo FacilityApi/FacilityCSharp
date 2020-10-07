@@ -180,14 +180,14 @@ namespace Facility.Core.Http
 			ResponseMappings = builder.ResponseMappings.ToList();
 		}
 
-		readonly Func<TRequest, ServiceResult>? m_validateRequest;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getUriParameters;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setUriParameters;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getRequestHeaders;
-		readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setRequestHeaders;
-		readonly Func<TRequest, object?>? m_getRequestBody;
-		readonly Func<object?, TRequest>? m_createRequest;
-		readonly Func<TResponse, IReadOnlyDictionary<string, string?>>? m_getResponseHeaders;
-		readonly Func<TResponse, IReadOnlyDictionary<string, string?>, TResponse>? m_setResponseHeaders;
+		private readonly Func<TRequest, ServiceResult>? m_validateRequest;
+		private readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getUriParameters;
+		private readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setUriParameters;
+		private readonly Func<TRequest, IReadOnlyDictionary<string, string?>>? m_getRequestHeaders;
+		private readonly Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? m_setRequestHeaders;
+		private readonly Func<TRequest, object?>? m_getRequestBody;
+		private readonly Func<object?, TRequest>? m_createRequest;
+		private readonly Func<TResponse, IReadOnlyDictionary<string, string?>>? m_getResponseHeaders;
+		private readonly Func<TResponse, IReadOnlyDictionary<string, string?>, TResponse>? m_setResponseHeaders;
 	}
 }

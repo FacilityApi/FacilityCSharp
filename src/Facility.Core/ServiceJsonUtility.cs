@@ -126,7 +126,9 @@ namespace Facility.Core
 		/// <summary>
 		/// Clones a JToken.
 		/// </summary>
-		public static T CloneToken<T>(T token) where T : JToken => (T) token?.DeepClone()!;
+		public static T CloneToken<T>(T? token)
+		    where T : JToken =>
+			(T) token?.DeepClone()!;
 
 		/// <summary>
 		/// Creates a JSON serializer with standard settings.
@@ -160,6 +162,6 @@ namespace Facility.Core
 			protected override string ResolveDictionaryKey(string dictionaryKey) => dictionaryKey;
 		}
 
-		static readonly JsonSerializerSettings s_jsonSerializerSettings = GetJsonSerializerSettings();
+		private static readonly JsonSerializerSettings s_jsonSerializerSettings = GetJsonSerializerSettings();
 	}
 }

@@ -36,6 +36,6 @@ namespace Facility.Core.Http
 				m_acceptHeader = MediaTypeWithQualityHeaderValue.Parse(acceptHeader);
 		}
 
-		readonly MediaTypeWithQualityHeaderValue? m_acceptHeader;
+		private readonly MediaTypeWithQualityHeaderValue? m_acceptHeader;
 	}
 }

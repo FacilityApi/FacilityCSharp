@@ -49,6 +49,6 @@ namespace Facility.Core
 		/// </summary>
 		protected abstract void WriteCore(JsonWriter writer, T value, JsonSerializer serializer);
 
-		static readonly Type? s_nullableType = typeof(T).GetTypeInfo().IsValueType && Nullable.GetUnderlyingType(typeof(T)) == null ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
+		private static readonly Type? s_nullableType = typeof(T).GetTypeInfo().IsValueType && Nullable.GetUnderlyingType(typeof(T)) == null ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
 	}
 }

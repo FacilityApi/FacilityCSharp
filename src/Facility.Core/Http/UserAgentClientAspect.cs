@@ -34,6 +34,6 @@ namespace Facility.Core.Http
 			m_userAgent = userAgent;
 		}
 
-		readonly string m_userAgent;
+		private readonly string m_userAgent;
 	}
 }

@@ -40,6 +40,6 @@ namespace Facility.Core.Http
 			httpRequest.Properties[c_requestPropertyContextKey] = context;
 		}
 
-		const string c_requestPropertyContextKey = "Facility_Context";
+		private const string c_requestPropertyContextKey = "Facility_Context";
 	}
 }

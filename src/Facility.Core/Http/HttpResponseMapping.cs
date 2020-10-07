@@ -81,8 +81,8 @@ namespace Facility.Core.Http
 			m_createResponse = builder.CreateResponse;
 		}
 
-		readonly Func<TResponse, bool>? m_matchesResponse;
-		readonly Func<TResponse, object?>? m_getResponseBody;
-		readonly Func<object?, TResponse>? m_createResponse;
+		private readonly Func<TResponse, bool>? m_matchesResponse;
+		private readonly Func<TResponse, object?>? m_getResponseBody;
+		private readonly Func<object?, TResponse>? m_createResponse;
 	}
 }
