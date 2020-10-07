@@ -7,14 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		build.cmd = build.cmd
 		build.sh = build.sh
-		CONTRIBUTING.md = CONTRIBUTING.md
+		.github\workflows\build.yaml = .github\workflows\build.yaml
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
+		nuget.config = nuget.config
 		README.md = README.md
-		VersionHistory.md = VersionHistory.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core", "src\Facility.Core\Facility.Core.csproj", "{E28C464C-6FC4-4802-A7CC-0F50957FBF9D}"
@@ -56,7 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{1430A6FE-CD2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacilityConformance", "src\FacilityConformance\FacilityConformance.csproj", "{338C2F17-0E09-4E5D-A6D7-47D74DA58107}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocTarget", "tools\XmlDocTarget\XmlDocTarget.csproj", "{3258DB23-3608-4640-85DC-FB642933034E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocGen", "tools\XmlDocGen\XmlDocGen.csproj", "{636E5B36-4AA8-47D8-884C-AE4D80B49A14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,10 +108,10 @@ Global
 		{338C2F17-0E09-4E5D-A6D7-47D74DA58107}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{338C2F17-0E09-4E5D-A6D7-47D74DA58107}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{338C2F17-0E09-4E5D-A6D7-47D74DA58107}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3258DB23-3608-4640-85DC-FB642933034E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3258DB23-3608-4640-85DC-FB642933034E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3258DB23-3608-4640-85DC-FB642933034E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3258DB23-3608-4640-85DC-FB642933034E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

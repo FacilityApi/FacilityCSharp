@@ -17,7 +17,6 @@ internal static class Build
 			{
 				GitLogin = new GitLoginInfo("FacilityApiBot", Environment.GetEnvironmentVariable("BUILD_BOT_PASSWORD") ?? ""),
 				GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
-				GitBranchName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH"),
 				SourceCodeUrl = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src",
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
@@ -28,20 +27,20 @@ internal static class Build
 		build.Target("codegen")
 			.DependsOn("build")
 			.Describe("Generates code from the FSD")
-			.Does(() => codeGen(verify: false));
+			.Does(() => CodeGen(verify: false));
 
 		build.Target("verify-codegen")
 			.DependsOn("build")
 			.Describe("Ensures the generated code is up-to-date")
-			.Does(() => codeGen(verify: true));
+			.Does(() => CodeGen(verify: true));
 
 		build.Target("test")
 			.DependsOn("verify-codegen");
 
-		void codeGen(bool verify)
+		void CodeGen(bool verify)
 		{
 			var configuration = dotNetBuildSettings!.BuildOptions!.ConfigurationOption!.Value;
-			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
+			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp3.1/{codegen}.dll").FirstOrDefault();
 
 			var verifyOption = verify ? "--verify" : null;
 
