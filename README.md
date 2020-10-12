@@ -1,7 +1,8 @@
 # Facility C# Support
 
 [C# support](https://facilityapi.github.io/generate/csharp) for the [Facility API Framework](https://facilityapi.github.io/).
-[![AppVeyor](https://img.shields.io/appveyor/ci/ejball/facilitycsharp.svg)](https://ci.appveyor.com/project/ejball/facilitycsharp)
+
+[![Build](https://github.com/FacilityApi/FacilityCSharp/workflows/Build/badge.svg)](https://github.com/FacilityApi/FacilityCSharp/actions?query=workflow%3ABuild)
 
 Name | Description | NuGet
 --- | --- | ---
