@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.6.0
+
+* Only load JSON streams into memory when `ForceAsyncIO` is set.
+
 ## 2.5.0
 
 * Load JSON request streams into memory to avoid synchronous I/O, which ASP.NET Core doesn't allow by default. (This was already true for JSON responses.)
