@@ -66,7 +66,11 @@ namespace Facility.Core.Http
 		{
 			try
 			{
-				using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+				// read content into memory so that ASP.NET Core doesn't complain about synchronous I/O during JSON deserialization
+				using var stream = CreateMemoryStream();
+				await content.CopyToAsync(stream).ConfigureAwait(false);
+				stream.Seek(0, SeekOrigin.Begin);
+
 				using var textReader = new StreamReader(stream);
 				var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
 				if (deserializedContent != null)
