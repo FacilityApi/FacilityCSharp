@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.5.0
+
+* Load JSON request streams into memory to avoid synchronous I/O, which ASP.NET Core doesn't allow by default. (This was already true for JSON responses.)
+
 ## 2.4.1
 
 * Add .NET Core App 3.1 support to `fsdgencsharp` and `FacilityConformance`.
