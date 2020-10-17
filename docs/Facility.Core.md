@@ -32,6 +32,7 @@
 | static class [HttpServiceErrors](Facility.Core.Http/HttpServiceErrors.md) | Common service errors. |
 | static class [HttpServiceUtility](Facility.Core.Http/HttpServiceUtility.md) | Utility methods for HTTP services. |
 | class [JsonHttpContentSerializer](Facility.Core.Http/JsonHttpContentSerializer.md) | Uses JSON to serialize and deserialize DTOs for HTTP requests and responses. |
+| class [JsonHttpContentSerializerSettings](Facility.Core.Http/JsonHttpContentSerializerSettings.md) | Settings for [`JsonHttpContentSerializer`](Facility.Core.Http/JsonHttpContentSerializer.md). |
 | class [ServiceHttpContext](Facility.Core.Http/ServiceHttpContext.md) | The context for service HTTP handlers. |
 | abstract class [ServiceHttpHandler](Facility.Core.Http/ServiceHttpHandler.md) | A service HTTP handler. |
 | abstract class [ServiceHttpHandlerAspect](Facility.Core.Http/ServiceHttpHandlerAspect.md) | Used to provide common functionality to every HTTP service handler. |

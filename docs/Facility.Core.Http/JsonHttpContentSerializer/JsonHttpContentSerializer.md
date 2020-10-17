@@ -1,4 +1,4 @@
-# JsonHttpContentSerializer constructor
+# JsonHttpContentSerializer constructor (1 of 2)
 
 Creates an instance.
 
@@ -8,6 +8,22 @@ public JsonHttpContentSerializer()
 
 ## See Also
 
+* class [JsonHttpContentSerializer](../JsonHttpContentSerializer.md)
+* namespace [Facility.Core.Http](../../Facility.Core.md)
+
+---
+
+# JsonHttpContentSerializer constructor (2 of 2)
+
+Creates an instance.
+
+```csharp
+public JsonHttpContentSerializer(JsonHttpContentSerializerSettings settings)
+```
+
+## See Also
+
+* class [JsonHttpContentSerializerSettings](../JsonHttpContentSerializerSettings.md)
 * class [JsonHttpContentSerializer](../JsonHttpContentSerializer.md)
 * namespace [Facility.Core.Http](../../Facility.Core.md)
 

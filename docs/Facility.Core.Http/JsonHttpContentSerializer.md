@@ -11,6 +11,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 | name | description |
 | --- | --- |
 | [JsonHttpContentSerializer](JsonHttpContentSerializer/JsonHttpContentSerializer.md)() | Creates an instance. |
+| [JsonHttpContentSerializer](JsonHttpContentSerializer/JsonHttpContentSerializer.md)(…) | Creates an instance. |
 | static readonly [Instance](JsonHttpContentSerializer/Instance.md) | An instance of JsonHttpContentSerializer. |
 | [SupportedMediaTypes](JsonHttpContentSerializer/SupportedMediaTypes.md) { get; } | The supported media types. Defaults to "application/json". |
 
