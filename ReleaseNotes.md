@@ -3,6 +3,7 @@
 ## 2.6.0
 
 * Only load JSON streams into memory when `ForceAsyncIO` is set.
+* Add `JsonHttpContentSerializer.MemoryStreamCreator`.
 
 ## 2.5.0
 

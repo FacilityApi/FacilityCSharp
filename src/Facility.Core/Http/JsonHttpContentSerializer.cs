@@ -35,6 +35,7 @@ namespace Facility.Core.Http
 		public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
 		{
 			m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
+			m_memoryStreamCreator = settings?.MemoryStreamCreator;
 
 			SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 		}
@@ -47,7 +48,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates a memory stream.
 		/// </summary>
-		protected virtual Stream CreateMemoryStream() => new MemoryStream();
+		protected virtual Stream CreateMemoryStream() => m_memoryStreamCreator is null ? new MemoryStream() : m_memoryStreamCreator();
 
 		/// <summary>
 		/// The media type for requests.
@@ -143,5 +144,6 @@ namespace Facility.Core.Http
 		}
 
 		private readonly bool m_forceAsyncIO;
+		private readonly Func<Stream>? m_memoryStreamCreator;
 	}
 }
