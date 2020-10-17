@@ -25,7 +25,18 @@ namespace Facility.Core.Http
 		/// Creates an instance.
 		/// </summary>
 		public JsonHttpContentSerializer()
+			: this(null)
 		{
+		}
+
+		/// <summary>
+		/// Creates an instance.
+		/// </summary>
+		public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
+		{
+			m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
+			m_memoryStreamCreator = settings?.MemoryStreamCreator;
+
 			SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 		}
 
@@ -37,7 +48,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Creates a memory stream.
 		/// </summary>
-		protected virtual Stream CreateMemoryStream() => new MemoryStream();
+		protected virtual Stream CreateMemoryStream() => m_memoryStreamCreator is null ? new MemoryStream() : m_memoryStreamCreator();
 
 		/// <summary>
 		/// The media type for requests.
@@ -66,22 +77,33 @@ namespace Facility.Core.Http
 		{
 			try
 			{
-				// read content into memory so that ASP.NET Core doesn't complain about synchronous I/O during JSON deserialization
-				using var stream = CreateMemoryStream();
-				await content.CopyToAsync(stream).ConfigureAwait(false);
-				stream.Seek(0, SeekOrigin.Begin);
-
-				using var textReader = new StreamReader(stream);
-				var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
-				if (deserializedContent != null)
-					return ServiceResult.Success(deserializedContent);
+				if (m_forceAsyncIO)
+				{
+					// read content into memory so that ASP.NET Core doesn't complain about synchronous I/O during JSON deserialization
+					using var stream = CreateMemoryStream();
+					await content.CopyToAsync(stream).ConfigureAwait(false);
+					stream.Seek(0, SeekOrigin.Begin);
+					return ReadJsonStream(dtoType, stream);
+				}
 				else
-					return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
+				{
+					using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+					return ReadJsonStream(dtoType, stream);
+				}
 			}
 			catch (JsonException exception)
 			{
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent(exception.Message));
 			}
+		}
+
+		private static ServiceResult<object> ReadJsonStream(Type dtoType, Stream stream)
+		{
+			using var textReader = new StreamReader(stream);
+			var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
+			if (deserializedContent is null)
+				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
+			return ServiceResult.Success(deserializedContent);
 		}
 
 		private sealed class DelegateHttpContent : HttpContent
@@ -120,5 +142,8 @@ namespace Facility.Core.Http
 
 			private readonly Stream m_memoryStream;
 		}
+
+		private readonly bool m_forceAsyncIO;
+		private readonly Func<Stream>? m_memoryStreamCreator;
 	}
 }
