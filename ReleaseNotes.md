@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.7.0
+
+* Add .NET Standard 2.1 target.
+* Make `ServiceResult<T>.GetValueOrDefault` maybe null.
+
 ## 2.6.0
 
 * Only load JSON streams into memory when `ForceAsyncIO` is set.
