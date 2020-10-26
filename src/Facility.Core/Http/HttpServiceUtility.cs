@@ -54,6 +54,24 @@ namespace Facility.Core.Http
 			return ServiceResult.Success();
 		}
 
+		internal static int IndexOfOrdinal(this string value, char ch)
+		{
+#if NETSTANDARD2_0
+			return value.IndexOf(ch);
+#else
+			return value.IndexOf(ch, StringComparison.Ordinal);
+#endif
+		}
+
+		internal static string ReplaceOrdinal(this string value, string oldValue, string newValue)
+		{
+#if NETSTANDARD2_0
+			return value.Replace(oldValue, newValue);
+#else
+			return value.Replace(oldValue, newValue, StringComparison.Ordinal);
+#endif
+		}
+
 		private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
 		{
 			public DictionaryFromHeaders(HttpHeaders httpHeaders)

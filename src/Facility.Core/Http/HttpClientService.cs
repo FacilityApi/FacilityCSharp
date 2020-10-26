@@ -196,7 +196,7 @@ namespace Facility.Core.Http
 
 		private static string GetUrlFromPattern(string url, IEnumerable<KeyValuePair<string, string?>> parameters)
 		{
-			var hasQuery = url.IndexOf('?') != -1;
+			var hasQuery = url.IndexOfOrdinal('?') != -1;
 
 			foreach (var parameter in parameters)
 			{

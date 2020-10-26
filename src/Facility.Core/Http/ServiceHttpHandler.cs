@@ -227,12 +227,12 @@ namespace Facility.Core.Http
 			string requestPath = requestUri.AbsolutePath.Trim('/');
 			routePath = routePath.Trim('/');
 
-			if (routePath.IndexOf('{') != -1)
+			if (routePath.IndexOfOrdinal('{') != -1)
 			{
 				var names = s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 				string regexPattern = Regex.Escape(routePath);
 				foreach (string name in names)
-					regexPattern = regexPattern.Replace("\\{" + name + "}", "(?'" + name + "'[^/]+)");
+					regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
 				regexPattern = "^(?:" + regexPattern + ")$";
 				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant).Match(requestPath);
 				return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
