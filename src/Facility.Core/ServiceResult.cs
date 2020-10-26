@@ -264,6 +264,7 @@ namespace Facility.Core
 		/// <summary>
 		/// The value. (Returns null on failure.)
 		/// </summary>
+		[return: MaybeNull]
 		public T GetValueOrDefault() => m_value;
 
 		/// <summary>
