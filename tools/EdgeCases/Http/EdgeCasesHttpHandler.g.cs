@@ -22,10 +22,7 @@ namespace EdgeCases.Http
 		public EdgeCasesHttpHandler(IEdgeCases service, ServiceHttpHandlerSettings? settings = null)
 			: base(settings)
 		{
-			if (service == null)
-				throw new ArgumentNullException("service");
-
-			m_service = service;
+			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
 
 		/// <summary>
@@ -34,10 +31,7 @@ namespace EdgeCases.Http
 		public EdgeCasesHttpHandler(Func<HttpRequestMessage, IEdgeCases> getService, ServiceHttpHandlerSettings? settings = null)
 			: base(settings)
 		{
-			if (getService == null)
-				throw new ArgumentNullException("getService");
-
-			m_getService = getService;
+			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}
 
 		/// <summary>

@@ -23,10 +23,7 @@ namespace Facility.ConformanceApi.Http
 		public ConformanceApiHttpHandler(IConformanceApi service, ServiceHttpHandlerSettings? settings = null)
 			: base(settings)
 		{
-			if (service == null)
-				throw new ArgumentNullException("service");
-
-			m_service = service;
+			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
 
 		/// <summary>
@@ -35,10 +32,7 @@ namespace Facility.ConformanceApi.Http
 		public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, ServiceHttpHandlerSettings? settings = null)
 			: base(settings)
 		{
-			if (getService == null)
-				throw new ArgumentNullException("getService");
-
-			m_getService = getService;
+			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}
 
 		/// <summary>

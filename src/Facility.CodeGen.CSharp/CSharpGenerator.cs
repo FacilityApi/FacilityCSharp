@@ -945,14 +945,7 @@ namespace Facility.CodeGen.CSharp
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())
-						{
-							code.WriteLine("if (service == null)");
-							using (code.Indent())
-								code.WriteLine("throw new ArgumentNullException(\"service\");");
-
-							code.WriteLine();
-							code.WriteLine("m_service = service;");
-						}
+							code.WriteLine("m_service = service ?? throw new ArgumentNullException(nameof(service));");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates the handler.");
@@ -960,14 +953,7 @@ namespace Facility.CodeGen.CSharp
 						using (code.Indent())
 							code.WriteLine(": base(settings)");
 						using (code.Block())
-						{
-							code.WriteLine("if (getService == null)");
-							using (code.Indent())
-								code.WriteLine("throw new ArgumentNullException(\"getService\");");
-
-							code.WriteLine();
-							code.WriteLine("m_getService = getService;");
-						}
+							code.WriteLine("m_getService = getService ?? throw new ArgumentNullException(nameof(getService));");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Attempts to handle the HTTP request.");
