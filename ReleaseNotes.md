@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.7.1
+
+* Simplify generated null check.
+
 ## 2.7.0
 
 * Add .NET Standard 2.1 target.
