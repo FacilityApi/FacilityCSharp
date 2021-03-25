@@ -25,11 +25,11 @@ namespace fsdgencsharp
 
 		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
 
-		protected override FileGeneratorSettings CreateSettings(ArgsReader argsReader) =>
+		protected override FileGeneratorSettings CreateSettings(ArgsReader args) =>
 			new CSharpGeneratorSettings
 			{
-				NamespaceName = argsReader.ReadOption("namespace"),
-				UseNullableReferences = argsReader.ReadFlag("nullable"),
+				NamespaceName = args.ReadOption("namespace"),
+				UseNullableReferences = args.ReadFlag("nullable"),
 			};
 	}
 }

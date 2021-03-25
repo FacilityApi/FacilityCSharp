@@ -264,8 +264,8 @@ namespace Facility.Core
 		/// <summary>
 		/// The value. (Returns null on failure.)
 		/// </summary>
-		[return: MaybeNull]
-		public T GetValueOrDefault() => m_value;
+		[SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "By design.")]
+		public T? GetValueOrDefault() => m_value;
 
 		/// <summary>
 		/// Maps a ServiceResult from one type to another.

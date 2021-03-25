@@ -22,10 +22,10 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
+		protected override Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
 			if (!string.IsNullOrWhiteSpace(m_userAgent))
-				request.Headers.Add("User-Agent", m_userAgent);
+				httpRequest.Headers.Add("User-Agent", m_userAgent);
 			return Task.CompletedTask;
 		}
 

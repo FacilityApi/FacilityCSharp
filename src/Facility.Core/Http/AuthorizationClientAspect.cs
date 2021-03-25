@@ -23,10 +23,10 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Called right before the request is sent.
 		/// </summary>
-		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
+		protected override Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
 			if (m_authorizationHeader != null)
-				request.Headers.Authorization = m_authorizationHeader;
+				httpRequest.Headers.Authorization = m_authorizationHeader;
 			return Task.CompletedTask;
 		}
 
