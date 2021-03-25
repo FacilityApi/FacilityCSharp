@@ -29,7 +29,7 @@ namespace Facility.Core.UnitTests.Http
 			var aspect = CommonClientAspects.RequestAuthorization(header);
 			var httpRequest = new HttpRequestMessage();
 			await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
-			httpRequest.Headers.Authorization.ToString().Should().Be(header);
+			httpRequest.Headers.Authorization!.ToString().Should().Be(header);
 		}
 
 		[Test]
@@ -41,7 +41,7 @@ namespace Facility.Core.UnitTests.Http
 			var httpRequest = new HttpRequestMessage();
 			await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
 			httpRequest.Headers.TryGetValues(headerName, out var values);
-			values.Single().Should().Be(headerValue);
+			values!.Single().Should().Be(headerValue);
 		}
 
 		[Test]

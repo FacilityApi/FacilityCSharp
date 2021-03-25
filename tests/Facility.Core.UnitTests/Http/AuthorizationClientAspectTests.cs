@@ -20,7 +20,7 @@ namespace Facility.Core.UnitTests.Http
 			var aspect = AuthorizationClientAspect.Create(header);
 			var httpRequest = new HttpRequestMessage();
 			await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
-			httpRequest.Headers.Authorization.ToString().Should().Be(header);
+			httpRequest.Headers.Authorization!.ToString().Should().Be(header);
 		}
 
 		private class TestDto : ServiceDto<TestDto>

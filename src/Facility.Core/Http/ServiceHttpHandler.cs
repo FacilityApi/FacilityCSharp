@@ -229,6 +229,7 @@ namespace Facility.Core.Http
 
 			if (routePath.IndexOfOrdinal('{') != -1)
 			{
+				// ReSharper disable once RedundantEnumerableCastCall (needed for .NET Standard 2.0)
 				var names = s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 				string regexPattern = Regex.Escape(routePath);
 				foreach (string name in names)

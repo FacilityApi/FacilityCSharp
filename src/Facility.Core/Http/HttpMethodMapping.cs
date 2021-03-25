@@ -145,7 +145,8 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// The response mappings.
 			/// </summary>
-			public Collection<HttpResponseMapping<TResponse>> ResponseMappings { get; } = new Collection<HttpResponseMapping<TResponse>>();
+			// ReSharper disable once CollectionNeverUpdated.Global (used in generated code)
+			public Collection<HttpResponseMapping<TResponse>> ResponseMappings { get; } = new();
 
 			/// <summary>
 			/// Extracts the headers from the response.
@@ -160,7 +161,7 @@ namespace Facility.Core.Http
 			/// <summary>
 			/// Builds the mapping.
 			/// </summary>
-			public HttpMethodMapping<TRequest, TResponse> Build() => new HttpMethodMapping<TRequest, TResponse>(this);
+			public HttpMethodMapping<TRequest, TResponse> Build() => new(this);
 		}
 
 		private HttpMethodMapping(Builder builder)
