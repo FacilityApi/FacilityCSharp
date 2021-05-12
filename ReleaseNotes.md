@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.7.2
+
+* Add .NET 5 support to `fsdgencsharp` and `FacilityConformance`.
+* Nullable reference improvement to `ServiceResult.GetValueOrDefault`.
+
 ## 2.7.1
 
 * Simplify generated null check.
