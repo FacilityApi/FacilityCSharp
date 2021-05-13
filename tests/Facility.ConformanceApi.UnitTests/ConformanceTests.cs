@@ -20,7 +20,7 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = s_httpClient });
 			var test = s_tests.Single(x => x.Test == testName);
-			var result = await new ConformanceApiTester(s_tests, api).RunTestAsync(test, CancellationToken.None).ConfigureAwait(false);
+			var result = await new ConformanceApiTester(s_tests, api).RunTestAsync(test).ConfigureAwait(false);
 			if (result.Status != ConformanceTestStatus.Pass)
 				Assert.Fail(result.Message);
 		}

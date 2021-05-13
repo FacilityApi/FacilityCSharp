@@ -96,7 +96,7 @@ namespace FacilityConformance
 
 				if (testNames.Count == 0)
 				{
-					results.AddRange((await tester.RunAllTestsAsync(CancellationToken.None)).Results);
+					results.AddRange((await tester.RunAllTestsAsync()).Results);
 				}
 				else
 				{
@@ -109,7 +109,7 @@ namespace FacilityConformance
 							return -1;
 						}
 
-						results.Add(await tester.RunTestAsync(testInfo, CancellationToken.None));
+						results.Add(await tester.RunTestAsync(testInfo));
 					}
 				}
 

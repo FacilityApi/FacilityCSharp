@@ -15,14 +15,14 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task NotImplemented()
 		{
 			var api = new DelegatingConformanceApi(ServiceDelegators.NotImplemented);
-			Awaiting(async () => await api.CheckQueryAsync(new CheckQueryRequestDto(), CancellationToken.None)).Should().Throw<NotImplementedException>();
+			Awaiting(async () => await api.CheckQueryAsync(new CheckQueryRequestDto())).Should().Throw<NotImplementedException>();
 		}
 
 		[Test]
 		public async Task Override()
 		{
 			var api = new CheckPathCounter();
-			(await api.CheckPathAsync(new CheckPathRequestDto(), CancellationToken.None)).Should().BeSuccess();
+			(await api.CheckPathAsync(new CheckPathRequestDto())).Should().BeSuccess();
 			api.Count.Should().Be(1);
 		}
 
@@ -31,7 +31,7 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			var inner = new CheckPathCounter();
 			var api = new DelegatingConformanceApi(ServiceDelegators.Forward(inner));
-			(await api.CheckPathAsync(new CheckPathRequestDto(), CancellationToken.None)).Should().BeSuccess();
+			(await api.CheckPathAsync(new CheckPathRequestDto())).Should().BeSuccess();
 			inner.Count.Should().Be(1);
 		}
 
@@ -45,7 +45,7 @@ namespace Facility.ConformanceApi.UnitTests
 					await method.InvokeAsync(inner, request, cancellationToken);
 					return await method.InvokeAsync(inner, request, cancellationToken);
 				});
-			(await api.CheckPathAsync(new CheckPathRequestDto(), CancellationToken.None)).Should().BeSuccess();
+			(await api.CheckPathAsync(new CheckPathRequestDto())).Should().BeSuccess();
 			inner.Count.Should().Be(2);
 		}
 
@@ -53,14 +53,14 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task RightResponse()
 		{
 			var api = new DelegatingConformanceApi(async (_, _, _) => ServiceResult.Success<ServiceDto>(new CheckPathResponseDto()));
-			(await api.CheckPathAsync(new CheckPathRequestDto(), CancellationToken.None)).Should().BeSuccess();
+			(await api.CheckPathAsync(new CheckPathRequestDto())).Should().BeSuccess();
 		}
 
 		[Test]
 		public async Task WrongResponse()
 		{
 			var api = new DelegatingConformanceApi(async (_, _, _) => ServiceResult.Success<ServiceDto>(new CheckQueryResponseDto()));
-			Awaiting(async () => await api.CheckPathAsync(new CheckPathRequestDto(), CancellationToken.None)).Should().Throw<InvalidCastException>();
+			Awaiting(async () => await api.CheckPathAsync(new CheckPathRequestDto())).Should().Throw<InvalidCastException>();
 		}
 
 		private sealed class CheckPathCounter : DelegatingConformanceApi

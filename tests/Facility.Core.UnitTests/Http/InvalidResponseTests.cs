@@ -110,7 +110,7 @@ namespace Facility.Core.UnitTests.Http
 			var handler = new FakeHttpHandler(send);
 			var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 			var clientApi = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = httpClient });
-			var result = await clientApi.GetApiInfoAsync(new GetApiInfoRequestDto(), CancellationToken.None);
+			var result = await clientApi.GetApiInfoAsync(new GetApiInfoRequestDto());
 			result.Should().BeFailure(code);
 			result.Error!.Message.Should().StartWith(message);
 		}

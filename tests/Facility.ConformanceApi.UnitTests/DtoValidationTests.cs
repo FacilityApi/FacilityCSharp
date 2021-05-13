@@ -36,7 +36,7 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			var api = CreateHttpApi();
 			var dto = CreateRequiredRequest();
-			var result = await api.RequiredAsync(dto, CancellationToken.None);
+			var result = await api.RequiredAsync(dto);
 			result.Should().BeSuccess();
 		}
 
@@ -44,7 +44,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task HttpRequiredFieldsMissingNoValidation()
 		{
 			var api = CreateHttpApi(skipClientValidation: true, skipServerValidation: true, requiredResponse: new RequiredResponseDto());
-			var result = await api.RequiredAsync(new RequiredRequestDto(), CancellationToken.None);
+			var result = await api.RequiredAsync(new RequiredRequestDto());
 			result.Should().BeSuccess();
 		}
 
@@ -63,7 +63,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var api = CreateHttpApi(skipClientValidation: skipClientValidation);
 			var dto = CreateRequiredRequest();
 			dto.Normal = null;
-			var result = await api.RequiredAsync(dto, CancellationToken.None);
+			var result = await api.RequiredAsync(dto);
 			result.Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("normal"));
 		}
 
@@ -82,7 +82,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var dto = CreateRequiredResponse();
 			dto.Normal = null;
 			var api = CreateHttpApi(requiredResponse: dto, skipClientValidation: skipClientValidation);
-			var result = await api.RequiredAsync(CreateRequiredRequest(), CancellationToken.None);
+			var result = await api.RequiredAsync(CreateRequiredRequest());
 			result.Should().BeFailure(ServiceErrors.CreateResponseFieldRequired("normal"));
 		}
 
@@ -101,7 +101,7 @@ namespace Facility.ConformanceApi.UnitTests
 			var api = CreateHttpApi(skipClientValidation: skipClientValidation);
 			var dto = CreateRequiredRequest();
 			dto.Query = null;
-			var result = await api.RequiredAsync(dto, CancellationToken.None);
+			var result = await api.RequiredAsync(dto);
 			result.Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("query"));
 		}
 
@@ -125,7 +125,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task HttpRequiredPathFieldMissing([Values] bool skipClientValidation)
 		{
 			var api = CreateHttpApi(skipClientValidation: skipClientValidation);
-			var result = await api.GetWidgetAsync(new GetWidgetRequestDto(), CancellationToken.None);
+			var result = await api.GetWidgetAsync(new GetWidgetRequestDto());
 			result.Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("id"));
 		}
 
@@ -133,7 +133,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task HttpRequiredPathFieldSpecified()
 		{
 			var api = CreateHttpApi();
-			var result = await api.GetWidgetAsync(new GetWidgetRequestDto { Id = 3 }, CancellationToken.None);
+			var result = await api.GetWidgetAsync(new GetWidgetRequestDto { Id = 3 });
 			result.Should().BeSuccess();
 		}
 
@@ -157,7 +157,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task HttpRequiredBodyFieldMissing([Values] bool skipClientValidation)
 		{
 			var api = CreateHttpApi(skipClientValidation: skipClientValidation);
-			var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto(), CancellationToken.None);
+			var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto());
 			result.Should().BeFailure(ServiceErrors.CreateRequestFieldRequired("ids"));
 		}
 
@@ -165,7 +165,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task HttpRequiredBodyFieldSpecified()
 		{
 			var api = CreateHttpApi();
-			var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto { Ids = new[] { 3 } }, CancellationToken.None);
+			var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto { Ids = new[] { 3 } });
 			result.Should().BeSuccess();
 		}
 
