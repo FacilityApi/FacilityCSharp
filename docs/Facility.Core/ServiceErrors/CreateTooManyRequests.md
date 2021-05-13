@@ -3,7 +3,7 @@
 The client has made too many requests.
 
 ```csharp
-public static ServiceErrorDto CreateTooManyRequests(string message = null)
+public static ServiceErrorDto CreateTooManyRequests(string? message = null)
 ```
 
 ## See Also

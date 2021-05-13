@@ -1,7 +1,7 @@
 # MirrorHeadersResponseDto.String property
 
 ```csharp
-public string String { get; set; }
+public string? String { get; set; }
 ```
 
 ## See Also

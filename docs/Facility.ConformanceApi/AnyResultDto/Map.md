@@ -1,7 +1,7 @@
 # AnyResultDto.Map property
 
 ```csharp
-public ServiceResult<IReadOnlyDictionary<string, int>> Map { get; set; }
+public ServiceResult<IReadOnlyDictionary<string, int>>? Map { get; set; }
 ```
 
 ## See Also

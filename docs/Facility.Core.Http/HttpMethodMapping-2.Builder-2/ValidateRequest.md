@@ -3,7 +3,7 @@
 Returns an error if the request is invalid.
 
 ```csharp
-public Func<TRequest, ServiceResult> ValidateRequest { get; set; }
+public Func<TRequest, ServiceResult>? ValidateRequest { get; set; }
 ```
 
 ## See Also

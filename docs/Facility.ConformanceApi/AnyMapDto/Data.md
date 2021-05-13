@@ -1,7 +1,7 @@
 # AnyMapDto.Data property
 
 ```csharp
-public IReadOnlyDictionary<string, AnyDto> Data { get; set; }
+public IReadOnlyDictionary<string, AnyDto>? Data { get; set; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 The service timed out.
 
 ```csharp
-public static ServiceErrorDto CreateTimeout(string message = null)
+public static ServiceErrorDto CreateTimeout(string? message = null)
 ```
 
 ## See Also

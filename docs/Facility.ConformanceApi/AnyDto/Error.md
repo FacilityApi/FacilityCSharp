@@ -1,7 +1,7 @@
 # AnyDto.Error property
 
 ```csharp
-public ServiceErrorDto Error { get; set; }
+public ServiceErrorDto? Error { get; set; }
 ```
 
 ## See Also

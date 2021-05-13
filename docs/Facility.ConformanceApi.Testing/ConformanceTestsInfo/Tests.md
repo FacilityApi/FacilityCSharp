@@ -3,7 +3,7 @@
 The name of the test.
 
 ```csharp
-public IReadOnlyList<ConformanceTestInfo> Tests { get; set; }
+public IReadOnlyList<ConformanceTestInfo>? Tests { get; set; }
 ```
 
 ## See Also

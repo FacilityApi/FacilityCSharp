@@ -3,7 +3,7 @@
 Creates a response with an optional body.
 
 ```csharp
-public Func<object, TResponse> CreateResponse { get; set; }
+public Func<object?, TResponse>? CreateResponse { get; set; }
 ```
 
 ## See Also

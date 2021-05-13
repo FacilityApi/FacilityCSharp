@@ -3,7 +3,7 @@
 The user is not an administrator.
 
 ```csharp
-public static ServiceErrorDto CreateNotAdmin(string message = null)
+public static ServiceErrorDto CreateNotAdmin(string? message = null)
 ```
 
 ## See Also

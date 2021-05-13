@@ -3,7 +3,7 @@
 The client must be authenticated.
 
 ```csharp
-public static ServiceErrorDto CreateNotAuthenticated(string message = null)
+public static ServiceErrorDto CreateNotAuthenticated(string? message = null)
 ```
 
 ## See Also

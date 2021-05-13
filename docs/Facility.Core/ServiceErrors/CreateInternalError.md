@@ -3,7 +3,7 @@
 The service experienced an unexpected internal error.
 
 ```csharp
-public static ServiceErrorDto CreateInternalError(string message = null)
+public static ServiceErrorDto CreateInternalError(string? message = null)
 ```
 
 ## See Also

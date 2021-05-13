@@ -3,7 +3,7 @@
 Attempts to parse a Decimal.
 
 ```csharp
-public static decimal? TryParseDecimal(string text)
+public static decimal? TryParseDecimal(string? text)
 ```
 
 ## See Also

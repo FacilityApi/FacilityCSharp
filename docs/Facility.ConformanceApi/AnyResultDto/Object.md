@@ -1,7 +1,7 @@
 # AnyResultDto.Object property
 
 ```csharp
-public ServiceResult<JObject> Object { get; set; }
+public ServiceResult<JObject>? Object { get; set; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Validates the field value.
 
 ```csharp
-public static bool ValidateFieldValue<T>(T value, out string errorMessage)
+public static bool ValidateFieldValue<T>(T value, out string? errorMessage)
 ```
 
 ## See Also
@@ -18,7 +18,7 @@ public static bool ValidateFieldValue<T>(T value, out string errorMessage)
 Validates the field value.
 
 ```csharp
-public static bool ValidateFieldValue<T>(T value, string fieldName, out string errorMessage)
+public static bool ValidateFieldValue<T>(T value, string fieldName, out string? errorMessage)
 ```
 
 ## See Also

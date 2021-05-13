@@ -3,7 +3,7 @@
 Creates an instance with the specified subject.
 
 ```csharp
-protected ServiceDtoAssertionsBase(TServiceDto subject)
+protected ServiceDtoAssertionsBase(TServiceDto? subject)
 ```
 
 ## See Also

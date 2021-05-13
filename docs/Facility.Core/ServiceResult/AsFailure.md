@@ -3,7 +3,7 @@
 The service result as a failure; null if it is a success.
 
 ```csharp
-public ServiceResultFailure AsFailure()
+public ServiceResultFailure? AsFailure()
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Gets the specified widgets.
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

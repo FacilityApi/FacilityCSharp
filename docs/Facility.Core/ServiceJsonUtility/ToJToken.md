@@ -3,7 +3,7 @@
 Converts the object to a JToken.
 
 ```csharp
-public static JToken ToJToken(object value)
+public static JToken ToJToken(object? value)
 ```
 
 | parameter | description |

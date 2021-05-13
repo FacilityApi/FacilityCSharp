@@ -3,7 +3,7 @@
 Attempts to handle the HTTP request.
 
 ```csharp
-public abstract Task<HttpResponseMessage> TryHandleHttpRequestAsync(HttpRequestMessage request, 
+public abstract Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage request, 
     CancellationToken cancellationToken)
 ```
 

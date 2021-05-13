@@ -4,7 +4,7 @@ Writes the headers to the response.
 
 ```csharp
 public TResponse SetResponseHeaders(TResponse response, 
-    IReadOnlyDictionary<string, string> responseHeaders)
+    IReadOnlyDictionary<string, string?> responseHeaders)
 ```
 
 ## See Also

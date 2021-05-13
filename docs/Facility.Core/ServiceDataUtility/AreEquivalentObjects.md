@@ -3,7 +3,7 @@
 True if the objects are equivalent.
 
 ```csharp
-public static bool AreEquivalentObjects(JObject first, JObject second)
+public static bool AreEquivalentObjects(JObject? first, JObject? second)
 ```
 
 ## See Also

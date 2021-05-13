@@ -3,7 +3,7 @@
 True if the arrays are equivalent.
 
 ```csharp
-public static bool AreEquivalentArrays<T>(IReadOnlyList<T> first, IReadOnlyList<T> second, 
+public static bool AreEquivalentArrays<T>(IReadOnlyList<T>? first, IReadOnlyList<T>? second, 
     Func<T, T, bool> areEquivalent)
 ```
 

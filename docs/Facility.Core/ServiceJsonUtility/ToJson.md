@@ -3,7 +3,7 @@
 Serializes a value to JSON.
 
 ```csharp
-public static string ToJson(object value)
+public static string ToJson(object? value)
 ```
 
 ## See Also

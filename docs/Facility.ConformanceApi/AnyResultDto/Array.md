@@ -1,7 +1,7 @@
 # AnyResultDto.Array property
 
 ```csharp
-public ServiceResult<IReadOnlyList<int>> Array { get; set; }
+public ServiceResult<IReadOnlyList<int>>? Array { get; set; }
 ```
 
 ## See Also

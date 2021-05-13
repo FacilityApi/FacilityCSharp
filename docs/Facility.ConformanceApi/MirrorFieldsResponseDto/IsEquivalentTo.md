@@ -3,7 +3,7 @@
 Determines if two DTOs are equivalent.
 
 ```csharp
-public override bool IsEquivalentTo(MirrorFieldsResponseDto other)
+public override bool IsEquivalentTo(MirrorFieldsResponseDto? other)
 ```
 
 ## See Also

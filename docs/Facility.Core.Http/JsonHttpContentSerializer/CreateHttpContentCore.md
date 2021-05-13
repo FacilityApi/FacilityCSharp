@@ -3,7 +3,7 @@
 Creates HTTP content for the specified DTO.
 
 ```csharp
-protected override HttpContent CreateHttpContentCore(object content, string mediaType)
+protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyResultDto.Bytes property
 
 ```csharp
-public ServiceResult<byte[]> Bytes { get; set; }
+public ServiceResult<byte[]>? Bytes { get; set; }
 ```
 
 ## See Also

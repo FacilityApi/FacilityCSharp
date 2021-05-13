@@ -4,7 +4,7 @@ Writes the path and query parameters to the request.
 
 ```csharp
 public TRequest SetUriParameters(TRequest request, 
-    IReadOnlyDictionary<string, string> uriParameters)
+    IReadOnlyDictionary<string, string?> uriParameters)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyResultDto.String property
 
 ```csharp
-public ServiceResult<string> String { get; set; }
+public ServiceResult<string>? String { get; set; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Deletes the specified widget.
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

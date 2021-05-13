@@ -4,7 +4,7 @@ Creates the handler.
 
 ```csharp
 public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, 
-    ServiceHttpHandlerSettings settings = null)
+    ServiceHttpHandlerSettings? settings = null)
 ```
 
 ## See Also
@@ -21,7 +21,7 @@ Creates the handler.
 
 ```csharp
 public ConformanceApiHttpHandler(IConformanceApi service, 
-    ServiceHttpHandlerSettings settings = null)
+    ServiceHttpHandlerSettings? settings = null)
 ```
 
 ## See Also

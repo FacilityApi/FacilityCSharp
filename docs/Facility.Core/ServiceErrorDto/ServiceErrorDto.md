@@ -18,7 +18,7 @@ public ServiceErrorDto()
 Creates a service error.
 
 ```csharp
-public ServiceErrorDto(string code)
+public ServiceErrorDto(string? code)
 ```
 
 ## See Also
@@ -33,7 +33,7 @@ public ServiceErrorDto(string code)
 Creates a service error.
 
 ```csharp
-public ServiceErrorDto(string code, string message)
+public ServiceErrorDto(string? code, string? message)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Don't delete the widget unless it has this ETag.
 
 ```csharp
-public string IfETag { get; set; }
+public string? IfETag { get; set; }
 ```
 
 ## See Also

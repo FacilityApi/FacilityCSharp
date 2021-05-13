@@ -3,7 +3,7 @@
 Called right before the request is sent.
 
 ```csharp
-protected virtual Task<HttpResponseMessage> RequestReceivedAsyncCore(
+protected virtual Task<HttpResponseMessage?> RequestReceivedAsyncCore(
     HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 ```
 

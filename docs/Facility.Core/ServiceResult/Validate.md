@@ -3,7 +3,7 @@
 Validates the server result value.
 
 ```csharp
-public bool Validate(out string errorMessage)
+public bool Validate(out string? errorMessage)
 ```
 
 ## See Also

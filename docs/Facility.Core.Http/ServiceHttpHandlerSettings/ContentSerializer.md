@@ -3,7 +3,7 @@
 The content serializer used by requests and responses.
 
 ```csharp
-public HttpContentSerializer ContentSerializer { get; set; }
+public HttpContentSerializer? ContentSerializer { get; set; }
 ```
 
 ## See Also

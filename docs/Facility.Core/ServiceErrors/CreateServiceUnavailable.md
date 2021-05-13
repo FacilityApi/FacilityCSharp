@@ -3,7 +3,7 @@
 The service is unavailable.
 
 ```csharp
-public static ServiceErrorDto CreateServiceUnavailable(string message = null)
+public static ServiceErrorDto CreateServiceUnavailable(string? message = null)
 ```
 
 ## See Also

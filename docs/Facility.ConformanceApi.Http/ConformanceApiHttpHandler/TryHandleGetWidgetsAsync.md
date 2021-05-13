@@ -3,7 +3,7 @@
 Gets widgets.
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleGetWidgetsAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

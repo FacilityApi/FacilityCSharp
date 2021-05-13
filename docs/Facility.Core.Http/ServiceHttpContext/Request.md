@@ -3,7 +3,7 @@
 The current service request.
 
 ```csharp
-public ServiceDto Request { get; }
+public ServiceDto? Request { get; }
 ```
 
 ## See Also

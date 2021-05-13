@@ -3,7 +3,7 @@
 Attempts to handle a service method.
 
 ```csharp
-protected Task<HttpResponseMessage> TryHandleServiceMethodAsync<TRequest, TResponse>(
+protected Task<HttpResponseMessage?> TryHandleServiceMethodAsync<TRequest, TResponse>(
     HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, 
     Func<TRequest, CancellationToken, Task<ServiceResult<TResponse>>> invokeMethodAsync, 
     CancellationToken cancellationToken)

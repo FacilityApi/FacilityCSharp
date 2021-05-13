@@ -3,7 +3,7 @@
 True if the DTOs are equivalent.
 
 ```csharp
-public static bool AreEquivalentDtos(ServiceDto first, ServiceDto second)
+public static bool AreEquivalentDtos(ServiceDto? first, ServiceDto? second)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 The widgets.
 
 ```csharp
-public IReadOnlyList<WidgetDto> Widgets { get; set; }
+public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 ```
 
 ## See Also

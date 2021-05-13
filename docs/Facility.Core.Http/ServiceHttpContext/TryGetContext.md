@@ -3,7 +3,7 @@
 Attempts to get the context from the specified HTTP request.
 
 ```csharp
-public static ServiceHttpContext TryGetContext(HttpRequestMessage httpRequest)
+public static ServiceHttpContext? TryGetContext(HttpRequestMessage httpRequest)
 ```
 
 ## See Also
@@ -18,7 +18,7 @@ public static ServiceHttpContext TryGetContext(HttpRequestMessage httpRequest)
 Attempts to get the context from the specified HTTP response.
 
 ```csharp
-public static ServiceHttpContext TryGetContext(HttpResponseMessage httpResponse)
+public static ServiceHttpContext? TryGetContext(HttpResponseMessage httpResponse)
 ```
 
 ## See Also

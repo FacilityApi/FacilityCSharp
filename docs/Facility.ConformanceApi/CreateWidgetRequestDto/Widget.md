@@ -3,7 +3,7 @@
 The widget to create.
 
 ```csharp
-public WidgetDto Widget { get; set; }
+public WidgetDto? Widget { get; set; }
 ```
 
 ## See Also

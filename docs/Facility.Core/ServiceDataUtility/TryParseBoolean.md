@@ -3,7 +3,7 @@
 Attempts to parse a Boolean.
 
 ```csharp
-public static bool? TryParseBoolean(string text)
+public static bool? TryParseBoolean(string? text)
 ```
 
 ## See Also

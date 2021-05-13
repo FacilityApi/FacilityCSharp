@@ -3,7 +3,7 @@
 Clones a JToken.
 
 ```csharp
-public static T CloneToken<T>(T token)
+public static T CloneToken<T>(T? token)
     where T : JToken
 ```
 

@@ -3,7 +3,7 @@
 The name of the service.
 
 ```csharp
-public string Service { get; set; }
+public string? Service { get; set; }
 ```
 
 ## See Also

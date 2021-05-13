@@ -3,7 +3,7 @@
 The type of the response body, if any.
 
 ```csharp
-public Type ResponseBodyType { get; set; }
+public Type? ResponseBodyType { get; set; }
 ```
 
 ## See Also

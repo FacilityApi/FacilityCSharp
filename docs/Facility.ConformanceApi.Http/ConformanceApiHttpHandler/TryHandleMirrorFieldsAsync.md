@@ -1,7 +1,7 @@
 # ConformanceApiHttpHandler.TryHandleMirrorFieldsAsync method
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

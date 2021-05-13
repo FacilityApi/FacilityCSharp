@@ -3,7 +3,7 @@
 Sets the User-Agent header of the request.
 
 ```csharp
-public static HttpClientServiceAspect RequestUserAgent(string userAgent)
+public static HttpClientServiceAspect RequestUserAgent(string? userAgent)
 ```
 
 ## See Also

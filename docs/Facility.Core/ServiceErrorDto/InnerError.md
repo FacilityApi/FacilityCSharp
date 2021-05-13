@@ -3,7 +3,7 @@
 The inner error.
 
 ```csharp
-public ServiceErrorDto InnerError { get; set; }
+public ServiceErrorDto? InnerError { get; set; }
 ```
 
 ## See Also

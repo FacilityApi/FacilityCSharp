@@ -1,7 +1,7 @@
 # AnyMapDto.Boolean property
 
 ```csharp
-public IReadOnlyDictionary<string, bool> Boolean { get; set; }
+public IReadOnlyDictionary<string, bool>? Boolean { get; set; }
 ```
 
 ## See Also

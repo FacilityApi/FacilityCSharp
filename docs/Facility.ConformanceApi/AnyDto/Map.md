@@ -1,7 +1,7 @@
 # AnyDto.Map property
 
 ```csharp
-public AnyMapDto Map { get; set; }
+public AnyMapDto? Map { get; set; }
 ```
 
 ## See Also

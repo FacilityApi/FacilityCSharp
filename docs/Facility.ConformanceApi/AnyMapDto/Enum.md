@@ -1,7 +1,7 @@
 # AnyMapDto.Enum property
 
 ```csharp
-public IReadOnlyDictionary<string, Answer> Enum { get; set; }
+public IReadOnlyDictionary<string, Answer>? Enum { get; set; }
 ```
 
 ## See Also

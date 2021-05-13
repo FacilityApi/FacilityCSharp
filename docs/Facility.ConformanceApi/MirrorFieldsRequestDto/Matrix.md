@@ -1,7 +1,7 @@
 # MirrorFieldsRequestDto.Matrix property
 
 ```csharp
-public IReadOnlyList<IReadOnlyList<IReadOnlyList<double>>> Matrix { get; set; }
+public IReadOnlyList<IReadOnlyList<IReadOnlyList<double>>>? Matrix { get; set; }
 ```
 
 ## See Also

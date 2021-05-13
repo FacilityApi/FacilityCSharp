@@ -1,7 +1,7 @@
 # AnyResultDto.Enum property
 
 ```csharp
-public ServiceResult<Answer> Enum { get; set; }
+public ServiceResult<Answer>? Enum { get; set; }
 ```
 
 ## See Also

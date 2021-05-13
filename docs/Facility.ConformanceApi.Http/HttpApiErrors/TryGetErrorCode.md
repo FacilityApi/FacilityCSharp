@@ -3,7 +3,7 @@
 Gets the error code that corresponds to the specified HTTP status code.
 
 ```csharp
-public static string TryGetErrorCode(HttpStatusCode statusCode)
+public static string? TryGetErrorCode(HttpStatusCode statusCode)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Called to create a memory stream. Defaults to creating a new MemoryStream.
 
 ```csharp
-public Func<Stream> MemoryStreamCreator { get; set; }
+public Func<Stream>? MemoryStreamCreator { get; set; }
 ```
 
 ## Remarks

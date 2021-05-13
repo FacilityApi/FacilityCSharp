@@ -3,7 +3,7 @@
 The query.
 
 ```csharp
-public string Query { get; set; }
+public string? Query { get; set; }
 ```
 
 ## See Also

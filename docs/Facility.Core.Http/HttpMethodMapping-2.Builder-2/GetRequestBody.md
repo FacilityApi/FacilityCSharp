@@ -3,7 +3,7 @@
 Extracts the HTTP request content body from the request.
 
 ```csharp
-public Func<TRequest, object> GetRequestBody { get; set; }
+public Func<TRequest, object?>? GetRequestBody { get; set; }
 ```
 
 ## See Also

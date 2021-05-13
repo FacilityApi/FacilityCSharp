@@ -1,7 +1,7 @@
 # ConformanceApiHttpHandler.TryHandleCheckPathAsync method
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

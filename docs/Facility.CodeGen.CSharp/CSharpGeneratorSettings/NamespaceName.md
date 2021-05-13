@@ -3,7 +3,7 @@
 The name of the namespace (optional).
 
 ```csharp
-public string NamespaceName { get; set; }
+public string? NamespaceName { get; set; }
 ```
 
 ## See Also

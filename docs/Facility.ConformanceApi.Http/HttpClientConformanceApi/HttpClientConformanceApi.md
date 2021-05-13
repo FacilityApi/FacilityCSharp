@@ -3,7 +3,7 @@
 Creates the service.
 
 ```csharp
-public HttpClientConformanceApi(HttpClientServiceSettings settings = null)
+public HttpClientConformanceApi(HttpClientServiceSettings? settings = null)
 ```
 
 ## See Also

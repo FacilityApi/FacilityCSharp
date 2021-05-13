@@ -1,7 +1,7 @@
 # RequiredRequestDto.WidgetMap property
 
 ```csharp
-public IReadOnlyDictionary<string, WidgetDto> WidgetMap { get; set; }
+public IReadOnlyDictionary<string, WidgetDto>? WidgetMap { get; set; }
 ```
 
 ## See Also

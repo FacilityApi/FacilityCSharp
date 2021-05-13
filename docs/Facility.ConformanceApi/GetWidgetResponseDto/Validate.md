@@ -3,7 +3,7 @@
 Validates the DTO.
 
 ```csharp
-public override bool Validate(out string errorMessage)
+public override bool Validate(out string? errorMessage)
 ```
 
 ## See Also

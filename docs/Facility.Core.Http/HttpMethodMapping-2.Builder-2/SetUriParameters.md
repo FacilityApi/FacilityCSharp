@@ -3,7 +3,8 @@
 Writes the path and query parameters to the request.
 
 ```csharp
-public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> SetUriParameters { get; set; }
+public Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? 
+    SetUriParameters { get; set; }
 ```
 
 ## See Also

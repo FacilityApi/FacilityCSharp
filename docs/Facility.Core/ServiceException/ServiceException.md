@@ -19,7 +19,7 @@ public ServiceException(ServiceErrorDto error)
 Creates an exception from an error data object and an inner exception.
 
 ```csharp
-public ServiceException(ServiceErrorDto error, Exception innerException)
+public ServiceException(ServiceErrorDto error, Exception? innerException)
 ```
 
 ## See Also

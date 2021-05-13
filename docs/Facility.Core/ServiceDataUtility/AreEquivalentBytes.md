@@ -3,7 +3,7 @@
 True if the bytes are equivalent.
 
 ```csharp
-public static bool AreEquivalentBytes(byte[] first, byte[] second)
+public static bool AreEquivalentBytes(byte[]? first, byte[]? second)
 ```
 
 ## See Also

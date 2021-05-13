@@ -1,7 +1,7 @@
 # MirrorFieldsResponseDto.Field property
 
 ```csharp
-public AnyDto Field { get; set; }
+public AnyDto? Field { get; set; }
 ```
 
 ## See Also

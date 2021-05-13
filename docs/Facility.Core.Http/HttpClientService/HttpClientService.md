@@ -3,7 +3,7 @@
 Creates an instance with the specified settings.
 
 ```csharp
-protected HttpClientService(HttpClientServiceSettings settings, Uri defaultBaseUri)
+protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyMapDto.Int64 property
 
 ```csharp
-public IReadOnlyDictionary<string, long> Int64 { get; set; }
+public IReadOnlyDictionary<string, long>? Int64 { get; set; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 I'm "too" 😄!
 
 ```csharp
-public static ServiceErrorDto CreateTooHappy(string message = null)
+public static ServiceErrorDto CreateTooHappy(string? message = null)
 ```
 
 ## See Also

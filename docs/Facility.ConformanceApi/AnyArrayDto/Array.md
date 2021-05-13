@@ -1,7 +1,7 @@
 # AnyArrayDto.Array property
 
 ```csharp
-public IReadOnlyList<IReadOnlyList<int>> Array { get; set; }
+public IReadOnlyList<IReadOnlyList<int>>? Array { get; set; }
 ```
 
 ## See Also

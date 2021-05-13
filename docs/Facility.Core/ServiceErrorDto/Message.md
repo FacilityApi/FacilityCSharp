@@ -3,7 +3,7 @@
 The error message.
 
 ```csharp
-public string Message { get; set; }
+public string? Message { get; set; }
 ```
 
 ## See Also

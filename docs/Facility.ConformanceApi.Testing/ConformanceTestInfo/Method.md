@@ -3,7 +3,7 @@
 The API method being called.
 
 ```csharp
-public string Method { get; set; }
+public string? Method { get; set; }
 ```
 
 ## See Also

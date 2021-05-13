@@ -1,7 +1,7 @@
 # RequiredRequestDto.WidgetMatrix property
 
 ```csharp
-public IReadOnlyList<IReadOnlyList<WidgetDto>> WidgetMatrix { get; set; }
+public IReadOnlyList<IReadOnlyList<WidgetDto>>? WidgetMatrix { get; set; }
 ```
 
 ## See Also

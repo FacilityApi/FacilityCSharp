@@ -3,7 +3,7 @@
 Writes the headers to the response.
 
 ```csharp
-public Func<TResponse, IReadOnlyDictionary<string, string>, TResponse> 
+public Func<TResponse, IReadOnlyDictionary<string, string?>, TResponse>? 
     SetResponseHeaders { get; set; }
 ```
 

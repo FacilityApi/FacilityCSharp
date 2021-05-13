@@ -1,7 +1,7 @@
 # MixedResponseDto.Body property
 
 ```csharp
-public JObject Body { get; set; }
+public JObject? Body { get; set; }
 ```
 
 ## See Also

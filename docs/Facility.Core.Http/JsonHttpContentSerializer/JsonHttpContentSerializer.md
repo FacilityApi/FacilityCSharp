@@ -18,7 +18,7 @@ public JsonHttpContentSerializer()
 Creates an instance.
 
 ```csharp
-public JsonHttpContentSerializer(JsonHttpContentSerializerSettings settings)
+public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
 ```
 
 ## See Also

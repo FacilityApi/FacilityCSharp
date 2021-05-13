@@ -3,7 +3,7 @@
 The name of the widget.
 
 ```csharp
-public string Name { get; set; }
+public string? Name { get; set; }
 ```
 
 ## See Also

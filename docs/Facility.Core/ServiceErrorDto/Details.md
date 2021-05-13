@@ -3,7 +3,7 @@
 Advanced error details.
 
 ```csharp
-public JObject Details { get; set; }
+public JObject? Details { get; set; }
 ```
 
 ## See Also

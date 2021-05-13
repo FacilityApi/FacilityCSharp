@@ -3,7 +3,7 @@
 Attempts to parse an Int64.
 
 ```csharp
-public static long? TryParseInt64(string text)
+public static long? TryParseInt64(string? text)
 ```
 
 ## See Also

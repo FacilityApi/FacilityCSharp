@@ -3,7 +3,7 @@
 Don't get the widget if it has this ETag.
 
 ```csharp
-public string IfNotETag { get; set; }
+public string? IfNotETag { get; set; }
 ```
 
 ## See Also

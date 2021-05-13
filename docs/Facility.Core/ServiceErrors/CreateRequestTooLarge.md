@@ -3,7 +3,7 @@
 The request is too large.
 
 ```csharp
-public static ServiceErrorDto CreateRequestTooLarge(string message = null)
+public static ServiceErrorDto CreateRequestTooLarge(string? message = null)
 ```
 
 ## See Also

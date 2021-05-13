@@ -3,7 +3,7 @@
 The current service result.
 
 ```csharp
-public ServiceResult<ServiceDto> Result { get; }
+public ServiceResult<ServiceDto>? Result { get; }
 ```
 
 ## See Also

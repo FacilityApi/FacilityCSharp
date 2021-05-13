@@ -3,7 +3,7 @@
 The test message, if any.
 
 ```csharp
-public string Message { get; }
+public string? Message { get; }
 ```
 
 ## See Also

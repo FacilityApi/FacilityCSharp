@@ -1,7 +1,7 @@
 # AnyResultDto.Boolean property
 
 ```csharp
-public ServiceResult<bool> Boolean { get; set; }
+public ServiceResult<bool>? Boolean { get; set; }
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyArrayDto.Int64 property
 
 ```csharp
-public IReadOnlyList<long> Int64 { get; set; }
+public IReadOnlyList<long>? Int64 { get; set; }
 ```
 
 ## See Also

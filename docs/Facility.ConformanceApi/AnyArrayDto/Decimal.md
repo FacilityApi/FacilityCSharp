@@ -1,7 +1,7 @@
 # AnyArrayDto.Decimal property
 
 ```csharp
-public IReadOnlyList<decimal> Decimal { get; set; }
+public IReadOnlyList<decimal>? Decimal { get; set; }
 ```
 
 ## See Also

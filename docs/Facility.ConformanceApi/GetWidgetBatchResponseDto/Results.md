@@ -3,7 +3,7 @@
 The widget results.
 
 ```csharp
-public IReadOnlyList<ServiceResult<WidgetDto>> Results { get; set; }
+public IReadOnlyList<ServiceResult<WidgetDto>>? Results { get; set; }
 ```
 
 ## See Also

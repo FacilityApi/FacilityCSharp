@@ -3,7 +3,7 @@
 The aspects used when sending requests and receiving responses (optional).
 
 ```csharp
-public IReadOnlyList<HttpClientServiceAspect> Aspects { get; set; }
+public IReadOnlyList<HttpClientServiceAspect>? Aspects { get; set; }
 ```
 
 ## See Also

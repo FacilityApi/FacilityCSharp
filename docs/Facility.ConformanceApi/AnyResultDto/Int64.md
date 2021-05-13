@@ -1,7 +1,7 @@
 # AnyResultDto.Int64 property
 
 ```csharp
-public ServiceResult<long> Int64 { get; set; }
+public ServiceResult<long>? Int64 { get; set; }
 ```
 
 ## See Also

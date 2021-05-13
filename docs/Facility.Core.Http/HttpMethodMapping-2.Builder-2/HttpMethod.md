@@ -3,7 +3,7 @@
 The HTTP method.
 
 ```csharp
-public HttpMethod HttpMethod { get; set; }
+public HttpMethod? HttpMethod { get; set; }
 ```
 
 ## See Also

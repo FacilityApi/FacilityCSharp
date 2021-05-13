@@ -3,7 +3,7 @@
 True if the results are equivalent.
 
 ```csharp
-public static bool AreEquivalentResults(ServiceResult first, ServiceResult second)
+public static bool AreEquivalentResults(ServiceResult? first, ServiceResult? second)
 ```
 
 ## See Also

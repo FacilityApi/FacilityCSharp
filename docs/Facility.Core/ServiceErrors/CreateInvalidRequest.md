@@ -3,7 +3,7 @@
 The request was invalid.
 
 ```csharp
-public static ServiceErrorDto CreateInvalidRequest(string message = null)
+public static ServiceErrorDto CreateInvalidRequest(string? message = null)
 ```
 
 ## See Also

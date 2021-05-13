@@ -3,8 +3,8 @@
 Reads a DTO from the specified HTTP content.
 
 ```csharp
-public Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent content, 
-    CancellationToken cancellationToken = default(CancellationToken))
+public Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, 
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also
@@ -20,8 +20,8 @@ public Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpConten
 Reads a DTO from the specified HTTP content.
 
 ```csharp
-public Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent content, 
-    CancellationToken cancellationToken = default(CancellationToken))
+public Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent? content, 
+    CancellationToken cancellationToken = default)
     where T : ServiceDto
 ```
 

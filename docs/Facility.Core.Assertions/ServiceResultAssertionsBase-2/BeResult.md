@@ -3,7 +3,7 @@
 Asserts that the subject result is equivalent to the expected result.
 
 ```csharp
-public AndConstraint<TAssertions> BeResult(TServiceResult expected)
+public AndConstraint<TAssertions> BeResult(TServiceResult? expected)
 ```
 
 ## See Also

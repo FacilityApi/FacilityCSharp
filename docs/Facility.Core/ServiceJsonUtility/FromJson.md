@@ -3,7 +3,7 @@
 Deserializes a value from JSON.
 
 ```csharp
-public static object FromJson(string json, Type type)
+public static object? FromJson(string json, Type type)
 ```
 
 ## See Also

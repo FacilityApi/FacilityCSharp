@@ -1,7 +1,7 @@
 # AnyResultDto.Decimal property
 
 ```csharp
-public ServiceResult<decimal> Decimal { get; set; }
+public ServiceResult<decimal>? Decimal { get; set; }
 ```
 
 ## See Also

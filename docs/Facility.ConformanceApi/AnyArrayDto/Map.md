@@ -1,7 +1,7 @@
 # AnyArrayDto.Map property
 
 ```csharp
-public IReadOnlyList<IReadOnlyDictionary<string, int>> Map { get; set; }
+public IReadOnlyList<IReadOnlyDictionary<string, int>>? Map { get; set; }
 ```
 
 ## See Also

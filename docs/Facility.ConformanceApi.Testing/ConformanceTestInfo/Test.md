@@ -3,7 +3,7 @@
 The name of the test.
 
 ```csharp
-public string Test { get; set; }
+public string? Test { get; set; }
 ```
 
 ## See Also

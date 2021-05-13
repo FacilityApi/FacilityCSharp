@@ -1,7 +1,7 @@
 # AnyArrayDto.Bytes property
 
 ```csharp
-public IReadOnlyList<byte[]> Bytes { get; set; }
+public IReadOnlyList<byte[]>? Bytes { get; set; }
 ```
 
 ## See Also

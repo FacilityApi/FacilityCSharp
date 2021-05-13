@@ -3,7 +3,7 @@
 The base URI.
 
 ```csharp
-protected Uri BaseUri { get; }
+protected Uri? BaseUri { get; }
 ```
 
 ## See Also

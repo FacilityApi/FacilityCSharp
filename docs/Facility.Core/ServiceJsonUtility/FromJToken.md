@@ -3,7 +3,7 @@
 Deserializes a value from a JToken.
 
 ```csharp
-public static object FromJToken(JToken jToken, Type type)
+public static object? FromJToken(JToken? jToken, Type type)
 ```
 
 ## See Also
@@ -18,7 +18,7 @@ public static object FromJToken(JToken jToken, Type type)
 Deserializes a value from a JToken.
 
 ```csharp
-public static T FromJToken<T>(JToken jToken)
+public static T FromJToken<T>(JToken? jToken)
 ```
 
 ## See Also

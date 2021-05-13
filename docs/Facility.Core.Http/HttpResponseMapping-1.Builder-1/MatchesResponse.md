@@ -3,7 +3,7 @@
 True if the response should result in this status code and body.
 
 ```csharp
-public Func<TResponse, bool> MatchesResponse { get; set; }
+public Func<TResponse, bool>? MatchesResponse { get; set; }
 ```
 
 ## See Also

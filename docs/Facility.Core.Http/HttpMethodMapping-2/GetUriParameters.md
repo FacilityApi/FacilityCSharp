@@ -3,7 +3,7 @@
 Extracts the path and query parameters from the request.
 
 ```csharp
-public IReadOnlyDictionary<string, string> GetUriParameters(TRequest request)
+public IReadOnlyDictionary<string, string?>? GetUriParameters(TRequest request)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # RequiredRequestDto.WidgetResults property
 
 ```csharp
-public IReadOnlyList<ServiceResult<WidgetDto>> WidgetResults { get; set; }
+public IReadOnlyList<ServiceResult<WidgetDto>>? WidgetResults { get; set; }
 ```
 
 ## See Also

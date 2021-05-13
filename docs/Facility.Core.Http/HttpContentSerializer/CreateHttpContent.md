@@ -3,7 +3,7 @@
 Creates HTTP content for the specified DTO.
 
 ```csharp
-public HttpContent CreateHttpContent(object content, string mediaType = null)
+public HttpContent CreateHttpContent(object content, string? mediaType = null)
 ```
 
 ## See Also

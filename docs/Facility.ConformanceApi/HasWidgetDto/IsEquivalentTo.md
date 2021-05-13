@@ -3,7 +3,7 @@
 Determines if two DTOs are equivalent.
 
 ```csharp
-public override bool IsEquivalentTo(HasWidgetDto other)
+public override bool IsEquivalentTo(HasWidgetDto? other)
 ```
 
 ## See Also

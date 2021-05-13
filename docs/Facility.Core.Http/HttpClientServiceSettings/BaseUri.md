@@ -3,7 +3,7 @@
 The base URI of the service (optional if the service has a default base URI).
 
 ```csharp
-public Uri BaseUri { get; set; }
+public Uri? BaseUri { get; set; }
 ```
 
 ## See Also

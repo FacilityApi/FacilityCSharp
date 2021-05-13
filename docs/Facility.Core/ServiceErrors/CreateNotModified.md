@@ -3,7 +3,7 @@
 The specified item was not modified.
 
 ```csharp
-public static ServiceErrorDto CreateNotModified(string message = null)
+public static ServiceErrorDto CreateNotModified(string? message = null)
 ```
 
 ## See Also

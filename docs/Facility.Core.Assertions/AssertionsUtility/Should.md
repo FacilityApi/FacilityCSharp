@@ -3,7 +3,7 @@
 Returns a [`ServiceDtoAssertions`](../ServiceDtoAssertions.md) object that can be used to assert the current ServiceDto.
 
 ```csharp
-public static ServiceDtoAssertions Should(this ServiceDto dto)
+public static ServiceDtoAssertions Should(this ServiceDto? dto)
 ```
 
 ## See Also
@@ -19,7 +19,7 @@ public static ServiceDtoAssertions Should(this ServiceDto dto)
 Returns a [`ServiceResultAssertions`](../ServiceResultAssertions.md) object that can be used to assert the current ServiceResult.
 
 ```csharp
-public static ServiceResultAssertions Should(this ServiceResult result)
+public static ServiceResultAssertions Should(this ServiceResult? result)
 ```
 
 ## See Also
@@ -35,7 +35,7 @@ public static ServiceResultAssertions Should(this ServiceResult result)
 Returns a [`ServiceDtoAssertions`](../ServiceDtoAssertions-1.md) object that can be used to assert the current ServiceDto.
 
 ```csharp
-public static ServiceDtoAssertions<T> Should<T>(this ServiceDto<T> dto)
+public static ServiceDtoAssertions<T> Should<T>(this ServiceDto<T>? dto)
     where T : ServiceDto<T>
 ```
 
@@ -52,7 +52,7 @@ public static ServiceDtoAssertions<T> Should<T>(this ServiceDto<T> dto)
 Returns a [`ServiceResultAssertions`](../ServiceResultAssertions-1.md) object that can be used to assert the current ServiceResult.
 
 ```csharp
-public static ServiceResultAssertions<T> Should<T>(this ServiceResult<T> result)
+public static ServiceResultAssertions<T> Should<T>(this ServiceResult<T>? result)
 ```
 
 ## See Also

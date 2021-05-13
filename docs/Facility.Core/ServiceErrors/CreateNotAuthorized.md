@@ -3,7 +3,7 @@
 The authenticated client does not have the required authorization.
 
 ```csharp
-public static ServiceErrorDto CreateNotAuthorized(string message = null)
+public static ServiceErrorDto CreateNotAuthorized(string? message = null)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # ConformanceApiHttpHandler.TryHandleMixedAsync method
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleMixedAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleMixedAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

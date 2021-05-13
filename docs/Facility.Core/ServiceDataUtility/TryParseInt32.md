@@ -3,7 +3,7 @@
 Attempts to parse an Int32.
 
 ```csharp
-public static int? TryParseInt32(string text)
+public static int? TryParseInt32(string? text)
 ```
 
 ## See Also

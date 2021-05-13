@@ -1,7 +1,7 @@
 # AnyMapDto.Decimal property
 
 ```csharp
-public IReadOnlyDictionary<string, decimal> Decimal { get; set; }
+public IReadOnlyDictionary<string, decimal>? Decimal { get; set; }
 ```
 
 ## See Also

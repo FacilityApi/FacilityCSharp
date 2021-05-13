@@ -3,7 +3,7 @@
 The message.
 
 ```csharp
-public override string Message { get; }
+public override string? Message { get; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Sets the Accept header of the request.
 
 ```csharp
-public static HttpClientServiceAspect RequestAccept(string accept)
+public static HttpClientServiceAspect RequestAccept(string? accept)
 ```
 
 ## See Also

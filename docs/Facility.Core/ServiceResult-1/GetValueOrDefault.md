@@ -3,7 +3,7 @@
 The value. (Returns null on failure.)
 
 ```csharp
-public T GetValueOrDefault()
+public T? GetValueOrDefault()
 ```
 
 ## See Also

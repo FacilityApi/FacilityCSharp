@@ -3,7 +3,7 @@
 Extracts the headers from the response.
 
 ```csharp
-public IReadOnlyDictionary<string, string> GetResponseHeaders(TResponse response)
+public IReadOnlyDictionary<string, string?>? GetResponseHeaders(TResponse response)
 ```
 
 ## See Also

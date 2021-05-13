@@ -1,7 +1,7 @@
 # MixedRequestDto.Header property
 
 ```csharp
-public string Header { get; set; }
+public string? Header { get; set; }
 ```
 
 ## See Also

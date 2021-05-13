@@ -1,7 +1,7 @@
 # AnyMapDto.Error property
 
 ```csharp
-public IReadOnlyDictionary<string, ServiceErrorDto> Error { get; set; }
+public IReadOnlyDictionary<string, ServiceErrorDto>? Error { get; set; }
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # ConformanceApiHttpHandler.TryHandleCheckQueryAsync method
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleCheckQueryAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleCheckQueryAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

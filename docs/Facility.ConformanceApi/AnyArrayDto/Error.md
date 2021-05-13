@@ -1,7 +1,7 @@
 # AnyArrayDto.Error property
 
 ```csharp
-public IReadOnlyList<ServiceErrorDto> Error { get; set; }
+public IReadOnlyList<ServiceErrorDto>? Error { get; set; }
 ```
 
 ## See Also

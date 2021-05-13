@@ -3,7 +3,7 @@
 The root path of the service, default "/".
 
 ```csharp
-public string RootPath { get; set; }
+public string? RootPath { get; set; }
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # RequiredRequestDto.WidgetResult property
 
 ```csharp
-public ServiceResult<WidgetDto> WidgetResult { get; set; }
+public ServiceResult<WidgetDto>? WidgetResult { get; set; }
 ```
 
 ## See Also

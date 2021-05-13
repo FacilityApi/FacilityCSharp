@@ -1,7 +1,7 @@
 # MixedRequestDto.Normal property
 
 ```csharp
-public string Normal { get; set; }
+public string? Normal { get; set; }
 ```
 
 ## See Also

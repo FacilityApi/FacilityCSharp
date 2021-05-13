@@ -3,7 +3,7 @@
 Determines if two DTOs are equivalent.
 
 ```csharp
-public bool IsEquivalentTo(ServiceDto other)
+public bool IsEquivalentTo(ServiceDto? other)
 ```
 
 ## See Also
@@ -19,7 +19,7 @@ public bool IsEquivalentTo(ServiceDto other)
 Determines if two DTOs are equivalent.
 
 ```csharp
-public abstract bool IsEquivalentTo(T other)
+public abstract bool IsEquivalentTo(T? other)
 ```
 
 ## See Also

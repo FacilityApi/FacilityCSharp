@@ -3,7 +3,7 @@
 The ETag of the widget.
 
 ```csharp
-public string ETag { get; set; }
+public string? ETag { get; set; }
 ```
 
 ## See Also

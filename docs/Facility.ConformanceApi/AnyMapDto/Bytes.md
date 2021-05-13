@@ -1,7 +1,7 @@
 # AnyMapDto.Bytes property
 
 ```csharp
-public IReadOnlyDictionary<string, byte[]> Bytes { get; set; }
+public IReadOnlyDictionary<string, byte[]>? Bytes { get; set; }
 ```
 
 ## See Also

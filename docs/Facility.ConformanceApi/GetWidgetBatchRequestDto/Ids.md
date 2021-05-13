@@ -3,7 +3,7 @@
 The IDs of the widgets to return.
 
 ```csharp
-public IReadOnlyList<int> Ids { get; set; }
+public IReadOnlyList<int>? Ids { get; set; }
 ```
 
 ## See Also

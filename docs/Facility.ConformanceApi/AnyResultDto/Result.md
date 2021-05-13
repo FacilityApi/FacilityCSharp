@@ -1,7 +1,7 @@
 # AnyResultDto.Result property
 
 ```csharp
-public ServiceResult<ServiceResult<int>> Result { get; set; }
+public ServiceResult<ServiceResult<int>>? Result { get; set; }
 ```
 
 ## See Also

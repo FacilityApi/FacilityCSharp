@@ -3,7 +3,7 @@
 Creates a conformance test result.
 
 ```csharp
-public ConformanceTestResult(string testName, ConformanceTestStatus status, string message = null)
+public ConformanceTestResult(string testName, ConformanceTestStatus status, string? message = null)
 ```
 
 ## See Also

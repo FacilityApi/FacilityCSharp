@@ -4,7 +4,7 @@ Writes the headers to the request.
 
 ```csharp
 public TRequest SetRequestHeaders(TRequest request, 
-    IReadOnlyDictionary<string, string> requestHeaders)
+    IReadOnlyDictionary<string, string?> requestHeaders)
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyDto.Array property
 
 ```csharp
-public AnyArrayDto Array { get; set; }
+public AnyArrayDto? Array { get; set; }
 ```
 
 ## See Also

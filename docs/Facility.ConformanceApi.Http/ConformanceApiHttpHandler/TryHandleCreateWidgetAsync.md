@@ -3,7 +3,7 @@
 Creates a new widget.
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

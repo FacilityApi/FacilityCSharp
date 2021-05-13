@@ -3,7 +3,8 @@
 Writes the headers to the request.
 
 ```csharp
-public Func<TRequest, IReadOnlyDictionary<string, string>, TRequest> SetRequestHeaders { get; set; }
+public Func<TRequest, IReadOnlyDictionary<string, string?>, TRequest>? 
+    SetRequestHeaders { get; set; }
 ```
 
 ## See Also

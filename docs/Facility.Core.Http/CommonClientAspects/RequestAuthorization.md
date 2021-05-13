@@ -3,7 +3,7 @@
 Sets the Authorization header of the request.
 
 ```csharp
-public static HttpClientServiceAspect RequestAuthorization(string authorization)
+public static HttpClientServiceAspect RequestAuthorization(string? authorization)
 ```
 
 ## See Also

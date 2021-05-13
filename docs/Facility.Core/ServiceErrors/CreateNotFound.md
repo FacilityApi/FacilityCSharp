@@ -3,7 +3,7 @@
 The specified item was not found.
 
 ```csharp
-public static ServiceErrorDto CreateNotFound(string message = null)
+public static ServiceErrorDto CreateNotFound(string? message = null)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 The type of the request body, if any.
 
 ```csharp
-public Type RequestBodyType { get; }
+public Type? RequestBodyType { get; }
 ```
 
 ## See Also

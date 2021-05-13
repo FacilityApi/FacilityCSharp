@@ -1,7 +1,7 @@
 # RequiredRequestDto.Query property
 
 ```csharp
-public string Query { get; set; }
+public string? Query { get; set; }
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Creates a request with an optional body.
 
 ```csharp
-public Func<object, TRequest> CreateRequest { get; set; }
+public Func<object?, TRequest>? CreateRequest { get; set; }
 ```
 
 ## See Also

@@ -1,7 +1,7 @@
 # AnyArrayDto.Boolean property
 
 ```csharp
-public IReadOnlyList<bool> Boolean { get; set; }
+public IReadOnlyList<bool>? Boolean { get; set; }
 ```
 
 ## See Also

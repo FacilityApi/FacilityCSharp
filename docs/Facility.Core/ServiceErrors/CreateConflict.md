@@ -3,7 +3,7 @@
 A conflict occurred.
 
 ```csharp
-public static ServiceErrorDto CreateConflict(string message = null)
+public static ServiceErrorDto CreateConflict(string? message = null)
 ```
 
 ## See Also

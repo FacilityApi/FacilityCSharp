@@ -1,7 +1,7 @@
 # AnyArrayDto.Enum property
 
 ```csharp
-public IReadOnlyList<Answer> Enum { get; set; }
+public IReadOnlyList<Answer>? Enum { get; set; }
 ```
 
 ## See Also

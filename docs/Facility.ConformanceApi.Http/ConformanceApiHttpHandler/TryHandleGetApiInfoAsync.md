@@ -3,7 +3,7 @@
 Gets API information.
 
 ```csharp
-public Task<HttpResponseMessage> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

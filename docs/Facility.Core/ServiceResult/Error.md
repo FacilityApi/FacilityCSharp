@@ -3,7 +3,7 @@
 The error.
 
 ```csharp
-public ServiceErrorDto Error { get; }
+public ServiceErrorDto? Error { get; }
 ```
 
 ## See Also

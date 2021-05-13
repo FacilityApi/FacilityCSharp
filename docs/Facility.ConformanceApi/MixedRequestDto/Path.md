@@ -1,7 +1,7 @@
 # MixedRequestDto.Path property
 
 ```csharp
-public string Path { get; set; }
+public string? Path { get; set; }
 ```
 
 ## See Also

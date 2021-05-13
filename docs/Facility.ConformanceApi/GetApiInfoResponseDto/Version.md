@@ -3,7 +3,7 @@
 The version of the service.
 
 ```csharp
-public string Version { get; set; }
+public string? Version { get; set; }
 ```
 
 ## See Also

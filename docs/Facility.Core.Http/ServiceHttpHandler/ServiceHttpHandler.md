@@ -3,7 +3,7 @@
 Creates an instance.
 
 ```csharp
-protected ServiceHttpHandler(ServiceHttpHandlerSettings settings)
+protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
 ```
 
 ## See Also

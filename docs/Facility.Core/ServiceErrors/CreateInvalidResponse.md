@@ -3,7 +3,7 @@
 The service returned an unexpected response.
 
 ```csharp
-public static ServiceErrorDto CreateInvalidResponse(string message = null)
+public static ServiceErrorDto CreateInvalidResponse(string? message = null)
 ```
 
 ## See Also

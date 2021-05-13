@@ -1,7 +1,7 @@
 # AnyDto.Result property
 
 ```csharp
-public AnyResultDto Result { get; set; }
+public AnyResultDto? Result { get; set; }
 ```
 
 ## See Also

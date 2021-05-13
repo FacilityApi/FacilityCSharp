@@ -3,7 +3,7 @@
 Called when the request is received.
 
 ```csharp
-public Task<HttpResponseMessage> RequestReceivedAsync(HttpRequestMessage httpRequest, 
+public Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, 
     CancellationToken cancellationToken)
 ```
 

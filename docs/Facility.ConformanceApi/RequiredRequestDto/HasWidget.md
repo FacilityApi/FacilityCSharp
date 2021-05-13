@@ -1,7 +1,7 @@
 # RequiredRequestDto.HasWidget property
 
 ```csharp
-public HasWidgetDto HasWidget { get; set; }
+public HasWidgetDto? HasWidget { get; set; }
 ```
 
 ## See Also

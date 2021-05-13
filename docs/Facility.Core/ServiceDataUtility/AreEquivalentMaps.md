@@ -3,8 +3,8 @@
 True if the maps are equivalent.
 
 ```csharp
-public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T> first, 
-    IReadOnlyDictionary<string, T> second, Func<T, T, bool> areEquivalent)
+public static bool AreEquivalentMaps<T>(IReadOnlyDictionary<string, T>? first, 
+    IReadOnlyDictionary<string, T>? second, Func<T, T, bool> areEquivalent)
 ```
 
 ## See Also

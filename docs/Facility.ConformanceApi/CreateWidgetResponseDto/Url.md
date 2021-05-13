@@ -3,7 +3,7 @@
 The URL of the created widget.
 
 ```csharp
-public string Url { get; set; }
+public string? Url { get; set; }
 ```
 
 ## See Also

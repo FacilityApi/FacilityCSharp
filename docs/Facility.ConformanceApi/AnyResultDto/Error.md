@@ -1,7 +1,7 @@
 # AnyResultDto.Error property
 
 ```csharp
-public ServiceResult<ServiceErrorDto> Error { get; set; }
+public ServiceResult<ServiceErrorDto>? Error { get; set; }
 ```
 
 ## See Also

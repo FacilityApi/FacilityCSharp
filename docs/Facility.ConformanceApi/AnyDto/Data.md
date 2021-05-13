@@ -1,7 +1,7 @@
 # AnyDto.Data property
 
 ```csharp
-public AnyDto Data { get; set; }
+public AnyDto? Data { get; set; }
 ```
 
 ## See Also

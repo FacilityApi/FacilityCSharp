@@ -1,7 +1,7 @@
 # ServiceResult&lt;T&gt;.IsEquivalentTo method
 
 ```csharp
-public bool IsEquivalentTo(ServiceResult other)
+public bool IsEquivalentTo(ServiceResult? other)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Attempts to parse a Double.
 
 ```csharp
-public static double? TryParseDouble(string text)
+public static double? TryParseDouble(string? text)
 ```
 
 ## See Also

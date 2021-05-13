@@ -3,7 +3,7 @@
 The HttpClient to use (optional).
 
 ```csharp
-public HttpClient HttpClient { get; set; }
+public HttpClient? HttpClient { get; set; }
 ```
 
 ## See Also

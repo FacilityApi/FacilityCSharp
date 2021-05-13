@@ -3,7 +3,7 @@
 Sets a request header.
 
 ```csharp
-public static HttpClientServiceAspect RequestHeader(string headerName, string headerValue)
+public static HttpClientServiceAspect RequestHeader(string headerName, string? headerValue)
 ```
 
 ## See Also

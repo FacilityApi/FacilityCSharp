@@ -3,7 +3,7 @@
 Extracts the headers from the request.
 
 ```csharp
-public Func<TRequest, IReadOnlyDictionary<string, string>> GetRequestHeaders { get; set; }
+public Func<TRequest, IReadOnlyDictionary<string, string?>>? GetRequestHeaders { get; set; }
 ```
 
 ## See Also

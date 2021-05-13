@@ -3,7 +3,7 @@
 Creates an instance with the specified subject.
 
 ```csharp
-public ServiceResultAssertions(ServiceResult subject)
+public ServiceResultAssertions(ServiceResult? subject)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 Check service results for equivalence.
 
 ```csharp
-public bool IsEquivalentTo(ServiceResult other)
+public bool IsEquivalentTo(ServiceResult? other)
 ```
 
 ## See Also
