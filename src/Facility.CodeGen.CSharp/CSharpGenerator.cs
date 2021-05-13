@@ -56,6 +56,9 @@ namespace Facility.CodeGen.CSharp
 
 				foreach (var methodInfo in service.Methods)
 					outputFiles.AddRange(GenerateMethodDtos(methodInfo, context));
+
+				outputFiles.Add(GenerateMethodInfos(service, context));
+				outputFiles.Add(GenerateDelegatingService(service, context));
 			}
 
 			var httpServiceInfo = HttpServiceInfo.Create(service);
@@ -1097,6 +1100,99 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine($"Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async(" +
 								$"{CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken);");
 						}
+					}
+				}
+			});
+		}
+
+		private CodeGenFile GenerateMethodInfos(ServiceInfo serviceInfo, Context context)
+		{
+			var className = $"{CodeGenUtility.Capitalize(serviceInfo.Name)}Methods";
+			var interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+
+			return CreateFile(className + CSharpUtility.FileExtension, code =>
+			{
+				WriteFileHeader(code, context);
+
+				var usings = new List<string>
+				{
+					"System",
+					"Facility.Core",
+				};
+				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
+
+				code.WriteLine($"namespace {context.NamespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+					code.WriteLine($"internal static class {className}");
+					using (code.Block())
+					{
+						foreach (var methodInfo in serviceInfo.Methods)
+						{
+							code.WriteLineSkipOnce();
+							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
+							code.WriteLine($"public static readonly IServiceMethodInfo {CSharpUtility.GetMethodName(methodInfo)} =");
+							using (code.Indent())
+							{
+								code.WriteLine($"ServiceMethodInfo.Create<{interfaceName}, {CSharpUtility.GetRequestDtoName(methodInfo)}, {CSharpUtility.GetResponseDtoName(methodInfo)}>(");
+								using (code.Indent())
+									code.WriteLine($"{CSharpUtility.CreateString(methodInfo.Name)}, {CSharpUtility.CreateString(serviceInfo.Name)}, x => x.{CSharpUtility.GetMethodName(methodInfo)}Async);");
+							}
+						}
+					}
+				}
+			});
+		}
+
+		private CodeGenFile GenerateDelegatingService(ServiceInfo serviceInfo, Context context)
+		{
+			var className = $"Delegating{CodeGenUtility.Capitalize(serviceInfo.Name)}";
+			var interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+			var methodsClassName = $"{CodeGenUtility.Capitalize(serviceInfo.Name)}Methods";
+
+			return CreateFile(className + CSharpUtility.FileExtension, code =>
+			{
+				WriteFileHeader(code, context);
+
+				var usings = new List<string>
+				{
+					"System",
+					"System.Threading",
+					"System.Threading.Tasks",
+					"Facility.Core",
+				};
+				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
+
+				code.WriteLine($"namespace {context.NamespaceName}");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, $"A delegating implementation of {serviceInfo.Name}.");
+					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
+					CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+					code.WriteLine($"public class {className} : {interfaceName}");
+					using (code.Block())
+					{
+						CSharpUtility.WriteSummary(code, "Creates an instance with the specified delegator.");
+						code.WriteLine($"public {className}(ServiceDelegator delegator) =>");
+						using (code.Indent())
+							code.WriteLine("m_delegator = delegator ?? throw new ArgumentNullException(nameof(delegator));");
+
+						foreach (var methodInfo in serviceInfo.Methods)
+						{
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, methodInfo.Summary);
+							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
+							code.WriteLine($"public virtual async Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async({CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken) =>");
+							using (code.Indent())
+								code.WriteLine($"(await m_delegator({methodsClassName}.{CSharpUtility.GetMethodName(methodInfo)}, request, cancellationToken).ConfigureAwait(false)).Cast<{CSharpUtility.GetResponseDtoName(methodInfo)}>();");
+						}
+
+						code.WriteLine();
+						code.WriteLine("private readonly ServiceDelegator m_delegator;");
 					}
 				}
 			});
