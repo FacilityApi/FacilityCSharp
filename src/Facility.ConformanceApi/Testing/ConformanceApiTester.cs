@@ -44,7 +44,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Runs all tests.
 		/// </summary>
-		public async Task<ConformanceTestRun> RunAllTestsAsync(CancellationToken cancellationToken)
+		public async Task<ConformanceTestRun> RunAllTestsAsync(CancellationToken cancellationToken = default)
 		{
 			var results = new List<ConformanceTestResult>();
 
@@ -57,7 +57,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Runs the test with the specified name.
 		/// </summary>
-		public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken)
+		public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken = default)
 		{
 			string testName = test.Test!;
 			ConformanceTestResult Failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);

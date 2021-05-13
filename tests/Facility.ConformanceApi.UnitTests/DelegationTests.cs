@@ -70,7 +70,7 @@ namespace Facility.ConformanceApi.UnitTests
 			{
 			}
 
-			public override async Task<ServiceResult<CheckPathResponseDto>> CheckPathAsync(CheckPathRequestDto request, CancellationToken cancellationToken)
+			public override async Task<ServiceResult<CheckPathResponseDto>> CheckPathAsync(CheckPathRequestDto request, CancellationToken cancellationToken = default)
 			{
 				Count++;
 				return ServiceResult.Success(new CheckPathResponseDto());

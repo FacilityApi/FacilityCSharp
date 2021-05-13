@@ -25,7 +25,7 @@ namespace EdgeCases.Http
 		/// An old method.
 		/// </summary>
 		[Obsolete]
-		public Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken) =>
+		public Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.OldMethodMapping, request, cancellationToken);
 	}
 }

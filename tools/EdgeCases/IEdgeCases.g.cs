@@ -16,6 +16,6 @@ namespace EdgeCases
 		/// An old method.
 		/// </summary>
 		[Obsolete]
-		Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken);
+		Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default);
 	}
 }

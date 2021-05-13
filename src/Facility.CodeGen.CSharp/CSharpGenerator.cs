@@ -893,7 +893,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken) =>");
+							code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken = default) =>");
 							using (code.Indent())
 								code.WriteLine($"TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
 						}
@@ -960,7 +960,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Attempts to handle the HTTP request.");
-						code.WriteLine($"public override async Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)");
+						code.WriteLine($"public override async Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)");
 						using (code.Block())
 						{
 							// check 'widgets/get' before 'widgets/{id}'
@@ -986,7 +986,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>");
+							code.WriteLine($"public Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>");
 							using (code.Indent())
 								code.WriteLine($"TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
 						}
@@ -1098,7 +1098,7 @@ namespace Facility.CodeGen.CSharp
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
 							code.WriteLine($"Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async(" +
-								$"{CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken);");
+								$"{CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default);");
 						}
 					}
 				}
@@ -1186,7 +1186,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, methodInfo.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-							code.WriteLine($"public virtual async Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async({CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken) =>");
+							code.WriteLine($"public virtual async Task<ServiceResult<{CSharpUtility.GetResponseDtoName(methodInfo)}>> {CSharpUtility.GetMethodName(methodInfo)}Async({CSharpUtility.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default) =>");
 							using (code.Indent())
 								code.WriteLine($"(await m_delegator({methodsClassName}.{CSharpUtility.GetMethodName(methodInfo)}, request, cancellationToken).ConfigureAwait(false)).Cast<{CSharpUtility.GetResponseDtoName(methodInfo)}>();");
 						}

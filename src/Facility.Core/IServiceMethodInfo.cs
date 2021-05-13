@@ -23,6 +23,6 @@ namespace Facility.Core
 		/// <summary>
 		/// Invokes the method on the specified service instance.
 		/// </summary>
-		Task<ServiceResult<ServiceDto>> InvokeAsync(object service, ServiceDto request, CancellationToken cancellationToken);
+		Task<ServiceResult<ServiceDto>> InvokeAsync(object service, ServiceDto request, CancellationToken cancellationToken = default);
 	}
 }

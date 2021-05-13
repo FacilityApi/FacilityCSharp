@@ -29,7 +29,7 @@ namespace Facility.Core
 
 			public string ServiceName { get; }
 
-			public Task<ServiceResult<ServiceDto>> InvokeAsync(object service, ServiceDto request, CancellationToken cancellationToken) =>
+			public Task<ServiceResult<ServiceDto>> InvokeAsync(object service, ServiceDto request, CancellationToken cancellationToken = default) =>
 				m_invokeAsync(service, request, cancellationToken);
 
 			internal StandardServiceMethodInfo(string name, string serviceName, Func<object, ServiceDto, CancellationToken, Task<ServiceResult<ServiceDto>>> invokeAsync)

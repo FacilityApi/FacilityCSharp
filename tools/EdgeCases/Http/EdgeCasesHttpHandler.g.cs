@@ -37,7 +37,7 @@ namespace EdgeCases.Http
 		/// <summary>
 		/// Attempts to handle the HTTP request.
 		/// </summary>
-		public override async Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+		public override async Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)
 		{
 			return await AdaptTask(TryHandleOldMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
@@ -46,7 +46,7 @@ namespace EdgeCases.Http
 		/// An old method.
 		/// </summary>
 		[Obsolete]
-		public Task<HttpResponseMessage?> TryHandleOldMethodAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken) =>
+		public Task<HttpResponseMessage?> TryHandleOldMethodAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.OldMethodMapping, httpRequest, GetService(httpRequest).OldMethodAsync, cancellationToken);
 
 		/// <summary>

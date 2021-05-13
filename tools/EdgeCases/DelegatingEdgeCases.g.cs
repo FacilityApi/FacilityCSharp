@@ -25,7 +25,7 @@ namespace EdgeCases
 		/// An old method.
 		/// </summary>
 		[Obsolete]
-		public virtual async Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken) =>
+		public virtual async Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(EdgeCasesMethods.OldMethod, request, cancellationToken).ConfigureAwait(false)).Cast<OldMethodResponseDto>();
 
 		private readonly ServiceDelegator m_delegator;
