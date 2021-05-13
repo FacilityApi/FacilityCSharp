@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.8.0
+
+* Support and generate delegating implementations of services.
+* Allow default cancellation token on public client methods.
+
 ## 2.7.2
 
 * Add .NET 5 support to `fsdgencsharp` and `FacilityConformance`.
