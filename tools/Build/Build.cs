@@ -18,7 +18,7 @@ return BuildRunner.Execute(args, build =>
 			GitLogin = gitLogin,
 			GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
 			SourceCodeUrl = "https://github.com/FacilityApi/FacilityCSharp/tree/master/src",
-			ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
+			ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal) && name != "FacilityConformance",
 		},
 		PackageSettings = new DotNetPackageSettings
 		{
