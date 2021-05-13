@@ -37,7 +37,7 @@ namespace Facility.Core.Http
 		public async Task<ServiceResult<T>> ReadHttpContentAsync<T>(HttpContent? content, CancellationToken cancellationToken = default)
 			where T : ServiceDto
 		{
-			return (await ReadHttpContentAsync(typeof(T), content, cancellationToken).ConfigureAwait(false)).Map(x => (T) x);
+			return (await ReadHttpContentAsync(typeof(T), content, cancellationToken).ConfigureAwait(false)).Cast<T>();
 		}
 
 		/// <summary>

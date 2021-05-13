@@ -273,7 +273,7 @@ namespace Facility.Core
 		/// <remarks>If the result is a success, the function is called on the input value to produce
 		/// a successful service result matching the type of the output value. If the result is a failure,
 		/// the function is not called, and a failed service result using the output type is returned.</remarks>
-		public ServiceResult<TOutput> Map<TOutput>(Func<T, TOutput> func) => Map(x => new ServiceResult<TOutput>(func(x)));
+		public ServiceResult<TOutput> Map<TOutput>(Func<T, TOutput> func) => IsFailure ? new ServiceResult<TOutput>(Error) : new ServiceResult<TOutput>(func(m_value));
 
 		/// <summary>
 		/// Maps a ServiceResult from one type to another.
