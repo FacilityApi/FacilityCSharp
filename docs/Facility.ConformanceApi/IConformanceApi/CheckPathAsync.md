@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<CheckPathResponseDto>> CheckPathAsync(CheckPathRequestDto request, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

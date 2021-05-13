@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(
-    MirrorFieldsRequestDto request, CancellationToken cancellationToken)
+    MirrorFieldsRequestDto request, CancellationToken cancellationToken = default)
 ```
 
 ## See Also

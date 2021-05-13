@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<CheckQueryResponseDto>> CheckQueryAsync(CheckQueryRequestDto request, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

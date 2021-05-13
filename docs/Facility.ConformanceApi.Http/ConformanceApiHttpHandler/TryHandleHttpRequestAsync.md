@@ -4,7 +4,7 @@ Attempts to handle the HTTP request.
 
 ```csharp
 public override Task<HttpResponseMessage?> TryHandleHttpRequestAsync(
-    HttpRequestMessage httpRequest, CancellationToken cancellationToken)
+    HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)
 ```
 
 ## See Also

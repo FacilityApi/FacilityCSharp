@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<MixedResponseDto>> MixedAsync(MixedRequestDto request, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

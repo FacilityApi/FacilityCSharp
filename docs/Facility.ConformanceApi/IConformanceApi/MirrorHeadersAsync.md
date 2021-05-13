@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<MirrorHeadersResponseDto>> MirrorHeadersAsync(
-    MirrorHeadersRequestDto request, CancellationToken cancellationToken)
+    MirrorHeadersRequestDto request, CancellationToken cancellationToken = default)
 ```
 
 ## See Also

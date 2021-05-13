@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleMirrorHeadersAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

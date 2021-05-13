@@ -16,6 +16,7 @@
 | class [CheckQueryResponseDto](Facility.ConformanceApi/CheckQueryResponseDto.md) | Response for CheckQuery. |
 | class [CreateWidgetRequestDto](Facility.ConformanceApi/CreateWidgetRequestDto.md) | Request for CreateWidget. |
 | class [CreateWidgetResponseDto](Facility.ConformanceApi/CreateWidgetResponseDto.md) | Response for CreateWidget. |
+| class [DelegatingConformanceApi](Facility.ConformanceApi/DelegatingConformanceApi.md) | A delegating implementation of ConformanceApi. |
 | class [DeleteWidgetRequestDto](Facility.ConformanceApi/DeleteWidgetRequestDto.md) | Request for DeleteWidget. |
 | class [DeleteWidgetResponseDto](Facility.ConformanceApi/DeleteWidgetResponseDto.md) | Response for DeleteWidget. |
 | class [GetApiInfoRequestDto](Facility.ConformanceApi/GetApiInfoRequestDto.md) | Request for GetApiInfo. |

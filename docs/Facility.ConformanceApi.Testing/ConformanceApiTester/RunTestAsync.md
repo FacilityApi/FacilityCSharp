@@ -4,7 +4,7 @@ Runs the test with the specified name.
 
 ```csharp
 public Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

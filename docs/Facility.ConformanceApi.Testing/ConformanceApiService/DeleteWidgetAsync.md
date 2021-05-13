@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<DeleteWidgetResponseDto>> DeleteWidgetAsync(
-    DeleteWidgetRequestDto request, CancellationToken cancellationToken)
+    DeleteWidgetRequestDto request, CancellationToken cancellationToken = default)
 ```
 
 ## See Also

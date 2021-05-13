@@ -4,7 +4,7 @@ Gets the specified widget.
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleGetWidgetAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

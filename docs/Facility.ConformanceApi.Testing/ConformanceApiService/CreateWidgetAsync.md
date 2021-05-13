@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<CreateWidgetResponseDto>> CreateWidgetAsync(
-    CreateWidgetRequestDto request, CancellationToken cancellationToken)
+    CreateWidgetRequestDto request, CancellationToken cancellationToken = default)
 ```
 
 ## See Also

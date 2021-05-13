@@ -4,7 +4,7 @@ Gets API information.
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleGetApiInfoAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

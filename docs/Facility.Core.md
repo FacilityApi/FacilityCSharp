@@ -4,7 +4,10 @@
 
 | public type | description |
 | --- | --- |
+| interface [IServiceMethodInfo](Facility.Core/IServiceMethodInfo.md) | Information about a Facility service method. |
 | static class [ServiceDataUtility](Facility.Core/ServiceDataUtility.md) | Helper methods for service data. |
+| delegate [ServiceDelegator](Facility.Core/ServiceDelegator.md) | Called when delegating a service method. |
+| static class [ServiceDelegators](Facility.Core/ServiceDelegators.md) | Common service delegators. |
 | abstract class [ServiceDto&lt;T&gt;](Facility.Core/ServiceDto-1.md) | Base class for data objects used by services. |
 | abstract class [ServiceDto](Facility.Core/ServiceDto.md) | Base class for data objects used by services. |
 | abstract class [ServiceEnumJsonConverter&lt;T&gt;](Facility.Core/ServiceEnumJsonConverter-1.md) | Used to JSON-serialize string-based enumerated types. |
@@ -14,6 +17,7 @@
 | class [ServiceException](Facility.Core/ServiceException.md) | An exception thrown by a service method. |
 | abstract class [ServiceJsonConverterBase&lt;T&gt;](Facility.Core/ServiceJsonConverterBase-1.md) | Base class for simple JSON converters. |
 | static class [ServiceJsonUtility](Facility.Core/ServiceJsonUtility.md) | Helper methods for working with JSON. |
+| static class [ServiceMethodInfo](Facility.Core/ServiceMethodInfo.md) | Helpers for service method information. |
 | class [ServiceResult&lt;T&gt;](Facility.Core/ServiceResult-1.md) | A service result value or error. |
 | class [ServiceResult](Facility.Core/ServiceResult.md) | A service result success or error. |
 | class [ServiceResultFailure](Facility.Core/ServiceResultFailure.md) | A failed service result. |

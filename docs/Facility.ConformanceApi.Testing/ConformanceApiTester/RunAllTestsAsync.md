@@ -3,7 +3,7 @@
 Runs all tests.
 
 ```csharp
-public Task<ConformanceTestRun> RunAllTestsAsync(CancellationToken cancellationToken)
+public Task<ConformanceTestRun> RunAllTestsAsync(CancellationToken cancellationToken = default)
 ```
 
 ## See Also

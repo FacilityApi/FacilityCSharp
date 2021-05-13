@@ -2,7 +2,7 @@
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleCheckPathAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

@@ -4,7 +4,7 @@ Creates a new widget.
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleCreateWidgetAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

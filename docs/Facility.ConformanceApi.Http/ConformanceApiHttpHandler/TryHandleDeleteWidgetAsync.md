@@ -4,7 +4,7 @@ Deletes the specified widget.
 
 ```csharp
 public Task<HttpResponseMessage?> TryHandleDeleteWidgetAsync(HttpRequestMessage httpRequest, 
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
 ```
 
 ## See Also

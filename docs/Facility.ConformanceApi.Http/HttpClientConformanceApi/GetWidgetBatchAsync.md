@@ -4,7 +4,7 @@ Gets the specified widgets.
 
 ```csharp
 public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(
-    GetWidgetBatchRequestDto request, CancellationToken cancellationToken)
+    GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default)
 ```
 
 ## See Also
