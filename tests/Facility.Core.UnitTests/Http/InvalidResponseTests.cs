@@ -15,7 +15,6 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests.Http
 {
-	[SuppressMessage("ReSharper", "ConsiderUsingConfigureAwait", Justification = "unit tests")]
 	public class InvalidResponseTests
 	{
 		[Test]
