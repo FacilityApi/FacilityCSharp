@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.8.1
+
+* Update dependencies.
+
 ## 2.8.0
 
 * Support and generate delegating implementations of services.
