@@ -10,7 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		build.ps1 = build.ps1
 		.github\workflows\build.yaml = .github\workflows\build.yaml
+		conformance\ConformanceApi.fsd = conformance\ConformanceApi.fsd
+		conformance\ConformanceTests.json = conformance\ConformanceTests.json
 		Directory.Build.props = Directory.Build.props
+		tools\EdgeCases.fsd = tools\EdgeCases.fsd
+		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		README.md = README.md
@@ -36,23 +40,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeCases", "tools\EdgeCases\EdgeCases.csproj", "{771FB7B6-E2CE-4F73-A62A-E52FBF980448}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{3B9C751B-C0C1-4A2C-A601-68F29BC03E1D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{89EA8A26-4490-4C0D-B1F5-F9DC78602647}"
-	ProjectSection(SolutionItems) = preProject
-		tools\EdgeCases.fsd = tools\EdgeCases.fsd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conformance", "conformance", "{5F8024B2-530D-4ABF-A99A-D2D0BF50FCCC}"
-	ProjectSection(SolutionItems) = preProject
-		conformance\ConformanceApi.fsd = conformance\ConformanceApi.fsd
-		conformance\ConformanceTests.json = conformance\ConformanceTests.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{1430A6FE-CD2A-4632-8451-305F715A5368}"
-	ProjectSection(SolutionItems) = preProject
-		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
-		fsd\README.md = fsd\README.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacilityConformance", "src\FacilityConformance\FacilityConformance.csproj", "{338C2F17-0E09-4E5D-A6D7-47D74DA58107}"
 EndProject
@@ -115,11 +102,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{89EA8A26-4490-4C0D-B1F5-F9DC78602647} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{5F8024B2-530D-4ABF-A99A-D2D0BF50FCCC} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{1430A6FE-CD2A-4632-8451-305F715A5368} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {934F60BE-546A-4F16-A6C7-6B65BF9889D2}
