@@ -599,5 +599,54 @@ namespace Facility.ConformanceApi.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<MirrorBytesRequestDto, MirrorBytesResponseDto> MirrorBytesMapping =
+			new HttpMethodMapping<MirrorBytesRequestDto, MirrorBytesResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/mirrorBytes",
+				ValidateRequest = request =>
+				{
+					if (request.Content == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("content"));
+					return ServiceResult.Success();
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string?>
+					{
+						["Content-Type"] = request.Type,
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					headers.TryGetValue("Content-Type", out var headerType);
+					request.Type = headerType;
+					return request;
+				},
+				RequestBodyType = typeof(byte[]),
+				GetRequestBody = request => request.Content,
+				CreateRequest = body => new MirrorBytesRequestDto { Content = (byte[]?) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MirrorBytesResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(byte[]),
+						MatchesResponse = response => response.Content != null,
+						GetResponseBody = response => response.Content,
+						CreateResponse = body => new MirrorBytesResponseDto { Content = (byte[]?) body },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string?>
+					{
+						["Content-Type"] = response.Type,
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					headers.TryGetValue("Content-Type", out var headerType);
+					response.Type = headerType;
+					return response;
+				},
+			}.Build();
 	}
 }

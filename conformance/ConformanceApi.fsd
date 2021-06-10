@@ -218,6 +218,16 @@ service ConformanceApi
 		[required] normal: string;
 	}
 
+	method mirrorBytes
+	{
+		[http(from: body)] content: bytes;
+		[http(from: header, name: Content-Type)] type: string;
+	}:
+	{
+		[http(from: body)] content: bytes;
+		[http(from: header, name: Content-Type)] type: string;
+	}
+
 	data Any
 	{
 		string: string;

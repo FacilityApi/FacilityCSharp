@@ -77,5 +77,8 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.RequiredMapping, request, cancellationToken);
+
+		public Task<ServiceResult<MirrorBytesResponseDto>> MirrorBytesAsync(MirrorBytesRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorBytesMapping, request, cancellationToken);
 	}
 }
