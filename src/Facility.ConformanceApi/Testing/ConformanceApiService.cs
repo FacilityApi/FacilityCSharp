@@ -78,8 +78,7 @@ namespace Facility.ConformanceApi.Testing
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
 
-			string uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
-			string methodName = uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
+			var methodName = Uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
 			var testsWithMethodName = m_tests.Where(x => x.Method == methodName).ToList();
 			if (testsWithMethodName.Count == 0)
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"No tests found for method {methodName}."));
@@ -107,6 +106,8 @@ namespace Facility.ConformanceApi.Testing
 				return ServiceResult.Success(response);
 			}
 		}
+
+		private static string Uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	}
