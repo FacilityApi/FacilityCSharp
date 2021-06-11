@@ -64,7 +64,7 @@ namespace Facility.Core.Http
 			if (aspectHttpResponse != null)
 				return aspectHttpResponse;
 
-			var mediaType = GetResponseMediaType(httpRequest);
+			var mediaType = GetAcceptedMediaType(httpRequest);
 
 			ServiceErrorDto? error = null;
 
@@ -256,12 +256,12 @@ namespace Facility.Core.Http
 				.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.ToList());
 		}
 
-		private string GetResponseMediaType(HttpRequestMessage httpRequest)
+		private string? GetAcceptedMediaType(HttpRequestMessage httpRequest)
 		{
 			return httpRequest.Headers.Accept
 				.OrderByDescending(x => x.Quality)
 				.Select(x => x.MediaType)
-				.FirstOrDefault(m_contentSerializer.IsSupportedMediaType) ?? m_contentSerializer.DefaultMediaType;
+				.FirstOrDefault(m_contentSerializer.IsSupportedMediaType);
 		}
 
 		private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
