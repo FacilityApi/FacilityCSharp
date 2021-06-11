@@ -88,7 +88,7 @@ namespace Facility.Core.Http
 				var requestBody = mapping.GetRequestBody(request);
 				if (requestBody != null)
 				{
-					var contentType = requestHeaders?.GetContentType();
+					var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 					httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
 				}
 

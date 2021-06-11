@@ -152,7 +152,7 @@ namespace Facility.Core.Http
 					if (responseMapping.ResponseBodyType != null)
 					{
 						var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
-						var mediaType = responseHeaders?.GetContentType() ?? GetAcceptedMediaType(httpRequest, serializer);
+						var mediaType = responseMapping.ResponseBodyContentType ?? responseHeaders?.GetContentType() ?? GetAcceptedMediaType(httpRequest, serializer);
 						httpResponse.Content = serializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
 					}
 				}

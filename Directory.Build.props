@@ -28,6 +28,10 @@
     <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <FacilityVersion>2.5.0</FacilityVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />

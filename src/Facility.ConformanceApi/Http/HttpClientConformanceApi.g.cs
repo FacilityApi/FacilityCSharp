@@ -83,5 +83,8 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorTextMapping, request, cancellationToken);
+
+		public Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.BodyTypesMapping, request, cancellationToken);
 	}
 }

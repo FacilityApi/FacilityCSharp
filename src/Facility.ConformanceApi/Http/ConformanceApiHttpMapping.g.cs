@@ -697,5 +697,34 @@ namespace Facility.ConformanceApi.Http
 					return response;
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<BodyTypesRequestDto, BodyTypesResponseDto> BodyTypesMapping =
+			new HttpMethodMapping<BodyTypesRequestDto, BodyTypesResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/bodyTypes",
+				ValidateRequest = request =>
+				{
+					if (request.Content == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("content"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(string),
+				RequestBodyContentType = "text/x-input",
+				GetRequestBody = request => request.Content,
+				CreateRequest = body => new BodyTypesRequestDto { Content = (string?) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<BodyTypesResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(byte[]),
+						ResponseBodyContentType = "application/x-output",
+						MatchesResponse = response => response.Content != null,
+						GetResponseBody = response => response.Content,
+						CreateResponse = body => new BodyTypesResponseDto { Content = (byte[]?) body },
+					}.Build(),
+				},
+			}.Build();
 	}
 }

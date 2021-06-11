@@ -645,6 +645,8 @@ namespace Facility.CodeGen.CSharp
 										var requestNullableBodyFieldTypeName = RenderNullableReferenceFieldType(requestBodyFieldInfo);
 
 										code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
+										if (httpMethodInfo.RequestBodyField.ContentType != null)
+											code.WriteLine($"RequestBodyContentType = {CSharpUtility.CreateString(httpMethodInfo.RequestBodyField.ContentType)},");
 										code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
 										code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestNullableBodyFieldTypeName}) body }},");
 									}
@@ -712,6 +714,8 @@ namespace Facility.CodeGen.CSharp
 														var responseBodyFieldTypeName = RenderNullableFieldType(bodyFieldType);
 														var responseNullableBodyFieldTypeName = RenderNullableReferenceFieldType(bodyFieldType);
 														code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
+														if (bodyField.ContentType != null)
+															code.WriteLine($"ResponseBodyContentType = {CSharpUtility.CreateString(bodyField.ContentType)},");
 														code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
 														code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
 														code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseNullableBodyFieldTypeName}) body }},");

@@ -25,6 +25,11 @@ namespace Facility.Core.Http
 		public Type? ResponseBodyType { get; }
 
 		/// <summary>
+		/// The content type of the response body, if any.
+		/// </summary>
+		public string? ResponseBodyContentType { get; }
+
+		/// <summary>
 		/// Extracts the HTTP response content body from the response.
 		/// </summary>
 		public object? GetResponseBody(TResponse response) =>
@@ -57,6 +62,11 @@ namespace Facility.Core.Http
 			public Type? ResponseBodyType { get; set; }
 
 			/// <summary>
+			/// The content type of the response body, if any.
+			/// </summary>
+			public string? ResponseBodyContentType { get; set; }
+
+			/// <summary>
 			/// Extracts the HTTP response content body from the response.
 			/// </summary>
 			public Func<TResponse, object?>? GetResponseBody { get; set; }
@@ -76,6 +86,7 @@ namespace Facility.Core.Http
 		{
 			StatusCode = builder.StatusCode;
 			ResponseBodyType = builder.ResponseBodyType;
+			ResponseBodyContentType = builder.ResponseBodyContentType;
 			m_matchesResponse = builder.MatchesResponse;
 			m_getResponseBody = builder.GetResponseBody;
 			m_createResponse = builder.CreateResponse;

@@ -640,6 +640,16 @@
         "content": "forty-two",
         "type": "text/number"
       }
+    },
+    {
+      "test": "bodyTypes",
+      "method": "bodyTypes",
+      "request": {
+        "content": "forty-two"
+      },
+      "response": {
+        "content": "NDI="
+      }
     }
   ]
 }
