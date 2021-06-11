@@ -40,9 +40,9 @@ namespace Facility.Core.Http
 		}
 
 		/// <summary>
-		/// Reads a DTO from the specified HTTP content.
+		/// Reads an object from the specified HTTP content.
 		/// </summary>
-		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, CancellationToken cancellationToken = default)
+		public async Task<ServiceResult<object>> ReadHttpContentAsync(Type objectType, HttpContent? content, CancellationToken cancellationToken = default)
 		{
 			var contentType = content?.Headers.ContentType;
 			if (contentType == null)
@@ -52,16 +52,16 @@ namespace Facility.Core.Http
 			if (!IsSupportedMediaType(mediaType))
 				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 
-			return await ReadHttpContentAsyncCore(dtoType, content!, cancellationToken).ConfigureAwait(false);
+			return await ReadHttpContentAsyncCore(objectType, content!, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
-		/// The media type for requests.
+		/// The default media type for the serializer.
 		/// </summary>
 		protected abstract string DefaultMediaTypeCore { get; }
 
 		/// <summary>
-		/// Determines if the specified media type is supported.
+		/// Determines if the specified media type can be read by this serializer.
 		/// </summary>
 		protected abstract bool IsSupportedMediaTypeCore(string mediaType);
 
@@ -79,6 +79,6 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		protected abstract Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken);
+		protected abstract Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken);
 	}
 }

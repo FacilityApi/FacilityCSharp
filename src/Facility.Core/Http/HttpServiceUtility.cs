@@ -27,9 +27,10 @@ namespace Facility.Core.Http
 		/// </summary>
 		public const string JsonMediaType = "application/json";
 
-		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers) => new DictionaryFromHeaders(headers);
+		internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers, HttpHeaders? moreHeaders) =>
+			new DictionaryFromHeaders(moreHeaders is null ? new[] { headers } : new[] { headers, moreHeaders });
 
-		internal static ServiceResult TryAddHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string?>>? headers)
+		internal static ServiceResult TryAddNonContentHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string?>>? headers)
 		{
 			if (headers != null)
 			{
@@ -37,7 +38,7 @@ namespace Facility.Core.Http
 				{
 					try
 					{
-						if (header.Value != null)
+						if (!s_supportedContentHeaders.Contains(header.Key) && header.Value != null)
 							httpHeaders.Add(header.Key, header.Value);
 					}
 					catch (FormatException)
@@ -53,6 +54,9 @@ namespace Facility.Core.Http
 
 			return ServiceResult.Success();
 		}
+
+		internal static string? GetContentType(this IEnumerable<KeyValuePair<string, string?>>? headers) =>
+			headers?.FirstOrDefault(x => x.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)).Value;
 
 		internal static int IndexOfOrdinal(this string value, char ch)
 		{
@@ -72,45 +76,51 @@ namespace Facility.Core.Http
 #endif
 		}
 
+		internal static bool UsesBytesSerializer(Type objectType) => objectType == typeof(byte[]);
+
 		private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
 		{
-			public DictionaryFromHeaders(HttpHeaders httpHeaders)
+			public DictionaryFromHeaders(IReadOnlyList<HttpHeaders> httpHeaders)
 			{
 				m_httpHeaders = httpHeaders;
 			}
 
-			public int Count => m_httpHeaders.Count();
+			public int Count => m_httpHeaders.Sum(x => x.Count());
 
 			public IEnumerable<string> Keys => this.Select(x => x.Key);
 
 			public IEnumerable<string> Values => this.Select(x => x.Value);
 
-			public bool ContainsKey(string key) => m_httpHeaders.Contains(key);
+			public bool ContainsKey(string key) => m_httpHeaders.Any(x => x.Contains(key));
 
 			public bool TryGetValue(string key, out string value)
 			{
-				if (m_httpHeaders.TryGetValues(key, out var values))
+				foreach (var httpHeaders in m_httpHeaders)
 				{
-					value = JoinHeaderValues(values);
-					return true;
+					if (httpHeaders.TryGetValues(key, out var values))
+					{
+						value = JoinHeaderValues(values);
+						return true;
+					}
 				}
-				else
-				{
-					value = null!;
-					return false;
-				}
+
+				value = null!;
+				return false;
 			}
 
 			public string this[string key] => TryGetValue(key, out var value) ? value : throw new KeyNotFoundException();
 
 			public IEnumerator<KeyValuePair<string, string>> GetEnumerator() =>
-				m_httpHeaders.Select(x => new KeyValuePair<string, string>(x.Key, JoinHeaderValues(x.Value))).GetEnumerator();
+				m_httpHeaders.SelectMany(x => x).Select(x => new KeyValuePair<string, string>(x.Key, JoinHeaderValues(x.Value))).GetEnumerator();
 
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 			private static string JoinHeaderValues(IEnumerable<string> values) => string.Join(", ", values);
 
-			private readonly HttpHeaders m_httpHeaders;
+			private readonly IReadOnlyList<HttpHeaders> m_httpHeaders;
 		}
+
+		private static readonly IReadOnlyCollection<string> s_supportedContentHeaders =
+			new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Content-Type" };
 	}
 }

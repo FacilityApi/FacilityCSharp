@@ -29,6 +29,7 @@ namespace Facility.Core.Http
 			m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 			m_synchronous = settings.Synchronous;
 			m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+			m_bytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 			m_aspects = settings.Aspects;
 			m_skipRequestValidation = settings.SkipRequestValidation;
 			m_skipResponseValidation = settings.SkipResponseValidation;
@@ -64,8 +65,6 @@ namespace Facility.Core.Http
 			if (aspectHttpResponse != null)
 				return aspectHttpResponse;
 
-			var mediaType = GetAcceptedMediaType(httpRequest);
-
 			ServiceErrorDto? error = null;
 
 			object? requestBody = null;
@@ -73,7 +72,8 @@ namespace Facility.Core.Http
 			{
 				try
 				{
-					var requestResult = await AdaptTask(m_contentSerializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
+					var serializer = GetHttpContentSerializer(mapping.RequestBodyType);
+					var requestResult = await AdaptTask(serializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
 					if (requestResult.IsFailure)
 						error = requestResult.Error;
 					else
@@ -100,7 +100,7 @@ namespace Facility.Core.Http
 				foreach (var pathParameter in pathParameters)
 					uriParameters[pathParameter.Key] = pathParameter.Value;
 				request = mapping.SetUriParameters(request, uriParameters);
-				request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers)!);
+				request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers, httpRequest.Content?.Headers)!);
 
 				context.Request = request;
 
@@ -143,12 +143,17 @@ namespace Facility.Core.Http
 					var responseMapping = responseMappingGroups[0].Single();
 					httpResponse = new HttpResponseMessage(responseMapping.StatusCode);
 
-					var headersResult = HttpServiceUtility.TryAddHeaders(httpResponse.Headers, mapping.GetResponseHeaders(response!));
+					var responseHeaders = mapping.GetResponseHeaders(response!);
+					var headersResult = HttpServiceUtility.TryAddNonContentHeaders(httpResponse.Headers, responseHeaders);
 					if (headersResult.IsFailure)
 						throw new InvalidOperationException(headersResult.Error!.Message);
 
 					if (responseMapping.ResponseBodyType != null)
-						httpResponse.Content = m_contentSerializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
+					{
+						var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
+						var mediaType = responseHeaders?.GetContentType() ?? GetAcceptedMediaType(httpRequest, serializer);
+						httpResponse.Content = serializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
+					}
 				}
 				else
 				{
@@ -161,7 +166,10 @@ namespace Facility.Core.Http
 					(TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
 				httpResponse = new HttpResponseMessage(statusCode);
 				if (statusCode != HttpStatusCode.NoContent && statusCode != HttpStatusCode.NotModified)
+				{
+					var mediaType = GetAcceptedMediaType(httpRequest, m_contentSerializer);
 					httpResponse.Content = m_contentSerializer.CreateHttpContent(error, mediaType);
+				}
 			}
 
 			httpResponse.RequestMessage = httpRequest;
@@ -256,13 +264,11 @@ namespace Facility.Core.Http
 				.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.ToList());
 		}
 
-		private string? GetAcceptedMediaType(HttpRequestMessage httpRequest)
-		{
-			return httpRequest.Headers.Accept
+		private string? GetAcceptedMediaType(HttpRequestMessage httpRequest, HttpContentSerializer serializer) =>
+			httpRequest.Headers.Accept
 				.OrderByDescending(x => x.Quality)
 				.Select(x => x.MediaType)
-				.FirstOrDefault(m_contentSerializer.IsAcceptedMediaType);
-		}
+				.FirstOrDefault(serializer.IsAcceptedMediaType);
 
 		private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		{
@@ -288,12 +294,16 @@ namespace Facility.Core.Http
 			}
 		}
 
+		private HttpContentSerializer GetHttpContentSerializer(Type objectType) =>
+			HttpServiceUtility.UsesBytesSerializer(objectType) ? m_bytesSerializer : m_contentSerializer;
+
 		private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
 		private static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
 
 		private readonly string m_rootPath;
 		private readonly bool m_synchronous;
 		private readonly HttpContentSerializer m_contentSerializer;
+		private readonly HttpContentSerializer m_bytesSerializer;
 		private readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
 		private readonly bool m_skipRequestValidation;
 		private readonly bool m_skipResponseValidation;

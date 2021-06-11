@@ -86,7 +86,11 @@ namespace Facility.ConformanceApi.Testing
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
 			var testsWithMatchingRequest = testsWithMethodName.Where(x => JToken.DeepEquals(x.Request, actualRequest)).ToList();
 			if (testsWithMatchingRequest.Count != 1)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: {ServiceJsonUtility.ToJson(actualRequest)}"));
+			{
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(
+					$"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: " +
+					$"{ServiceJsonUtility.ToJson(actualRequest)} ({string.Join(", ", testsWithMethodName.Select(x => ServiceJsonUtility.ToJson(x.Request)))})"));
+			}
 			var testInfo = testsWithMatchingRequest[0];
 
 			if (testInfo.Error != null)

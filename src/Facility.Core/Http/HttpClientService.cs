@@ -30,12 +30,18 @@ namespace Facility.Core.Http
 
 			BaseUri = baseUri;
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+			BytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		}
 
 		/// <summary>
 		/// The HTTP content serializer.
 		/// </summary>
 		protected HttpContentSerializer ContentSerializer { get; }
+
+		/// <summary>
+		/// The HTTP content serializer for bytes.
+		/// </summary>
+		protected HttpContentSerializer BytesSerializer { get; }
 
 		/// <summary>
 		/// The base URI.
@@ -66,7 +72,8 @@ namespace Facility.Core.Http
 					return requestValidation.ToFailure();
 
 				// create the HTTP request with the right method, path, query string, and headers
-				var httpRequestResult = TryCreateHttpRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), mapping.GetRequestHeaders(request));
+				var requestHeaders = mapping.GetRequestHeaders(request);
+				var httpRequestResult = TryCreateHttpRequest(mapping.HttpMethod, mapping.Path, mapping.GetUriParameters(request), requestHeaders);
 				if (httpRequestResult.IsFailure)
 					return httpRequestResult.ToFailure();
 
@@ -74,7 +81,10 @@ namespace Facility.Core.Http
 				using var httpRequest = httpRequestResult.Value;
 				var requestBody = mapping.GetRequestBody(request);
 				if (requestBody != null)
-					httpRequest.Content = ContentSerializer.CreateHttpContent(requestBody);
+				{
+					var contentType = requestHeaders?.GetContentType();
+					httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
+				}
 
 				// send the HTTP request and get the HTTP response
 				using var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
@@ -91,7 +101,8 @@ namespace Facility.Core.Http
 				object? responseBody = null;
 				if (responseMapping.ResponseBodyType != null)
 				{
-					ServiceResult<object> responseResult = await ContentSerializer.ReadHttpContentAsync(
+					var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
+					ServiceResult<object> responseResult = await serializer.ReadHttpContentAsync(
 						responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 					if (responseResult.IsFailure)
 					{
@@ -104,7 +115,7 @@ namespace Facility.Core.Http
 
 				// create the response DTO
 				var response = responseMapping.CreateResponse(responseBody);
-				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers)!);
+				response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers, httpResponse.Content.Headers)!);
 
 				// validate the response DTO
 				if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
@@ -187,7 +198,7 @@ namespace Facility.Core.Http
 
 			var requestMessage = new HttpRequestMessage(httpMethod, url);
 
-			var headersResult = HttpServiceUtility.TryAddHeaders(requestMessage.Headers, requestHeaders);
+			var headersResult = HttpServiceUtility.TryAddNonContentHeaders(requestMessage.Headers, requestHeaders);
 			if (headersResult.IsFailure)
 				return headersResult.ToFailure();
 
@@ -236,6 +247,9 @@ namespace Facility.Core.Http
 
 			return Task.FromResult(task.GetAwaiter().GetResult());
 		}
+
+		private HttpContentSerializer GetHttpContentSerializer(Type objectType) =>
+			HttpServiceUtility.UsesBytesSerializer(objectType) ? BytesSerializer : ContentSerializer;
 
 		private static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
