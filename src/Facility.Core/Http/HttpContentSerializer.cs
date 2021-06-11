@@ -16,25 +16,19 @@ namespace Facility.Core.Http
 		public string DefaultMediaType => DefaultMediaTypeCore;
 
 		/// <summary>
-		/// Determines if the specified media type is supported.
+		/// Determines if the specified media type can be read by this serializer.
 		/// </summary>
 		public bool IsSupportedMediaType(string mediaType) => IsSupportedMediaTypeCore(mediaType);
 
 		/// <summary>
-		/// Determines if the specified media type is supported.
+		/// Determines if the specified media type is accepted when investigating the Accept header.
 		/// </summary>
 		public bool IsAcceptedMediaType(string mediaType) => IsAcceptedMediaTypeCore(mediaType);
 
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
-		public HttpContent CreateHttpContent(object content, string? mediaType = null)
-		{
-			if (mediaType != null && !IsSupportedMediaType(mediaType))
-				throw new ArgumentException($"Unsupported media type '{mediaType}'.");
-
-			return CreateHttpContentCore(content, mediaType);
-		}
+		public HttpContent CreateHttpContent(object content, string? mediaType = null) => CreateHttpContentCore(content, mediaType);
 
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
@@ -54,7 +48,7 @@ namespace Facility.Core.Http
 			if (contentType == null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateMissingContentType());
 
-			string mediaType = contentType.MediaType;
+			var mediaType = contentType.MediaType;
 			if (!IsSupportedMediaType(mediaType))
 				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 
