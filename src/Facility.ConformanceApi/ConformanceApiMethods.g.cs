@@ -57,5 +57,17 @@ namespace Facility.ConformanceApi
 		public static readonly IServiceMethodInfo Required =
 			ServiceMethodInfo.Create<IConformanceApi, RequiredRequestDto, RequiredResponseDto>(
 				"required", "ConformanceApi", x => x.RequiredAsync);
+
+		public static readonly IServiceMethodInfo MirrorBytes =
+			ServiceMethodInfo.Create<IConformanceApi, MirrorBytesRequestDto, MirrorBytesResponseDto>(
+				"mirrorBytes", "ConformanceApi", x => x.MirrorBytesAsync);
+
+		public static readonly IServiceMethodInfo MirrorText =
+			ServiceMethodInfo.Create<IConformanceApi, MirrorTextRequestDto, MirrorTextResponseDto>(
+				"mirrorText", "ConformanceApi", x => x.MirrorTextAsync);
+
+		public static readonly IServiceMethodInfo BodyTypes =
+			ServiceMethodInfo.Create<IConformanceApi, BodyTypesRequestDto, BodyTypesResponseDto>(
+				"bodyTypes", "ConformanceApi", x => x.BodyTypesAsync);
 	}
 }

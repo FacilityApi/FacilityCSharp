@@ -218,6 +218,34 @@ service ConformanceApi
 		[required] normal: string;
 	}
 
+	method mirrorBytes
+	{
+		[http(from: body)] content: bytes;
+		[http(from: header, name: Content-Type)] type: string;
+	}:
+	{
+		[http(from: body)] content: bytes;
+		[http(from: header, name: Content-Type)] type: string;
+	}
+
+	method mirrorText
+	{
+		[http(from: body)] content: string;
+		[http(from: header, name: Content-Type)] type: string;
+	}:
+	{
+		[http(from: body)] content: string;
+		[http(from: header, name: Content-Type)] type: string;
+	}
+
+	method bodyTypes
+	{
+		[http(from: body, type: "text/x-input")] content: string;
+	}:
+	{
+		[http(from: body, type: "application/x-output")] content: bytes;
+	}
+
 	data Any
 	{
 		string: string;

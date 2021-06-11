@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.9.0
+
+* Support bytes/strings as request/response body fields.
+* Support custom content type on request/response body fields.
+* Support `Content-Type` as header fields.
+
 ## 2.8.1
 
 * Update dependencies.

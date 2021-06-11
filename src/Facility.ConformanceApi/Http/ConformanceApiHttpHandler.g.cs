@@ -41,10 +41,13 @@ namespace Facility.ConformanceApi.Http
 		public override async Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)
 		{
 			return await AdaptTask(TryHandleGetApiInfoAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleBodyTypesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckQueryAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckPathAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleMirrorBytesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleMirrorTextAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMixedAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleRequiredAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -107,6 +110,15 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<HttpResponseMessage?> TryHandleRequiredAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.RequiredMapping, httpRequest, GetService(httpRequest).RequiredAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleMirrorBytesAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorBytesMapping, httpRequest, GetService(httpRequest).MirrorBytesAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleMirrorTextAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorTextMapping, httpRequest, GetService(httpRequest).MirrorTextAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleBodyTypesAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.BodyTypesMapping, httpRequest, GetService(httpRequest).BodyTypesAsync, cancellationToken);
 
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.

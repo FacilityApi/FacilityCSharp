@@ -19,13 +19,13 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// An instance of JsonHttpContentSerializer.
 		/// </summary>
-		public static readonly JsonHttpContentSerializer Instance = new JsonHttpContentSerializer();
+		public static readonly JsonHttpContentSerializer Instance = new();
 
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
 		public JsonHttpContentSerializer()
-			: this(null)
+			: this(settings: null)
 		{
 		}
 
@@ -73,7 +73,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Reads a DTO from the specified HTTP content.
 		/// </summary>
-		protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type dtoType, HttpContent content, CancellationToken cancellationToken)
+		protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -83,12 +83,12 @@ namespace Facility.Core.Http
 					using var stream = CreateMemoryStream();
 					await content.CopyToAsync(stream).ConfigureAwait(false);
 					stream.Seek(0, SeekOrigin.Begin);
-					return ReadJsonStream(dtoType, stream);
+					return ReadJsonStream(objectType, stream);
 				}
 				else
 				{
 					using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-					return ReadJsonStream(dtoType, stream);
+					return ReadJsonStream(objectType, stream);
 				}
 			}
 			catch (JsonException exception)
@@ -97,10 +97,10 @@ namespace Facility.Core.Http
 			}
 		}
 
-		private static ServiceResult<object> ReadJsonStream(Type dtoType, Stream stream)
+		private static ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
 		{
 			using var textReader = new StreamReader(stream);
-			var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, dtoType);
+			var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, objectType);
 			if (deserializedContent is null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 			return ServiceResult.Success(deserializedContent);

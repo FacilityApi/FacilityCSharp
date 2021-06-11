@@ -23,6 +23,16 @@ namespace Facility.Core.Http
 		public HttpContentSerializer? ContentSerializer { get; set; }
 
 		/// <summary>
+		/// The content serializer used by requests and responses for bytes (optional).
+		/// </summary>
+		public HttpContentSerializer? BytesSerializer { get; set; }
+
+		/// <summary>
+		/// The content serializer used by requests and responses for text (optional).
+		/// </summary>
+		public HttpContentSerializer? TextSerializer { get; set; }
+
+		/// <summary>
 		/// The aspects used when receiving requests and sending responses.
 		/// </summary>
 		public IReadOnlyList<ServiceHttpHandlerAspect>? Aspects { get; set; }

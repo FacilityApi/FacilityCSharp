@@ -47,6 +47,11 @@ namespace Facility.Core.Http
 		public Type? RequestBodyType { get; }
 
 		/// <summary>
+		/// The content type of the request body, if any.
+		/// </summary>
+		public string? RequestBodyContentType { get; }
+
+		/// <summary>
 		/// Extracts the HTTP request content body from the request.
 		/// </summary>
 		public object? GetRequestBody(TRequest request) =>
@@ -123,6 +128,11 @@ namespace Facility.Core.Http
 			public Type? RequestBodyType { get; set; }
 
 			/// <summary>
+			/// The content type of the request body, if any.
+			/// </summary>
+			public string? RequestBodyContentType { get; set; }
+
+			/// <summary>
 			/// Extracts the HTTP request content body from the request.
 			/// </summary>
 			public Func<TRequest, object?>? GetRequestBody { get; set; }
@@ -172,6 +182,7 @@ namespace Facility.Core.Http
 			m_getUriParameters = builder.GetUriParameters;
 			m_setUriParameters = builder.SetUriParameters;
 			RequestBodyType = builder.RequestBodyType;
+			RequestBodyContentType = builder.RequestBodyContentType;
 			m_getRequestBody = builder.GetRequestBody;
 			m_getRequestHeaders = builder.GetRequestHeaders;
 			m_setRequestHeaders = builder.SetRequestHeaders;

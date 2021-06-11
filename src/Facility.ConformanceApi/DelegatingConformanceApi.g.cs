@@ -75,6 +75,15 @@ namespace Facility.ConformanceApi
 		public virtual async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(ConformanceApiMethods.Required, request, cancellationToken).ConfigureAwait(false)).Cast<RequiredResponseDto>();
 
+		public virtual async Task<ServiceResult<MirrorBytesResponseDto>> MirrorBytesAsync(MirrorBytesRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.MirrorBytes, request, cancellationToken).ConfigureAwait(false)).Cast<MirrorBytesResponseDto>();
+
+		public virtual async Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.MirrorText, request, cancellationToken).ConfigureAwait(false)).Cast<MirrorTextResponseDto>();
+
+		public virtual async Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.BodyTypes, request, cancellationToken).ConfigureAwait(false)).Cast<BodyTypesResponseDto>();
+
 		private readonly ServiceDelegator m_delegator;
 	}
 }

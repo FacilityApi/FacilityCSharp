@@ -616,6 +616,40 @@
         "code": "InvalidRequest",
         "message": "'hasWidget' is invalid: 'widget' is invalid: 'name' is required."
       }
+    },
+    {
+      "test": "mirrorBytes",
+      "method": "mirrorBytes",
+      "request": {
+        "content": "NDI=",
+        "type": "application/binary"
+      },
+      "response": {
+        "content": "NDI=",
+        "type": "application/binary"
+      }
+    },
+    {
+      "test": "mirrorText",
+      "method": "mirrorText",
+      "request": {
+        "content": "forty-two",
+        "type": "text/number"
+      },
+      "response": {
+        "content": "forty-two",
+        "type": "text/number"
+      }
+    },
+    {
+      "test": "bodyTypes",
+      "method": "bodyTypes",
+      "request": {
+        "content": "forty-two"
+      },
+      "response": {
+        "content": "NDI="
+      }
     }
   ]
 }

@@ -69,13 +69,24 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
 			Task.FromResult(Execute<RequiredResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<MirrorBytesResponseDto>> MirrorBytesAsync(MirrorBytesRequestDto request, CancellationToken cancellationToken = default) =>
+			Task.FromResult(Execute<MirrorBytesResponseDto>(request));
+
+		/// <inheritdoc />
+		public Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default) =>
+			Task.FromResult(Execute<MirrorTextResponseDto>(request));
+
+		/// <inheritdoc />
+		public Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
+			Task.FromResult(Execute<BodyTypesResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
 
-			string uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
-			string methodName = uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
+			var methodName = Uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
 			var testsWithMethodName = m_tests.Where(x => x.Method == methodName).ToList();
 			if (testsWithMethodName.Count == 0)
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"No tests found for method {methodName}."));
@@ -83,7 +94,11 @@ namespace Facility.ConformanceApi.Testing
 			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
 			var testsWithMatchingRequest = testsWithMethodName.Where(x => JToken.DeepEquals(x.Request, actualRequest)).ToList();
 			if (testsWithMatchingRequest.Count != 1)
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: {ServiceJsonUtility.ToJson(actualRequest)}"));
+			{
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(
+					$"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: " +
+					$"{ServiceJsonUtility.ToJson(actualRequest)} ({string.Join(", ", testsWithMethodName.Select(x => ServiceJsonUtility.ToJson(x.Request)))})"));
+			}
 			var testInfo = testsWithMatchingRequest[0];
 
 			if (testInfo.Error != null)
@@ -103,6 +118,8 @@ namespace Facility.ConformanceApi.Testing
 				return ServiceResult.Success(response);
 			}
 		}
+
+		private static string Uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	}

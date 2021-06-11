@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <VersionPrefix>2.8.1</VersionPrefix>
+    <VersionPrefix>2.9.0</VersionPrefix>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -26,6 +26,10 @@
 
   <PropertyGroup Condition=" '$(BuildNumber)' != '' ">
     <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <FacilityVersion>2.5.0</FacilityVersion>
   </PropertyGroup>
 
   <ItemGroup>
