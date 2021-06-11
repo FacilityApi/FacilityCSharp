@@ -31,6 +31,7 @@ namespace Facility.Core.Http
 			BaseUri = baseUri;
 			ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 			BytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
+			TextSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 		}
 
 		/// <summary>
@@ -42,6 +43,11 @@ namespace Facility.Core.Http
 		/// The HTTP content serializer for bytes.
 		/// </summary>
 		protected HttpContentSerializer BytesSerializer { get; }
+
+		/// <summary>
+		/// The HTTP content serializer for text.
+		/// </summary>
+		protected HttpContentSerializer TextSerializer { get; }
 
 		/// <summary>
 		/// The base URI.
@@ -249,7 +255,9 @@ namespace Facility.Core.Http
 		}
 
 		private HttpContentSerializer GetHttpContentSerializer(Type objectType) =>
-			HttpServiceUtility.UsesBytesSerializer(objectType) ? BytesSerializer : ContentSerializer;
+			HttpServiceUtility.UsesBytesSerializer(objectType) ? BytesSerializer :
+			HttpServiceUtility.UsesTextSerializer(objectType) ? TextSerializer :
+			ContentSerializer;
 
 		private static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 

@@ -628,6 +628,18 @@
         "content": "NDI=",
         "type": "application/binary"
       }
+    },
+    {
+      "test": "mirrorText",
+      "method": "mirrorText",
+      "request": {
+        "content": "forty-two",
+        "type": "text/number"
+      },
+      "response": {
+        "content": "forty-two",
+        "type": "text/number"
+      }
     }
   ]
 }

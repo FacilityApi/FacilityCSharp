@@ -30,6 +30,7 @@ namespace Facility.Core.Http
 			m_synchronous = settings.Synchronous;
 			m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
 			m_bytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
+			m_textSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 			m_aspects = settings.Aspects;
 			m_skipRequestValidation = settings.SkipRequestValidation;
 			m_skipResponseValidation = settings.SkipResponseValidation;
@@ -295,7 +296,9 @@ namespace Facility.Core.Http
 		}
 
 		private HttpContentSerializer GetHttpContentSerializer(Type objectType) =>
-			HttpServiceUtility.UsesBytesSerializer(objectType) ? m_bytesSerializer : m_contentSerializer;
+			HttpServiceUtility.UsesBytesSerializer(objectType) ? m_bytesSerializer :
+			HttpServiceUtility.UsesTextSerializer(objectType) ? m_textSerializer :
+			m_contentSerializer;
 
 		private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
 		private static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
@@ -304,6 +307,7 @@ namespace Facility.Core.Http
 		private readonly bool m_synchronous;
 		private readonly HttpContentSerializer m_contentSerializer;
 		private readonly HttpContentSerializer m_bytesSerializer;
+		private readonly HttpContentSerializer m_textSerializer;
 		private readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
 		private readonly bool m_skipRequestValidation;
 		private readonly bool m_skipResponseValidation;

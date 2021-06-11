@@ -80,5 +80,8 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<MirrorBytesResponseDto>> MirrorBytesAsync(MirrorBytesRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorBytesMapping, request, cancellationToken);
+
+		public Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorTextMapping, request, cancellationToken);
 	}
 }

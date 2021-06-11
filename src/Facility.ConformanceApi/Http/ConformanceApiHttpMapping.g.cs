@@ -648,5 +648,54 @@ namespace Facility.ConformanceApi.Http
 					return response;
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<MirrorTextRequestDto, MirrorTextResponseDto> MirrorTextMapping =
+			new HttpMethodMapping<MirrorTextRequestDto, MirrorTextResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/mirrorText",
+				ValidateRequest = request =>
+				{
+					if (request.Content == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("content"));
+					return ServiceResult.Success();
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string?>
+					{
+						["Content-Type"] = request.Type,
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					headers.TryGetValue("Content-Type", out var headerType);
+					request.Type = headerType;
+					return request;
+				},
+				RequestBodyType = typeof(string),
+				GetRequestBody = request => request.Content,
+				CreateRequest = body => new MirrorTextRequestDto { Content = (string?) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MirrorTextResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(string),
+						MatchesResponse = response => response.Content != null,
+						GetResponseBody = response => response.Content,
+						CreateResponse = body => new MirrorTextResponseDto { Content = (string?) body },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string?>
+					{
+						["Content-Type"] = response.Type,
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					headers.TryGetValue("Content-Type", out var headerType);
+					response.Type = headerType;
+					return response;
+				},
+			}.Build();
 	}
 }

@@ -46,6 +46,7 @@ namespace Facility.ConformanceApi.Http
 				await AdaptTask(TryHandleMirrorBytesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleMirrorTextAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMixedAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleRequiredAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleGetWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -111,6 +112,9 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<HttpResponseMessage?> TryHandleMirrorBytesAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorBytesMapping, httpRequest, GetService(httpRequest).MirrorBytesAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleMirrorTextAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorTextMapping, httpRequest, GetService(httpRequest).MirrorTextAsync, cancellationToken);
 
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.

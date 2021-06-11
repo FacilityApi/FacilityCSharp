@@ -73,6 +73,10 @@ namespace Facility.ConformanceApi.Testing
 		public Task<ServiceResult<MirrorBytesResponseDto>> MirrorBytesAsync(MirrorBytesRequestDto request, CancellationToken cancellationToken = default) =>
 			Task.FromResult(Execute<MirrorBytesResponseDto>(request));
 
+		/// <inheritdoc />
+		public Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default) =>
+			Task.FromResult(Execute<MirrorTextResponseDto>(request));
+
 		private ServiceResult<T> Execute<T>(ServiceDto request)
 		{
 			if (request == null)

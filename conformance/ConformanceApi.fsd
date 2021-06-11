@@ -228,6 +228,16 @@ service ConformanceApi
 		[http(from: header, name: Content-Type)] type: string;
 	}
 
+	method mirrorText
+	{
+		[http(from: body)] content: string;
+		[http(from: header, name: Content-Type)] type: string;
+	}:
+	{
+		[http(from: body)] content: string;
+		[http(from: header, name: Content-Type)] type: string;
+	}
+
 	data Any
 	{
 		string: string;

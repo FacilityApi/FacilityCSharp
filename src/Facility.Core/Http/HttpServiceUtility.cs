@@ -78,6 +78,8 @@ namespace Facility.Core.Http
 
 		internal static bool UsesBytesSerializer(Type objectType) => objectType == typeof(byte[]);
 
+		internal static bool UsesTextSerializer(Type objectType) => objectType == typeof(string);
+
 		private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
 		{
 			public DictionaryFromHeaders(IReadOnlyList<HttpHeaders> httpHeaders)

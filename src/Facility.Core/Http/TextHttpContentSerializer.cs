@@ -1,25 +1,26 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Facility.Core.Http
 {
 	/// <summary>
-	/// Serializes and deserializes bytes for HTTP requests and responses.
+	/// Serializes and deserializes text for HTTP requests and responses.
 	/// </summary>
-	public class BytesHttpContentSerializer : HttpContentSerializer
+	public class TextHttpContentSerializer : HttpContentSerializer
 	{
 		/// <summary>
 		/// An instance of BytesHttpContentSerializer.
 		/// </summary>
-		public static readonly BytesHttpContentSerializer Instance = new();
+		public static readonly TextHttpContentSerializer Instance = new();
 
 		/// <summary>
 		/// The default media type for the serializer.
 		/// </summary>
-		protected override string DefaultMediaTypeCore => "application/octet-stream";
+		protected override string DefaultMediaTypeCore => "text/plain";
 
 		/// <summary>
 		/// Determines if the specified media type is supported.
@@ -38,9 +39,9 @@ namespace Facility.Core.Http
 		{
 			mediaType ??= DefaultMediaTypeCore;
 
-			if (content is byte[] byteArray)
+			if (content is string text)
 			{
-				var httpContent = new ByteArrayContent(byteArray);
+				var httpContent = new StringContent(text, Encoding.UTF8);
 				httpContent.Headers.ContentType = MediaTypeHeaderValue.Parse(mediaType);
 				return httpContent;
 			}
@@ -53,8 +54,8 @@ namespace Facility.Core.Http
 		/// </summary>
 		protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken)
 		{
-			if (objectType == typeof(byte[]))
-				return ServiceResult.Success((object) await content.ReadAsByteArrayAsync().ConfigureAwait(false));
+			if (objectType == typeof(string))
+				return ServiceResult.Success((object) await content.ReadAsStringAsync().ConfigureAwait(false));
 
 			throw new ArgumentException($"Unexpected content type: {objectType.Name}", nameof(content));
 		}
