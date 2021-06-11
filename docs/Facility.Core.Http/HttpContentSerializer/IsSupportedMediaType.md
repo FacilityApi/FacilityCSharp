@@ -1,6 +1,6 @@
 # HttpContentSerializer.IsSupportedMediaType method
 
-Determines if the specified media type is supported.
+Determines if the specified media type can be read by this serializer.
 
 ```csharp
 public bool IsSupportedMediaType(string mediaType)

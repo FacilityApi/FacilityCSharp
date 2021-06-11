@@ -12,8 +12,9 @@ public abstract class HttpContentSerializer
 | --- | --- |
 | [DefaultMediaType](HttpContentSerializer/DefaultMediaType.md) { get; } | The default media type for the serializer. |
 | [CreateHttpContent](HttpContentSerializer/CreateHttpContent.md)(…) | Creates HTTP content for the specified DTO. |
-| [IsSupportedMediaType](HttpContentSerializer/IsSupportedMediaType.md)(…) | Determines if the specified media type is supported. |
-| [ReadHttpContentAsync](HttpContentSerializer/ReadHttpContentAsync.md)(…) | Reads a DTO from the specified HTTP content. |
+| [IsAcceptedMediaType](HttpContentSerializer/IsAcceptedMediaType.md)(…) | Determines if the specified media type is accepted when investigating the Accept header. |
+| [IsSupportedMediaType](HttpContentSerializer/IsSupportedMediaType.md)(…) | Determines if the specified media type can be read by this serializer. |
+| [ReadHttpContentAsync](HttpContentSerializer/ReadHttpContentAsync.md)(…) | Reads an object from the specified HTTP content. |
 | [ReadHttpContentAsync&lt;T&gt;](HttpContentSerializer/ReadHttpContentAsync.md)(…) | Reads a DTO from the specified HTTP content. |
 
 ## Protected Members
@@ -21,9 +22,10 @@ public abstract class HttpContentSerializer
 | name | description |
 | --- | --- |
 | [HttpContentSerializer](HttpContentSerializer/HttpContentSerializer.md)() | The default constructor. |
-| abstract [DefaultMediaTypeCore](HttpContentSerializer/DefaultMediaTypeCore.md) { get; } | The media type for requests. |
+| abstract [DefaultMediaTypeCore](HttpContentSerializer/DefaultMediaTypeCore.md) { get; } | The default media type for the serializer. |
 | abstract [CreateHttpContentCore](HttpContentSerializer/CreateHttpContentCore.md)(…) | Creates HTTP content for the specified DTO. |
-| abstract [IsSupportedMediaTypeCore](HttpContentSerializer/IsSupportedMediaTypeCore.md)(…) | Determines if the specified media type is supported. |
+| virtual [IsAcceptedMediaTypeCore](HttpContentSerializer/IsAcceptedMediaTypeCore.md)(…) | Determines if the specified media type is accepted when investigating the Accept header. |
+| abstract [IsSupportedMediaTypeCore](HttpContentSerializer/IsSupportedMediaTypeCore.md)(…) | Determines if the specified media type can be read by this serializer. |
 | abstract [ReadHttpContentAsyncCore](HttpContentSerializer/ReadHttpContentAsyncCore.md)(…) | Reads a DTO from the specified HTTP content. |
 
 ## See Also

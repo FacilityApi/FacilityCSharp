@@ -13,11 +13,13 @@ public sealed class HttpClientServiceSettings
 | [HttpClientServiceSettings](HttpClientServiceSettings/HttpClientServiceSettings.md)() | The default constructor. |
 | [Aspects](HttpClientServiceSettings/Aspects.md) { get; set; } | The aspects used when sending requests and receiving responses (optional). |
 | [BaseUri](HttpClientServiceSettings/BaseUri.md) { get; set; } | The base URI of the service (optional if the service has a default base URI). |
+| [BytesSerializer](HttpClientServiceSettings/BytesSerializer.md) { get; set; } | The content serializer used by requests and responses for bytes (optional). |
 | [ContentSerializer](HttpClientServiceSettings/ContentSerializer.md) { get; set; } | The content serializer used by requests and responses (optional). |
 | [HttpClient](HttpClientServiceSettings/HttpClient.md) { get; set; } | The HttpClient to use (optional). |
 | [SkipRequestValidation](HttpClientServiceSettings/SkipRequestValidation.md) { get; set; } | True to prevent the validation of request DTOs before sending. |
 | [SkipResponseValidation](HttpClientServiceSettings/SkipResponseValidation.md) { get; set; } | True to prevent the validation of response DTOs after receiving. |
 | [Synchronous](HttpClientServiceSettings/Synchronous.md) { get; set; } | True to call services synchronously, allowing tasks to be safely blocked. |
+| [TextSerializer](HttpClientServiceSettings/TextSerializer.md) { get; set; } | The content serializer used by requests and responses for text (optional). |
 
 ## See Also
 

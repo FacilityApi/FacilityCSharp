@@ -11,6 +11,7 @@ public sealed class ConformanceApiHttpHandler : ServiceHttpHandler
 | name | description |
 | --- | --- |
 | [ConformanceApiHttpHandler](ConformanceApiHttpHandler/ConformanceApiHttpHandler.md)(…) | Creates the handler. (2 constructors) |
+| [TryHandleBodyTypesAsync](ConformanceApiHttpHandler/TryHandleBodyTypesAsync.md)(…) |  |
 | [TryHandleCheckPathAsync](ConformanceApiHttpHandler/TryHandleCheckPathAsync.md)(…) |  |
 | [TryHandleCheckQueryAsync](ConformanceApiHttpHandler/TryHandleCheckQueryAsync.md)(…) |  |
 | [TryHandleCreateWidgetAsync](ConformanceApiHttpHandler/TryHandleCreateWidgetAsync.md)(…) | Creates a new widget. |
@@ -20,8 +21,10 @@ public sealed class ConformanceApiHttpHandler : ServiceHttpHandler
 | [TryHandleGetWidgetBatchAsync](ConformanceApiHttpHandler/TryHandleGetWidgetBatchAsync.md)(…) | Gets the specified widgets. |
 | [TryHandleGetWidgetsAsync](ConformanceApiHttpHandler/TryHandleGetWidgetsAsync.md)(…) | Gets widgets. |
 | override [TryHandleHttpRequestAsync](ConformanceApiHttpHandler/TryHandleHttpRequestAsync.md)(…) | Attempts to handle the HTTP request. |
+| [TryHandleMirrorBytesAsync](ConformanceApiHttpHandler/TryHandleMirrorBytesAsync.md)(…) |  |
 | [TryHandleMirrorFieldsAsync](ConformanceApiHttpHandler/TryHandleMirrorFieldsAsync.md)(…) |  |
 | [TryHandleMirrorHeadersAsync](ConformanceApiHttpHandler/TryHandleMirrorHeadersAsync.md)(…) |  |
+| [TryHandleMirrorTextAsync](ConformanceApiHttpHandler/TryHandleMirrorTextAsync.md)(…) |  |
 | [TryHandleMixedAsync](ConformanceApiHttpHandler/TryHandleMixedAsync.md)(…) |  |
 | [TryHandleRequiredAsync](ConformanceApiHttpHandler/TryHandleRequiredAsync.md)(…) |  |
 

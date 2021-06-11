@@ -11,6 +11,7 @@ public class DelegatingConformanceApi : IConformanceApi
 | name | description |
 | --- | --- |
 | [DelegatingConformanceApi](DelegatingConformanceApi/DelegatingConformanceApi.md)(…) | Creates an instance with the specified delegator. |
+| virtual [BodyTypesAsync](DelegatingConformanceApi/BodyTypesAsync.md)(…) |  |
 | virtual [CheckPathAsync](DelegatingConformanceApi/CheckPathAsync.md)(…) |  |
 | virtual [CheckQueryAsync](DelegatingConformanceApi/CheckQueryAsync.md)(…) |  |
 | virtual [CreateWidgetAsync](DelegatingConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
@@ -19,8 +20,10 @@ public class DelegatingConformanceApi : IConformanceApi
 | virtual [GetWidgetAsync](DelegatingConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | virtual [GetWidgetBatchAsync](DelegatingConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |
 | virtual [GetWidgetsAsync](DelegatingConformanceApi/GetWidgetsAsync.md)(…) | Gets widgets. |
+| virtual [MirrorBytesAsync](DelegatingConformanceApi/MirrorBytesAsync.md)(…) |  |
 | virtual [MirrorFieldsAsync](DelegatingConformanceApi/MirrorFieldsAsync.md)(…) |  |
 | virtual [MirrorHeadersAsync](DelegatingConformanceApi/MirrorHeadersAsync.md)(…) |  |
+| virtual [MirrorTextAsync](DelegatingConformanceApi/MirrorTextAsync.md)(…) |  |
 | virtual [MixedAsync](DelegatingConformanceApi/MixedAsync.md)(…) |  |
 | virtual [RequiredAsync](DelegatingConformanceApi/RequiredAsync.md)(…) |  |
 

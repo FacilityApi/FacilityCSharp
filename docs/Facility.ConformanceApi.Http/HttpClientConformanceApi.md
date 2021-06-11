@@ -11,6 +11,7 @@ public sealed class HttpClientConformanceApi : HttpClientService, IConformanceAp
 | name | description |
 | --- | --- |
 | [HttpClientConformanceApi](HttpClientConformanceApi/HttpClientConformanceApi.md)(…) | Creates the service. |
+| [BodyTypesAsync](HttpClientConformanceApi/BodyTypesAsync.md)(…) |  |
 | [CheckPathAsync](HttpClientConformanceApi/CheckPathAsync.md)(…) |  |
 | [CheckQueryAsync](HttpClientConformanceApi/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](HttpClientConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
@@ -19,8 +20,10 @@ public sealed class HttpClientConformanceApi : HttpClientService, IConformanceAp
 | [GetWidgetAsync](HttpClientConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | [GetWidgetBatchAsync](HttpClientConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |
 | [GetWidgetsAsync](HttpClientConformanceApi/GetWidgetsAsync.md)(…) | Gets widgets. |
+| [MirrorBytesAsync](HttpClientConformanceApi/MirrorBytesAsync.md)(…) |  |
 | [MirrorFieldsAsync](HttpClientConformanceApi/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](HttpClientConformanceApi/MirrorHeadersAsync.md)(…) |  |
+| [MirrorTextAsync](HttpClientConformanceApi/MirrorTextAsync.md)(…) |  |
 | [MixedAsync](HttpClientConformanceApi/MixedAsync.md)(…) |  |
 | [RequiredAsync](HttpClientConformanceApi/RequiredAsync.md)(…) |  |
 

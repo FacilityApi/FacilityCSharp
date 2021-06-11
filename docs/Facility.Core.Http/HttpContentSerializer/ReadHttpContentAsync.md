@@ -1,9 +1,9 @@
 # HttpContentSerializer.ReadHttpContentAsync method (1 of 2)
 
-Reads a DTO from the specified HTTP content.
+Reads an object from the specified HTTP content.
 
 ```csharp
-public Task<ServiceResult<object>> ReadHttpContentAsync(Type dtoType, HttpContent? content, 
+public Task<ServiceResult<object>> ReadHttpContentAsync(Type objectType, HttpContent? content, 
     CancellationToken cancellationToken = default)
 ```
 

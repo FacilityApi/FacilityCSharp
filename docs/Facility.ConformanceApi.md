@@ -10,6 +10,8 @@
 | class [AnyMapDto](Facility.ConformanceApi/AnyMapDto.md) |  |
 | class [AnyResultDto](Facility.ConformanceApi/AnyResultDto.md) |  |
 | static class [ApiErrors](Facility.ConformanceApi/ApiErrors.md) | Custom errors. |
+| class [BodyTypesRequestDto](Facility.ConformanceApi/BodyTypesRequestDto.md) | Request for BodyTypes. |
+| class [BodyTypesResponseDto](Facility.ConformanceApi/BodyTypesResponseDto.md) | Response for BodyTypes. |
 | class [CheckPathRequestDto](Facility.ConformanceApi/CheckPathRequestDto.md) | Request for CheckPath. |
 | class [CheckPathResponseDto](Facility.ConformanceApi/CheckPathResponseDto.md) | Response for CheckPath. |
 | class [CheckQueryRequestDto](Facility.ConformanceApi/CheckQueryRequestDto.md) | Request for CheckQuery. |
@@ -29,10 +31,14 @@
 | class [GetWidgetsResponseDto](Facility.ConformanceApi/GetWidgetsResponseDto.md) | Response for GetWidgets. |
 | class [HasWidgetDto](Facility.ConformanceApi/HasWidgetDto.md) |  |
 | interface [IConformanceApi](Facility.ConformanceApi/IConformanceApi.md) | API for a Facility test server. |
+| class [MirrorBytesRequestDto](Facility.ConformanceApi/MirrorBytesRequestDto.md) | Request for MirrorBytes. |
+| class [MirrorBytesResponseDto](Facility.ConformanceApi/MirrorBytesResponseDto.md) | Response for MirrorBytes. |
 | class [MirrorFieldsRequestDto](Facility.ConformanceApi/MirrorFieldsRequestDto.md) | Request for MirrorFields. |
 | class [MirrorFieldsResponseDto](Facility.ConformanceApi/MirrorFieldsResponseDto.md) | Response for MirrorFields. |
 | class [MirrorHeadersRequestDto](Facility.ConformanceApi/MirrorHeadersRequestDto.md) | Request for MirrorHeaders. |
 | class [MirrorHeadersResponseDto](Facility.ConformanceApi/MirrorHeadersResponseDto.md) | Response for MirrorHeaders. |
+| class [MirrorTextRequestDto](Facility.ConformanceApi/MirrorTextRequestDto.md) | Request for MirrorText. |
+| class [MirrorTextResponseDto](Facility.ConformanceApi/MirrorTextResponseDto.md) | Response for MirrorText. |
 | class [MixedRequestDto](Facility.ConformanceApi/MixedRequestDto.md) | Request for Mixed. |
 | class [MixedResponseDto](Facility.ConformanceApi/MixedResponseDto.md) | Response for Mixed. |
 | class [RequiredRequestDto](Facility.ConformanceApi/RequiredRequestDto.md) | Request for Required. |

@@ -3,7 +3,7 @@
 Reads a DTO from the specified HTTP content.
 
 ```csharp
-protected override Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type dtoType, 
+protected override Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, 
     HttpContent content, CancellationToken cancellationToken)
 ```
 

@@ -11,6 +11,7 @@ public sealed class ConformanceApiService : IConformanceApi
 | name | description |
 | --- | --- |
 | [ConformanceApiService](ConformanceApiService/ConformanceApiService.md)(…) | Creates a service for the specified test. |
+| [BodyTypesAsync](ConformanceApiService/BodyTypesAsync.md)(…) |  |
 | [CheckPathAsync](ConformanceApiService/CheckPathAsync.md)(…) |  |
 | [CheckQueryAsync](ConformanceApiService/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](ConformanceApiService/CreateWidgetAsync.md)(…) |  |
@@ -19,8 +20,10 @@ public sealed class ConformanceApiService : IConformanceApi
 | [GetWidgetAsync](ConformanceApiService/GetWidgetAsync.md)(…) |  |
 | [GetWidgetBatchAsync](ConformanceApiService/GetWidgetBatchAsync.md)(…) |  |
 | [GetWidgetsAsync](ConformanceApiService/GetWidgetsAsync.md)(…) |  |
+| [MirrorBytesAsync](ConformanceApiService/MirrorBytesAsync.md)(…) |  |
 | [MirrorFieldsAsync](ConformanceApiService/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](ConformanceApiService/MirrorHeadersAsync.md)(…) |  |
+| [MirrorTextAsync](ConformanceApiService/MirrorTextAsync.md)(…) |  |
 | [MixedAsync](ConformanceApiService/MixedAsync.md)(…) |  |
 | [RequiredAsync](ConformanceApiService/RequiredAsync.md)(…) |  |
 

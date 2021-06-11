@@ -20,6 +20,7 @@ public sealed class Builder<TRequest, TResponse>
 | [GetUriParameters](HttpMethodMapping-2.Builder-2/GetUriParameters.md) { get; set; } | Extracts the path and query parameters from the request. |
 | [HttpMethod](HttpMethodMapping-2.Builder-2/HttpMethod.md) { get; set; } | The HTTP method. |
 | [Path](HttpMethodMapping-2.Builder-2/Path.md) { get; set; } | The path. |
+| [RequestBodyContentType](HttpMethodMapping-2.Builder-2/RequestBodyContentType.md) { get; set; } | The content type of the request body, if any. |
 | [RequestBodyType](HttpMethodMapping-2.Builder-2/RequestBodyType.md) { get; set; } | The type of the request body, if any. |
 | [ResponseMappings](HttpMethodMapping-2.Builder-2/ResponseMappings.md) { get; } | The response mappings. |
 | [SetRequestHeaders](HttpMethodMapping-2.Builder-2/SetRequestHeaders.md) { get; set; } | Writes the headers to the request. |

@@ -11,6 +11,7 @@ public sealed class HttpResponseMapping<TResponse>
 
 | name | description |
 | --- | --- |
+| [ResponseBodyContentType](HttpResponseMapping-1/ResponseBodyContentType.md) { get; } | The content type of the response body, if any. |
 | [ResponseBodyType](HttpResponseMapping-1/ResponseBodyType.md) { get; } | The type of the response body, if any. |
 | [StatusCode](HttpResponseMapping-1/StatusCode.md) { get; } | The status code used by this mapping. |
 | [CreateResponse](HttpResponseMapping-1/CreateResponse.md)(…) | Creates a response with an optional body. |

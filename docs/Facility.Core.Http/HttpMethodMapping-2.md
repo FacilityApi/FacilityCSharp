@@ -14,6 +14,7 @@ public sealed class HttpMethodMapping<TRequest, TResponse>
 | --- | --- |
 | [HttpMethod](HttpMethodMapping-2/HttpMethod.md) { get; } | The HTTP method. |
 | [Path](HttpMethodMapping-2/Path.md) { get; } | The path. |
+| [RequestBodyContentType](HttpMethodMapping-2/RequestBodyContentType.md) { get; } | The content type of the request body, if any. |
 | [RequestBodyType](HttpMethodMapping-2/RequestBodyType.md) { get; } | The type of the request body, if any. |
 | [ResponseMappings](HttpMethodMapping-2/ResponseMappings.md) { get; } | The response mappings. |
 | [CreateRequest](HttpMethodMapping-2/CreateRequest.md)(…) | Creates a request with an optional body. |

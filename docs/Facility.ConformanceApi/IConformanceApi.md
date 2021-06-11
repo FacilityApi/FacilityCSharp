@@ -10,6 +10,7 @@ public interface IConformanceApi
 
 | name | description |
 | --- | --- |
+| [BodyTypesAsync](IConformanceApi/BodyTypesAsync.md)(…) |  |
 | [CheckPathAsync](IConformanceApi/CheckPathAsync.md)(…) |  |
 | [CheckQueryAsync](IConformanceApi/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](IConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
@@ -18,8 +19,10 @@ public interface IConformanceApi
 | [GetWidgetAsync](IConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | [GetWidgetBatchAsync](IConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |
 | [GetWidgetsAsync](IConformanceApi/GetWidgetsAsync.md)(…) | Gets widgets. |
+| [MirrorBytesAsync](IConformanceApi/MirrorBytesAsync.md)(…) |  |
 | [MirrorFieldsAsync](IConformanceApi/MirrorFieldsAsync.md)(…) |  |
 | [MirrorHeadersAsync](IConformanceApi/MirrorHeadersAsync.md)(…) |  |
+| [MirrorTextAsync](IConformanceApi/MirrorTextAsync.md)(…) |  |
 | [MixedAsync](IConformanceApi/MixedAsync.md)(…) |  |
 | [RequiredAsync](IConformanceApi/RequiredAsync.md)(…) |  |
 

@@ -15,6 +15,7 @@ public sealed class Builder<TResponse>
 | [CreateResponse](HttpResponseMapping-1.Builder-1/CreateResponse.md) { get; set; } | Creates a response with an optional body. |
 | [GetResponseBody](HttpResponseMapping-1.Builder-1/GetResponseBody.md) { get; set; } | Extracts the HTTP response content body from the response. |
 | [MatchesResponse](HttpResponseMapping-1.Builder-1/MatchesResponse.md) { get; set; } | True if the response should result in this status code and body. |
+| [ResponseBodyContentType](HttpResponseMapping-1.Builder-1/ResponseBodyContentType.md) { get; set; } | The content type of the response body, if any. |
 | [ResponseBodyType](HttpResponseMapping-1.Builder-1/ResponseBodyType.md) { get; set; } | The type of the response body, if any. |
 | [StatusCode](HttpResponseMapping-1.Builder-1/StatusCode.md) { get; set; } | The status code used by this mapping. |
 | [Build](HttpResponseMapping-1.Builder-1/Build.md)() | Builds the mapping. |

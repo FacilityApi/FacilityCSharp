@@ -10,6 +10,7 @@ public static class ConformanceApiHttpMapping
 
 | name | description |
 | --- | --- |
+| static readonly [BodyTypesMapping](ConformanceApiHttpMapping/BodyTypesMapping.md) |  |
 | static readonly [CheckPathMapping](ConformanceApiHttpMapping/CheckPathMapping.md) |  |
 | static readonly [CheckQueryMapping](ConformanceApiHttpMapping/CheckQueryMapping.md) |  |
 | static readonly [CreateWidgetMapping](ConformanceApiHttpMapping/CreateWidgetMapping.md) | Creates a new widget. |
@@ -18,8 +19,10 @@ public static class ConformanceApiHttpMapping
 | static readonly [GetWidgetBatchMapping](ConformanceApiHttpMapping/GetWidgetBatchMapping.md) | Gets the specified widgets. |
 | static readonly [GetWidgetMapping](ConformanceApiHttpMapping/GetWidgetMapping.md) | Gets the specified widget. |
 | static readonly [GetWidgetsMapping](ConformanceApiHttpMapping/GetWidgetsMapping.md) | Gets widgets. |
+| static readonly [MirrorBytesMapping](ConformanceApiHttpMapping/MirrorBytesMapping.md) |  |
 | static readonly [MirrorFieldsMapping](ConformanceApiHttpMapping/MirrorFieldsMapping.md) |  |
 | static readonly [MirrorHeadersMapping](ConformanceApiHttpMapping/MirrorHeadersMapping.md) |  |
+| static readonly [MirrorTextMapping](ConformanceApiHttpMapping/MirrorTextMapping.md) |  |
 | static readonly [MixedMapping](ConformanceApiHttpMapping/MixedMapping.md) |  |
 | static readonly [RequiredMapping](ConformanceApiHttpMapping/RequiredMapping.md) |  |
 

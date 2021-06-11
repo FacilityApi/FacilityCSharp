@@ -1,6 +1,6 @@
 # HttpContentSerializer.DefaultMediaTypeCore property
 
-The media type for requests.
+The default media type for the serializer.
 
 ```csharp
 protected abstract string DefaultMediaTypeCore { get; }
