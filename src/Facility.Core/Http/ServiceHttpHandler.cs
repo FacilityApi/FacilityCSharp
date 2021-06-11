@@ -261,7 +261,7 @@ namespace Facility.Core.Http
 			return httpRequest.Headers.Accept
 				.OrderByDescending(x => x.Quality)
 				.Select(x => x.MediaType)
-				.FirstOrDefault(m_contentSerializer.IsSupportedMediaType);
+				.FirstOrDefault(m_contentSerializer.IsAcceptedMediaType);
 		}
 
 		private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)

@@ -21,6 +21,11 @@ namespace Facility.Core.Http
 		public bool IsSupportedMediaType(string mediaType) => IsSupportedMediaTypeCore(mediaType);
 
 		/// <summary>
+		/// Determines if the specified media type is supported.
+		/// </summary>
+		public bool IsAcceptedMediaType(string mediaType) => IsAcceptedMediaTypeCore(mediaType);
+
+		/// <summary>
 		/// Creates HTTP content for the specified DTO.
 		/// </summary>
 		public HttpContent CreateHttpContent(object content, string? mediaType = null)
@@ -65,6 +70,12 @@ namespace Facility.Core.Http
 		/// Determines if the specified media type is supported.
 		/// </summary>
 		protected abstract bool IsSupportedMediaTypeCore(string mediaType);
+
+		/// <summary>
+		/// Determines if the specified media type is accepted when investigating the Accept header.
+		/// </summary>
+		/// <remarks>Calls <see cref="IsSupportedMediaType"/> by default.</remarks>
+		protected virtual bool IsAcceptedMediaTypeCore(string mediaType) => IsSupportedMediaType(mediaType);
 
 		/// <summary>
 		/// Creates HTTP content for the specified DTO.
