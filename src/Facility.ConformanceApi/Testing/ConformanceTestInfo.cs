@@ -31,5 +31,10 @@ namespace Facility.ConformanceApi.Testing
 		/// The API error being received, if the method should fail.
 		/// </summary>
 		public JObject? Error { get; set; }
+
+		/// <summary>
+		/// A raw HTTP request.
+		/// </summary>
+		public ConformanceHttpRequestInfo? HttpRequest { get; set; }
 	}
 }

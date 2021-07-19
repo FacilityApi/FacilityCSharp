@@ -650,6 +650,78 @@
       "response": {
         "content": "NDI="
       }
+    },
+    {
+      "test": "checkPathHttpPathCase",
+      "method": "checkPath",
+      "httpRequest": {
+        "method": "GET",
+        "path": "/CHECKPATH/pathCase/true/1.2/3/4/5.6/yes"
+      },
+      "request": {
+        "string": "pathCase",
+        "boolean": true,
+        "double": 1.2,
+        "int32": 3,
+        "int64": 4,
+        "decimal": 5.6,
+        "enum": "yes"
+      },
+      "response": {}
+    },
+    {
+      "test": "checkPathHttpBooleanCase",
+      "method": "checkPath",
+      "httpRequest": {
+        "method": "GET",
+        "path": "/checkPath/booleanCase/TRUE/1.2/3/4/5.6/yes"
+      },
+      "request": {
+        "string": "booleanCase",
+        "boolean": true,
+        "double": 1.2,
+        "int32": 3,
+        "int64": 4,
+        "decimal": 5.6,
+        "enum": "yes"
+      },
+      "response": {}
+    },
+    {
+      "test": "checkQueryHttpPathCase",
+      "method": "checkQuery",
+      "httpRequest": {
+        "method": "GET",
+        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.2&int32=3&int64=4&decimal=5.6&enum=yes"
+      },
+      "request": {
+        "string": "pathCase",
+        "boolean": true,
+        "double": 1.2,
+        "int32": 3,
+        "int64": 4,
+        "decimal": 5.6,
+        "enum": "yes"
+      },
+      "response": {}
+    },
+    {
+      "test": "checkQueryHttpQueryCase",
+      "method": "checkQuery",
+      "httpRequest": {
+        "method": "GET",
+        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.2&int32=3&int64=4&decimal=5.6&enum=yes"
+      },
+      "request": {
+        "string": "queryCase",
+        "boolean": true,
+        "double": 1.2,
+        "int32": 3,
+        "int64": 4,
+        "decimal": 5.6,
+        "enum": "yes"
+      },
+      "response": {}
     }
   ]
 }

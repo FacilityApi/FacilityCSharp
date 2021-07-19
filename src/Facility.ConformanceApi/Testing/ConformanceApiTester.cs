@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,9 +21,21 @@ namespace Facility.ConformanceApi.Testing
 		/// <param name="tests">The conformance tests.</param>
 		/// <param name="api">The API interface to test.</param>
 		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
+			: this(tests, api, httpClient: null)
+		{
+		}
+
+		/// <summary>
+		/// Creates a tester.
+		/// </summary>
+		/// <param name="tests">The conformance tests.</param>
+		/// <param name="api">The API interface to test.</param>
+		/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
+		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
 		{
 			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
 			m_api = api ?? throw new ArgumentNullException(nameof(api));
+			m_httpClient = httpClient;
 
 			var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
 			if (sameNameTests != null)
@@ -64,6 +77,21 @@ namespace Facility.ConformanceApi.Testing
 
 			try
 			{
+				if (m_httpClient != null && test.HttpRequest != null)
+				{
+					if (test.HttpRequest.Method is null)
+						return Failure("HTTP request missing method.");
+					if (test.HttpRequest.Path is null)
+						return Failure("HTTP request missing path.");
+
+					var httpRequest = new HttpRequestMessage(new HttpMethod(test.HttpRequest.Method), test.HttpRequest.Path);
+					var httpResponse = await m_httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+					if (!httpResponse.IsSuccessStatusCode)
+						return Failure($"Got {(int) httpResponse.StatusCode} {httpResponse.ReasonPhrase}: {await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false)}");
+
+					return new ConformanceTestResult(testName, ConformanceTestStatus.Pass);
+				}
+
 				static string Capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
 				var methodInfo = typeof(IConformanceApi).GetMethod(Capitalize(test.Method!) + "Async", BindingFlags.Public | BindingFlags.Instance);
 				if (methodInfo == null)
@@ -119,5 +147,6 @@ namespace Facility.ConformanceApi.Testing
 
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 		private readonly IConformanceApi m_api;
+		private readonly HttpClient? m_httpClient;
 	}
 }
