@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.10.0
+
+* Fix bug where HTTP path was not case-insensitive when path variables were used.
+* HTTP query parameter names should be case-insensitive.
+* Add some conformance tests for case insensitivity.
+
 ## 2.9.0
 
 * Support bytes/strings as request/response body fields.

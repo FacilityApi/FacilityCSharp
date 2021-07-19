@@ -328,7 +328,7 @@ namespace Facility.ConformanceApi.Http
 			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Get,
-				Path = "/mirror/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
+				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
 				ValidateRequest = request =>
 				{
 					if (string.IsNullOrEmpty(request.String))

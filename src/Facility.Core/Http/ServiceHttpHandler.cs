@@ -95,7 +95,7 @@ namespace Facility.Core.Http
 			{
 				var request = mapping.CreateRequest(requestBody);
 
-				var uriParameters = new Dictionary<string, string?>();
+				var uriParameters = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
 				foreach (var queryParameter in ParseQueryString(httpRequest.RequestUri.Query))
 					uriParameters[queryParameter.Key] = queryParameter.Value[0];
 				foreach (var pathParameter in pathParameters)
@@ -244,7 +244,7 @@ namespace Facility.Core.Http
 				foreach (string name in names)
 					regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
 				regexPattern = "^(?:" + regexPattern + ")$";
-				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant).Match(requestPath);
+				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).Match(requestPath);
 				return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
 			}
 

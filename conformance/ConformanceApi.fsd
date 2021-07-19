@@ -152,7 +152,7 @@ service ConformanceApi
 	{
 	}
 
-	[http(method: GET, path: "/mirror/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}")]
+	[http(method: GET, path: "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}")]
 	method checkPath
 	{
 		string: string;

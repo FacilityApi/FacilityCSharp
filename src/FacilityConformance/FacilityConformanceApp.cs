@@ -80,17 +80,17 @@ namespace FacilityConformance
 			}
 			else if (command == "test")
 			{
-				string url = argsReader.ReadOption("url") ?? defaultUrl;
+				var baseUri = new Uri(argsReader.ReadOption("url") ?? defaultUrl);
 				var testNames = argsReader.ReadArguments();
 				argsReader.VerifyComplete();
 
 				var api = new HttpClientConformanceApi(
 					new HttpClientServiceSettings
 					{
-						BaseUri = new Uri(url),
+						BaseUri = baseUri,
 					});
 
-				var tester = new ConformanceApiTester(m_tests, api);
+				var tester = new ConformanceApiTester(m_tests, api, new HttpClient { BaseAddress = baseUri });
 
 				var results = new List<ConformanceTestResult>();
 
