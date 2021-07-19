@@ -12,6 +12,7 @@ public sealed class ConformanceTestInfo
 | --- | --- |
 | [ConformanceTestInfo](ConformanceTestInfo/ConformanceTestInfo.md)() | The default constructor. |
 | [Error](ConformanceTestInfo/Error.md) { get; set; } | The API error being received, if the method should fail. |
+| [HttpRequest](ConformanceTestInfo/HttpRequest.md) { get; set; } | A raw HTTP request. |
 | [Method](ConformanceTestInfo/Method.md) { get; set; } | The API method being called. |
 | [Request](ConformanceTestInfo/Request.md) { get; set; } | The API request being sent. |
 | [Response](ConformanceTestInfo/Response.md) { get; set; } | The API response being received, if the method should succeed. |

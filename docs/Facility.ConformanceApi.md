@@ -60,6 +60,7 @@
 | --- | --- |
 | class [ConformanceApiService](Facility.ConformanceApi.Testing/ConformanceApiService.md) | Implements a conformance API service. |
 | class [ConformanceApiTester](Facility.ConformanceApi.Testing/ConformanceApiTester.md) | Tests a conformance API service. |
+| class [ConformanceHttpRequestInfo](Facility.ConformanceApi.Testing/ConformanceHttpRequestInfo.md) | A raw HTTP request. |
 | class [ConformanceTestInfo](Facility.ConformanceApi.Testing/ConformanceTestInfo.md) | Information for a conformance test. |
 | class [ConformanceTestResult](Facility.ConformanceApi.Testing/ConformanceTestResult.md) | A conformance test result. |
 | class [ConformanceTestRun](Facility.ConformanceApi.Testing/ConformanceTestRun.md) | The results of a test run. |

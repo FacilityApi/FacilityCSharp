@@ -10,7 +10,7 @@ public sealed class ConformanceApiTester
 
 | name | description |
 | --- | --- |
-| [ConformanceApiTester](ConformanceApiTester/ConformanceApiTester.md)(…) | Creates a tester. |
+| [ConformanceApiTester](ConformanceApiTester/ConformanceApiTester.md)(…) | Creates a tester. (2 constructors) |
 | [RunAllTestsAsync](ConformanceApiTester/RunAllTestsAsync.md)(…) | Runs all tests. |
 | [RunTestAsync](ConformanceApiTester/RunTestAsync.md)(…) | Runs the test with the specified name. |
 
