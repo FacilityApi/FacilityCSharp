@@ -244,7 +244,7 @@ namespace Facility.Core.Http
 				foreach (string name in names)
 					regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
 				regexPattern = "^(?:" + regexPattern + ")$";
-				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant).Match(requestPath);
+				Match match = new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).Match(requestPath);
 				return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
 			}
 
