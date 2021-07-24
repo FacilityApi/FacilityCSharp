@@ -329,9 +329,9 @@ namespace Facility.CodeGen.CSharp
 
 						var requiredFields = fieldInfos.Where(x => x.IsRequired).ToList();
 						var validateFields = fieldInfos.Where(x => x.Validation != null).ToList();
-						var validatableFields = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
+						var fieldsRequiringRecursiveValidation = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
 
-						if (requiredFields.Count != 0 || validateFields.Count != 0 || validatableFields.Count != 0)
+						if (requiredFields.Count != 0 || validateFields.Count != 0 || fieldsRequiringRecursiveValidation.Count != 0)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Validates the DTO.");
@@ -426,11 +426,11 @@ namespace Facility.CodeGen.CSharp
 									}
 								}
 
-								if (validatableFields.Count != 0)
+								if (fieldsRequiringRecursiveValidation.Count != 0)
 								{
 									code.WriteLineSkipOnce();
 									code.WriteLine($"string{NullableReferenceSuffix} errorMessage;");
-									foreach (var fieldInfo in validatableFields)
+									foreach (var fieldInfo in fieldsRequiringRecursiveValidation)
 									{
 										var propertyName = context.GetFieldPropertyName(fieldInfo);
 										code.WriteLine($"if (!ServiceDataUtility.ValidateFieldValue({propertyName}, \"{fieldInfo.Name}\", out errorMessage))");
