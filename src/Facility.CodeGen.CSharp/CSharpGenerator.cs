@@ -257,6 +257,23 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
+		private static void GenerateRangeCheck(CodeWriter code, string fieldName, ServiceFieldValidationRange range)
+		{
+			if (range.Minimum != null)
+			{
+				code.WriteLine($"if ({fieldName} < {range.Minimum})");
+				using (code.Indent())
+					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\");");
+			}
+
+			if (range.Maximum != null)
+			{
+				code.WriteLine($"if ({fieldName} > {range.Maximum})");
+				using (code.Indent())
+					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\");");
+			}
+		}
+
 		private CodeGenFile GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 		{
 			string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
@@ -365,6 +382,7 @@ namespace Facility.CodeGen.CSharp
 									{
 										var type = context.GetFieldType(fieldInfo);
 										var propertyName = context.GetFieldPropertyName(fieldInfo);
+										var validation = fieldInfo.Validation!;
 
 										switch (type.Kind)
 										{
@@ -372,27 +390,23 @@ namespace Facility.CodeGen.CSharp
 											{
 												code.WriteLine($"if (!{propertyName}.IsDefined())");
 												using (code.Indent())
-													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\");");
 
 												break;
 											}
 
 											case ServiceTypeKind.String:
 											{
-												var validRange = fieldInfo.Validation!.LengthRange;
+												var validRange = validation.LengthRange;
 												if (validRange != null)
-												{
-													code.WriteLine($"if ({propertyName}.Length is < {validRange.Minimum} or > {validRange.Maximum})");
-													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
-												}
+													GenerateRangeCheck(code, $"{propertyName}.Length", validRange);
 
-												var validPattern = fieldInfo.Validation.RegexPattern;
+												var validPattern = validation.RegexPattern;
 												if (validPattern != null)
 												{
 													code.WriteLine($"if (!System.Text.RegularExpressions.Regex.IsMatch({propertyName}, \"{validPattern}\")");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\");");
 												}
 
 												break;
@@ -403,11 +417,7 @@ namespace Facility.CodeGen.CSharp
 											case ServiceTypeKind.Int64:
 											case ServiceTypeKind.Decimal:
 											{
-												var validRange = fieldInfo.Validation!.ValueRange!;
-												code.WriteLine($"if ({propertyName} is < {validRange.Minimum} or > {validRange.Maximum})");
-												using (code.Indent())
-													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
-
+												GenerateRangeCheck(code, propertyName, validation.ValueRange!);
 												break;
 											}
 
@@ -415,11 +425,7 @@ namespace Facility.CodeGen.CSharp
 											case ServiceTypeKind.Array:
 											case ServiceTypeKind.Map:
 											{
-												var validRange = fieldInfo.Validation!.CountRange!;
-												code.WriteLine($"if ({propertyName}.Count is < {validRange.Minimum} or > {validRange.Maximum})");
-												using (code.Indent())
-													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
-
+												GenerateRangeCheck(code, $"{propertyName}.Count", validation.CountRange!);
 												break;
 											}
 										}
