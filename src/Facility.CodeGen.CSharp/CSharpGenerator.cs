@@ -328,8 +328,10 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						var requiredFields = fieldInfos.Where(x => x.IsRequired).ToList();
+						var validateFields = fieldInfos.Where(x => x.Validation != null).ToList();
 						var validatableFields = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
-						if (requiredFields.Count != 0 || validatableFields.Count != 0)
+
+						if (requiredFields.Count != 0 || validateFields.Count != 0 || validatableFields.Count != 0)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Validates the DTO.");
@@ -353,6 +355,74 @@ namespace Facility.CodeGen.CSharp
 										code.WriteLine($"if ({propertyName} == null)");
 										using (code.Indent())
 											code.WriteLine($"return ServiceDataUtility.GetRequiredFieldErrorMessage(\"{fieldInfo.Name}\");");
+									}
+								}
+
+								if (validateFields.Count != 0)
+								{
+									code.WriteLineSkipOnce();
+									foreach (var fieldInfo in validateFields)
+									{
+										var type = context.GetFieldType(fieldInfo);
+										var propertyName = context.GetFieldPropertyName(fieldInfo);
+
+										switch (type.Kind)
+										{
+											case ServiceTypeKind.Enum:
+											{
+												code.WriteLine($"if (!{propertyName}.IsDefined())");
+												using (code.Indent())
+													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+
+												break;
+											}
+
+											case ServiceTypeKind.String:
+											{
+												var validRange = fieldInfo.Validation!.LengthRange;
+												if (validRange != null)
+												{
+													code.WriteLine($"if ({propertyName}.Length is < {validRange.Minimum} or > {validRange.Maximum})");
+													using (code.Indent())
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+												}
+
+												var validPattern = fieldInfo.Validation.RegexPattern;
+												if (validPattern != null)
+												{
+													code.WriteLine($"if (!System.Text.RegularExpressions.Regex.IsMatch({propertyName}, \"{validPattern}\")");
+													using (code.Indent())
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+												}
+
+												break;
+											}
+
+											case ServiceTypeKind.Double:
+											case ServiceTypeKind.Int32:
+											case ServiceTypeKind.Int64:
+											case ServiceTypeKind.Decimal:
+											{
+												var validRange = fieldInfo.Validation!.ValueRange!;
+												code.WriteLine($"if ({propertyName} is < {validRange.Minimum} or > {validRange.Maximum})");
+												using (code.Indent())
+													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+
+												break;
+											}
+
+											case ServiceTypeKind.Bytes:
+											case ServiceTypeKind.Array:
+											case ServiceTypeKind.Map:
+											{
+												var validRange = fieldInfo.Validation!.CountRange!;
+												code.WriteLine($"if ({propertyName}.Count is < {validRange.Minimum} or > {validRange.Maximum})");
+												using (code.Indent())
+													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\");");
+
+												break;
+											}
+										}
 									}
 								}
 
@@ -1275,7 +1345,7 @@ namespace Facility.CodeGen.CSharp
 				var addedDto = false;
 				foreach (var dto in service.Dtos)
 				{
-					if (dto.Fields.Any(x => x.IsRequired))
+					if (dto.Fields.Any(x => x.IsRequired || x.Validation != null))
 					{
 						dtosNeedingValidation.Add(dto);
 						addedDto = true;
