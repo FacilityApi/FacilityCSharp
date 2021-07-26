@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FacilityVersion>2.6.0</FacilityVersion>
+    <FacilityVersion>2.6.1</FacilityVersion>
   </PropertyGroup>
 
   <ItemGroup>
