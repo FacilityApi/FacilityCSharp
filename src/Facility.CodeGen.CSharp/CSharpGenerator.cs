@@ -257,18 +257,18 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
-		private static void GenerateRangeCheck(CodeWriter code, string fieldName, ServiceFieldValidationRange range)
+		private static void GenerateRangeCheck(CodeWriter code, string fieldName, ServiceFieldValidationRange range, string literalSuffix = "")
 		{
 			if (range.Minimum != null)
 			{
-				code.WriteLine($"if ({fieldName} < {range.Minimum})");
+				code.WriteLine($"if ({fieldName} < {range.Minimum}{literalSuffix})");
 				using (code.Indent())
 					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\");");
 			}
 
 			if (range.Maximum != null)
 			{
-				code.WriteLine($"if ({fieldName} > {range.Maximum})");
+				code.WriteLine($"if ({fieldName} > {range.Maximum}{literalSuffix})");
 				using (code.Indent())
 					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\");");
 			}
@@ -412,12 +412,24 @@ namespace Facility.CodeGen.CSharp
 												break;
 											}
 
-											case ServiceTypeKind.Double:
 											case ServiceTypeKind.Int32:
-											case ServiceTypeKind.Int64:
-											case ServiceTypeKind.Decimal:
 											{
 												GenerateRangeCheck(code, propertyName, validation.ValueRange!);
+												break;
+											}
+											case ServiceTypeKind.Double:
+											{
+												GenerateRangeCheck(code, propertyName, validation.ValueRange!, "D");
+												break;
+											}
+											case ServiceTypeKind.Int64:
+											{
+												GenerateRangeCheck(code, propertyName, validation.ValueRange!, "L");
+												break;
+											}
+											case ServiceTypeKind.Decimal:
+											{
+												GenerateRangeCheck(code, propertyName, validation.ValueRange!, "M");
 												break;
 											}
 
