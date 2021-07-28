@@ -52,6 +52,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = "[csharp] service TestApi { method do { [validate(length: 10..)] password: string; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
+			StringAssert.DoesNotContain("using System.Text.RegularExpressions;", requestDtoFile.Text);
 			StringAssert.Contains("if (Password != null && Password.Length < 10)", requestDtoFile.Text);
 		}
 
@@ -61,8 +62,9 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = @"[csharp] service TestApi { method do { [validate(regex: ""^[0-9]{4}$"")] pin: string; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-			StringAssert.Contains("static readonly Regex s_ValidPinPattern = new Regex(\"^[0-9]{4}$\");", requestDtoFile.Text);
-			StringAssert.Contains("if (Pin != null && !s_ValidPinPattern.IsMatch(Pin))", requestDtoFile.Text);
+			StringAssert.Contains("using System.Text.RegularExpressions;", requestDtoFile.Text);
+			StringAssert.Contains("static readonly Regex s_validPinRegex = new Regex(\"^[0-9]{4}$\", RegexOptions.CultureInvariant);", requestDtoFile.Text);
+			StringAssert.Contains("if (Pin != null && !s_validPinRegex.IsMatch(Pin))", requestDtoFile.Text);
 		}
 
 		[Test]

@@ -286,11 +286,15 @@ namespace Facility.CodeGen.CSharp
 				{
 					"System",
 					"System.Collections.Generic",
-					"System.Text.RegularExpressions",
 					"Facility.Core",
 					"Newtonsoft.Json",
 					"Newtonsoft.Json.Linq",
 				};
+
+				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
+				if (regexFields.Count != 0)
+					usings.Add("System.Text.RegularExpressions");
+
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!dtoInfo.IsObsolete && dtoInfo.Fields.Any(x => x.IsObsolete))
@@ -316,7 +320,6 @@ namespace Facility.CodeGen.CSharp
 						var fieldInfos = dtoInfo.Fields;
 						GenerateFieldProperties(code, fieldInfos, context);
 
-						var regexFields = fieldInfos.Where(x => x.Validation?.RegexPattern != null).ToList();
 						if (regexFields.Count != 0)
 						{
 							code.WriteLine();
@@ -431,11 +434,10 @@ namespace Facility.CodeGen.CSharp
 												var validPattern = validation.RegexPattern;
 												if (validPattern != null)
 												{
-													var regexField = $"s_Valid{propertyName}Pattern";
+													var regexField = $"s_valid{propertyName}Regex";
 													code.WriteLine($"if ({propertyName} != null && !{regexField}.IsMatch({propertyName}))");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\", $\"Must match regular expression: {regexField}\");");
-
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\", $\"Must match regular expression: {{{regexField}}}\");");
 												}
 
 												break;
