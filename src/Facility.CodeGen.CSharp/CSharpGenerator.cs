@@ -286,6 +286,7 @@ namespace Facility.CodeGen.CSharp
 				{
 					"System",
 					"System.Collections.Generic",
+					"System.Text.RegularExpressions",
 					"Facility.Core",
 					"Newtonsoft.Json",
 					"Newtonsoft.Json.Linq",
@@ -314,6 +315,15 @@ namespace Facility.CodeGen.CSharp
 
 						var fieldInfos = dtoInfo.Fields;
 						GenerateFieldProperties(code, fieldInfos, context);
+
+						code.WriteLine();
+						var regexFields = fieldInfos.Where(x => x.Validation?.RegexPattern != null).ToList();
+						foreach (var fieldInfo in regexFields)
+						{
+							var propertyName = context.GetFieldPropertyName(fieldInfo);
+							var validPattern = fieldInfo.Validation!.RegexPattern!;
+							code.WriteLine($"private static readonly Regex s_Valid{propertyName}Pattern = new Regex({CSharpUtility.CreateString(validPattern)});");
+						}
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
@@ -404,7 +414,7 @@ namespace Facility.CodeGen.CSharp
 												var validPattern = validation.RegexPattern;
 												if (validPattern != null)
 												{
-													code.WriteLine($"if (!System.Text.RegularExpressions.Regex.IsMatch({propertyName}, \"{validPattern}\")");
+													code.WriteLine($"if (!s_Valid{propertyName}Pattern.IsMatch({propertyName}))");
 													using (code.Indent())
 														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\");");
 												}

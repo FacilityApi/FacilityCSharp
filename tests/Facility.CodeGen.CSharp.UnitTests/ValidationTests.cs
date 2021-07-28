@@ -61,7 +61,8 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = @"[csharp] service TestApi { method do { [validate(regex: ""^[0-9]{4}$"")] pin: string; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-			StringAssert.Contains("Regex.IsMatch(Pin, \"[0-9]{4}\")", requestDtoFile.Text);
+			StringAssert.Contains("static readonly Regex s_ValidPinPattern = new Regex(\"^[0-9]{4}$\");", requestDtoFile.Text);
+			StringAssert.Contains("if (!s_ValidPinPattern.IsMatch(Pin))", requestDtoFile.Text);
 		}
 
 		[Test]
