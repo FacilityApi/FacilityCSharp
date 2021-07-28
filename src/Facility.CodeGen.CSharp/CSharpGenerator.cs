@@ -324,7 +324,7 @@ namespace Facility.CodeGen.CSharp
 							{
 								var propertyName = context.GetFieldPropertyName(fieldInfo);
 								var validPattern = fieldInfo.Validation!.RegexPattern!;
-								code.WriteLine($"private static readonly Regex s_Valid{propertyName}Pattern = new Regex({CSharpUtility.CreateString(validPattern)});");
+								code.WriteLine($"private static readonly Regex s_valid{propertyName}Regex = new Regex({CSharpUtility.CreateString(validPattern)}, RegexOptions.CultureInvariant);");
 							}
 						}
 
@@ -417,14 +417,14 @@ namespace Facility.CodeGen.CSharp
 													{
 														code.WriteLine($"if ({propertyName} != null && {propertyName}.Length < {validRange.Minimum})");
 														using (code.Indent())
-															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Must be at least {validRange.Minimum}\");");
+															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Length must be at least {validRange.Minimum}\");");
 													}
 
 													if (validRange.Maximum != null)
 													{
 														code.WriteLine($"if ({propertyName} != null && {propertyName}.Length > {validRange.Maximum})");
 														using (code.Indent())
-															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Must be at most {validRange.Maximum}\");");
+															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Length must be at most {validRange.Maximum}\");");
 													}
 												}
 
@@ -434,7 +434,8 @@ namespace Facility.CodeGen.CSharp
 													var regexField = $"s_Valid{propertyName}Pattern";
 													code.WriteLine($"if ({propertyName} != null && !{regexField}.IsMatch({propertyName}))");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\", $\"Must match {{{regexField}}}.\");");
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{propertyName}\", $\"Must match regular expression: {regexField}\");");
+
 												}
 
 												break;
@@ -470,14 +471,14 @@ namespace Facility.CodeGen.CSharp
 												{
 													code.WriteLine($"if ({propertyName} != null && {propertyName}.Count < {range.Minimum})");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Must be at least {range.Minimum}\");");
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Count must be at least {range.Minimum}\");");
 												}
 
 												if (range.Maximum != null)
 												{
 													code.WriteLine($"if ({propertyName} != null && {propertyName}.Count > {range.Maximum})");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Must be at most {range.Maximum}\");");
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Count must be at most {range.Maximum}\");");
 												}
 												break;
 											}
