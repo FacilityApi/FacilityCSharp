@@ -32,8 +32,8 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = "[csharp] service TestApi { method do { [validate(value: 0..1)] normalized: double; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-			StringAssert.Contains("if (Normalized < 0D)", requestDtoFile.Text);
-			StringAssert.Contains("if (Normalized > 1D)", requestDtoFile.Text);
+			StringAssert.Contains("if (Normalized != null && Normalized < 0D)", requestDtoFile.Text);
+			StringAssert.Contains("if (Normalized != null && Normalized > 1D)", requestDtoFile.Text);
 		}
 
 		[Test]
@@ -43,7 +43,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
 			StringAssert.Contains("public override bool Validate", requestDtoFile.Text);
-			StringAssert.Contains("if (!Data.IsDefined())", requestDtoFile.Text);
+			StringAssert.Contains("if (Data != null && !Data.Value.IsDefined())", requestDtoFile.Text);
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = "[csharp] service TestApi { method do { [validate(length: 10..)] password: string; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-			StringAssert.Contains("if (Password.Length < 10)", requestDtoFile.Text);
+			StringAssert.Contains("if (Password != null && Password.Length < 10)", requestDtoFile.Text);
 		}
 
 		[Test]
@@ -62,7 +62,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
 			StringAssert.Contains("static readonly Regex s_ValidPinPattern = new Regex(\"^[0-9]{4}$\");", requestDtoFile.Text);
-			StringAssert.Contains("if (!s_ValidPinPattern.IsMatch(Pin))", requestDtoFile.Text);
+			StringAssert.Contains("if (Pin != null && !s_ValidPinPattern.IsMatch(Pin))", requestDtoFile.Text);
 		}
 
 		[Test]
@@ -71,7 +71,7 @@ namespace Facility.CodeGen.CSharp.UnitTests
 			var definition = @"[csharp] service TestApi { method do { [validate(count: ..100)] accountIds: int64[]; }: {} }";
 			var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-			StringAssert.Contains("if (AccountIds.Count > 100", requestDtoFile.Text);
+			StringAssert.Contains("if (AccountIds != null && AccountIds.Count > 100", requestDtoFile.Text);
 		}
 
 		private CodeGenFile GetGeneratedFile(string definition, string fileName)
