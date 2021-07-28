@@ -42,5 +42,22 @@ namespace Facility.ConformanceApi
 				Id == other.Id &&
 				IfETag == other.IfETag;
 		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			if (Id != null && Id < 0)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("Id", "Must be at least 0");
+
+			return null;
+		}
 	}
 }

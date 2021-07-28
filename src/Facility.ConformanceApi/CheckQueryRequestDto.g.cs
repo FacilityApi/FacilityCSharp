@@ -51,5 +51,22 @@ namespace Facility.ConformanceApi
 				Decimal == other.Decimal &&
 				Enum == other.Enum;
 		}
+
+		/// <summary>
+		/// Validates the DTO.
+		/// </summary>
+		public override bool Validate(out string? errorMessage)
+		{
+			errorMessage = GetValidationErrorMessage();
+			return errorMessage == null;
+		}
+
+		private string? GetValidationErrorMessage()
+		{
+			if (Enum != null && !Enum.Value.IsDefined())
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("Enum", "Must be an expected enum value.");
+
+			return null;
+		}
 	}
 }

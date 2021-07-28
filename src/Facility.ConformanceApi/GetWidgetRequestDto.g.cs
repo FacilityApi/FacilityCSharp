@@ -57,6 +57,9 @@ namespace Facility.ConformanceApi
 			if (Id == null)
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("id");
 
+			if (Id != null && Id < 0)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("Id", "Must be at least 0");
+
 			return null;
 		}
 	}
