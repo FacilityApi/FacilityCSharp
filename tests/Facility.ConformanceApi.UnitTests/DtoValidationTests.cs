@@ -182,9 +182,9 @@ namespace Facility.ConformanceApi.UnitTests
 		public void RequiredWidgetsNameMissing()
 		{
 			var dto = CreateRequiredRequest();
-			dto.Widgets = new[] { CreateWidget(), new WidgetDto() };
+			dto.FiveWidgets = new[] { CreateWidget(), new(), new(), new(), new() };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("fiveWidgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]

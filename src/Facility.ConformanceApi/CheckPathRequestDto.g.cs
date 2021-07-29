@@ -64,7 +64,7 @@ namespace Facility.ConformanceApi
 		private string? GetValidationErrorMessage()
 		{
 			if (Enum != null && !Enum.Value.IsDefined())
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("Enum", "Must be an expected enum value.");
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("enum", "Must be an expected enum value.");
 
 			return null;
 		}

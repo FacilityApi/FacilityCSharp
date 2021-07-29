@@ -108,7 +108,7 @@ service ConformanceApi
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
-		[http(from: body), required]
+		[http(from: body), required, validate(count: ..100)]
 		ids: int32[];
 	}:
 	{
@@ -126,7 +126,7 @@ service ConformanceApi
 		id: int32;
 
 		/// The name of the widget.
-		[required, validate(regex: "[_a-zA-Z0-9]+")]
+		[required, validate(regex: "^[_a-zA-Z0-9]+$", length: 1..50)]
 		name: string;
 	}
 
@@ -212,8 +212,8 @@ service ConformanceApi
 	{
 		[http(from: query), required] query: string;
 		[required] normal: string;
+		[validate(count: 5)] fiveWidgets: Widget[];
 		widget: Widget;
-		widgets: Widget[];
 		widgetMatrix: Widget[][];
 		widgetResult: result<Widget>;
 		widgetResults: result<Widget>[];

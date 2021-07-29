@@ -34,7 +34,7 @@ namespace Facility.ConformanceApi
 		/// </summary>
 		public string? Name { get; set; }
 
-		private static readonly Regex s_validNameRegex = new Regex("[_a-zA-Z0-9]+", RegexOptions.CultureInvariant);
+		private static readonly Regex s_validNameRegex = new Regex("^[_a-zA-Z0-9]+$", RegexOptions.CultureInvariant);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
@@ -61,9 +61,13 @@ namespace Facility.ConformanceApi
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("name");
 
 			if (Id != null && Id < 0)
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("Id", "Must be at least 0");
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("id", "Must be at least 0.");
+			if (Name != null && Name.Length < 1)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at least 1.");
+			if (Name != null && Name.Length > 50)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at most 50.");
 			if (Name != null && !s_validNameRegex.IsMatch(Name))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("Name", $"Must match regular expression: {s_validNameRegex}");
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", $"Must match regular expression: {s_validNameRegex}.");
 
 			return null;
 		}

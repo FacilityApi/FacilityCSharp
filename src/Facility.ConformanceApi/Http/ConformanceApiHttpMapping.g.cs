@@ -570,8 +570,8 @@ namespace Facility.ConformanceApi.Http
 					new RequiredRequestDto
 					{
 						Normal = request.Normal,
+						FiveWidgets = request.FiveWidgets,
 						Widget = request.Widget,
-						Widgets = request.Widgets,
 						WidgetMatrix = request.WidgetMatrix,
 						WidgetResult = request.WidgetResult,
 						WidgetResults = request.WidgetResults,
@@ -582,8 +582,8 @@ namespace Facility.ConformanceApi.Http
 					new RequiredRequestDto
 					{
 						Normal = ((RequiredRequestDto) body!).Normal,
+						FiveWidgets = ((RequiredRequestDto) body!).FiveWidgets,
 						Widget = ((RequiredRequestDto) body!).Widget,
-						Widgets = ((RequiredRequestDto) body!).Widgets,
 						WidgetMatrix = ((RequiredRequestDto) body!).WidgetMatrix,
 						WidgetResult = ((RequiredRequestDto) body!).WidgetResult,
 						WidgetResults = ((RequiredRequestDto) body!).WidgetResults,
