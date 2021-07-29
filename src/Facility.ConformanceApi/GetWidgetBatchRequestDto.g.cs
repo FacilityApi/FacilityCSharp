@@ -51,8 +51,8 @@ namespace Facility.ConformanceApi
 			if (Ids == null)
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("ids");
 
-			if (Ids != null && Ids.Count > 100)
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("ids", "Count must be at most 100.");
+			if (Ids != null && Ids.Count > 10)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("ids", "Count must be at most 10.");
 
 			return null;
 		}

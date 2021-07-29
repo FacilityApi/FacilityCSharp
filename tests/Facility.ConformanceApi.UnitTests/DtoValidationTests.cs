@@ -182,9 +182,9 @@ namespace Facility.ConformanceApi.UnitTests
 		public void RequiredWidgetsNameMissing()
 		{
 			var dto = CreateRequiredRequest();
-			dto.FiveWidgets = new[] { CreateWidget(), new(), new(), new(), new() };
+			dto.Widgets = new[] { CreateWidget(), new(), new(), new(), new() };
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("fiveWidgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
 
 		[Test]
@@ -230,6 +230,76 @@ namespace Facility.ConformanceApi.UnitTests
 			dto.HasWidget = new HasWidgetDto { Widget = new WidgetDto() };
 			dto.Validate(out var errorMessage).Should().BeFalse();
 			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("hasWidget", ServiceDataUtility.GetInvalidFieldErrorMessage("widget", ServiceDataUtility.GetRequiredFieldErrorMessage("name"))));
+		}
+
+		[Test]
+		public void ValidateGetWidgetHasPositiveId()
+		{
+			var dto = new GetWidgetRequestDto { Id = -1 };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("id", "Must be at least 0."));
+		}
+
+		[Test]
+		public void ValidateDeleteWidgetHasPositiveId()
+		{
+			var dto = new DeleteWidgetRequestDto { Id = -1 };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("id", "Must be at least 0."));
+		}
+
+		[Test]
+		public void ValidateBatchWidgetFailsExceedingMaximumIds()
+		{
+			var dto = new GetWidgetBatchRequestDto
+			{
+				Ids = new[] { 1, 2, 3, 4, 50, 200, 300, 500, 700, 1000, 1001 },
+			};
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("ids", "Count must be at most 10."));
+		}
+
+		[Test]
+		public void ValidateFailsLessThanCount()
+		{
+			var dto = CreateRequiredRequest();
+			dto.Point = new[] { 0.0 };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at least 2."));
+		}
+
+		[Test]
+		public void ValidateFailsMoreThanCount()
+		{
+			var dto = CreateRequiredRequest();
+			dto.Point = new[] { 0.0, 1.0, 2.0 };
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at most 2."));
+		}
+
+		[Test]
+		public void ValidateWidgetIdIsPositive()
+		{
+			var dto = CreateWidget();
+			dto.Id = -1;
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("id", "Must be at least 0."));
+		}
+
+		[Test]
+		public void ValidateWidgetNameMatchesPattern()
+		{
+			var dto = new WidgetDto { Id = 1, Name = "%%widget%%"};
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Must match regular expression: ^[_a-zA-Z0-9]+$."));
+		}
+
+		[Test]
+		public void ValidateWidgetNameLength()
+		{
+			var dto = new WidgetDto { Id = 1, Name = "ExcessivelyLongName"};
+			dto.Validate(out var errorMessage).Should().BeFalse();
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at most 10."));
 		}
 
 		private static RequiredRequestDto CreateRequiredRequest() => new RequiredRequestDto { Query = "query", Normal = "normal" };

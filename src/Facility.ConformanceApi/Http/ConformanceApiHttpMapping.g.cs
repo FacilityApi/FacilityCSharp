@@ -570,25 +570,27 @@ namespace Facility.ConformanceApi.Http
 					new RequiredRequestDto
 					{
 						Normal = request.Normal,
-						FiveWidgets = request.FiveWidgets,
 						Widget = request.Widget,
+						Widgets = request.Widgets,
 						WidgetMatrix = request.WidgetMatrix,
 						WidgetResult = request.WidgetResult,
 						WidgetResults = request.WidgetResults,
 						WidgetMap = request.WidgetMap,
 						HasWidget = request.HasWidget,
+						Point = request.Point,
 					},
 				CreateRequest = body =>
 					new RequiredRequestDto
 					{
 						Normal = ((RequiredRequestDto) body!).Normal,
-						FiveWidgets = ((RequiredRequestDto) body!).FiveWidgets,
 						Widget = ((RequiredRequestDto) body!).Widget,
+						Widgets = ((RequiredRequestDto) body!).Widgets,
 						WidgetMatrix = ((RequiredRequestDto) body!).WidgetMatrix,
 						WidgetResult = ((RequiredRequestDto) body!).WidgetResult,
 						WidgetResults = ((RequiredRequestDto) body!).WidgetResults,
 						WidgetMap = ((RequiredRequestDto) body!).WidgetMap,
 						HasWidget = ((RequiredRequestDto) body!).HasWidget,
+						Point = ((RequiredRequestDto) body!).Point,
 					},
 				ResponseMappings =
 				{

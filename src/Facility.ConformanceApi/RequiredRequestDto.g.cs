@@ -27,9 +27,9 @@ namespace Facility.ConformanceApi
 
 		public string? Normal { get; set; }
 
-		public IReadOnlyList<WidgetDto>? FiveWidgets { get; set; }
-
 		public WidgetDto? Widget { get; set; }
+
+		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 
 		public IReadOnlyList<IReadOnlyList<WidgetDto>>? WidgetMatrix { get; set; }
 
@@ -41,6 +41,8 @@ namespace Facility.ConformanceApi
 
 		public HasWidgetDto? HasWidget { get; set; }
 
+		public IReadOnlyList<double>? Point { get; set; }
+
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
@@ -49,13 +51,14 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				Query == other.Query &&
 				Normal == other.Normal &&
-				ServiceDataUtility.AreEquivalentFieldValues(FiveWidgets, other.FiveWidgets) &&
 				ServiceDataUtility.AreEquivalentDtos(Widget, other.Widget) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Widgets, other.Widgets) &&
 				ServiceDataUtility.AreEquivalentFieldValues(WidgetMatrix, other.WidgetMatrix) &&
 				ServiceDataUtility.AreEquivalentResults(WidgetResult, other.WidgetResult) &&
 				ServiceDataUtility.AreEquivalentFieldValues(WidgetResults, other.WidgetResults) &&
 				ServiceDataUtility.AreEquivalentFieldValues(WidgetMap, other.WidgetMap) &&
-				ServiceDataUtility.AreEquivalentDtos(HasWidget, other.HasWidget);
+				ServiceDataUtility.AreEquivalentDtos(HasWidget, other.HasWidget) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Point, other.Point);
 		}
 
 		/// <summary>
@@ -74,15 +77,15 @@ namespace Facility.ConformanceApi
 			if (Normal == null)
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
 
-			if (FiveWidgets != null && FiveWidgets.Count < 5)
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("fiveWidgets", "Count must be at least 5.");
-			if (FiveWidgets != null && FiveWidgets.Count > 5)
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("fiveWidgets", "Count must be at most 5.");
+			if (Point != null && Point.Count < 2)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at least 2.");
+			if (Point != null && Point.Count > 2)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at most 2.");
 
 			string? errorMessage;
-			if (!ServiceDataUtility.ValidateFieldValue(FiveWidgets, "fiveWidgets", out errorMessage))
-				return errorMessage!;
 			if (!ServiceDataUtility.ValidateFieldValue(Widget, "widget", out errorMessage))
+				return errorMessage!;
+			if (!ServiceDataUtility.ValidateFieldValue(Widgets, "widgets", out errorMessage))
 				return errorMessage!;
 			if (!ServiceDataUtility.ValidateFieldValue(WidgetMatrix, "widgetMatrix", out errorMessage))
 				return errorMessage!;
