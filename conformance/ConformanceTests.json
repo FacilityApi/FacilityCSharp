@@ -520,7 +520,8 @@
         "widgetResult": { "value": { "name": "string" } },
         "widgetResults": [{ "value": { "name": "string" } }],
         "widgetMap": { "name": { "name": "string" } },
-        "hasWidget": { "widget": { "name": "string" } }
+        "hasWidget": { "widget": { "name": "string" } },
+        "point": [ 0.0, 1.0 ]
       },
       "response": {
         "normal": "string"
