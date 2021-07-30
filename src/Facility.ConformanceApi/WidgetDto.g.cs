@@ -67,7 +67,7 @@ namespace Facility.ConformanceApi
 			if (Name != null && Name.Length > 10)
 				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at most 10.");
 			if (Name != null && !s_validNameRegex.IsMatch(Name))
-				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", $"Must match regular expression: {s_validNameRegex}.");
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("name", $"Must match regular expression: {s_validNameRegex}");
 
 			return null;
 		}

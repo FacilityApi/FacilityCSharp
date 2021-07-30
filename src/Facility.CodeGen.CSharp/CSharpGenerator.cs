@@ -437,7 +437,7 @@ namespace Facility.CodeGen.CSharp
 													var regexField = $"s_valid{propertyName}Regex";
 													code.WriteLine($"if ({propertyName} != null && !{regexField}.IsMatch({propertyName}))");
 													using (code.Indent())
-														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", $\"Must match regular expression: {{{regexField}}}.\");");
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", $\"Must match regular expression: {{{regexField}}}\");");
 												}
 
 												break;

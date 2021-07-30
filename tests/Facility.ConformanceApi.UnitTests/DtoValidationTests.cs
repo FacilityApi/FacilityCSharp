@@ -182,7 +182,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public void RequiredWidgetsNameMissing()
 		{
 			var dto = CreateRequiredRequest();
-			dto.Widgets = new[] { CreateWidget(), new(), new(), new(), new() };
+			dto.Widgets = new[] { CreateWidget(), new WidgetDto() };
 			dto.Validate(out var errorMessage).Should().BeFalse();
 			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 		}
@@ -291,7 +291,7 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			var dto = new WidgetDto { Id = 1, Name = "%%widget%%"};
 			dto.Validate(out var errorMessage).Should().BeFalse();
-			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Must match regular expression: ^[_a-zA-Z0-9]+$."));
+			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Must match regular expression: ^[_a-zA-Z0-9]+$"));
 		}
 
 		[Test]
