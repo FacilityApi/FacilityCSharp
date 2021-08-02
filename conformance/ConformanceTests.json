@@ -758,6 +758,30 @@
         "code": "InvalidRequest",
         "message": "'ids' is invalid: Count must be at most 10."
       }
+    },
+    {
+      "test": "createWidgetNameTooLong",
+      "method": "createWidget",
+      "request": {
+        "widget": {
+          "name": "FacilityServiceWidget"
+        }
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'widget' is invalid: 'name' is invalid: Length must be at most 10."
+      }
+    },
+    {
+      "test": "checkQueryInvalidAnswer",
+      "method": "checkQuery",
+      "request": {
+        "enum": "negative"
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'enum' is invalid: Must be an expected enum value."
+      }
     }
   ]
 }
