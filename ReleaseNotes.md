@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.11.0
+
+* Support DTO validation with `[validate]` fields.
+
 ## 2.10.0
 
 * Fix bug where HTTP path was not case-insensitive when path variables were used.
