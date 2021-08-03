@@ -13,6 +13,7 @@ public sealed class RequiredRequestDto : ServiceDto<RequiredRequestDto>
 | [RequiredRequestDto](RequiredRequestDto/RequiredRequestDto.md)() | Creates an instance. |
 | [HasWidget](RequiredRequestDto/HasWidget.md) { get; set; } |  |
 | [Normal](RequiredRequestDto/Normal.md) { get; set; } |  |
+| [Point](RequiredRequestDto/Point.md) { get; set; } |  |
 | [Query](RequiredRequestDto/Query.md) { get; set; } |  |
 | [Widget](RequiredRequestDto/Widget.md) { get; set; } |  |
 | [WidgetMap](RequiredRequestDto/WidgetMap.md) { get; set; } |  |

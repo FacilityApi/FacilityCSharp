@@ -19,6 +19,7 @@ public sealed class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 | [Int64](CheckQueryRequestDto/Int64.md) { get; set; } |  |
 | [String](CheckQueryRequestDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](CheckQueryRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [Validate](CheckQueryRequestDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also
 
