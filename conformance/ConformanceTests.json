@@ -520,7 +520,8 @@
         "widgetResult": { "value": { "name": "string" } },
         "widgetResults": [{ "value": { "name": "string" } }],
         "widgetMap": { "name": { "name": "string" } },
-        "hasWidget": { "widget": { "name": "string" } }
+        "hasWidget": { "widget": { "name": "string" } },
+        "point": [ 0.0, 1.0 ]
       },
       "response": {
         "normal": "string"
@@ -722,6 +723,65 @@
         "enum": "yes"
       },
       "response": {}
+    },
+    {
+      "test": "getWidgetInvalidId",
+      "method": "getWidget",
+      "request": {
+        "id": -1
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'id' is invalid: Must be at least 0."
+      }
+    },
+    {
+      "test": "createWidgetInvalidName",
+      "method": "createWidget",
+      "request": {
+        "widget": {
+          "name": "*order"
+        }
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'widget' is invalid: 'name' is invalid: Must match regular expression: ^[_a-zA-Z0-9]+$"
+      }
+    },
+    {
+      "test": "getWidgetBatchTooLarge",
+      "method": "getWidgetBatch",
+      "request": {
+        "ids": [0, 1, 2, 31, 231, 10011, 10213, 20014, 120001, 120003, 120032, 1000000001]
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'ids' is invalid: Count must be at most 10."
+      }
+    },
+    {
+      "test": "createWidgetNameTooLong",
+      "method": "createWidget",
+      "request": {
+        "widget": {
+          "name": "FacilityServiceWidget"
+        }
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'widget' is invalid: 'name' is invalid: Length must be at most 10."
+      }
+    },
+    {
+      "test": "checkQueryInvalidAnswer",
+      "method": "checkQuery",
+      "request": {
+        "enum": "negative"
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'enum' is invalid: Must be an expected enum value."
+      }
     }
   ]
 }

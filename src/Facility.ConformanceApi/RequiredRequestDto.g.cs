@@ -41,6 +41,8 @@ namespace Facility.ConformanceApi
 
 		public HasWidgetDto? HasWidget { get; set; }
 
+		public IReadOnlyList<double>? Point { get; set; }
+
 		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
@@ -55,7 +57,8 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentResults(WidgetResult, other.WidgetResult) &&
 				ServiceDataUtility.AreEquivalentFieldValues(WidgetResults, other.WidgetResults) &&
 				ServiceDataUtility.AreEquivalentFieldValues(WidgetMap, other.WidgetMap) &&
-				ServiceDataUtility.AreEquivalentDtos(HasWidget, other.HasWidget);
+				ServiceDataUtility.AreEquivalentDtos(HasWidget, other.HasWidget) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Point, other.Point);
 		}
 
 		/// <summary>
@@ -73,6 +76,11 @@ namespace Facility.ConformanceApi
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("query");
 			if (Normal == null)
 				return ServiceDataUtility.GetRequiredFieldErrorMessage("normal");
+
+			if (Point != null && Point.Count < 2)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at least 2.");
+			if (Point != null && Point.Count > 2)
+				return ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at most 2.");
 
 			string? errorMessage;
 			if (!ServiceDataUtility.ValidateFieldValue(Widget, "widget", out errorMessage))

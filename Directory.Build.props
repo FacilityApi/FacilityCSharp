@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <VersionPrefix>2.10.0</VersionPrefix>
+    <VersionPrefix>2.11.0</VersionPrefix>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FacilityVersion>2.5.0</FacilityVersion>
+    <FacilityVersion>2.6.1</FacilityVersion>
   </PropertyGroup>
 
   <ItemGroup>

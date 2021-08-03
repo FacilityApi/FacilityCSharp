@@ -58,7 +58,7 @@ service ConformanceApi
 	method getWidget
 	{
 		/// The widget ID.
-		[required]
+		[required, validate(value: 0..)]
 		id: int32;
 
 		/// Don't get the widget if it has this ETag.
@@ -85,6 +85,7 @@ service ConformanceApi
 	method deleteWidget
 	{
 		/// The widget ID.
+		[validate(value: 0..)]
 		id: int32;
 
 		/// Don't delete the widget unless it has this ETag.
@@ -107,7 +108,7 @@ service ConformanceApi
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
-		[http(from: body), required]
+		[http(from: body), required, validate(count: ..10)]
 		ids: int32[];
 	}:
 	{
@@ -121,10 +122,11 @@ service ConformanceApi
 	data Widget
 	{
 		/// A unique identifier for the widget.
+		[validate(value: 0..)]
 		id: int32;
 
 		/// The name of the widget.
-		[required]
+		[required, validate(regex: "^[_a-zA-Z0-9]+$", length: 1..10)]
 		name: string;
 	}
 
@@ -147,6 +149,8 @@ service ConformanceApi
 		int32: int32;
 		int64: int64;
 		decimal: decimal;
+
+		[validate]
 		enum: Answer;
 	}:
 	{
@@ -161,6 +165,8 @@ service ConformanceApi
 		int32: int32;
 		int64: int64;
 		decimal: decimal;
+
+		[validate]
 		enum: Answer;
 	}:
 	{
@@ -213,6 +219,7 @@ service ConformanceApi
 		widgetResults: result<Widget>[];
 		widgetMap: map<Widget>;
 		hasWidget: HasWidget;
+		[validate(count: 2)] point: double[];
 	}:
 	{
 		[required] normal: string;

@@ -577,6 +577,7 @@ namespace Facility.ConformanceApi.Http
 						WidgetResults = request.WidgetResults,
 						WidgetMap = request.WidgetMap,
 						HasWidget = request.HasWidget,
+						Point = request.Point,
 					},
 				CreateRequest = body =>
 					new RequiredRequestDto
@@ -589,6 +590,7 @@ namespace Facility.ConformanceApi.Http
 						WidgetResults = ((RequiredRequestDto) body!).WidgetResults,
 						WidgetMap = ((RequiredRequestDto) body!).WidgetMap,
 						HasWidget = ((RequiredRequestDto) body!).HasWidget,
+						Point = ((RequiredRequestDto) body!).Point,
 					},
 				ResponseMappings =
 				{

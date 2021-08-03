@@ -257,6 +257,23 @@ namespace Facility.CodeGen.CSharp
 			});
 		}
 
+		private static void GenerateRangeCheck(CodeWriter code, string propertyName, string fieldName, ServiceFieldValidationRange range, string literalSuffix = "")
+		{
+			if (range.Minimum != null)
+			{
+				code.WriteLine($"if ({propertyName} != null && {propertyName} < {range.Minimum}{literalSuffix})");
+				using (code.Indent())
+					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\", \"Must be at least {range.Minimum}.\");");
+			}
+
+			if (range.Maximum != null)
+			{
+				code.WriteLine($"if ({propertyName} != null && {propertyName} > {range.Maximum}{literalSuffix})");
+				using (code.Indent())
+					code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldName}\", \"Must be at most {range.Maximum}.\");");
+			}
+		}
+
 		private CodeGenFile GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 		{
 			string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
@@ -273,6 +290,11 @@ namespace Facility.CodeGen.CSharp
 					"Newtonsoft.Json",
 					"Newtonsoft.Json.Linq",
 				};
+
+				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
+				if (regexFields.Count != 0)
+					usings.Add("System.Text.RegularExpressions");
+
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!dtoInfo.IsObsolete && dtoInfo.Fields.Any(x => x.IsObsolete))
@@ -297,6 +319,17 @@ namespace Facility.CodeGen.CSharp
 
 						var fieldInfos = dtoInfo.Fields;
 						GenerateFieldProperties(code, fieldInfos, context);
+
+						if (regexFields.Count != 0)
+						{
+							code.WriteLine();
+							foreach (var fieldInfo in regexFields)
+							{
+								var propertyName = context.GetFieldPropertyName(fieldInfo);
+								var validPattern = fieldInfo.Validation!.RegexPattern!;
+								code.WriteLine($"private static readonly Regex s_valid{propertyName}Regex = new Regex({CSharpUtility.CreateString(validPattern)}, RegexOptions.CultureInvariant);");
+							}
+						}
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
@@ -328,8 +361,10 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						var requiredFields = fieldInfos.Where(x => x.IsRequired).ToList();
-						var validatableFields = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
-						if (requiredFields.Count != 0 || validatableFields.Count != 0)
+						var validateFields = fieldInfos.Where(x => x.Validation != null).ToList();
+						var fieldsRequiringRecursiveValidation = fieldInfos.Where(x => context.NeedsValidation(context.GetFieldType(x))).ToList();
+
+						if (requiredFields.Count != 0 || validateFields.Count != 0 || fieldsRequiringRecursiveValidation.Count != 0)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Validates the DTO.");
@@ -356,11 +391,108 @@ namespace Facility.CodeGen.CSharp
 									}
 								}
 
-								if (validatableFields.Count != 0)
+								if (validateFields.Count != 0)
+								{
+									code.WriteLineSkipOnce();
+									foreach (var fieldInfo in validateFields)
+									{
+										var type = context.GetFieldType(fieldInfo);
+										var propertyName = context.GetFieldPropertyName(fieldInfo);
+										var validation = fieldInfo.Validation!;
+
+										switch (type.Kind)
+										{
+											case ServiceTypeKind.Enum:
+											{
+												code.WriteLine($"if ({propertyName} != null && !{propertyName}.Value.IsDefined())");
+												using (code.Indent())
+													code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Must be an expected enum value.\");");
+
+												break;
+											}
+
+											case ServiceTypeKind.String:
+											{
+												var validRange = validation.LengthRange;
+												if (validRange != null)
+												{
+													if (validRange.Minimum != null)
+													{
+														code.WriteLine($"if ({propertyName} != null && {propertyName}.Length < {validRange.Minimum})");
+														using (code.Indent())
+															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Length must be at least {validRange.Minimum}.\");");
+													}
+
+													if (validRange.Maximum != null)
+													{
+														code.WriteLine($"if ({propertyName} != null && {propertyName}.Length > {validRange.Maximum})");
+														using (code.Indent())
+															code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Length must be at most {validRange.Maximum}.\");");
+													}
+												}
+
+												var validPattern = validation.RegexPattern;
+												if (validPattern != null)
+												{
+													var regexField = $"s_valid{propertyName}Regex";
+													code.WriteLine($"if ({propertyName} != null && !{regexField}.IsMatch({propertyName}))");
+													using (code.Indent())
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", $\"Must match regular expression: {{{regexField}}}\");");
+												}
+
+												break;
+											}
+
+											case ServiceTypeKind.Int32:
+											{
+												GenerateRangeCheck(code, propertyName,  fieldInfo.Name, validation.ValueRange!);
+												break;
+											}
+											case ServiceTypeKind.Double:
+											{
+												GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!, "D");
+												break;
+											}
+											case ServiceTypeKind.Int64:
+											{
+												GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!, "L");
+												break;
+											}
+											case ServiceTypeKind.Decimal:
+											{
+												GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!, "M");
+												break;
+											}
+
+											case ServiceTypeKind.Bytes:
+											case ServiceTypeKind.Array:
+											case ServiceTypeKind.Map:
+											{
+												var range = validation.CountRange!;
+												if (range.Minimum != null)
+												{
+													code.WriteLine($"if ({propertyName} != null && {propertyName}.Count < {range.Minimum})");
+													using (code.Indent())
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Count must be at least {range.Minimum}.\");");
+												}
+
+												if (range.Maximum != null)
+												{
+													code.WriteLine($"if ({propertyName} != null && {propertyName}.Count > {range.Maximum})");
+													using (code.Indent())
+														code.WriteLine($"return ServiceDataUtility.GetInvalidFieldErrorMessage(\"{fieldInfo.Name}\", \"Count must be at most {range.Maximum}.\");");
+												}
+												break;
+											}
+										}
+									}
+								}
+
+								if (fieldsRequiringRecursiveValidation.Count != 0)
 								{
 									code.WriteLineSkipOnce();
 									code.WriteLine($"string{NullableReferenceSuffix} errorMessage;");
-									foreach (var fieldInfo in validatableFields)
+									foreach (var fieldInfo in fieldsRequiringRecursiveValidation)
 									{
 										var propertyName = context.GetFieldPropertyName(fieldInfo);
 										code.WriteLine($"if (!ServiceDataUtility.ValidateFieldValue({propertyName}, \"{fieldInfo.Name}\", out errorMessage))");
@@ -1275,7 +1407,7 @@ namespace Facility.CodeGen.CSharp
 				var addedDto = false;
 				foreach (var dto in service.Dtos)
 				{
-					if (dto.Fields.Any(x => x.IsRequired))
+					if (dto.Fields.Any(x => x.IsRequired || x.Validation != null))
 					{
 						dtosNeedingValidation.Add(dto);
 						addedDto = true;
