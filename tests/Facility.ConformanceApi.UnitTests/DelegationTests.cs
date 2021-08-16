@@ -63,6 +63,25 @@ namespace Facility.ConformanceApi.UnitTests
 			Awaiting(async () => await api.CheckPathAsync(new CheckPathRequestDto())).Should().Throw<InvalidCastException>();
 		}
 
+		[Test]
+		public async Task Validate()
+		{
+			var invalidWidget = new WidgetDto();
+			var validWidget = new WidgetDto { Id = 1, Name = "one" };
+
+			var createdWidget = invalidWidget;
+			var api = new DelegatingConformanceApi(async (_, _, _) => ServiceResult.Success<ServiceDto>(new CreateWidgetResponseDto { Widget = createdWidget }));
+			(await api.CreateWidgetAsync(new CreateWidgetRequestDto { Widget = invalidWidget })).Should().BeSuccess();
+
+			var validatingApi = new DelegatingConformanceApi(ServiceDelegators.Validate(api));
+			(await validatingApi.CreateWidgetAsync(new CreateWidgetRequestDto { Widget = invalidWidget })).Should().BeFailure(ServiceErrors.InvalidRequest);
+			(await validatingApi.CreateWidgetAsync(new CreateWidgetRequestDto { Widget = validWidget })).Should().BeFailure(ServiceErrors.InvalidResponse);
+
+			createdWidget = validWidget;
+			(await validatingApi.CreateWidgetAsync(new CreateWidgetRequestDto { Widget = invalidWidget })).Should().BeFailure(ServiceErrors.InvalidRequest);
+			(await validatingApi.CreateWidgetAsync(new CreateWidgetRequestDto { Widget = validWidget })).Should().BeSuccess();
+		}
+
 		private sealed class CheckPathCounter : DelegatingConformanceApi
 		{
 			public CheckPathCounter()

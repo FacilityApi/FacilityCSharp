@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Facility.Core
 {
@@ -21,6 +22,28 @@ namespace Facility.Core
 				throw new ArgumentNullException(nameof(inner));
 
 			return (method, request, cancellationToken) => method.InvokeAsync(inner, request, cancellationToken);
+		}
+
+		/// <summary>
+		/// Validates requests and responses.
+		/// </summary>
+		public static ServiceDelegator Validate(object inner)
+		{
+			if (inner is null)
+				throw new ArgumentNullException(nameof(inner));
+
+			return async (method, request, cancellationToken) =>
+			{
+				if (!request.Validate(out var requestErrorMessage))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(requestErrorMessage));
+
+				var response = await method.InvokeAsync(inner, request, cancellationToken).ConfigureAwait(false);
+
+				if (!response.Validate(out var responseErrorMessage))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidResponse(responseErrorMessage));
+
+				return response;
+			};
 		}
 	}
 }
