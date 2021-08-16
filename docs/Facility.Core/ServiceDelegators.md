@@ -12,6 +12,7 @@ public static class ServiceDelegators
 | --- | --- |
 | static [NotImplemented](ServiceDelegators/NotImplemented.md) { get; } | All methods throw NotImplementedException. |
 | static [Forward](ServiceDelegators/Forward.md)(…) | Forwards all methods to the inner service. |
+| static [Validate](ServiceDelegators/Validate.md)(…) | Validates requests and responses. |
 
 ## See Also
 
