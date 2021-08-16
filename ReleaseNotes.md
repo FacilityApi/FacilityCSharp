@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.12.0
+
+* Create standard validating delegator.
+
 ## 2.11.0
 
 * Support DTO validation with `[validate]` fields.
