@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.13.0
+
+* Generate string constants for enums
+
 ## 2.12.0
 
 * Create standard validating delegator.
