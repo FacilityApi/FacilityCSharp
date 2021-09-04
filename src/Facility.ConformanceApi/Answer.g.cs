@@ -97,5 +97,23 @@ namespace Facility.ConformanceApi
 			});
 
 		readonly string m_value;
+
+		public static class Strings
+		{
+			/// <summary>
+			/// Affirmative.
+			/// </summary>
+			public const string Yes =  "yes";
+
+			/// <summary>
+			/// Negative.
+			/// </summary>
+			public const string No =  "no";
+
+			/// <summary>
+			/// Unknown.
+			/// </summary>
+			public const string Maybe =  "maybe";
+		}
 	}
 }

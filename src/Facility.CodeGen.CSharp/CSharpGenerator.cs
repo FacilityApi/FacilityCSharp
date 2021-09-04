@@ -252,6 +252,21 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						code.WriteLine("readonly string m_value;");
+
+						code.WriteLine();
+						code.WriteLine("public static class Strings");
+						using (code.Block())
+						{
+							foreach (var enumValue in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(enumValue);
+
+								code.WriteLineSkipOnce();
+								CSharpUtility.WriteSummary(code, enumValue.Summary);
+								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
+								code.WriteLine($"public const string {memberName} =  \"{enumValue.Name}\";");
+							}
+						}
 					}
 				}
 			});
