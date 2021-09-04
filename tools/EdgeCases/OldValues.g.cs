@@ -92,5 +92,17 @@ namespace EdgeCases
 			});
 
 		readonly string m_value;
+
+		public static class Strings
+		{
+			/// <summary>
+			/// An old value.
+			/// </summary>
+			[Obsolete]
+			public const string Old =  "old";
+
+			[Obsolete]
+			public const string Older =  "older";
+		}
 	}
 }
