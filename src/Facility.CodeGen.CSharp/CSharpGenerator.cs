@@ -196,11 +196,11 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates an instance.");
-						code.WriteLine($"public {enumName}(string value) => m_value = Strings.GetDefinedValue(value) ?? value;");
+						code.WriteLine($"public {enumName}(string value) => m_value = value;");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Converts the instance to a string.");
-						code.WriteLine("public override string ToString() => m_value ?? \"\";");
+						code.WriteLine("public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? \"\";");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -224,7 +224,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns true if the instance is equal to one of the defined values.");
-						code.WriteLine("public bool IsDefined() => Strings.GetDefinedValue(m_value) != null;");
+						code.WriteLine("public bool IsDefined() => s_valueCache.ContainsKey(m_value);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns all of the defined values.");
@@ -243,31 +243,6 @@ namespace Facility.CodeGen.CSharp
 								CSharpUtility.WriteSummary(code, enumValue.Summary);
 								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
 								code.WriteLine($"public const string {memberName} =  \"{enumValue.Name}\";");
-							}
-
-							code.WriteLine();
-							CSharpUtility.WriteSummary(code, "Returns the underlying string for defined values.");
-							code.WriteLine("public static string? GetDefinedValue(string value)");
-							using (code.Block())
-							{
-								code.WriteLine("s_cache.TryGetValue(value, out var cachedValue);");
-								code.WriteLine("return cachedValue;");
-							}
-
-							code.WriteLine();
-							code.WriteLine($"private static readonly Dictionary<string, string> s_cache = new Dictionary<string, string>(");
-							using (code.Indent())
-							{
-								code.WriteLine("new Dictionary<string, string>");
-								using (code.Block("{", "},"))
-								{
-									foreach (var value in enumInfo.Values)
-									{
-										string memberName = CSharpUtility.GetEnumValueName(value);
-										code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName}}},");
-									}
-								}
-								code.WriteLine($"StringComparer.OrdinalIgnoreCase);");
 							}
 						}
 
@@ -290,6 +265,22 @@ namespace Facility.CodeGen.CSharp
 								foreach (var value in enumInfo.Values)
 									code.WriteLine($"{CSharpUtility.GetEnumValueName(value)},");
 							}
+						}
+
+						code.WriteLine();
+						code.WriteLine($"private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(");
+						using (code.Indent())
+						{
+							code.WriteLine("new Dictionary<string, string>");
+							using (code.Block("{", "},"))
+							{
+								foreach (var value in enumInfo.Values)
+								{
+									string memberName = CSharpUtility.GetEnumValueName(value);
+									code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
+								}
+							}
+							code.WriteLine($"StringComparer.OrdinalIgnoreCase);");
 						}
 
 						code.WriteLine();

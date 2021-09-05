@@ -32,12 +32,12 @@ namespace EdgeCases
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public OldValues(string value) => m_value = Strings.GetDefinedValue(value) ?? value;
+		public OldValues(string value) => m_value = value;
 
 		/// <summary>
 		/// Converts the instance to a string.
 		/// </summary>
-		public override string ToString() => m_value ?? "";
+		public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
 
 		/// <summary>
 		/// Checks for equality.
@@ -67,7 +67,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => Strings.GetDefinedValue(m_value) != null;
+		public bool IsDefined() => s_valueCache.ContainsKey(m_value);
 
 		/// <summary>
 		/// Returns all of the defined values.
@@ -87,23 +87,6 @@ namespace EdgeCases
 
 			[Obsolete]
 			public const string Older =  "older";
-
-			/// <summary>
-			/// Returns the underlying string for defined values.
-			/// </summary>
-			public static string? GetDefinedValue(string value)
-			{
-				s_cache.TryGetValue(value, out var cachedValue);
-				return cachedValue;
-			}
-
-			private static readonly Dictionary<string, string> s_cache = new Dictionary<string, string>(
-				new Dictionary<string, string>
-				{
-					{ Strings.Old, Strings.Old},
-					{ Strings.Older, Strings.Older},
-				},
-				StringComparer.OrdinalIgnoreCase);
 		}
 
 		/// <summary>
@@ -123,6 +106,14 @@ namespace EdgeCases
 				Old,
 				Older,
 			});
+
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(
+			new Dictionary<string, string>
+			{
+				{ Strings.Old, Strings.Old },
+				{ Strings.Older, Strings.Older },
+			},
+			StringComparer.OrdinalIgnoreCase);
 
 		readonly string m_value;
 	}

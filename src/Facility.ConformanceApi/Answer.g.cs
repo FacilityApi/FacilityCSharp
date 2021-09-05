@@ -36,12 +36,12 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public Answer(string value) => m_value = Strings.GetDefinedValue(value) ?? value;
+		public Answer(string value) => m_value = value;
 
 		/// <summary>
 		/// Converts the instance to a string.
 		/// </summary>
-		public override string ToString() => m_value ?? "";
+		public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
 
 		/// <summary>
 		/// Checks for equality.
@@ -71,7 +71,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => Strings.GetDefinedValue(m_value) != null;
+		public bool IsDefined() => s_valueCache.ContainsKey(m_value);
 
 		/// <summary>
 		/// Returns all of the defined values.
@@ -97,24 +97,6 @@ namespace Facility.ConformanceApi
 			/// Unknown.
 			/// </summary>
 			public const string Maybe =  "maybe";
-
-			/// <summary>
-			/// Returns the underlying string for defined values.
-			/// </summary>
-			public static string? GetDefinedValue(string value)
-			{
-				s_cache.TryGetValue(value, out var cachedValue);
-				return cachedValue;
-			}
-
-			private static readonly Dictionary<string, string> s_cache = new Dictionary<string, string>(
-				new Dictionary<string, string>
-				{
-					{ Strings.Yes, Strings.Yes},
-					{ Strings.No, Strings.No},
-					{ Strings.Maybe, Strings.Maybe},
-				},
-				StringComparer.OrdinalIgnoreCase);
 		}
 
 		/// <summary>
@@ -135,6 +117,15 @@ namespace Facility.ConformanceApi
 				No,
 				Maybe,
 			});
+
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(
+			new Dictionary<string, string>
+			{
+				{ Strings.Yes, Strings.Yes },
+				{ Strings.No, Strings.No },
+				{ Strings.Maybe, Strings.Maybe },
+			},
+			StringComparer.OrdinalIgnoreCase);
 
 		readonly string m_value;
 	}
