@@ -31,7 +31,16 @@ namespace EdgeCases
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public OldValues(string value) => m_value = value;
+		public OldValues(string value)
+		{
+			if (!s_normalizedConstants.TryGetValue(value, out var normalizedValue))
+			{
+				normalizedValue = value.ToLowerInvariant();
+				s_normalizedConstants[normalizedValue] = normalizedValue;
+			}
+
+			m_value = normalizedValue;
+		}
 
 		/// <summary>
 		/// Converts the instance to a string.
@@ -41,7 +50,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(OldValues other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
+		public bool Equals(OldValues other) => StringComparer.Ordinal.Equals(ToString(), other.ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -51,7 +60,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -105,6 +114,12 @@ namespace EdgeCases
 				Old,
 				Older,
 			});
+
+		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>
+		{
+			{ Strings.Old, Strings.Old },
+			{ Strings.Older, Strings.Older },
+		};
 
 		readonly string m_value;
 	}

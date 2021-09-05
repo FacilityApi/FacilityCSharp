@@ -195,7 +195,19 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Creates an instance.");
-						code.WriteLine($"public {enumName}(string value) => m_value = value;");
+						code.WriteLine($"public {enumName}(string value)");
+						using (code.Block())
+						{
+							code.WriteLine("if (!s_normalizedConstants.TryGetValue(value, out var normalizedValue))");
+							using (code.Block())
+							{
+								code.WriteLine("normalizedValue = value.ToLowerInvariant();");
+								code.WriteLine("s_normalizedConstants[normalizedValue] = normalizedValue;");
+							}
+
+							code.WriteLine();
+							code.WriteLine("m_value = normalizedValue;");
+						}
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Converts the instance to a string.");
@@ -203,7 +215,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine($"public bool Equals({enumName} other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());");
+						code.WriteLine($"public bool Equals({enumName} other) => StringComparer.Ordinal.Equals(ToString(), other.ToString());");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -211,7 +223,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the hash code.");
-						code.WriteLine("public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());");
+						code.WriteLine("public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(ToString());");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -263,6 +275,17 @@ namespace Facility.CodeGen.CSharp
 							{
 								foreach (var value in enumInfo.Values)
 									code.WriteLine($"{CSharpUtility.GetEnumValueName(value)},");
+							}
+						}
+
+						code.WriteLine();
+						code.WriteLine($"private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>");
+						using (code.Block("{", "};"))
+						{
+							foreach (var value in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(value);
+								code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
 							}
 						}
 

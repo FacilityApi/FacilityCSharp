@@ -35,7 +35,16 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public Answer(string value) => m_value = value;
+		public Answer(string value)
+		{
+			if (!s_normalizedConstants.TryGetValue(value, out var normalizedValue))
+			{
+				normalizedValue = value.ToLowerInvariant();
+				s_normalizedConstants[normalizedValue] = normalizedValue;
+			}
+
+			m_value = normalizedValue;
+		}
 
 		/// <summary>
 		/// Converts the instance to a string.
@@ -45,7 +54,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(Answer other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
+		public bool Equals(Answer other) => StringComparer.Ordinal.Equals(ToString(), other.ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -55,7 +64,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -116,6 +125,13 @@ namespace Facility.ConformanceApi
 				No,
 				Maybe,
 			});
+
+		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>
+		{
+			{ Strings.Yes, Strings.Yes },
+			{ Strings.No, Strings.No },
+			{ Strings.Maybe, Strings.Maybe },
+		};
 
 		readonly string m_value;
 	}
