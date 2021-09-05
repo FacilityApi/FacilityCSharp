@@ -17,14 +17,6 @@ namespace Facility.ConformanceApi
 	[JsonConverter(typeof(AnswerJsonConverter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
-		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-		static Answer()
-		{
-			s_normalizedConstants[Strings.Yes] = Strings.Yes;
-			s_normalizedConstants[Strings.No] = Strings.No;
-			s_normalizedConstants[Strings.Maybe] = Strings.Maybe;
-		}
 
 		/// <summary>
 		/// Affirmative.
@@ -44,16 +36,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public Answer(string value)
-		{
-			if (!s_normalizedConstants.TryGetValue(value, out var normalizedValue))
-			{
-				normalizedValue = value.ToLowerInvariant();
-				s_normalizedConstants[normalizedValue] = normalizedValue;
-			}
-
-			m_value = normalizedValue;
-		}
+		public Answer(string value) => m_value = Strings.GetDefinedValue(value) ?? value;
 
 		/// <summary>
 		/// Converts the instance to a string.
@@ -63,7 +46,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(Answer other) => StringComparer.Ordinal.Equals(ToString(), other.ToString());
+		public bool Equals(Answer other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -73,7 +56,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -88,7 +71,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => s_values.Contains(this);
+		public bool IsDefined() => Strings.GetDefinedValue(m_value) != null;
 
 		/// <summary>
 		/// Returns all of the defined values.
@@ -114,6 +97,24 @@ namespace Facility.ConformanceApi
 			/// Unknown.
 			/// </summary>
 			public const string Maybe =  "maybe";
+
+			/// <summary>
+			/// Returns the underlying string for defined values.
+			/// </summary>
+			public static string? GetDefinedValue(string value)
+			{
+				s_cache.TryGetValue(value, out var cachedValue);
+				return cachedValue;
+			}
+
+			private static readonly Dictionary<string, string> s_cache = new Dictionary<string, string>(
+				new Dictionary<string, string>
+				{
+					{ Strings.Yes, Strings.Yes},
+					{ Strings.No, Strings.No},
+					{ Strings.Maybe, Strings.Maybe},
+				},
+				StringComparer.OrdinalIgnoreCase);
 		}
 
 		/// <summary>

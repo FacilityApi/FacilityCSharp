@@ -19,13 +19,6 @@ namespace EdgeCases
 	[JsonConverter(typeof(OldValuesJsonConverter))]
 	public partial struct OldValues : IEquatable<OldValues>
 	{
-		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-		static OldValues()
-		{
-			s_normalizedConstants[Strings.Old] = Strings.Old;
-			s_normalizedConstants[Strings.Older] = Strings.Older;
-		}
 
 		/// <summary>
 		/// An old value.
@@ -39,16 +32,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public OldValues(string value)
-		{
-			if (!s_normalizedConstants.TryGetValue(value, out var normalizedValue))
-			{
-				normalizedValue = value.ToLowerInvariant();
-				s_normalizedConstants[normalizedValue] = normalizedValue;
-			}
-
-			m_value = normalizedValue;
-		}
+		public OldValues(string value) => m_value = Strings.GetDefinedValue(value) ?? value;
 
 		/// <summary>
 		/// Converts the instance to a string.
@@ -58,7 +42,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(OldValues other) => StringComparer.Ordinal.Equals(ToString(), other.ToString());
+		public bool Equals(OldValues other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -68,7 +52,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
 
 		/// <summary>
 		/// Checks for equality.
@@ -83,7 +67,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => s_values.Contains(this);
+		public bool IsDefined() => Strings.GetDefinedValue(m_value) != null;
 
 		/// <summary>
 		/// Returns all of the defined values.
@@ -103,6 +87,23 @@ namespace EdgeCases
 
 			[Obsolete]
 			public const string Older =  "older";
+
+			/// <summary>
+			/// Returns the underlying string for defined values.
+			/// </summary>
+			public static string? GetDefinedValue(string value)
+			{
+				s_cache.TryGetValue(value, out var cachedValue);
+				return cachedValue;
+			}
+
+			private static readonly Dictionary<string, string> s_cache = new Dictionary<string, string>(
+				new Dictionary<string, string>
+				{
+					{ Strings.Old, Strings.Old},
+					{ Strings.Older, Strings.Older},
+				},
+				StringComparer.OrdinalIgnoreCase);
 		}
 
 		/// <summary>
