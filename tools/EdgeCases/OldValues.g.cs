@@ -19,6 +19,14 @@ namespace EdgeCases
 	[JsonConverter(typeof(OldValuesJsonConverter))]
 	public partial struct OldValues : IEquatable<OldValues>
 	{
+		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+		static OldValues()
+		{
+			s_normalizedConstants[Strings.Old] = Strings.Old;
+			s_normalizedConstants[Strings.Older] = Strings.Older;
+		}
+
 		/// <summary>
 		/// An old value.
 		/// </summary>
@@ -114,12 +122,6 @@ namespace EdgeCases
 				Old,
 				Older,
 			});
-
-		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>
-		{
-			{ Strings.Old, Strings.Old },
-			{ Strings.Older, Strings.Older },
-		};
 
 		readonly string m_value;
 	}

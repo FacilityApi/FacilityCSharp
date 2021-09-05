@@ -17,6 +17,15 @@ namespace Facility.ConformanceApi
 	[JsonConverter(typeof(AnswerJsonConverter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
+		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+		static Answer()
+		{
+			s_normalizedConstants[Strings.Yes] = Strings.Yes;
+			s_normalizedConstants[Strings.No] = Strings.No;
+			s_normalizedConstants[Strings.Maybe] = Strings.Maybe;
+		}
+
 		/// <summary>
 		/// Affirmative.
 		/// </summary>
@@ -125,13 +134,6 @@ namespace Facility.ConformanceApi
 				No,
 				Maybe,
 			});
-
-		private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>
-		{
-			{ Strings.Yes, Strings.Yes },
-			{ Strings.No, Strings.No },
-			{ Strings.Maybe, Strings.Maybe },
-		};
 
 		readonly string m_value;
 	}

@@ -183,6 +183,20 @@ namespace Facility.CodeGen.CSharp
 					code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
+						code.WriteLine($"private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);");
+
+						code.WriteLine();
+						code.WriteLine($"static {enumName}()");
+						using (code.Block())
+						{
+							foreach (var value in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(value);
+								code.WriteLine($"s_normalizedConstants[Strings.{memberName}] = Strings.{memberName};");
+							}
+						}
+
+						code.WriteLine();
 						foreach (var enumValue in enumInfo.Values)
 						{
 							string memberName = CSharpUtility.GetEnumValueName(enumValue);
@@ -275,17 +289,6 @@ namespace Facility.CodeGen.CSharp
 							{
 								foreach (var value in enumInfo.Values)
 									code.WriteLine($"{CSharpUtility.GetEnumValueName(value)},");
-							}
-						}
-
-						code.WriteLine();
-						code.WriteLine($"private static readonly Dictionary<string, string> s_normalizedConstants = new Dictionary<string, string>");
-						using (code.Block("{", "};"))
-						{
-							foreach (var value in enumInfo.Values)
-							{
-								string memberName = CSharpUtility.GetEnumValueName(value);
-								code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
 							}
 						}
 
