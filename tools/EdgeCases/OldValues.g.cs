@@ -23,10 +23,10 @@ namespace EdgeCases
 		/// An old value.
 		/// </summary>
 		[Obsolete]
-		public static readonly OldValues Old = new OldValues("old");
+		public static readonly OldValues Old = new OldValues(Strings.Old);
 
 		[Obsolete]
-		public static readonly OldValues Older = new OldValues("older");
+		public static readonly OldValues Older = new OldValues(Strings.Older);
 
 		/// <summary>
 		/// Creates an instance.
@@ -74,6 +74,21 @@ namespace EdgeCases
 		public static IReadOnlyList<OldValues> GetValues() => s_values;
 
 		/// <summary>
+		/// Provides string constants for defined values.
+		/// </summary>
+		public static class Strings
+		{
+			/// <summary>
+			/// An old value.
+			/// </summary>
+			[Obsolete]
+			public const string Old =  "old";
+
+			[Obsolete]
+			public const string Older =  "older";
+		}
+
+		/// <summary>
 		/// Used for JSON serialization.
 		/// </summary>
 		public sealed class OldValuesJsonConverter : ServiceEnumJsonConverter<OldValues>
@@ -92,17 +107,5 @@ namespace EdgeCases
 			});
 
 		readonly string m_value;
-
-		public static class Strings
-		{
-			/// <summary>
-			/// An old value.
-			/// </summary>
-			[Obsolete]
-			public const string Old =  "old";
-
-			[Obsolete]
-			public const string Older =  "older";
-		}
 	}
 }

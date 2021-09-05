@@ -20,17 +20,17 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Affirmative.
 		/// </summary>
-		public static readonly Answer Yes = new Answer("yes");
+		public static readonly Answer Yes = new Answer(Strings.Yes);
 
 		/// <summary>
 		/// Negative.
 		/// </summary>
-		public static readonly Answer No = new Answer("no");
+		public static readonly Answer No = new Answer(Strings.No);
 
 		/// <summary>
 		/// Unknown.
 		/// </summary>
-		public static readonly Answer Maybe = new Answer("maybe");
+		public static readonly Answer Maybe = new Answer(Strings.Maybe);
 
 		/// <summary>
 		/// Creates an instance.
@@ -78,6 +78,27 @@ namespace Facility.ConformanceApi
 		public static IReadOnlyList<Answer> GetValues() => s_values;
 
 		/// <summary>
+		/// Provides string constants for defined values.
+		/// </summary>
+		public static class Strings
+		{
+			/// <summary>
+			/// Affirmative.
+			/// </summary>
+			public const string Yes =  "yes";
+
+			/// <summary>
+			/// Negative.
+			/// </summary>
+			public const string No =  "no";
+
+			/// <summary>
+			/// Unknown.
+			/// </summary>
+			public const string Maybe =  "maybe";
+		}
+
+		/// <summary>
 		/// Used for JSON serialization.
 		/// </summary>
 		public sealed class AnswerJsonConverter : ServiceEnumJsonConverter<Answer>
@@ -97,23 +118,5 @@ namespace Facility.ConformanceApi
 			});
 
 		readonly string m_value;
-
-		public static class Strings
-		{
-			/// <summary>
-			/// Affirmative.
-			/// </summary>
-			public const string Yes =  "yes";
-
-			/// <summary>
-			/// Negative.
-			/// </summary>
-			public const string No =  "no";
-
-			/// <summary>
-			/// Unknown.
-			/// </summary>
-			public const string Maybe =  "maybe";
-		}
 	}
 }

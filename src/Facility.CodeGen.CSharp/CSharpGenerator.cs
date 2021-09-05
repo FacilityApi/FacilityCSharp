@@ -190,7 +190,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLineSkipOnce();
 							CSharpUtility.WriteSummary(code, enumValue.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, enumValue);
-							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}(\"{enumValue.Name}\");");
+							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}(Strings.{memberName});");
 						}
 
 						code.WriteLine();
@@ -230,6 +230,22 @@ namespace Facility.CodeGen.CSharp
 						code.WriteLine($"public static IReadOnlyList<{enumName}> GetValues() => s_values;");
 
 						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Provides string constants for defined values.");
+						code.WriteLine("public static class Strings");
+						using (code.Block())
+						{
+							foreach (var enumValue in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(enumValue);
+
+								code.WriteLineSkipOnce();
+								CSharpUtility.WriteSummary(code, enumValue.Summary);
+								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
+								code.WriteLine($"public const string {memberName} =  \"{enumValue.Name}\";");
+							}
+						}
+
+						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
 						code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
 						using (code.Block())
@@ -252,21 +268,6 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						code.WriteLine("readonly string m_value;");
-
-						code.WriteLine();
-						code.WriteLine("public static class Strings");
-						using (code.Block())
-						{
-							foreach (var enumValue in enumInfo.Values)
-							{
-								string memberName = CSharpUtility.GetEnumValueName(enumValue);
-
-								code.WriteLineSkipOnce();
-								CSharpUtility.WriteSummary(code, enumValue.Summary);
-								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
-								code.WriteLine($"public const string {memberName} =  \"{enumValue.Name}\";");
-							}
-						}
 					}
 				}
 			});
