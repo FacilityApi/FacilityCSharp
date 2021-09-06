@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Facility.CodeGen.CSharp;
@@ -24,6 +25,13 @@ namespace Facility.ConformanceApi.UnitTests
 			var generator = new CSharpGenerator { GeneratorName = "CodeGenTests" };
 			var output = generator.GenerateOutput(service);
 			output.Files.Count(x => x.Name == "IConformanceApi.g.cs").Should().Be(1);
+		}
+
+		[Test]
+		public void AvoidsCrashOnDefaultEnumComparison()
+		{
+			Func<bool> comparison = () => Answer.Yes == default;
+			comparison.Should().NotThrow();
 		}
 	}
 }

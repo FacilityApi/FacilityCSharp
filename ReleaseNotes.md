@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.13.1
+
+* Fix bug when comparing default enums
+
 ## 2.13.0
 
 * Generate string constants for enums
