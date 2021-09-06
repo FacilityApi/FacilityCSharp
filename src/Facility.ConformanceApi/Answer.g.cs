@@ -20,17 +20,17 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Affirmative.
 		/// </summary>
-		public static readonly Answer Yes = new Answer("yes");
+		public static readonly Answer Yes = new Answer(Strings.Yes);
 
 		/// <summary>
 		/// Negative.
 		/// </summary>
-		public static readonly Answer No = new Answer("no");
+		public static readonly Answer No = new Answer(Strings.No);
 
 		/// <summary>
 		/// Unknown.
 		/// </summary>
-		public static readonly Answer Maybe = new Answer("maybe");
+		public static readonly Answer Maybe = new Answer(Strings.Maybe);
 
 		/// <summary>
 		/// Creates an instance.
@@ -40,7 +40,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Converts the instance to a string.
 		/// </summary>
-		public override string ToString() => m_value ?? "";
+		public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
 
 		/// <summary>
 		/// Checks for equality.
@@ -70,12 +70,33 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => s_values.Contains(this);
+		public bool IsDefined() => s_valueCache.ContainsKey(m_value);
 
 		/// <summary>
 		/// Returns all of the defined values.
 		/// </summary>
 		public static IReadOnlyList<Answer> GetValues() => s_values;
+
+		/// <summary>
+		/// Provides string constants for defined values.
+		/// </summary>
+		public static class Strings
+		{
+			/// <summary>
+			/// Affirmative.
+			/// </summary>
+			public const string Yes = "yes";
+
+			/// <summary>
+			/// Negative.
+			/// </summary>
+			public const string No = "no";
+
+			/// <summary>
+			/// Unknown.
+			/// </summary>
+			public const string Maybe = "maybe";
+		}
 
 		/// <summary>
 		/// Used for JSON serialization.
@@ -95,6 +116,13 @@ namespace Facility.ConformanceApi
 				No,
 				Maybe,
 			});
+
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ Strings.Yes, Strings.Yes },
+			{ Strings.No, Strings.No },
+			{ Strings.Maybe, Strings.Maybe },
+		};
 
 		readonly string m_value;
 	}

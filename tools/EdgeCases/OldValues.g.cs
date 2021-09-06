@@ -23,10 +23,10 @@ namespace EdgeCases
 		/// An old value.
 		/// </summary>
 		[Obsolete]
-		public static readonly OldValues Old = new OldValues("old");
+		public static readonly OldValues Old = new OldValues(Strings.Old);
 
 		[Obsolete]
-		public static readonly OldValues Older = new OldValues("older");
+		public static readonly OldValues Older = new OldValues(Strings.Older);
 
 		/// <summary>
 		/// Creates an instance.
@@ -36,7 +36,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Converts the instance to a string.
 		/// </summary>
-		public override string ToString() => m_value ?? "";
+		public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
 
 		/// <summary>
 		/// Checks for equality.
@@ -66,12 +66,27 @@ namespace EdgeCases
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => s_values.Contains(this);
+		public bool IsDefined() => s_valueCache.ContainsKey(m_value);
 
 		/// <summary>
 		/// Returns all of the defined values.
 		/// </summary>
 		public static IReadOnlyList<OldValues> GetValues() => s_values;
+
+		/// <summary>
+		/// Provides string constants for defined values.
+		/// </summary>
+		public static class Strings
+		{
+			/// <summary>
+			/// An old value.
+			/// </summary>
+			[Obsolete]
+			public const string Old = "old";
+
+			[Obsolete]
+			public const string Older = "older";
+		}
 
 		/// <summary>
 		/// Used for JSON serialization.
@@ -90,6 +105,12 @@ namespace EdgeCases
 				Old,
 				Older,
 			});
+
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ Strings.Old, Strings.Old },
+			{ Strings.Older, Strings.Older },
+		};
 
 		readonly string m_value;
 	}

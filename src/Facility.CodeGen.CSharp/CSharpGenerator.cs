@@ -190,7 +190,7 @@ namespace Facility.CodeGen.CSharp
 							code.WriteLineSkipOnce();
 							CSharpUtility.WriteSummary(code, enumValue.Summary);
 							CSharpUtility.WriteObsoleteAttribute(code, enumValue);
-							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}(\"{enumValue.Name}\");");
+							code.WriteLine($"public static readonly {enumName} {memberName} = new {enumName}(Strings.{memberName});");
 						}
 
 						code.WriteLine();
@@ -199,7 +199,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Converts the instance to a string.");
-						code.WriteLine("public override string ToString() => m_value ?? \"\";");
+						code.WriteLine("public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? \"\";");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -223,11 +223,27 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns true if the instance is equal to one of the defined values.");
-						code.WriteLine("public bool IsDefined() => s_values.Contains(this);");
+						code.WriteLine("public bool IsDefined() => s_valueCache.ContainsKey(m_value);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns all of the defined values.");
 						code.WriteLine($"public static IReadOnlyList<{enumName}> GetValues() => s_values;");
+
+						code.WriteLine();
+						CSharpUtility.WriteSummary(code, "Provides string constants for defined values.");
+						code.WriteLine("public static class Strings");
+						using (code.Block())
+						{
+							foreach (var enumValue in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(enumValue);
+
+								code.WriteLineSkipOnce();
+								CSharpUtility.WriteSummary(code, enumValue.Summary);
+								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
+								code.WriteLine($"public const string {memberName} = \"{enumValue.Name}\";");
+							}
+						}
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
@@ -247,6 +263,17 @@ namespace Facility.CodeGen.CSharp
 							{
 								foreach (var value in enumInfo.Values)
 									code.WriteLine($"{CSharpUtility.GetEnumValueName(value)},");
+							}
+						}
+
+						code.WriteLine();
+						code.WriteLine($"private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)");
+						using (code.Block("{", "};"))
+						{
+							foreach (var value in enumInfo.Values)
+							{
+								string memberName = CSharpUtility.GetEnumValueName(value);
+								code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
 							}
 						}
 

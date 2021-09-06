@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Facility.Definition;
 using Facility.Definition.Fsd;
 using FluentAssertions;
@@ -61,6 +62,23 @@ namespace Facility.CodeGen.CSharp.UnitTests
 				StringAssert.Contains("namespace OverrideNamespace", file.Text);
 				StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
 			}
+		}
+
+		[Test]
+		public void GenerateEnumStringConstants()
+		{
+			const string definition = "[csharp] service TestApi { enum Answer { yes, no, maybe } }";
+			var parser = new FsdParser();
+			var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+			var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+			var output = generator.GenerateOutput(service);
+
+			var file = output.Files.First(x => x.Name == "Answer.g.cs");
+			StringAssert.Contains("public static class Strings", file.Text);
+			StringAssert.Contains("public const string Yes = \"yes\";", file.Text);
+			StringAssert.Contains("public const string No = \"no\";", file.Text);
+			StringAssert.Contains("public const string Maybe = \"maybe\";", file.Text);
 		}
 
 		private void ThrowsServiceDefinitionException(string definition, string message)
