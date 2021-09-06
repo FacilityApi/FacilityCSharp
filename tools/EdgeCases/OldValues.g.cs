@@ -19,7 +19,6 @@ namespace EdgeCases
 	[JsonConverter(typeof(OldValuesJsonConverter))]
 	public partial struct OldValues : IEquatable<OldValues>
 	{
-
 		/// <summary>
 		/// An old value.
 		/// </summary>
@@ -83,10 +82,10 @@ namespace EdgeCases
 			/// An old value.
 			/// </summary>
 			[Obsolete]
-			public const string Old =  "old";
+			public const string Old = "old";
 
 			[Obsolete]
-			public const string Older =  "older";
+			public const string Older = "older";
 		}
 
 		/// <summary>
@@ -107,13 +106,11 @@ namespace EdgeCases
 				Older,
 			});
 
-		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(
-			new Dictionary<string, string>
-			{
-				{ Strings.Old, Strings.Old },
-				{ Strings.Older, Strings.Older },
-			},
-			StringComparer.OrdinalIgnoreCase);
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ Strings.Old, Strings.Old },
+			{ Strings.Older, Strings.Older },
+		};
 
 		readonly string m_value;
 	}

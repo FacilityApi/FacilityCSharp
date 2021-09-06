@@ -183,7 +183,6 @@ namespace Facility.CodeGen.CSharp
 					code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
-						code.WriteLine();
 						foreach (var enumValue in enumInfo.Values)
 						{
 							string memberName = CSharpUtility.GetEnumValueName(enumValue);
@@ -242,7 +241,7 @@ namespace Facility.CodeGen.CSharp
 								code.WriteLineSkipOnce();
 								CSharpUtility.WriteSummary(code, enumValue.Summary);
 								CSharpUtility.WriteObsoleteAttribute(code, enumValue);
-								code.WriteLine($"public const string {memberName} =  \"{enumValue.Name}\";");
+								code.WriteLine($"public const string {memberName} = \"{enumValue.Name}\";");
 							}
 						}
 
@@ -268,19 +267,14 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine($"private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(");
-						using (code.Indent())
+						code.WriteLine($"private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)");
+						using (code.Block("{", "};"))
 						{
-							code.WriteLine("new Dictionary<string, string>");
-							using (code.Block("{", "},"))
+							foreach (var value in enumInfo.Values)
 							{
-								foreach (var value in enumInfo.Values)
-								{
-									string memberName = CSharpUtility.GetEnumValueName(value);
-									code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
-								}
+								string memberName = CSharpUtility.GetEnumValueName(value);
+								code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
 							}
-							code.WriteLine($"StringComparer.OrdinalIgnoreCase);");
 						}
 
 						code.WriteLine();

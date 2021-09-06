@@ -76,9 +76,9 @@ namespace Facility.CodeGen.CSharp.UnitTests
 
 			var file = output.Files.First(x => x.Name == "Answer.g.cs");
 			StringAssert.Contains("public static class Strings", file.Text);
-			StringAssert.Contains("public const string Yes =  \"yes\";", file.Text);
-			StringAssert.Contains("public const string No =  \"no\";", file.Text);
-			StringAssert.Contains("public const string Maybe =  \"maybe\";", file.Text);
+			StringAssert.Contains("public const string Yes = \"yes\";", file.Text);
+			StringAssert.Contains("public const string No = \"no\";", file.Text);
+			StringAssert.Contains("public const string Maybe = \"maybe\";", file.Text);
 		}
 
 		private void ThrowsServiceDefinitionException(string definition, string message)

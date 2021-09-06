@@ -17,7 +17,6 @@ namespace Facility.ConformanceApi
 	[JsonConverter(typeof(AnswerJsonConverter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
-
 		/// <summary>
 		/// Affirmative.
 		/// </summary>
@@ -86,17 +85,17 @@ namespace Facility.ConformanceApi
 			/// <summary>
 			/// Affirmative.
 			/// </summary>
-			public const string Yes =  "yes";
+			public const string Yes = "yes";
 
 			/// <summary>
 			/// Negative.
 			/// </summary>
-			public const string No =  "no";
+			public const string No = "no";
 
 			/// <summary>
 			/// Unknown.
 			/// </summary>
-			public const string Maybe =  "maybe";
+			public const string Maybe = "maybe";
 		}
 
 		/// <summary>
@@ -118,14 +117,12 @@ namespace Facility.ConformanceApi
 				Maybe,
 			});
 
-		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(
-			new Dictionary<string, string>
-			{
-				{ Strings.Yes, Strings.Yes },
-				{ Strings.No, Strings.No },
-				{ Strings.Maybe, Strings.Maybe },
-			},
-			StringComparer.OrdinalIgnoreCase);
+		private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ Strings.Yes, Strings.Yes },
+			{ Strings.No, Strings.No },
+			{ Strings.Maybe, Strings.Maybe },
+		};
 
 		readonly string m_value;
 	}
