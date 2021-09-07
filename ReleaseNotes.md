@@ -1,12 +1,17 @@
 # Release Notes
 
+## 2.13.2
+
+* Don't do cache lookup when not needed.
+* Add explicit visibility to code-generated fields.
+
 ## 2.13.1
 
-* Fix bug when comparing default enums
+* Fix bug when comparing default enums.
 
 ## 2.13.0
 
-* Generate string constants for enums
+* Generate string constants for enums.
 
 ## 2.12.0
 
