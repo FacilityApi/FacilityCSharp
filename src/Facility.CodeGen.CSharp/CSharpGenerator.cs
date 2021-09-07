@@ -203,7 +203,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine($"public bool Equals({enumName} other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());");
+						code.WriteLine($"public bool Equals({enumName} other) => StringComparer.OrdinalIgnoreCase.Equals(m_value ?? \"\", other.m_value ?? \"\");");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -211,7 +211,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the hash code.");
-						code.WriteLine("public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());");
+						code.WriteLine("public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(m_value ?? \"\");");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
@@ -278,7 +278,7 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine("readonly string m_value;");
+						code.WriteLine("private readonly string m_value;");
 					}
 				}
 			});
@@ -1170,8 +1170,8 @@ namespace Facility.CodeGen.CSharp
 						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService{NullableReferenceBang}(httpRequest);");
 
 						code.WriteLine();
-						code.WriteLine($"readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
-						code.WriteLine($"readonly Func<HttpRequestMessage, {fullInterfaceName}>{NullableReferenceSuffix} m_getService;");
+						code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
+						code.WriteLine($"private readonly Func<HttpRequestMessage, {fullInterfaceName}>{NullableReferenceSuffix} m_getService;");
 					}
 				}
 			});

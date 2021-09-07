@@ -45,7 +45,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(Answer other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
+		public bool Equals(Answer other) => StringComparer.OrdinalIgnoreCase.Equals(m_value ?? "", other.m_value ?? "");
 
 		/// <summary>
 		/// Checks for equality.
@@ -55,7 +55,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(m_value ?? "");
 
 		/// <summary>
 		/// Checks for equality.
@@ -124,6 +124,6 @@ namespace Facility.ConformanceApi
 			{ Strings.Maybe, Strings.Maybe },
 		};
 
-		readonly string m_value;
+		private readonly string m_value;
 	}
 }
