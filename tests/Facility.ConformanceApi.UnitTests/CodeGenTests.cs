@@ -26,12 +26,5 @@ namespace Facility.ConformanceApi.UnitTests
 			var output = generator.GenerateOutput(service);
 			output.Files.Count(x => x.Name == "IConformanceApi.g.cs").Should().Be(1);
 		}
-
-		[Test]
-		public void AvoidsCrashOnDefaultEnumComparison()
-		{
-			Func<bool> comparison = () => Answer.Yes == default;
-			comparison.Should().NotThrow();
-		}
 	}
 }
