@@ -124,6 +124,6 @@ namespace Facility.ConformanceApi
 			{ Strings.Maybe, Strings.Maybe },
 		};
 
-		readonly string m_value;
+		private readonly string m_value;
 	}
 }

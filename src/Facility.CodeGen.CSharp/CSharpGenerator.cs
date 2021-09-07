@@ -278,7 +278,7 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine("readonly string m_value;");
+						code.WriteLine("private readonly string m_value;");
 					}
 				}
 			});
@@ -1170,8 +1170,8 @@ namespace Facility.CodeGen.CSharp
 						code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService{NullableReferenceBang}(httpRequest);");
 
 						code.WriteLine();
-						code.WriteLine($"readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
-						code.WriteLine($"readonly Func<HttpRequestMessage, {fullInterfaceName}>{NullableReferenceSuffix} m_getService;");
+						code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
+						code.WriteLine($"private readonly Func<HttpRequestMessage, {fullInterfaceName}>{NullableReferenceSuffix} m_getService;");
 					}
 				}
 			});

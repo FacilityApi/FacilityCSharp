@@ -128,7 +128,7 @@ namespace Facility.ConformanceApi.Http
 
 		private IConformanceApi GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService!(httpRequest);
 
-		readonly IConformanceApi? m_service;
-		readonly Func<HttpRequestMessage, IConformanceApi>? m_getService;
+		private readonly IConformanceApi? m_service;
+		private readonly Func<HttpRequestMessage, IConformanceApi>? m_getService;
 	}
 }

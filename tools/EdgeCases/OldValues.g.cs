@@ -112,6 +112,6 @@ namespace EdgeCases
 			{ Strings.Older, Strings.Older },
 		};
 
-		readonly string m_value;
+		private readonly string m_value;
 	}
 }

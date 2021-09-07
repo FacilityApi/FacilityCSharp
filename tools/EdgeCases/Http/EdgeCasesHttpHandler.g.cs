@@ -57,7 +57,7 @@ namespace EdgeCases.Http
 
 		private IEdgeCases GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService!(httpRequest);
 
-		readonly IEdgeCases? m_service;
-		readonly Func<HttpRequestMessage, IEdgeCases>? m_getService;
+		private readonly IEdgeCases? m_service;
+		private readonly Func<HttpRequestMessage, IEdgeCases>? m_getService;
 	}
 }
