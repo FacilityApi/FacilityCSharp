@@ -41,7 +41,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public bool Equals(OldValues other) => StringComparer.OrdinalIgnoreCase.Equals(ToString(), other.ToString());
+		public bool Equals(OldValues other) => StringComparer.OrdinalIgnoreCase.Equals(m_value ?? "", other.m_value ?? "");
 
 		/// <summary>
 		/// Checks for equality.
@@ -51,7 +51,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Gets the hash code.
 		/// </summary>
-		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(ToString());
+		public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(m_value ?? "");
 
 		/// <summary>
 		/// Checks for equality.

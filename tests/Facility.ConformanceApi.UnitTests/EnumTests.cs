@@ -51,5 +51,28 @@ namespace Facility.ConformanceApi.UnitTests
 			Func<string> toString = () => default(Answer).ToString();
 			toString.Should().NotThrow();
 		}
+
+		[Test]
+		public void Inequality()
+		{
+			(Answer.Yes == Answer.No).Should().BeFalse();
+			(Answer.Yes != Answer.No).Should().BeTrue();
+		}
+
+		[Test]
+		public void DefaultEnumIsEmpty()
+		{
+			var def = default(Answer);
+			var empty = new Answer("");
+			(def == empty).Should().BeTrue();
+			(def != empty).Should().BeFalse();
+			def.GetHashCode().Should().Be(empty.GetHashCode());
+		}
+
+		[Test]
+		public void GetValues()
+		{
+			Answer.GetValues().Should().Equal(Answer.Yes, Answer.No, Answer.Maybe);
+		}
 	}
 }
