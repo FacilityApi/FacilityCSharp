@@ -199,7 +199,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Converts the instance to a string.");
-						code.WriteLine("public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? \"\";");
+						code.WriteLine("public override string ToString() => m_value != null && s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? \"\";");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");

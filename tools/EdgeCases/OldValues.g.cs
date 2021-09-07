@@ -36,7 +36,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Converts the instance to a string.
 		/// </summary>
-		public override string ToString() => s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
+		public override string ToString() => m_value != null && s_valueCache.TryGetValue(m_value, out var cachedValue) ? cachedValue : m_value ?? "";
 
 		/// <summary>
 		/// Checks for equality.
