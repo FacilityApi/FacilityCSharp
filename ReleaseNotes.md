@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.13.3
+
+* Fix bug when calling `IsDefined` on default enums.
+
 ## 2.13.2
 
 * Don't do cache lookup when not needed.
