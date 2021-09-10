@@ -70,7 +70,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Returns true if the instance is equal to one of the defined values.
 		/// </summary>
-		public bool IsDefined() => s_valueCache.ContainsKey(m_value);
+		public bool IsDefined() => m_value != null && s_valueCache.ContainsKey(m_value);
 
 		/// <summary>
 		/// Returns all of the defined values.
