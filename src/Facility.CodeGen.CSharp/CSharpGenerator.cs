@@ -223,7 +223,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns true if the instance is equal to one of the defined values.");
-						code.WriteLine("public bool IsDefined() => s_valueCache.ContainsKey(m_value);");
+						code.WriteLine("public bool IsDefined() => m_value != null && s_valueCache.ContainsKey(m_value);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Returns all of the defined values.");
