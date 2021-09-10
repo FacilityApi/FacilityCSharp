@@ -74,5 +74,12 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			Answer.GetValues().Should().Equal(Answer.Yes, Answer.No, Answer.Maybe);
 		}
+
+		[Test]
+		public void AvoidsCrashOnDefaultIsDefined()
+		{
+			Func<bool> isDefined = () => default(Answer).IsDefined();
+			isDefined.Should().NotThrow();
+		}
 	}
 }
