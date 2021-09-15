@@ -13,5 +13,4 @@ Facility.CodeGen.CSharp | A library that generates C# for a Facility Service Def
 FacilityConformance | A tool that checks Facility conformance. | [![NuGet](https://img.shields.io/nuget/v/FacilityConformance.svg)](https://www.nuget.org/packages/FacilityConformance)
 Facility.ConformanceApi | A .NET client for the standard Facility test server. | [![NuGet](https://img.shields.io/nuget/v/Facility.ConformanceApi.svg)](https://www.nuget.org/packages/Facility.ConformanceApi)
 
-* [Documentation](https://facilityapi.github.io/)
-* [Release Notes](ReleaseNotes.md)
+[Documentation](https://facilityapi.github.io/) | [Release Notes](ReleaseNotes.md) | [Contributing](CONTRIBUTING.md)
