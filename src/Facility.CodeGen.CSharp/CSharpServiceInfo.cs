@@ -85,8 +85,8 @@ namespace Facility.CodeGen.CSharp
 
 			void CheckTypeName(string name, ServiceDefinitionPosition? position)
 			{
-				if (!typeName!.Add(name))
-					validationErrors!.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
+				if (!typeName.Add(name))
+					validationErrors.Add(new ServiceDefinitionError($"Element generates duplicate C# type '{name}'.", position));
 			}
 
 			foreach (var member in serviceInfo.Members)

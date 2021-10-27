@@ -267,7 +267,7 @@ namespace Facility.CodeGen.CSharp
 						}
 
 						code.WriteLine();
-						code.WriteLine($"private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)");
+						code.WriteLine("private static readonly IReadOnlyDictionary<string, string> s_valueCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)");
 						using (code.Block("{", "};"))
 						{
 							foreach (var value in enumInfo.Values)
@@ -377,7 +377,7 @@ namespace Facility.CodeGen.CSharp
 										var fieldInfo = fieldInfos[fieldIndex];
 										var propertyName = context.GetFieldPropertyName(fieldInfo);
 										var fieldType = context.GetFieldType(fieldInfo);
-										var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType!.Kind);
+										var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
 										code.Write(areEquivalentMethodName != null ?
 											$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
 											$"{propertyName} == other.{propertyName}");
@@ -630,7 +630,7 @@ namespace Facility.CodeGen.CSharp
 			{
 				WriteFileHeader(code, context);
 
-				List<string> usings = new List<string>
+				var usings = new List<string>
 				{
 					"System",
 					"System.Collections.Generic",
@@ -1016,7 +1016,7 @@ namespace Facility.CodeGen.CSharp
 			{
 				WriteFileHeader(code, context);
 
-				List<string> usings = new List<string>
+				var usings = new List<string>
 				{
 					"System",
 					"System.Threading",
@@ -1079,7 +1079,7 @@ namespace Facility.CodeGen.CSharp
 			{
 				WriteFileHeader(code, context);
 
-				List<string> usings = new List<string>
+				var usings = new List<string>
 				{
 					"System",
 					"System.Net",
