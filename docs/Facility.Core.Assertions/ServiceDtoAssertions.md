@@ -14,7 +14,7 @@ public class ServiceDtoAssertions : ServiceDtoAssertionsBase<ServiceDto, Service
 
 ## See Also
 
-* class [ServiceDtoAssertionsBase&lt;TServiceDto,TAssertions&gt;](ServiceDtoAssertionsBase-2.md)
+* class [ServiceDtoAssertionsBase&lt;TServiceDto,TAssertions&gt;](./ServiceDtoAssertionsBase-2.md)
 * namespace [Facility.Core.Assertions](../Facility.Core.Assertions.md)
 * [ServiceDtoAssertions.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core.Assertions/ServiceDtoAssertions.cs)
 

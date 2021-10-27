@@ -1,6 +1,6 @@
 # JsonHttpContentSerializerSettings class
 
-Settings for [`JsonHttpContentSerializer`](JsonHttpContentSerializer.md).
+Settings for [`JsonHttpContentSerializer`](./JsonHttpContentSerializer.md).
 
 ```csharp
 public class JsonHttpContentSerializerSettings

@@ -27,7 +27,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 
 ## See Also
 
-* class [HttpContentSerializer](HttpContentSerializer.md)
+* class [HttpContentSerializer](./HttpContentSerializer.md)
 * namespace [Facility.Core.Http](../Facility.Core.md)
 * [JsonHttpContentSerializer.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/Http/JsonHttpContentSerializer.cs)
 

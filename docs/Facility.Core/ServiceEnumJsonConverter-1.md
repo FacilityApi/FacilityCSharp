@@ -17,7 +17,7 @@ public abstract class ServiceEnumJsonConverter<T> : ServiceJsonConverterBase<T>
 
 ## See Also
 
-* class [ServiceJsonConverterBase&lt;T&gt;](ServiceJsonConverterBase-1.md)
+* class [ServiceJsonConverterBase&lt;T&gt;](./ServiceJsonConverterBase-1.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceEnumJsonConverter.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceEnumJsonConverter.cs)
 

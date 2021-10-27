@@ -8,7 +8,7 @@ protected virtual bool IsAcceptedMediaTypeCore(string mediaType)
 
 ## Remarks
 
-Calls [`IsSupportedMediaType`](IsSupportedMediaType.md) by default.
+Calls [`IsSupportedMediaType`](./IsSupportedMediaType.md) by default.
 
 ## See Also
 

@@ -14,7 +14,7 @@ public sealed class ServiceResultFailure : ServiceResult
 
 ## See Also
 
-* class [ServiceResult](ServiceResult.md)
+* class [ServiceResult](./ServiceResult.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceResultFailure.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceResultFailure.cs)
 

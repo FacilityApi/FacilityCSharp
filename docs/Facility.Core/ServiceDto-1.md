@@ -22,7 +22,7 @@ public abstract class ServiceDto<T> : ServiceDto
 
 ## See Also
 
-* class [ServiceDto](ServiceDto.md)
+* class [ServiceDto](./ServiceDto.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceDto.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceDto.cs)
 

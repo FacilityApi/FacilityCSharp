@@ -1,6 +1,6 @@
 # CommonClientAspects class
 
-Common implementations of [`HttpClientServiceAspect`](HttpClientServiceAspect.md).
+Common implementations of [`HttpClientServiceAspect`](./HttpClientServiceAspect.md).
 
 ```csharp
 public static class CommonClientAspects

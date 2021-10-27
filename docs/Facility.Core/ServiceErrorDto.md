@@ -22,7 +22,7 @@ public sealed class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 
 ## See Also
 
-* class [ServiceDto&lt;T&gt;](ServiceDto-1.md)
+* class [ServiceDto&lt;T&gt;](./ServiceDto-1.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceErrorDto.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceErrorDto.cs)
 

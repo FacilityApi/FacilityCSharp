@@ -12,8 +12,8 @@ public static class AssertionsUtility
 | --- | --- |
 | static [BeDtos&lt;T&gt;](AssertionsUtility/BeDtos.md)(…) | Asserts that the subject DTOs are equivalent to the expected DTOs. (2 methods) |
 | static [BeResults&lt;T&gt;](AssertionsUtility/BeResults.md)(…) | Asserts that the subject results are equivalent to the expected results. (2 methods) |
-| static [Should](AssertionsUtility/Should.md)(…) | Returns a [`ServiceDtoAssertions`](ServiceDtoAssertions.md) object that can be used to assert the current ServiceDto. (2 methods) |
-| static [Should&lt;T&gt;](AssertionsUtility/Should.md)(…) | Returns a [`ServiceDtoAssertions`](ServiceDtoAssertions-1.md) object that can be used to assert the current ServiceDto. (2 methods) |
+| static [Should](AssertionsUtility/Should.md)(…) | Returns a [`ServiceDtoAssertions`](./ServiceDtoAssertions.md) object that can be used to assert the current ServiceDto. (2 methods) |
+| static [Should&lt;T&gt;](AssertionsUtility/Should.md)(…) | Returns a [`ServiceDtoAssertions`](./ServiceDtoAssertions-1.md) object that can be used to assert the current ServiceDto. (2 methods) |
 
 ## See Also
 

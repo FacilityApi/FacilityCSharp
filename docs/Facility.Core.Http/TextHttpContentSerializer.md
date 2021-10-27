@@ -25,7 +25,7 @@ public class TextHttpContentSerializer : HttpContentSerializer
 
 ## See Also
 
-* class [HttpContentSerializer](HttpContentSerializer.md)
+* class [HttpContentSerializer](./HttpContentSerializer.md)
 * namespace [Facility.Core.Http](../Facility.Core.md)
 * [TextHttpContentSerializer.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/Http/TextHttpContentSerializer.cs)
 

@@ -9,9 +9,9 @@ public delegate Task<ServiceResult<ServiceDto>> ServiceDelegator(IServiceMethodI
 
 ## See Also
 
-* class [ServiceResult&lt;T&gt;](ServiceResult-1.md)
-* class [ServiceDto](ServiceDto.md)
-* interface [IServiceMethodInfo](IServiceMethodInfo.md)
+* class [ServiceResult&lt;T&gt;](./ServiceResult-1.md)
+* class [ServiceDto](./ServiceDto.md)
+* interface [IServiceMethodInfo](./IServiceMethodInfo.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceDelegator.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceDelegator.cs)
 

@@ -19,7 +19,7 @@ public sealed class ServiceResult<T> : ServiceResult
 
 ## See Also
 
-* class [ServiceResult](ServiceResult.md)
+* class [ServiceResult](./ServiceResult.md)
 * namespace [Facility.Core](../Facility.Core.md)
 * [ServiceResult.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/ServiceResult.cs)
 

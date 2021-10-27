@@ -25,7 +25,7 @@ public class BytesHttpContentSerializer : HttpContentSerializer
 
 ## See Also
 
-* class [HttpContentSerializer](HttpContentSerializer.md)
+* class [HttpContentSerializer](./HttpContentSerializer.md)
 * namespace [Facility.Core.Http](../Facility.Core.md)
 * [BytesHttpContentSerializer.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core/Http/BytesHttpContentSerializer.cs)
 

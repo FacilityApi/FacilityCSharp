@@ -16,7 +16,7 @@ public class ServiceResultAssertions<T> :
 
 ## See Also
 
-* class [ServiceResultAssertionsBase&lt;TServiceResult,TAssertions&gt;](ServiceResultAssertionsBase-2.md)
+* class [ServiceResultAssertionsBase&lt;TServiceResult,TAssertions&gt;](./ServiceResultAssertionsBase-2.md)
 * namespace [Facility.Core.Assertions](../Facility.Core.Assertions.md)
 * [ServiceResultAssertions.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.Core.Assertions/ServiceResultAssertions.cs)
 

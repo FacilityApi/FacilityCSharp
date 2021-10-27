@@ -29,7 +29,7 @@ public class DelegatingConformanceApi : IConformanceApi
 
 ## See Also
 
-* interface [IConformanceApi](IConformanceApi.md)
+* interface [IConformanceApi](./IConformanceApi.md)
 * namespace [Facility.ConformanceApi](../Facility.ConformanceApi.md)
 * [DelegatingConformanceApi.cs](https://github.com/FacilityApi/FacilityCSharp/tree/master/src/Facility.ConformanceApi/DelegatingConformanceApi.cs)
 
