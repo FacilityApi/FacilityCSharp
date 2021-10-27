@@ -207,7 +207,7 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Checks for equality.");
-						code.WriteLine($"public override bool Equals(object obj) => obj is {enumName} && Equals(({enumName}) obj);");
+						code.WriteLine($"public override bool Equals(object{NullableReferenceSuffix} obj) => obj is {enumName} && Equals(({enumName}) obj);");
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Gets the hash code.");

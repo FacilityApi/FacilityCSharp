@@ -46,7 +46,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public override bool Equals(object obj) => obj is OldValues && Equals((OldValues) obj);
+		public override bool Equals(object? obj) => obj is OldValues && Equals((OldValues) obj);
 
 		/// <summary>
 		/// Gets the hash code.

@@ -50,7 +50,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// Checks for equality.
 		/// </summary>
-		public override bool Equals(object obj) => obj is Answer && Equals((Answer) obj);
+		public override bool Equals(object? obj) => obj is Answer && Equals((Answer) obj);
 
 		/// <summary>
 		/// Gets the hash code.
