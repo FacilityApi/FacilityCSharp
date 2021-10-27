@@ -45,7 +45,7 @@ namespace Facility.Core.UnitTests.Http
 		public async Task EmptyJson()
 		{
 			await GetApiInfoInvalidResponse(
-				_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(string.Empty, Encoding.UTF8, "application/json") },
+				_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("", Encoding.UTF8, "application/json") },
 				ServiceErrors.InvalidResponse, HttpServiceErrors.CreateInvalidContent("").Message);
 		}
 
