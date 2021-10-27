@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.13.4
+
+* Fix nullability of generated `Equals`.
+* Drop .NET Core 2.1 support from tools.
+
 ## 2.13.3
 
 * Fix bug when calling `IsDefined` on default enums.
