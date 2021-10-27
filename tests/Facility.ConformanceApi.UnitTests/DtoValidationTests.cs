@@ -289,7 +289,7 @@ namespace Facility.ConformanceApi.UnitTests
 		[Test]
 		public void ValidateWidgetNameMatchesPattern()
 		{
-			var dto = new WidgetDto { Id = 1, Name = "%%widget%%"};
+			var dto = new WidgetDto { Id = 1, Name = "%%widget%%" };
 			dto.Validate(out var errorMessage).Should().BeFalse();
 			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Must match regular expression: ^[_a-zA-Z0-9]+$"));
 		}
@@ -297,7 +297,7 @@ namespace Facility.ConformanceApi.UnitTests
 		[Test]
 		public void ValidateWidgetNameLength()
 		{
-			var dto = new WidgetDto { Id = 1, Name = "ExcessivelyLongName"};
+			var dto = new WidgetDto { Id = 1, Name = "ExcessivelyLongName" };
 			dto.Validate(out var errorMessage).Should().BeFalse();
 			errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at most 10."));
 		}

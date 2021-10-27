@@ -472,7 +472,7 @@ namespace Facility.CodeGen.CSharp
 
 											case ServiceTypeKind.Int32:
 											{
-												GenerateRangeCheck(code, propertyName,  fieldInfo.Name, validation.ValueRange!);
+												GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!);
 												break;
 											}
 											case ServiceTypeKind.Double:
