@@ -218,7 +218,9 @@ namespace Facility.Core.Http
 			if (!m_synchronous)
 				return task;
 
+#pragma warning disable CA1849
 			task.GetAwaiter().GetResult();
+#pragma warning restore CA1849
 			return Task.CompletedTask;
 		}
 
