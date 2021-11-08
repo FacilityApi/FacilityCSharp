@@ -22,7 +22,11 @@ namespace Facility.Core.Http
 		/// </summary>
 		public static ServiceHttpContext? TryGetContext(HttpRequestMessage httpRequest)
 		{
+#if NET6_0_OR_GREATER
+			httpRequest.Options.TryGetValue(s_requestPropertyContextKey, out var context);
+#else
 			httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out var context);
+#endif
 			return context as ServiceHttpContext;
 		}
 
@@ -37,9 +41,17 @@ namespace Facility.Core.Http
 
 		internal static void SetContext(HttpRequestMessage httpRequest, ServiceHttpContext context)
 		{
+#if NET6_0_OR_GREATER
+			httpRequest.Options.Set(s_requestPropertyContextKey, context);
+#else
 			httpRequest.Properties[c_requestPropertyContextKey] = context;
+#endif
 		}
 
+#if NET6_0_OR_GREATER
+		private static readonly HttpRequestOptionsKey<ServiceHttpContext> s_requestPropertyContextKey = new("Facility_Context");
+#else
 		private const string c_requestPropertyContextKey = "Facility_Context";
+#endif
 	}
 }
