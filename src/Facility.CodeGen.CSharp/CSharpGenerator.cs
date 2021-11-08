@@ -32,6 +32,8 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
+		public ServiceSerializerKind Serializer { get; set;  }
+
 		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
@@ -90,6 +92,7 @@ namespace Facility.CodeGen.CSharp
 			var csharpSettings = (CSharpGeneratorSettings) settings;
 			NamespaceName = csharpSettings.NamespaceName;
 			UseNullableReferences = csharpSettings.UseNullableReferences;
+			Serializer = csharpSettings.Serializer;
 		}
 
 		/// <summary>
@@ -162,8 +165,9 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.Generic",
 					"System.Collections.ObjectModel",
 					"Facility.Core",
-					"Newtonsoft.Json",
 				};
+				if (Serializer is ServiceSerializerKind.NewtonsoftJson)
+					usings.Add("Newtonsoft.Json");
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!enumInfo.IsObsolete && enumInfo.Values.Any(x => x.IsObsolete))
@@ -314,8 +318,9 @@ namespace Facility.CodeGen.CSharp
 					"System",
 					"System.Collections.Generic",
 					"Facility.Core",
-					"Newtonsoft.Json",
 				};
+				if (Serializer is ServiceSerializerKind.NewtonsoftJson)
+					usings.Add("Newtonsoft.Json");
 
 				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
 				if (regexFields.Count != 0)
@@ -639,6 +644,8 @@ namespace Facility.CodeGen.CSharp
 					"Facility.Core",
 					"Facility.Core.Http",
 				};
+				if (Serializer is ServiceSerializerKind.NewtonsoftJson)
+					usings.Add("Newtonsoft.Json.Linq");
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
 				CSharpUtility.WriteObsoletePragma(code);
