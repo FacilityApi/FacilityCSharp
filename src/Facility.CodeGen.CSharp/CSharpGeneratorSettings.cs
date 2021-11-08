@@ -23,5 +23,6 @@ namespace Facility.CodeGen.CSharp
 	public enum Serializer
 	{
 		NewtonsoftJson,
+		SystemTextJson,
 	}
 }

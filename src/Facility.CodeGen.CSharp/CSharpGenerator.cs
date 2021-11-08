@@ -168,6 +168,8 @@ namespace Facility.CodeGen.CSharp
 				};
 				if (Serializer is Serializer.NewtonsoftJson)
 					usings.Add("Newtonsoft.Json");
+				else if (Serializer is Serializer.SystemTextJson)
+					usings.Add("System.Text.Json.Serialization");
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!enumInfo.IsObsolete && enumInfo.Values.Any(x => x.IsObsolete))
@@ -323,6 +325,11 @@ namespace Facility.CodeGen.CSharp
 				{
 					usings.Add("Newtonsoft.Json");
 					usings.Add("Newtonsoft.Json.Linq");
+				}
+				else if (Serializer is Serializer.SystemTextJson)
+				{
+					usings.Add("System.Text.Json");
+					usings.Add("System.Text.Json.Nodes");
 				}
 
 				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
@@ -649,6 +656,8 @@ namespace Facility.CodeGen.CSharp
 				};
 				if (Serializer is Serializer.NewtonsoftJson)
 					usings.Add("Newtonsoft.Json.Linq");
+				else if (Serializer is Serializer.SystemTextJson)
+					usings.Add("System.Text.Json.Nodes");
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
 				CSharpUtility.WriteObsoletePragma(code);
@@ -1388,6 +1397,7 @@ namespace Facility.CodeGen.CSharp
 				ServiceTypeKind.Object => Serializer switch
 				{
 					Serializer.NewtonsoftJson => "JObject",
+					Serializer.SystemTextJson => "JsonObject",
 					_ => throw new InvalidOperationException(),
 				},
 				ServiceTypeKind.Error => "ServiceErrorDto",

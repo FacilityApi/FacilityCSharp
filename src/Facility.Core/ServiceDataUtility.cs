@@ -4,6 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+#if NET6_0_OR_GREATER
+using System.Text.Json.Nodes;
+#endif
 
 namespace Facility.Core
 {
@@ -26,6 +29,13 @@ namespace Facility.Core
 		/// True if the objects are equivalent.
 		/// </summary>
 		public static bool AreEquivalentObjects(JObject? first, JObject? second) => JToken.DeepEquals(first, second);
+
+#if NET6_0_OR_GREATER
+		/// <summary>
+		/// True if the objects are equivalent.
+		/// </summary>
+		public static bool AreEquivalentObjects(JsonObject? first, JsonObject? second) => throw new NotImplementedException();
+#endif
 
 		/// <summary>
 		/// True if the bytes are equivalent.
