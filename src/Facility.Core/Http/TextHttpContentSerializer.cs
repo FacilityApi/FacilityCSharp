@@ -55,7 +55,14 @@ namespace Facility.Core.Http
 		protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken)
 		{
 			if (objectType == typeof(string))
-				return ServiceResult.Success((object) await content.ReadAsStringAsync().ConfigureAwait(false));
+			{
+#if NET6_0_OR_GREATER
+				var stringValue = await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#else
+				var stringValue = await content.ReadAsStringAsync().ConfigureAwait(false);
+#endif
+				return ServiceResult.Success((object) stringValue);
+			}
 
 			throw new ArgumentException($"Unexpected content type: {objectType.Name}", nameof(content));
 		}

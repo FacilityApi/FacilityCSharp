@@ -156,13 +156,13 @@ namespace Facility.Core
 					return EqualityComparer<T>.Default;
 
 				if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceDtoEquivalenceComparer<>).MakeGenericType(type));
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceDtoEquivalenceComparer<>).MakeGenericType(type))!;
 
 				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type));
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type))!;
 
 				if (type == typeof(JObject))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(JObjectEquivalenceComparer));
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(JObjectEquivalenceComparer))!;
 
 				var interfaces = new[] { type }.Concat(typeInfo.ImplementedInterfaces).ToList();
 
@@ -172,7 +172,7 @@ namespace Facility.Core
 				{
 					var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
 					var valueType = genericTypeArguments[1];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(MapEquivalenceComparer<,>).MakeGenericType(type, valueType));
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(MapEquivalenceComparer<,>).MakeGenericType(type, valueType))!;
 				}
 
 				var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
@@ -180,7 +180,7 @@ namespace Facility.Core
 				if (arrayInterface != null)
 				{
 					var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ArrayEquivalenceComparer<,>).MakeGenericType(type, itemType));
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ArrayEquivalenceComparer<,>).MakeGenericType(type, itemType))!;
 				}
 
 				throw new InvalidOperationException($"Type not supported for equivalence: {typeof(T)}");
@@ -195,30 +195,30 @@ namespace Facility.Core
 		private sealed class ServiceDtoEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
 			where T : ServiceDto
 		{
-			public override bool Equals(T x, T y) => AreEquivalentDtos(x, y);
+			public override bool Equals(T? x, T? y) => AreEquivalentDtos(x, y);
 		}
 
 		private sealed class ServiceResultEquivalenceComparer<T> : NoHashCodeEqualityComparer<T>
 			where T : ServiceResult
 		{
-			public override bool Equals(T x, T y) => AreEquivalentResults(x, y);
+			public override bool Equals(T? x, T? y) => AreEquivalentResults(x, y);
 		}
 
 		private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>
 		{
-			public override bool Equals(JObject x, JObject y) => AreEquivalentObjects(x, y);
+			public override bool Equals(JObject? x, JObject? y) => AreEquivalentObjects(x, y);
 		}
 
 		private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
 			where T : IReadOnlyList<TItem>
 		{
-			public override bool Equals(T x, T y) => AreEquivalentArrays(x, y, EquivalenceComparerCache<TItem>.Instance.Equals);
+			public override bool Equals(T? x, T? y) => AreEquivalentArrays(x, y, EquivalenceComparerCache<TItem>.Instance.Equals);
 		}
 
 		private sealed class MapEquivalenceComparer<T, TValue> : NoHashCodeEqualityComparer<T>
 			where T : IReadOnlyDictionary<string, TValue>
 		{
-			public override bool Equals(T x, T y) => AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
+			public override bool Equals(T? x, T? y) => AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
 		}
 
 		private interface IValidator<in T>
@@ -239,10 +239,10 @@ namespace Facility.Core
 					return new AlwaysValidValidator<T>();
 
 				if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceDtoValidator<>).MakeGenericType(type));
+					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceDtoValidator<>).MakeGenericType(type))!;
 
 				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceResultValidator<>).MakeGenericType(type));
+					return (IValidator<T>) Activator.CreateInstance(typeof(ServiceResultValidator<>).MakeGenericType(type))!;
 
 				if (type == typeof(JObject) || type == typeof(byte[]))
 					return new AlwaysValidValidator<T>();
@@ -255,7 +255,7 @@ namespace Facility.Core
 				{
 					var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
 					var valueType = genericTypeArguments[1];
-					return (IValidator<T>) Activator.CreateInstance(typeof(MapValidator<,>).MakeGenericType(type, valueType));
+					return (IValidator<T>) Activator.CreateInstance(typeof(MapValidator<,>).MakeGenericType(type, valueType))!;
 				}
 
 				var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
@@ -263,7 +263,7 @@ namespace Facility.Core
 				if (arrayInterface != null)
 				{
 					var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
-					return (IValidator<T>) Activator.CreateInstance(typeof(ArrayValidator<,>).MakeGenericType(type, itemType));
+					return (IValidator<T>) Activator.CreateInstance(typeof(ArrayValidator<,>).MakeGenericType(type, itemType))!;
 				}
 
 				throw new InvalidOperationException($"Type not supported for validation: {typeof(T)}");

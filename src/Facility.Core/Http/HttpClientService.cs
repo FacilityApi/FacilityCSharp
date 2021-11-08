@@ -165,7 +165,7 @@ namespace Facility.Core.Http
 			if (exception is ArgumentException || exception is ObjectDisposedException || exception is AggregateException)
 				return true;
 
-			string exceptionTypeName = exception.GetType().FullName;
+			var exceptionTypeName = exception.GetType().FullName;
 			return exceptionTypeName != null && (
 				exceptionTypeName.StartsWith("System.Net.", StringComparison.Ordinal) ||
 				exceptionTypeName.StartsWith("System.IO.", StringComparison.Ordinal) ||
@@ -223,8 +223,11 @@ namespace Facility.Core.Http
 					var bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
 					if (bracketedKeyIndex != -1)
 					{
-						url = url.Substring(0, bracketedKeyIndex) +
-							Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);
+#if NET6_0_OR_GREATER
+						url = string.Concat(url.AsSpan(0, bracketedKeyIndex), Uri.EscapeDataString(parameter.Value), url.AsSpan(bracketedKeyIndex + bracketedKey.Length));
+#else
+						url = url.Substring(0, bracketedKeyIndex) + Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);
+#endif
 					}
 					else
 					{
