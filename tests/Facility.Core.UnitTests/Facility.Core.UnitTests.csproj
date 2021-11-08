@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
-    <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+    <ProjectReference Include="..\..\src\Facility.ConformanceApi.NewtonsoftJson\Facility.ConformanceApi.NewtonsoftJson.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <Description>A tool that checks Facility conformance.</Description>
     <PackageTags>Facility conformance</PackageTags>
     <IsPackable>true</IsPackable>
@@ -15,12 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+    <ProjectReference Include="..\Facility.ConformanceApi.NewtonsoftJson\Facility.ConformanceApi.NewtonsoftJson.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ArgsReading" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>

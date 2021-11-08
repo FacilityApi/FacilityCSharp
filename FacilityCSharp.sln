@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.CodeGen.CSharp.Uni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core.UnitTests", "tests\Facility.Core.UnitTests\Facility.Core.UnitTests.csproj", "{BA429714-E26A-42B8-BAD7-434ED139C31C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi", "src\Facility.ConformanceApi\Facility.ConformanceApi.csproj", "{79AEC163-9587-4992-93BD-AC833FFE78F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.NewtonsoftJson", "src\Facility.ConformanceApi.NewtonsoftJson\Facility.ConformanceApi.NewtonsoftJson.csproj", "{79AEC163-9587-4992-93BD-AC833FFE78F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.UnitTests", "tests\Facility.ConformanceApi.UnitTests\Facility.ConformanceApi.UnitTests.csproj", "{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}"
 EndProject

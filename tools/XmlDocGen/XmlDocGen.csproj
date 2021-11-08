@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.CodeGen.CSharp\Facility.CodeGen.CSharp.csproj" />
-    <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+    <ProjectReference Include="..\..\src\Facility.ConformanceApi.NewtonsoftJson\Facility.ConformanceApi.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
   </ItemGroup>

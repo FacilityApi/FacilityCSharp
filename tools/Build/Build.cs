@@ -50,7 +50,7 @@ return BuildRunner.Execute(args, build =>
 		var verifyOption = verify ? "--verify" : null;
 
 		RunDotNet(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable", "--newline", "lf", verifyOption);
-		RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--newline", "lf", "--clean", verifyOption);
+		RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi.NewtonsoftJson/", "--nullable", "--serializer", "newtonsoftjson", "--newline", "lf", "--clean", verifyOption);
 		RunDotNet(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--newline", "lf", "--clean", verifyOption);
 	}
 });

@@ -6,6 +6,7 @@
     <PackageTags>Facility server testing</PackageTags>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Facility.ConformanceApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
