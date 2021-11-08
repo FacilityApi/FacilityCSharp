@@ -16,5 +16,12 @@ namespace Facility.CodeGen.CSharp
 		/// True if the code should use nullable reference syntax.
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
+
+		public Serializer Serializer { get; set; }
+	}
+
+	public enum Serializer
+	{
+		NewtonsoftJson,
 	}
 }

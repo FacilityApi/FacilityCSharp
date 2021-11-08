@@ -32,6 +32,8 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
+		public Serializer Serializer { get; set;  }
+
 		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
@@ -90,6 +92,7 @@ namespace Facility.CodeGen.CSharp
 			var csharpSettings = (CSharpGeneratorSettings) settings;
 			NamespaceName = csharpSettings.NamespaceName;
 			UseNullableReferences = csharpSettings.UseNullableReferences;
+			Serializer = csharpSettings.Serializer;
 		}
 
 		/// <summary>
@@ -162,8 +165,9 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.Generic",
 					"System.Collections.ObjectModel",
 					"Facility.Core",
-					"Newtonsoft.Json",
 				};
+				if (Serializer is Serializer.NewtonsoftJson)
+					usings.Add("Newtonsoft.Json");
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 				if (!enumInfo.IsObsolete && enumInfo.Values.Any(x => x.IsObsolete))
@@ -314,9 +318,12 @@ namespace Facility.CodeGen.CSharp
 					"System",
 					"System.Collections.Generic",
 					"Facility.Core",
-					"Newtonsoft.Json",
-					"Newtonsoft.Json.Linq",
 				};
+				if (Serializer is Serializer.NewtonsoftJson)
+				{
+					usings.Add("Newtonsoft.Json");
+					usings.Add("Newtonsoft.Json.Linq");
+				}
 
 				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
 				if (regexFields.Count != 0)
@@ -639,8 +646,9 @@ namespace Facility.CodeGen.CSharp
 					"System.Net.Http",
 					"Facility.Core",
 					"Facility.Core.Http",
-					"Newtonsoft.Json.Linq",
 				};
+				if (Serializer is Serializer.NewtonsoftJson)
+					usings.Add("Newtonsoft.Json.Linq");
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
 				CSharpUtility.WriteObsoletePragma(code);
@@ -1377,7 +1385,11 @@ namespace Facility.CodeGen.CSharp
 				ServiceTypeKind.Int64 => "long?",
 				ServiceTypeKind.Decimal => "decimal?",
 				ServiceTypeKind.Bytes => "byte[]",
-				ServiceTypeKind.Object => "JObject",
+				ServiceTypeKind.Object => Serializer switch
+				{
+					Serializer.NewtonsoftJson => "JObject",
+					_ => throw new InvalidOperationException(),
+				},
 				ServiceTypeKind.Error => "ServiceErrorDto",
 				ServiceTypeKind.Dto => CSharpUtility.GetDtoName(fieldType.Dto!),
 				ServiceTypeKind.Enum => CSharpUtility.GetEnumName(fieldType.Enum!) + "?",
