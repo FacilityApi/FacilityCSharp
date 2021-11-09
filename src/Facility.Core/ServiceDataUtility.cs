@@ -40,6 +40,11 @@ namespace Facility.Core
 #endif
 
 		/// <summary>
+		/// True if the objects are equivalent.
+		/// </summary>
+		public static bool AreEquivalentObjects(object? first, object? second) => AreEquivalentFieldValues(first, second);
+
+		/// <summary>
 		/// True if the bytes are equivalent.
 		/// </summary>
 		public static bool AreEquivalentBytes(byte[]? first, byte[]? second)
