@@ -34,7 +34,7 @@ namespace fsdgencsharp
 				NamespaceName = args.ReadOption("namespace"),
 				UseNullableReferences = args.ReadFlag("nullable"),
 				Serializer = args.ReadOption("serializer") is { } serializerOption ?
-					Enum.TryParse<Serializer>(serializerOption, ignoreCase: true, out var serializer) ? serializer : throw new ArgsReaderException("Invalid serializer value") :
+					Enum.TryParse<FacilitySerializer>(serializerOption, ignoreCase: true, out var serializer) ? serializer : throw new ArgsReaderException("Invalid serializer value") :
 					default,
 			};
 	}

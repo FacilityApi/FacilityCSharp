@@ -32,7 +32,7 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
-		public Serializer Serializer { get; set;  }
+		public FacilitySerializer Serializer { get; set;  }
 
 		/// <summary>
 		/// Generates the C# output.
@@ -166,9 +166,9 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.ObjectModel",
 					"Facility.Core",
 				};
-				if (Serializer is Serializer.NewtonsoftJson)
+				if (Serializer is FacilitySerializer.NewtonsoftJson)
 					usings.Add("Newtonsoft.Json");
-				else if (Serializer is Serializer.SystemTextJson)
+				else if (Serializer is FacilitySerializer.SystemTextJson)
 					usings.Add("System.Text.Json.Serialization");
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
@@ -253,7 +253,8 @@ namespace Facility.CodeGen.CSharp
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
-						code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
+						var enumConverterNamespacePrefix = Serializer is FacilitySerializer.SystemTextJson ? "Facility.Core.SystemTextJson." : "";
+						code.WriteLine($"public sealed class {enumName}JsonConverter : {enumConverterNamespacePrefix}ServiceEnumJsonConverter<{enumName}>");
 						using (code.Block())
 						{
 							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
@@ -321,12 +322,12 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.Generic",
 					"Facility.Core",
 				};
-				if (Serializer is Serializer.NewtonsoftJson)
+				if (Serializer is FacilitySerializer.NewtonsoftJson)
 				{
 					usings.Add("Newtonsoft.Json");
 					usings.Add("Newtonsoft.Json.Linq");
 				}
-				else if (Serializer is Serializer.SystemTextJson)
+				else if (Serializer is FacilitySerializer.SystemTextJson)
 				{
 					usings.Add("System.Text.Json");
 					usings.Add("System.Text.Json.Nodes");
@@ -351,6 +352,8 @@ namespace Facility.CodeGen.CSharp
 					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 					CSharpUtility.WriteObsoleteAttribute(code, dtoInfo);
 
+					if (Serializer is FacilitySerializer.SystemTextJson)
+						code.WriteLine("[FacilitySerializer(FacilitySerializer.SystemTextJson)]");
 					code.WriteLine($"public sealed partial class {fullDtoName} : ServiceDto<{fullDtoName}>");
 					using (code.Block())
 					{
@@ -654,9 +657,9 @@ namespace Facility.CodeGen.CSharp
 					"Facility.Core",
 					"Facility.Core.Http",
 				};
-				if (Serializer is Serializer.NewtonsoftJson)
+				if (Serializer is FacilitySerializer.NewtonsoftJson)
 					usings.Add("Newtonsoft.Json.Linq");
-				else if (Serializer is Serializer.SystemTextJson)
+				else if (Serializer is FacilitySerializer.SystemTextJson)
 					usings.Add("System.Text.Json.Nodes");
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
@@ -1396,8 +1399,8 @@ namespace Facility.CodeGen.CSharp
 				ServiceTypeKind.Bytes => "byte[]",
 				ServiceTypeKind.Object => Serializer switch
 				{
-					Serializer.NewtonsoftJson => "JObject",
-					Serializer.SystemTextJson => "JsonObject",
+					FacilitySerializer.NewtonsoftJson => "JObject",
+					FacilitySerializer.SystemTextJson => "JsonObject",
 					_ => throw new InvalidOperationException(),
 				},
 				ServiceTypeKind.Error => "ServiceErrorDto",

@@ -17,10 +17,10 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
-		public Serializer Serializer { get; set; }
+		public FacilitySerializer Serializer { get; set; }
 	}
 
-	public enum Serializer
+	public enum FacilitySerializer
 	{
 		NewtonsoftJson,
 		SystemTextJson,

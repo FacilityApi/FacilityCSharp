@@ -18,5 +18,7 @@ namespace Facility.Core.Http
 		/// </summary>
 		/// <remarks>Consider using <c>Microsoft.IO.RecyclableMemoryStream</c>.</remarks>
 		public Func<Stream>? MemoryStreamCreator { get; set; }
+
+		public FacilitySerializer Serializer { get; set; }
 	}
 }

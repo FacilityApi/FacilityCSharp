@@ -36,6 +36,7 @@ namespace Facility.Core.Http
 		{
 			m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 			m_memoryStreamCreator = settings?.MemoryStreamCreator;
+			m_serializer = settings?.Serializer ?? default;
 
 			SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 		}
@@ -66,7 +67,7 @@ namespace Facility.Core.Http
 		protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 		{
 			var memoryStream = CreateMemoryStream();
-			ServiceJsonUtility.ToJsonStream(content, memoryStream);
+			ServiceJsonUtility.ToJsonStream(content, memoryStream, m_serializer);
 			return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
 		}
 
@@ -105,10 +106,9 @@ namespace Facility.Core.Http
 			}
 		}
 
-		private static ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
+		private ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
 		{
-			using var textReader = new StreamReader(stream);
-			var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, objectType);
+			var deserializedContent = ServiceJsonUtility.FromJsonStream(stream, objectType, m_serializer);
 			if (deserializedContent is null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 			return ServiceResult.Success(deserializedContent);
@@ -153,5 +153,6 @@ namespace Facility.Core.Http
 
 		private readonly bool m_forceAsyncIO;
 		private readonly Func<Stream>? m_memoryStreamCreator;
+		private readonly FacilitySerializer m_serializer;
 	}
 }
