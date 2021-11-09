@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace Facility.Core
 {
@@ -15,8 +14,8 @@ namespace Facility.Core
 		public static ServiceErrorDto CreateInternalErrorForException(Exception exception)
 		{
 			var error = ServiceErrors.CreateInternalError(exception.Message);
-			var jException = new JObject { ["details"] = new JArray(exception.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable()) };
-			error.Details = new JObject { ["exception"] = jException };
+			var exceptionInfo = new Dictionary<string, object?> { ["details"] = exception.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries) };
+			error.Details = new Dictionary<string, object?> { ["exception"] = exceptionInfo };
 			return error;
 		}
 	}

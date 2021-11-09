@@ -35,7 +35,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Advanced error details.
 		/// </summary>
-		public JObject? Details { get; set; }
+		public System.Collections.Generic.Dictionary<string, object?>? Details { get; set; }
 
 		/// <summary>
 		/// The inner error.

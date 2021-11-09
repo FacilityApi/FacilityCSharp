@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace Facility.Core.UnitTests
@@ -31,6 +31,6 @@ namespace Facility.Core.UnitTests
 			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 		}
 
-		private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
+		private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new Dictionary<string, object?> { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
 	}
 }

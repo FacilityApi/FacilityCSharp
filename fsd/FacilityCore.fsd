@@ -12,6 +12,7 @@ service FacilityCore
 		message: string;
 
 		/// Advanced error details.
+		[csharp(type: "System.Collections.Generic.Dictionary<string, object?>")]
 		details: object;
 
 		/// The inner error.
