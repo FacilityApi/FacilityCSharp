@@ -10,6 +10,9 @@ namespace Facility.Core
 	/// A service result success or error.
 	/// </summary>
 	[JsonConverter(typeof(ServiceResultJsonConverter))]
+#if NET6_0_OR_GREATER
+	[System.Text.Json.Serialization.JsonConverter(typeof(Facility.Core.SystemTextJson.ServiceResultJsonConverter))]
+#endif
 	public class ServiceResult
 	{
 		/// <summary>

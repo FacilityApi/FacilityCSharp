@@ -8,6 +8,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 #if NET6_0_OR_GREATER
 using System.Text.Json.Nodes;
+using JsonElement = System.Text.Json.JsonElement;
 #endif
 
 namespace Facility.Core
@@ -36,7 +37,7 @@ namespace Facility.Core
 		/// <summary>
 		/// True if the objects are equivalent.
 		/// </summary>
-		public static bool AreEquivalentObjects(JsonObject? first, JsonObject? second) => throw new NotImplementedException();
+		public static bool AreEquivalentObjects(JsonObject? first, JsonObject? second) => ServiceJsonUtility.DeepEquals(first, second);
 #endif
 
 		/// <summary>
@@ -176,6 +177,14 @@ namespace Facility.Core
 			if (typeof(JToken).GetTypeInfo().IsAssignableFrom(typeInfo))
 				return (IEqualityComparer) Activator.CreateInstance(typeof(JTokenEquivalenceComparer))!;
 
+#if NET6_0_OR_GREATER
+			if (typeof(JsonNode).GetTypeInfo().IsAssignableFrom(typeInfo))
+				return (IEqualityComparer) Activator.CreateInstance(typeof(JsonNodeEquivalenceComparer))!;
+
+			if (typeInfo == typeof(JsonElement))
+				return (IEqualityComparer) Activator.CreateInstance(typeof(JsonElementEquivalenceComparer))!;
+#endif
+
 			if (type == typeof(object))
 				return new ObjectEqualityComparer();
 
@@ -228,6 +237,18 @@ namespace Facility.Core
 		{
 			public override bool Equals(JToken? x, JToken? y) => JToken.DeepEquals(x, y);
 		}
+
+#if NET6_0_OR_GREATER
+		private sealed class JsonNodeEquivalenceComparer : NoHashCodeEqualityComparer<JsonNode>
+		{
+			public override bool Equals(JsonNode? x, JsonNode? y) => ServiceJsonUtility.DeepEquals(x, y);
+		}
+
+		private sealed class JsonElementEquivalenceComparer : NoHashCodeEqualityComparer<JsonElement>
+		{
+			public override bool Equals(JsonElement x, JsonElement y) => ServiceJsonUtility.DeepEquals(x, y);
+		}
+#endif
 
 		private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
 			where T : IReadOnlyList<TItem>

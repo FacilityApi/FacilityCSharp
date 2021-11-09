@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,13 +12,17 @@ namespace Facility.Core
 	/// <summary>
 	/// Helper methods for working with JSON.
 	/// </summary>
-	public static class ServiceJsonUtility
+	public static partial class ServiceJsonUtility
 	{
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static string ToJson(object? value)
+		public static string ToJson(object? value, FacilitySerializer serializer = default)
 		{
+#if NET6_0_OR_GREATER
+			if (serializer is FacilitySerializer.SystemTextJson || value is System.Text.Json.Nodes.JsonNode || value?.GetType().GetCustomAttribute<FacilitySerializerAttribute>() is { Value: FacilitySerializer.SystemTextJson })
+				return SystemTextJsonToJson(value);
+#endif
 			using var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
 			ToJsonTextWriter(value, stringWriter);
 			return stringWriter.ToString();
@@ -26,8 +31,16 @@ namespace Facility.Core
 		/// <summary>
 		/// Serializes a value to JSON.
 		/// </summary>
-		public static void ToJsonStream(object? value, Stream outputStream)
+		public static void ToJsonStream(object? value, Stream outputStream, FacilitySerializer serializer = default)
 		{
+#if NET6_0_OR_GREATER
+			if (serializer is FacilitySerializer.SystemTextJson || value is System.Text.Json.Nodes.JsonNode || value?.GetType().GetCustomAttribute<FacilitySerializerAttribute>() is { Value: FacilitySerializer.SystemTextJson })
+			{
+				SystemTextJsonToJson(value, outputStream);
+				return;
+			}
+#endif
+
 			// don't dispose the StreamWriter to avoid closing the stream
 			var textWriter = new StreamWriter(outputStream);
 			ToJsonTextWriter(value, textWriter);
@@ -58,6 +71,10 @@ namespace Facility.Core
 		/// </summary>
 		public static object? FromJson(string json, Type type)
 		{
+#if NET6_0_OR_GREATER
+			if (type.GetCustomAttribute<FacilitySerializerAttribute>() is { Value: FacilitySerializer.SystemTextJson })
+				return SystemTextJsonFromJson(json, type);
+#endif
 			using var stringReader = new StringReader(json);
 			return FromJsonTextReader(stringReader, type);
 		}
@@ -93,6 +110,17 @@ namespace Facility.Core
 			if (value is null && type == typeof(JToken))
 				value = JValue.CreateNull();
 			return value;
+		}
+
+		public static object? FromJsonStream(Stream stream, Type type, FacilitySerializer serializer = default)
+		{
+#if NET6_0_OR_GREATER
+			if (serializer is FacilitySerializer.SystemTextJson || type.GetCustomAttribute<FacilitySerializerAttribute>() is { Value: FacilitySerializer.SystemTextJson })
+				return SystemTextJsonFromJsonStream(stream, type);
+#endif
+
+			using var textReader = new StreamReader(stream);
+			return FromJsonTextReader(textReader, type);
 		}
 
 		/// <summary>
