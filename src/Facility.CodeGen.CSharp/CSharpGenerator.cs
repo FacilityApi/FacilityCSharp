@@ -1234,7 +1234,7 @@ namespace Facility.CodeGen.CSharp
 			{
 				string propertyName = context.GetFieldPropertyName(fieldInfo);
 				string normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
-				string nullableFieldType = RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo));
+				string nullableFieldType = context.GetFieldPropertyType(fieldInfo) is { } overrideFieldType ? overrideFieldType + NullableReferenceSuffix : RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo));
 
 				code.WriteLine();
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
@@ -1439,6 +1439,8 @@ namespace Facility.CodeGen.CSharp
 			public string NamespaceName { get; }
 
 			public string GetFieldPropertyName(ServiceFieldInfo field) => m_csharpServiceInfo.GetFieldPropertyName(field);
+
+			public string? GetFieldPropertyType(ServiceFieldInfo field) => m_csharpServiceInfo.GetFieldPropertyType(field);
 
 			public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => m_csharpServiceInfo.Service.GetFieldType(field) ?? throw new InvalidOperationException("Missing field.");
 

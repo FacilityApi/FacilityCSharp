@@ -45,10 +45,17 @@ namespace Facility.CodeGen.CSharp
 		public string GetFieldPropertyName(ServiceFieldInfo field) =>
 			m_fieldPropertyNames.TryGetValue(field, out var value) ? value : CodeGenUtility.Capitalize(field.Name);
 
+		/// <summary>
+		/// Gets the property type for the specified field.
+		/// </summary>
+		public string? GetFieldPropertyType(ServiceFieldInfo field) =>
+			m_fieldPropertyTypes.TryGetValue(field, out var value) ? value : default;
+
 		private CSharpServiceInfo(ServiceInfo serviceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
 		{
 			Service = serviceInfo;
 			m_fieldPropertyNames = new Dictionary<ServiceFieldInfo, string>();
+			m_fieldPropertyTypes = new Dictionary<ServiceFieldInfo, string>();
 
 			var validationErrors = new List<ServiceDefinitionError>();
 
@@ -64,8 +71,10 @@ namespace Facility.CodeGen.CSharp
 						{
 							if (parameter.Name == "namespace" && descendant is ServiceInfo)
 								m_namespace = parameter.Value;
-							else if (parameter.Name == "name" && descendant is ServiceFieldInfo field)
-								m_fieldPropertyNames[field] = parameter.Value;
+							else if (parameter.Name == "name" && descendant is ServiceFieldInfo field1)
+								m_fieldPropertyNames[field1] = parameter.Value;
+							else if (parameter.Name == "type" && descendant is ServiceFieldInfo field2)
+								m_fieldPropertyTypes[field2] = parameter.Value;
 							else
 								validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 						}
@@ -119,5 +128,6 @@ namespace Facility.CodeGen.CSharp
 
 		private readonly string? m_namespace;
 		private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
+		private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyTypes;
 	}
 }
