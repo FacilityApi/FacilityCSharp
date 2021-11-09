@@ -36,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Core.UnitTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.NewtonsoftJson", "src\Facility.ConformanceApi.NewtonsoftJson\Facility.ConformanceApi.NewtonsoftJson.csproj", "{79AEC163-9587-4992-93BD-AC833FFE78F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.UnitTests", "tests\Facility.ConformanceApi.UnitTests\Facility.ConformanceApi.UnitTests.csproj", "{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.ConformanceApi.NewtonsoftJson.UnitTests", "tests\Facility.ConformanceApi.NewtonsoftJson.UnitTests\Facility.ConformanceApi.NewtonsoftJson.UnitTests.csproj", "{929EDD8B-F72E-4CED-9013-EEAF562F1B3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeCases", "tools\EdgeCases\EdgeCases.csproj", "{771FB7B6-E2CE-4F73-A62A-E52FBF980448}"
 EndProject
