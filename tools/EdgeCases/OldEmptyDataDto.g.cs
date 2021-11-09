@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using Facility.Core;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace EdgeCases
 {

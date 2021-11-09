@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using Facility.Core;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Facility.ConformanceApi
 {
@@ -34,7 +33,7 @@ namespace Facility.ConformanceApi
 
 		public IReadOnlyList<byte[]>? Bytes { get; set; }
 
-		public IReadOnlyList<JObject>? Object { get; set; }
+		public IReadOnlyList<ServiceObject>? Object { get; set; }
 
 		public IReadOnlyList<ServiceErrorDto>? Error { get; set; }
 

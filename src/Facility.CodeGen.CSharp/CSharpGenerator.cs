@@ -315,7 +315,6 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.Generic",
 					"Facility.Core",
 					"Newtonsoft.Json",
-					"Newtonsoft.Json.Linq",
 				};
 
 				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
@@ -639,7 +638,6 @@ namespace Facility.CodeGen.CSharp
 					"System.Net.Http",
 					"Facility.Core",
 					"Facility.Core.Http",
-					"Newtonsoft.Json.Linq",
 				};
 				CSharpUtility.WriteUsings(code, usings, namespaceName);
 
@@ -1377,7 +1375,7 @@ namespace Facility.CodeGen.CSharp
 				ServiceTypeKind.Int64 => "long?",
 				ServiceTypeKind.Decimal => "decimal?",
 				ServiceTypeKind.Bytes => "byte[]",
-				ServiceTypeKind.Object => "JObject",
+				ServiceTypeKind.Object => "ServiceObject",
 				ServiceTypeKind.Error => "ServiceErrorDto",
 				ServiceTypeKind.Dto => CSharpUtility.GetDtoName(fieldType.Dto!),
 				ServiceTypeKind.Enum => CSharpUtility.GetEnumName(fieldType.Enum!) + "?",
