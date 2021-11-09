@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -153,48 +155,51 @@ namespace Facility.Core
 		/// </summary>
 		public static string GetInvalidFieldErrorMessage(string fieldName, string errorMessage) => $"'{fieldName}' is invalid: {errorMessage}";
 
+		private static IEqualityComparer CreateEqualityComparer(Type type)
+		{
+			var typeInfo = type.GetTypeInfo();
+
+			if (Nullable.GetUnderlyingType(type) != null || typeof(IEquatable<>).MakeGenericType(typeInfo).GetTypeInfo().IsAssignableFrom(typeInfo))
+				return (IEqualityComparer) typeof(EqualityComparer<>).MakeGenericType(type).GetProperty("Default", BindingFlags.Public | BindingFlags.Static)!.GetValue(null)!;
+
+			if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
+				return (IEqualityComparer) Activator.CreateInstance(typeof(ServiceDtoEquivalenceComparer<>).MakeGenericType(type))!;
+
+			if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
+				return (IEqualityComparer) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type))!;
+
+			if (typeof(JToken).GetTypeInfo().IsAssignableFrom(typeInfo))
+				return (IEqualityComparer) Activator.CreateInstance(typeof(JTokenEquivalenceComparer))!;
+
+			if (type == typeof(object))
+				return new ObjectEqualityComparer();
+
+			var interfaces = new[] { type }.Concat(typeInfo.ImplementedInterfaces).ToList();
+
+			var mapInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
+				x.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>) && x.GetTypeInfo().GenericTypeArguments[0] == typeof(string));
+			if (mapInterface != null)
+			{
+				var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
+				var valueType = genericTypeArguments[1];
+				return (IEqualityComparer) Activator.CreateInstance(typeof(MapEquivalenceComparer<,>).MakeGenericType(type, valueType))!;
+			}
+
+			var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType && x.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+			if (arrayInterface != null)
+			{
+				var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
+				return (IEqualityComparer) Activator.CreateInstance(typeof(ArrayEquivalenceComparer<,>).MakeGenericType(type, itemType))!;
+			}
+
+			throw new InvalidOperationException($"Type not supported for equivalence: {type}");
+		}
+
 		private static class EquivalenceComparerCache<T>
 		{
 			public static readonly IEqualityComparer<T> Instance = CreateInstance();
 
-			private static IEqualityComparer<T> CreateInstance()
-			{
-				var type = typeof(T);
-				var typeInfo = type.GetTypeInfo();
-
-				if (Nullable.GetUnderlyingType(type) != null || typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return EqualityComparer<T>.Default;
-
-				if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceDtoEquivalenceComparer<>).MakeGenericType(type))!;
-
-				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type))!;
-
-				if (type == typeof(JObject))
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(JObjectEquivalenceComparer))!;
-
-				var interfaces = new[] { type }.Concat(typeInfo.ImplementedInterfaces).ToList();
-
-				var mapInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
-					x.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>) && x.GetTypeInfo().GenericTypeArguments[0] == typeof(string));
-				if (mapInterface != null)
-				{
-					var genericTypeArguments = mapInterface.GetTypeInfo().GenericTypeArguments;
-					var valueType = genericTypeArguments[1];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(MapEquivalenceComparer<,>).MakeGenericType(type, valueType))!;
-				}
-
-				var arrayInterface = interfaces.FirstOrDefault(x => x.IsConstructedGenericType &&
-					x.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
-				if (arrayInterface != null)
-				{
-					var itemType = arrayInterface.GetTypeInfo().GenericTypeArguments[0];
-					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ArrayEquivalenceComparer<,>).MakeGenericType(type, itemType))!;
-				}
-
-				throw new InvalidOperationException($"Type not supported for equivalence: {typeof(T)}");
-			}
+			private static IEqualityComparer<T> CreateInstance() => (IEqualityComparer<T>) CreateEqualityComparer(typeof(T));
 		}
 
 		private abstract class NoHashCodeEqualityComparer<T> : EqualityComparer<T>
@@ -214,9 +219,9 @@ namespace Facility.Core
 			public override bool Equals(T? x, T? y) => AreEquivalentResults(x, y);
 		}
 
-		private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>
+		private sealed class JTokenEquivalenceComparer : NoHashCodeEqualityComparer<JToken>
 		{
-			public override bool Equals(JObject? x, JObject? y) => AreEquivalentObjects(x, y);
+			public override bool Equals(JToken? x, JToken? y) => JToken.DeepEquals(x, y);
 		}
 
 		private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>
@@ -229,6 +234,20 @@ namespace Facility.Core
 			where T : IReadOnlyDictionary<string, TValue>
 		{
 			public override bool Equals(T? x, T? y) => AreEquivalentMaps(x, y, EquivalenceComparerCache<TValue>.Instance.Equals);
+		}
+
+		private sealed class ObjectEqualityComparer : NoHashCodeEqualityComparer<object>
+		{
+			public override bool Equals(object? x, object? y)
+			{
+				if (ReferenceEquals(x, y))
+					return true;
+				if (x == null && y == null)
+					return true;
+				return x != null && m_comparers.GetOrAdd(x.GetType(), CreateEqualityComparer).Equals(x, y);
+			}
+
+			private readonly ConcurrentDictionary<Type, IEqualityComparer> m_comparers = new();
 		}
 
 		private interface IValidator<in T>
