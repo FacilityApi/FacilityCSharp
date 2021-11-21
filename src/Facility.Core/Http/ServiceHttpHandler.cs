@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -211,6 +212,7 @@ namespace Facility.Core.Http
 		/// <summary>
 		/// Makes a task synchronous if necessary.
 		/// </summary>
+		[SuppressMessage("Performance", "CA1849:Call async methods when in an async method", Justification = "Task is completed.")]
 		protected Task AdaptTask(Task task)
 		{
 			if (!m_synchronous)
