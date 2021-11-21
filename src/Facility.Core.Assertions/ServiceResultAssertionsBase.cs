@@ -15,8 +15,8 @@ namespace Facility.Core.Assertions
 		/// Creates an instance with the specified subject.
 		/// </summary>
 		protected ServiceResultAssertionsBase(TServiceResult? subject)
+			: base(subject)
 		{
-			Subject = subject;
 		}
 
 		/// <summary>

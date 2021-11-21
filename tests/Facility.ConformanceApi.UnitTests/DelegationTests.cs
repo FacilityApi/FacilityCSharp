@@ -15,7 +15,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task NotImplemented()
 		{
 			var api = new DelegatingConformanceApi(ServiceDelegators.NotImplemented);
-			Awaiting(async () => await api.CheckQueryAsync(new CheckQueryRequestDto())).Should().Throw<NotImplementedException>();
+			await Awaiting(async () => await api.CheckQueryAsync(new CheckQueryRequestDto())).Should().ThrowAsync<NotImplementedException>();
 		}
 
 		[Test]
@@ -60,7 +60,7 @@ namespace Facility.ConformanceApi.UnitTests
 		public async Task WrongResponse()
 		{
 			var api = new DelegatingConformanceApi(async (_, _, _) => ServiceResult.Success<ServiceDto>(new CheckQueryResponseDto()));
-			Awaiting(async () => await api.CheckPathAsync(new CheckPathRequestDto())).Should().Throw<InvalidCastException>();
+			await Awaiting(async () => await api.CheckPathAsync(new CheckPathRequestDto())).Should().ThrowAsync<InvalidCastException>();
 		}
 
 		[Test]

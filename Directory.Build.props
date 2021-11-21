@@ -31,7 +31,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FacilityVersion>2.6.1</FacilityVersion>
+    <FacilityVersion>2.7.0</FacilityVersion>
   </PropertyGroup>
 
   <ItemGroup>
