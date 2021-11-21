@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.13.5
+
+* Add .NET 6 support to tools.
+
 ## 2.13.4
 
 * Fix nullability of generated `Equals`.
