@@ -4,7 +4,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Facility.Core
 {
@@ -34,7 +33,8 @@ namespace Facility.Core
 		/// <summary>
 		/// Advanced error details.
 		/// </summary>
-		[JsonProperty("details")]
+		[Newtonsoft.Json.JsonProperty("details")]
+		[System.Text.Json.Serialization.JsonPropertyName("details")]
 		public ServiceObject? DetailsObject { get; set; }
 
 		/// <summary>

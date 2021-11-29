@@ -5,6 +5,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using static FluentAssertions.FluentActions;
+#pragma warning disable CS0618
 
 namespace Facility.Core.UnitTests
 {

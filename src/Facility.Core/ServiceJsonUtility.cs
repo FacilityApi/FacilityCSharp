@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,6 +12,7 @@ namespace Facility.Core
 	/// <summary>
 	/// Helper methods for working with JSON.
 	/// </summary>
+	[Obsolete("Use ServiceSerializer")]
 	public static class ServiceJsonUtility
 	{
 		/// <summary>
@@ -93,6 +95,12 @@ namespace Facility.Core
 			if (value is null && type == typeof(JToken))
 				value = JValue.CreateNull();
 			return value;
+		}
+
+		public static object? FromJsonStream(Stream stream, Type type)
+		{
+			using var textReader = new StreamReader(stream);
+			return FromJsonTextReader(textReader, type);
 		}
 
 		/// <summary>

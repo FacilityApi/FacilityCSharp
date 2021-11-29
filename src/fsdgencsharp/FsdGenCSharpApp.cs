@@ -23,7 +23,7 @@ namespace fsdgencsharp
 			"   --nullable",
 			"      Use nullable reference syntax in the generated C#.",
 			"   --serializer <serializer>",
-			"      Use the specified serializer in the generated C#. Supported values are: NewtonsoftJson",
+			"      Use the specified serializer in the generated C#. Supported values are: NewtonsoftJson, SystemTextJson",
 		};
 
 		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
@@ -33,9 +33,7 @@ namespace fsdgencsharp
 			{
 				NamespaceName = args.ReadOption("namespace"),
 				UseNullableReferences = args.ReadFlag("nullable"),
-				Serializer = args.ReadOption("serializer") is { } serializerOption ?
-					Enum.TryParse<ServiceSerializerKind>(serializerOption, ignoreCase: true, out var serializer) ? serializer : throw new ArgsReaderException("Invalid serializer value") :
-					default,
+				Serializers = args.ReadOptions<ServiceSerializerKind>("serializer"),
 			};
 	}
 }

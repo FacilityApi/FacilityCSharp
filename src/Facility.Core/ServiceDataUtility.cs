@@ -111,7 +111,9 @@ namespace Facility.Core
 		/// <summary>
 		/// Clones the data element.
 		/// </summary>
+#pragma warning disable CS0618
 		public static T Clone<T>(T value) => value is null ? default! : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
+#pragma warning restore CS0618
 
 		/// <summary>
 		/// Attempts to parse a Boolean.

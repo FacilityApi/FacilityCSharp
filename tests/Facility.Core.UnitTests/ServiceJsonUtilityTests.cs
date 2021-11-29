@@ -3,6 +3,7 @@ using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+#pragma warning disable CS0618
 
 namespace Facility.Core.UnitTests
 {

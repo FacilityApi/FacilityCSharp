@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
-using Newtonsoft.Json;
 
 namespace EdgeCases
 {
@@ -22,7 +21,8 @@ namespace EdgeCases
 		{
 		}
 
-		[JsonProperty("f")]
+		[Newtonsoft.Json.JsonProperty("f")]
+		[System.Text.Json.Serialization.JsonPropertyName("f")]
 		public string? Field { get; set; }
 
 		/// <summary>

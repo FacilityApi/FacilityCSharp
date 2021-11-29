@@ -10,6 +10,7 @@ namespace Facility.Core
 	/// A service result success or error.
 	/// </summary>
 	[JsonConverter(typeof(ServiceResultJsonConverter))]
+	[System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
 	public class ServiceResult
 	{
 		/// <summary>

@@ -15,6 +15,7 @@ using NUnit.Framework;
 namespace Facility.ConformanceApi.UnitTests
 {
 	[TestFixture(typeof(NewtonsoftJsonServiceSerializer))]
+	[TestFixture(typeof(SystemTextJsonServiceSerializer))]
 	public class ConformanceTests
 	{
 		public ConformanceTests(Type serializerType)

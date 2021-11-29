@@ -1,4 +1,4 @@
-namespace Facility.CodeGen.CSharp
+namespace Facility.Core
 {
 	public enum ServiceSerializerKind
 	{

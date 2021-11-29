@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
@@ -6,6 +7,7 @@ using NUnit.Framework;
 namespace Facility.Core.UnitTests;
 
 [TestFixture(typeof(NewtonsoftJsonServiceSerializer))]
+[TestFixture(typeof(SystemTextJsonServiceSerializer))]
 public sealed class JsonServiceSerializerTests
 {
 	public JsonServiceSerializerTests(Type serializerType)
@@ -103,17 +105,17 @@ public sealed class JsonServiceSerializerTests
 	}
 
 	[Test]
-	public void EquivalenceFromJObject()
+	public void RoundTripFromJObject()
 	{
 		var so1 = ServiceObject.Create(new JObject { ["foo"] = "bar" });
-		var so2 = ServiceObject.Create(new JObject { ["foo"] = "bar" });
+		var so2 = m_serializer.FromString<ServiceObject>(m_serializer.ToString(so1));
 		Assert.IsTrue(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]
-	public void RoundTripFromJObject()
+	public void RoundTripFromJsonObject()
 	{
-		var so1 = ServiceObject.Create(new JObject { ["foo"] = "bar" });
+		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 		var so2 = m_serializer.FromString<ServiceObject>(m_serializer.ToString(so1));
 		Assert.IsTrue(so1.IsEquivalentTo(so2));
 	}

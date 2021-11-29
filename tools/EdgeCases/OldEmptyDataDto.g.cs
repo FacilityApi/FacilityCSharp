@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
-using Newtonsoft.Json;
 
 namespace EdgeCases
 {

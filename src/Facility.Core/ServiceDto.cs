@@ -10,7 +10,7 @@ namespace Facility.Core
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
-		public override string ToString() => ServiceJsonUtility.ToJson(this);
+		public override string ToString() => NewtonsoftJsonServiceSerializer.Instance.ToString(this);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

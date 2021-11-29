@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Facility.Core;
-using Newtonsoft.Json;
 
 #pragma warning disable 612, 618 // member is obsolete
 
@@ -16,7 +15,8 @@ namespace EdgeCases
 	/// Some old values.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	[JsonConverter(typeof(OldValuesJsonConverter))]
+	[Newtonsoft.Json.JsonConverter(typeof(OldValuesJsonConverter))]
+	[System.Text.Json.Serialization.JsonConverter(typeof(OldValuesSystemTextJsonConverter))]
 	public partial struct OldValues : IEquatable<OldValues>
 	{
 		/// <summary>
@@ -92,6 +92,17 @@ namespace EdgeCases
 		/// Used for JSON serialization.
 		/// </summary>
 		public sealed class OldValuesJsonConverter : ServiceEnumJsonConverter<OldValues>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override OldValues CreateCore(string value) => new OldValues(value);
+		}
+
+		/// <summary>
+		/// Used for JSON serialization.
+		/// </summary>
+		public sealed class OldValuesSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<OldValues>
 		{
 			/// <summary>
 			/// Creates the value from a string.
