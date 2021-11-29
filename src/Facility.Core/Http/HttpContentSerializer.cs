@@ -48,7 +48,7 @@ namespace Facility.Core.Http
 			if (contentType == null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateMissingContentType());
 
-			var mediaType = contentType.MediaType;
+			var mediaType = contentType.MediaType ?? "";
 			if (!IsSupportedMediaType(mediaType))
 				return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 

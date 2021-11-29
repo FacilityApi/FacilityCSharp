@@ -81,13 +81,21 @@ namespace Facility.Core.Http
 				{
 					// read content into memory so that ASP.NET Core doesn't complain about synchronous I/O during JSON deserialization
 					using var stream = CreateMemoryStream();
+#if NET6_0_OR_GREATER
+					await content.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+#else
 					await content.CopyToAsync(stream).ConfigureAwait(false);
+#endif
 					stream.Seek(0, SeekOrigin.Begin);
 					return ReadJsonStream(objectType, stream);
 				}
 				else
 				{
+#if NET6_0_OR_GREATER
+					using var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+#else
 					using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+#endif
 					return ReadJsonStream(objectType, stream);
 				}
 			}
@@ -115,7 +123,7 @@ namespace Facility.Core.Http
 				m_memoryStream = memoryStream;
 			}
 
-			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
+			protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context)
 			{
 				m_memoryStream.Position = 0;
 				return m_memoryStream.CopyToAsync(stream);

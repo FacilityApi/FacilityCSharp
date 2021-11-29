@@ -218,7 +218,9 @@ namespace Facility.Core.Http
 			if (!m_synchronous)
 				return task;
 
+#pragma warning disable CA1849
 			task.GetAwaiter().GetResult();
+#pragma warning restore CA1849
 			return Task.CompletedTask;
 		}
 
@@ -271,6 +273,8 @@ namespace Facility.Core.Http
 			httpRequest.Headers.Accept
 				.OrderByDescending(x => x.Quality)
 				.Select(x => x.MediaType)
+				.Where(x => x is not null)
+				.Select(x => x!)
 				.FirstOrDefault(serializer.IsAcceptedMediaType);
 
 		private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
