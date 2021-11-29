@@ -30,7 +30,7 @@ namespace Facility.Core
 		public JObject? Details
 		{
 			get => DetailsObject?.AsJObject();
-			set => DetailsObject = value is null ? null : new ServiceObject(value);
+			set => DetailsObject = ServiceObject.Create(value);
 		}
 	}
 }

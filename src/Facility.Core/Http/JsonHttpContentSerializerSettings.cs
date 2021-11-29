@@ -18,5 +18,10 @@ namespace Facility.Core.Http
 		/// </summary>
 		/// <remarks>Consider using <c>Microsoft.IO.RecyclableMemoryStream</c>.</remarks>
 		public Func<Stream>? MemoryStreamCreator { get; set; }
+
+		/// <summary>
+		/// The serializer. Defaults to <see cref="NewtonsoftJsonServiceSerializer"/>.
+		/// </summary>
+		public ServiceSerializer? Serializer { get; set; }
 	}
 }

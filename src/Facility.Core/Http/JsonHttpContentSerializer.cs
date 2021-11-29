@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Facility.Core.Http
 {
@@ -36,6 +28,7 @@ namespace Facility.Core.Http
 		{
 			m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 			m_memoryStreamCreator = settings?.MemoryStreamCreator;
+			m_serializer = settings?.Serializer ?? NewtonsoftJsonServiceSerializer.Instance;
 
 			SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 		}
@@ -66,7 +59,7 @@ namespace Facility.Core.Http
 		protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 		{
 			var memoryStream = CreateMemoryStream();
-			ServiceJsonUtility.ToJsonStream(content, memoryStream);
+			m_serializer.ToStream(content, memoryStream);
 			return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
 		}
 
@@ -99,16 +92,15 @@ namespace Facility.Core.Http
 					return ReadJsonStream(objectType, stream);
 				}
 			}
-			catch (JsonException exception)
+			catch (ServiceSerializationException exception)
 			{
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent(exception.Message));
 			}
 		}
 
-		private static ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
+		private ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
 		{
-			using var textReader = new StreamReader(stream);
-			var deserializedContent = ServiceJsonUtility.FromJsonTextReader(textReader, objectType);
+			var deserializedContent = m_serializer.FromStream(stream, objectType);
 			if (deserializedContent is null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 			return ServiceResult.Success(deserializedContent);
@@ -153,5 +145,6 @@ namespace Facility.Core.Http
 
 		private readonly bool m_forceAsyncIO;
 		private readonly Func<Stream>? m_memoryStreamCreator;
+		private readonly ServiceSerializer m_serializer;
 	}
 }
