@@ -25,7 +25,7 @@ namespace Facility.Core
 			Message = message;
 		}
 
-		// [Obsolete("Use DetailsObject.")]
+		[Obsolete("Use DetailsObject.")]
 		[JsonIgnore]
 		public JObject? Details
 		{
