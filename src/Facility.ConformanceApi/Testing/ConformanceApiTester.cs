@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Facility.Core;
-using Newtonsoft.Json.Linq;
 
 namespace Facility.ConformanceApi.Testing
 {
@@ -31,11 +24,13 @@ namespace Facility.ConformanceApi.Testing
 		/// <param name="tests">The conformance tests.</param>
 		/// <param name="api">The API interface to test.</param>
 		/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
-		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
+		/// <param name="serializer">The optional serializer.</param>
+		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient, ServiceSerializer? serializer = null)
 		{
 			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
 			m_api = api ?? throw new ArgumentNullException(nameof(api));
 			m_httpClient = httpClient;
+			m_serializer = serializer ?? NewtonsoftJsonServiceSerializer.Instance;
 
 			var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
 			if (sameNameTests != null)
@@ -47,7 +42,7 @@ namespace Facility.ConformanceApi.Testing
 				{
 					for (var j = i + 1; j < testsPerMethod.Count; j++)
 					{
-						if (JToken.DeepEquals(testsPerMethod[i].Request, testsPerMethod[j].Request))
+						if (ServiceObjectUtility.DeepEquals(testsPerMethod[i].Request, testsPerMethod[j].Request))
 							throw new ArgumentException($"Tests must not have the same method name and request data, e.g. {testsPerMethod[i].Test} and {testsPerMethod[j].Test}.");
 					}
 				}
@@ -97,42 +92,44 @@ namespace Facility.ConformanceApi.Testing
 				if (methodInfo == null)
 					return Failure($"Missing API method for {test.Method}");
 
-				var requestJObject = test.Request;
-				var requestDto = ServiceJsonUtility.FromJToken(requestJObject, methodInfo.GetParameters()[0].ParameterType);
-				var requestRoundTripJObject = ServiceJsonUtility.ToJToken(requestDto);
-				if (!JToken.DeepEquals(requestJObject, requestRoundTripJObject))
-					return Failure($"Request round trip failed. expected={ServiceJsonUtility.ToJson(requestJObject)} actual={ServiceJsonUtility.ToJson(requestRoundTripJObject)}");
+				var requestServiceObject = test.Request;
+				if (requestServiceObject is null)
+					return Failure($"Missing request for {test.Method}");
+				var requestDto = m_serializer.FromServiceObject(requestServiceObject, methodInfo.GetParameters()[0].ParameterType);
+				var requestRoundTripServiceObject = m_serializer.ToServiceObject(requestDto);
+				if (!ServiceObjectUtility.DeepEquals(requestServiceObject, requestRoundTripServiceObject))
+					return Failure($"Request round trip failed. expected={m_serializer.ToString(requestServiceObject)} actual={m_serializer.ToString(requestRoundTripServiceObject)}");
 
 				var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
 				await task.ConfigureAwait(false);
 
 				dynamic result = ((dynamic) task).Result;
 				var actualResponseDto = (ServiceDto?) result.GetValueOrDefault();
-				var expectedResponseJObject = test.Response;
-				var expectedErrorJObject = test.Error;
+				var expectedResponseServiceObject = test.Response;
+				var expectedErrorServiceObject = test.Error;
 				if (actualResponseDto != null)
 				{
-					var actualResponseJObject = (JObject) ServiceJsonUtility.ToJToken(actualResponseDto);
+					var actualResponseServiceObject = m_serializer.ToServiceObject(actualResponseDto);
 
-					if (expectedErrorJObject != null)
-						return Failure($"Got valid response; expected error. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
-					if (!JToken.DeepEquals(expectedResponseJObject, actualResponseJObject))
-						return Failure($"Response JSON did not match. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualResponseJObject)}");
+					if (expectedErrorServiceObject != null)
+						return Failure($"Got valid response; expected error. expected={m_serializer.ToString(expectedErrorServiceObject)} actual={m_serializer.ToString(actualResponseServiceObject)}");
+					if (!ServiceObjectUtility.DeepEquals(expectedResponseServiceObject, actualResponseServiceObject))
+						return Failure($"Response JSON did not match. expected={m_serializer.ToString(expectedResponseServiceObject)} actual={m_serializer.ToString(actualResponseServiceObject)}");
 					var responseType = methodInfo.ReturnType.GetGenericArguments()[0].GetGenericArguments()[0];
-					var expectedResponseDto = (ServiceDto) ServiceJsonUtility.FromJToken(expectedResponseJObject, responseType)!;
+					var expectedResponseDto = (ServiceDto) m_serializer.FromServiceObject(expectedResponseServiceObject, responseType)!;
 					if (!expectedResponseDto.IsEquivalentTo(actualResponseDto))
-						return Failure($"Response DTO did not match. expected={expectedResponseDto} actual={ServiceJsonUtility.ToJson(actualResponseDto)}");
+						return Failure($"Response DTO did not match. expected={expectedResponseDto} actual={m_serializer.ToString(actualResponseDto)}");
 				}
 				else
 				{
 					var actualErrorDto = (ServiceErrorDto) result.Error;
-					var actualErrorJObject = (JObject) ServiceJsonUtility.ToJToken(actualErrorDto);
+					var actualErrorServiceObject = m_serializer.ToServiceObject(actualErrorDto);
 
-					if (expectedErrorJObject == null)
-						return Failure($"Got error; expected valid response. expected={ServiceJsonUtility.ToJson(expectedResponseJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
-					if (!JToken.DeepEquals(expectedErrorJObject, actualErrorJObject))
-						return Failure($"Error JSON did not match. expected={ServiceJsonUtility.ToJson(expectedErrorJObject)} actual={ServiceJsonUtility.ToJson(actualErrorJObject)}");
-					var expectedErrorDto = ServiceJsonUtility.FromJToken<ServiceErrorDto>(expectedErrorJObject);
+					if (expectedErrorServiceObject == null)
+						return Failure($"Got error; expected valid response. expected={m_serializer.ToString(expectedResponseServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
+					if (!ServiceObjectUtility.DeepEquals(expectedErrorServiceObject, actualErrorServiceObject))
+						return Failure($"Error JSON did not match. expected={m_serializer.ToString(expectedErrorServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
+					var expectedErrorDto = m_serializer.FromServiceObject<ServiceErrorDto>(expectedErrorServiceObject)!;
 					if (!expectedErrorDto.IsEquivalentTo(actualErrorDto))
 						return Failure($"Error DTO did not match. expected={expectedErrorDto} actual={actualErrorDto}");
 				}
@@ -141,12 +138,13 @@ namespace Facility.ConformanceApi.Testing
 			}
 			catch (Exception exception)
 			{
-				return Failure($"Unhandled exception {exception.GetType().FullName}: {exception.Message}");
+				return Failure($"Unhandled exception {exception.GetType().FullName}: {exception}");
 			}
 		}
 
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 		private readonly IConformanceApi m_api;
 		private readonly HttpClient? m_httpClient;
+		private readonly ServiceSerializer m_serializer;
 	}
 }

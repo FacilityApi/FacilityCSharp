@@ -11,7 +11,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Load tests from JSON.
 		/// </summary>
-		public static ConformanceTestsInfo FromJson(string json) => ServiceJsonUtility.FromJson<ConformanceTestsInfo>(json);
+		public static ConformanceTestsInfo FromJson(string json) => NewtonsoftJsonServiceSerializer.Instance.FromString<ConformanceTestsInfo>(json)!;
 
 		/// <summary>
 		/// The name of the test.
