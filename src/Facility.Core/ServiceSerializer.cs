@@ -34,7 +34,7 @@ public abstract class ServiceSerializer
 	/// <summary>
 	/// Deserializes a value from the serialization format.
 	/// </summary>
-	public T? FromString<T>(string stringValue) => (T?) FromString(stringValue, typeof(T));
+	public virtual T? FromString<T>(string stringValue) => (T?) FromString(stringValue, typeof(T));
 
 	/// <summary>
 	/// Deserializes a value from the serialization format.
@@ -62,5 +62,5 @@ public abstract class ServiceSerializer
 	/// Deserializes a value from a <see cref="ServiceObject"/> representation of the serialization format.
 	/// </summary>
 	[return: NotNullIfNotNull("serviceObject")]
-	public T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
+	public virtual T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
 }
