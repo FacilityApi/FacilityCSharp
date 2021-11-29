@@ -10,10 +10,19 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a service for the specified test.
 		/// </summary>
-		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer? serializer = null)
+		[Obsolete("Use constructor with ServiceSerializer.")]
+		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
+			: this(tests, serializer: NewtonsoftJsonServiceSerializer.Instance)
+		{
+		}
+
+		/// <summary>
+		/// Creates a service for the specified test.
+		/// </summary>
+		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer serializer)
 		{
 			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
-			m_serializer = serializer ?? NewtonsoftJsonServiceSerializer.Instance;
+			m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 		}
 
 		/// <inheritdoc />

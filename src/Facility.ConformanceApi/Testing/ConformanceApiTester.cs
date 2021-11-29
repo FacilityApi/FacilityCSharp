@@ -24,13 +24,24 @@ namespace Facility.ConformanceApi.Testing
 		/// <param name="tests">The conformance tests.</param>
 		/// <param name="api">The API interface to test.</param>
 		/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
+		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
+			: this(tests, api, httpClient, serializer: NewtonsoftJsonServiceSerializer.Instance)
+		{
+		}
+
+		/// <summary>
+		/// Creates a tester.
+		/// </summary>
+		/// <param name="tests">The conformance tests.</param>
+		/// <param name="api">The API interface to test.</param>
+		/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
 		/// <param name="serializer">The optional serializer.</param>
-		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient, ServiceSerializer? serializer = null)
+		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient, ServiceSerializer serializer)
 		{
 			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
 			m_api = api ?? throw new ArgumentNullException(nameof(api));
 			m_httpClient = httpClient;
-			m_serializer = serializer ?? NewtonsoftJsonServiceSerializer.Instance;
+			m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
 			var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
 			if (sameNameTests != null)
