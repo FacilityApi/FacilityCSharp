@@ -97,12 +97,6 @@ namespace Facility.Core
 			return value;
 		}
 
-		public static object? FromJsonStream(Stream stream, Type type)
-		{
-			using var textReader = new StreamReader(stream);
-			return FromJsonTextReader(textReader, type);
-		}
-
 		/// <summary>
 		/// Deserializes a value from a JToken.
 		/// </summary>
