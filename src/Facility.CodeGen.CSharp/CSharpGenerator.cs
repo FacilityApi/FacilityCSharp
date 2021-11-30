@@ -33,11 +33,6 @@ namespace Facility.CodeGen.CSharp
 		public bool UseNullableReferences { get; set; }
 
 		/// <summary>
-		/// The serializers to generate support for. Defaults to all.
-		/// </summary>
-		public IReadOnlyCollection<ServiceSerializerKind> Serializers { get; set; } = s_defaultSerializers;
-
-		/// <summary>
 		/// Generates the C# output.
 		/// </summary>
 		public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -95,7 +90,6 @@ namespace Facility.CodeGen.CSharp
 			var csharpSettings = (CSharpGeneratorSettings) settings;
 			NamespaceName = csharpSettings.NamespaceName;
 			UseNullableReferences = csharpSettings.UseNullableReferences;
-			Serializers = csharpSettings.Serializers ?? s_defaultSerializers;
 		}
 
 		/// <summary>
@@ -184,10 +178,8 @@ namespace Facility.CodeGen.CSharp
 					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 					CSharpUtility.WriteObsoleteAttribute(code, enumInfo);
 
-					if (Serializers.Contains(ServiceSerializerKind.NewtonsoftJson))
-						code.WriteLine($"[Newtonsoft.Json.JsonConverter(typeof({enumName}JsonConverter))]");
-					if (Serializers.Contains(ServiceSerializerKind.SystemTextJson))
-						code.WriteLine($"[System.Text.Json.Serialization.JsonConverter(typeof({enumName}SystemTextJsonConverter))]");
+					code.WriteLine($"[Newtonsoft.Json.JsonConverter(typeof({enumName}JsonConverter))]");
+					code.WriteLine($"[System.Text.Json.Serialization.JsonConverter(typeof({enumName}SystemTextJsonConverter))]");
 					code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
@@ -253,7 +245,7 @@ namespace Facility.CodeGen.CSharp
 							}
 						}
 
-						foreach (var serializer in Serializers)
+						foreach (var serializer in s_serializers)
 						{
 							code.WriteLine();
 							CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
@@ -1482,6 +1474,6 @@ namespace Facility.CodeGen.CSharp
 			private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 		}
 
-		private static readonly IReadOnlyCollection<ServiceSerializerKind> s_defaultSerializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
+		private static readonly IReadOnlyCollection<ServiceSerializerKind> s_serializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
 	}
 }
