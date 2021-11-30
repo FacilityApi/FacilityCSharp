@@ -1,22 +1,26 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Facility.Core;
 
-public sealed class ServiceObjectSystemTextJsonConverter : ServiceSystemTextJsonConverterBase<ServiceObject>
+public sealed class ServiceObjectSystemTextJsonConverter : JsonConverter<ServiceObject>
 {
-	protected override ServiceObject ReadCore(ref Utf8JsonReader reader, JsonSerializerOptions options)
+	/// <summary>
+	/// Reads the JSON representation of the value.
+	/// </summary>
+	public override ServiceObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var jsonObject = JsonNode.Parse(ref reader)!.AsObject();
-		return ServiceObject.Create(jsonObject)!;
+		var jsonNode = JsonNode.Parse(ref reader);
+		if (jsonNode is not JsonObject)
+			throw new JsonException("Expected object for ServiceObject.");
+
+		return ServiceObject.Create(jsonNode.AsObject());
 	}
 
-	public override void Write(Utf8JsonWriter writer, ServiceObject value, JsonSerializerOptions options)
-	{
-		var jsonObject = value.AsJsonObject();
-		if (jsonObject is null)
-			writer.WriteNullValue();
-		else
-			jsonObject.WriteTo(writer, options);
-	}
+	/// <summary>
+	/// Writes the JSON representation of the value.
+	/// </summary>
+	public override void Write(Utf8JsonWriter writer, ServiceObject value, JsonSerializerOptions options) =>
+		value.AsJsonObject().WriteTo(writer, options);
 }
