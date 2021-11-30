@@ -23,7 +23,7 @@ namespace fsdgencsharp
 			"   --nullable",
 			"      Use nullable reference syntax in the generated C#.",
 			"   --serializer <serializer>",
-			"      Use the specified serializer in the generated C#. Supported values are: NewtonsoftJson, SystemTextJson",
+			"      Use the specified serializer in the generated C#. Supported values are: NewtonsoftJson, SystemTextJson. Defaults to all.",
 		};
 
 		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
