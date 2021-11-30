@@ -11,7 +11,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Load tests from JSON.
 		/// </summary>
-		[Obsolete("Use use overload with ServiceSerializer.")]
+		[Obsolete("Use the overload with ServiceSerializer.")]
 		public static ConformanceTestsInfo FromJson(string json) => FromJson(json, ServiceSerializer.Default);
 
 		/// <summary>
