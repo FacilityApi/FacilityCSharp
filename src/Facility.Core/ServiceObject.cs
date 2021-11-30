@@ -14,9 +14,9 @@ public sealed class ServiceObject
 	[return: NotNullIfNotNull("jsonObject")]
 	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
-	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromString<JObject>(ToJsonString())!;
+	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromString<JObject>(ToString())!;
 
-	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromString<JsonObject>(ToJsonString())!;
+	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromString<JsonObject>(ToString())!;
 
 	public bool IsEquivalentTo(ServiceObject? other) => other is not null &&
 		(
@@ -24,6 +24,11 @@ public sealed class ServiceObject
 			m_jsonObject is { } jsonObject ? SystemTextJsonUtility.DeepEquals(jsonObject, other.AsJsonObject()) :
 			throw new InvalidOperationException()
 		);
+
+	public override string ToString() =>
+		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToString(jObject) :
+		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToString(jsonObject) :
+		"";
 
 	private ServiceObject(JObject jObject)
 	{
@@ -34,11 +39,6 @@ public sealed class ServiceObject
 	{
 		m_jsonObject = jsonObject;
 	}
-
-	private string ToJsonString() =>
-		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToString(jObject) :
-		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToString(jsonObject) :
-		throw new InvalidOperationException();
 
 	private readonly JObject? m_jObject;
 	private readonly JsonObject? m_jsonObject;
