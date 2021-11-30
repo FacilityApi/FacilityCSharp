@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 
 namespace Facility.Core;
 
-public class ServiceObjectSystemTextJsonConverter : ServiceSystemTextJsonConverterBase<ServiceObject>
+public sealed class ServiceObjectSystemTextJsonConverter : ServiceSystemTextJsonConverterBase<ServiceObject>
 {
 	protected override ServiceObject ReadCore(ref Utf8JsonReader reader, JsonSerializerOptions options)
 	{
