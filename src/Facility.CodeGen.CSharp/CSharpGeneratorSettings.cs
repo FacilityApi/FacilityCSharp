@@ -17,6 +17,9 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
-		public IReadOnlyCollection<ServiceSerializerKind>? Serializers { get; set; }
+		/// <summary>
+		/// The serializers to generate support for. Defaults to all.
+		/// </summary>
+		public IReadOnlyCollection<ServiceSerializerKind> Serializers { get; set; } = CSharpGenerator.DefaultSerializers;
 	}
 }

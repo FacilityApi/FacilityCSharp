@@ -32,7 +32,10 @@ namespace Facility.CodeGen.CSharp
 		/// </summary>
 		public bool UseNullableReferences { get; set; }
 
-		public IReadOnlyCollection<ServiceSerializerKind> Serializers { get; set; } = s_defaultSerializers;
+		/// <summary>
+		/// The serializers to generate support for. Defaults to all.
+		/// </summary>
+		public IReadOnlyCollection<ServiceSerializerKind> Serializers { get; set; } = DefaultSerializers;
 
 		/// <summary>
 		/// Generates the C# output.
@@ -92,7 +95,7 @@ namespace Facility.CodeGen.CSharp
 			var csharpSettings = (CSharpGeneratorSettings) settings;
 			NamespaceName = csharpSettings.NamespaceName;
 			UseNullableReferences = csharpSettings.UseNullableReferences;
-			Serializers = csharpSettings.Serializers ?? s_defaultSerializers;
+			Serializers = csharpSettings.Serializers;
 		}
 
 		/// <summary>
@@ -1479,6 +1482,6 @@ namespace Facility.CodeGen.CSharp
 			private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 		}
 
-		private static readonly IReadOnlyCollection<ServiceSerializerKind> s_defaultSerializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
+		internal static readonly IReadOnlyCollection<ServiceSerializerKind> DefaultSerializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
 	}
 }
