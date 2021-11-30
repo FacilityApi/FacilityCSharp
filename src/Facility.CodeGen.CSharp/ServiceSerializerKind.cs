@@ -1,8 +1,7 @@
-namespace Facility.CodeGen.CSharp
+namespace Facility.CodeGen.CSharp;
+
+internal enum ServiceSerializerKind
 {
-	internal enum ServiceSerializerKind
-	{
-		NewtonsoftJson,
-		SystemTextJson,
-	}
+	NewtonsoftJson,
+	SystemTextJson,
 }
