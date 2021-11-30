@@ -56,9 +56,7 @@ namespace FacilityConformance
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")!))
 				m_testsJson = testsJsonReader.ReadToEnd();
 
-#pragma warning disable CS0618
-			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests!;
-#pragma warning restore CS0618
+			m_tests = ConformanceTestsInfo.FromJson(m_testsJson, ServiceSerializer.Default).Tests!;
 		}
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
