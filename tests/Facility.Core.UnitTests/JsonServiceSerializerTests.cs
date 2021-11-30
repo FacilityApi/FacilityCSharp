@@ -6,13 +6,12 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-[TestFixture(typeof(NewtonsoftJsonServiceSerializer))]
-[TestFixture(typeof(SystemTextJsonServiceSerializer))]
-public sealed class JsonServiceSerializerTests
+[TestFixtureSource(nameof(ServiceSerializers))]
+public sealed class JsonServiceSerializerTests : ServiceSerializerTestBase
 {
-	public JsonServiceSerializerTests(Type serializerType)
+	public JsonServiceSerializerTests(ServiceSerializer serializer)
+		: base(serializer)
 	{
-		m_serializer = (ServiceSerializer) Activator.CreateInstance(serializerType)!;
 	}
 
 	[Test]
@@ -21,8 +20,8 @@ public sealed class JsonServiceSerializerTests
 		var dto = ValueDto.Create(true);
 		var json = "{\"booleanValue\":true}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -31,8 +30,8 @@ public sealed class JsonServiceSerializerTests
 		var dto = ValueDto.Create(new Dictionary<string, bool> { ["Key"] = true });
 		var json = "{\"booleanMapValue\":{\"Key\":true}}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -41,8 +40,8 @@ public sealed class JsonServiceSerializerTests
 		var dto = ValueDto.Create("2016-10-21T15:31:00Z");
 		var json = $"{{\"stringValue\":\"{dto.StringValue}\"}}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -51,8 +50,8 @@ public sealed class JsonServiceSerializerTests
 		var dto = ValueDto.Create(default(bool?));
 		var json = "{}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -60,7 +59,7 @@ public sealed class JsonServiceSerializerTests
 	{
 		var dto = ValueDto.Create(true);
 		var json = "{\"booleanValue\":true,\"missing\":false}";
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -68,7 +67,7 @@ public sealed class JsonServiceSerializerTests
 	{
 		var dto = ValueDto.Create(true);
 		var json = "{\"$ref\":\"xyzzy\",\"booleanValue\":true}";
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -83,8 +82,8 @@ public sealed class JsonServiceSerializerTests
 		});
 		var json = "{\"errorArrayValue\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
@@ -100,15 +99,15 @@ public sealed class JsonServiceSerializerTests
 
 		var json = "{\"errorMapValue\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
 
-		m_serializer.ToString(dto).Should().Be(json);
-		m_serializer.FromString<ValueDto>(json).Should().BeDto(dto);
+		Serializer.ToString(dto).Should().Be(json);
+		Serializer.FromString<ValueDto>(json).Should().BeDto(dto);
 	}
 
 	[Test]
 	public void RoundTripFromJObject()
 	{
 		var so1 = ServiceObject.Create(new JObject { ["foo"] = "bar" });
-		var so2 = m_serializer.FromString<ServiceObject>(m_serializer.ToString(so1));
+		var so2 = Serializer.FromString<ServiceObject>(Serializer.ToString(so1));
 		Assert.IsTrue(so1.IsEquivalentTo(so2));
 	}
 
@@ -116,9 +115,7 @@ public sealed class JsonServiceSerializerTests
 	public void RoundTripFromJsonObject()
 	{
 		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
-		var so2 = m_serializer.FromString<ServiceObject>(m_serializer.ToString(so1));
+		var so2 = Serializer.FromString<ServiceObject>(Serializer.ToString(so1));
 		Assert.IsTrue(so1.IsEquivalentTo(so2));
 	}
-
-	private readonly ServiceSerializer m_serializer;
 }

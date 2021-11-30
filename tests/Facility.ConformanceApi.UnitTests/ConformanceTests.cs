@@ -14,15 +14,14 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests
 {
-	[TestFixture(typeof(NewtonsoftJsonServiceSerializer))]
-	[TestFixture(typeof(SystemTextJsonServiceSerializer))]
-	public class ConformanceTests
+	[TestFixtureSource(nameof(ServiceSerializers))]
+	public class ConformanceTests : ServiceSerializerTestBase
 	{
-		public ConformanceTests(Type serializerType)
+		public ConformanceTests(ServiceSerializer serializer)
+			: base(serializer)
 		{
-			m_serializer = (ServiceSerializer) Activator.CreateInstance(serializerType)!;
-			m_tests = CreateTestProvider(m_serializer);
-			m_httpClient = CreateHttpClient(m_tests, m_serializer);
+			m_tests = CreateTestProvider(Serializer);
+			m_httpClient = CreateHttpClient(m_tests, Serializer);
 		}
 
 		[TestCaseSource(nameof(TestNames))]
@@ -30,7 +29,7 @@ namespace Facility.ConformanceApi.UnitTests
 		{
 			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient });
 			var test = m_tests.Single(x => x.Test == testName);
-			var result = await new ConformanceApiTester(m_tests, api, m_httpClient, m_serializer).RunTestAsync(test).ConfigureAwait(false);
+			var result = await new ConformanceApiTester(m_tests, api, m_httpClient, Serializer).RunTestAsync(test).ConfigureAwait(false);
 			if (result.Status != ConformanceTestStatus.Pass)
 				Assert.Fail(result.Message);
 		}
@@ -58,7 +57,6 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(ServiceSerializer.Default).Select(x => x.Test!).ToList();
 
-		private readonly ServiceSerializer m_serializer;
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 		private readonly HttpClient m_httpClient;
 	}
