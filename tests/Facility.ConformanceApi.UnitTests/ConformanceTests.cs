@@ -21,29 +21,30 @@ namespace Facility.ConformanceApi.UnitTests
 		public ConformanceTests(Type serializerType)
 		{
 			m_serializer = (ServiceSerializer) Activator.CreateInstance(serializerType)!;
-			m_httpClient = CreateHttpClient(m_serializer);
+			m_tests = CreateTestProvider(m_serializer);
+			m_httpClient = CreateHttpClient(m_tests, m_serializer);
 		}
 
 		[TestCaseSource(nameof(TestNames))]
 		public async Task RunTest(string testName)
 		{
 			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient });
-			var test = s_tests.Single(x => x.Test == testName);
-			var result = await new ConformanceApiTester(s_tests, api, m_httpClient, m_serializer).RunTestAsync(test).ConfigureAwait(false);
+			var test = m_tests.Single(x => x.Test == testName);
+			var result = await new ConformanceApiTester(m_tests, api, m_httpClient, m_serializer).RunTestAsync(test).ConfigureAwait(false);
 			if (result.Status != ConformanceTestStatus.Pass)
 				Assert.Fail(result.Message);
 		}
 
-		private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider()
+		private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider(ServiceSerializer serializer)
 		{
 			using var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")!);
-			return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
+			return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), serializer).Tests!;
 		}
 
-		private static HttpClient CreateHttpClient(ServiceSerializer serviceSerializer)
+		private static HttpClient CreateHttpClient(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer serviceSerializer)
 		{
 			var handler = new ConformanceApiHttpHandler(
-					service: new ConformanceApiService(s_tests, serviceSerializer),
+					service: new ConformanceApiService(tests, serviceSerializer),
 					settings: new ServiceHttpHandlerSettings())
 			{ InnerHandler = new NotFoundHttpHandler() };
 			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
@@ -55,11 +56,10 @@ namespace Facility.ConformanceApi.UnitTests
 				Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 		}
 
-		private static readonly IReadOnlyList<ConformanceTestInfo> s_tests = CreateTestProvider();
-
-		private static IReadOnlyList<string> TestNames => s_tests.Select(x => x.Test!).ToList();
+		private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(NewtonsoftJsonServiceSerializer.Instance).Select(x => x.Test!).ToList();
 
 		private readonly ServiceSerializer m_serializer;
+		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 		private readonly HttpClient m_httpClient;
 	}
 }
