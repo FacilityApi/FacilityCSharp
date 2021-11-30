@@ -12,6 +12,7 @@ service FacilityCore
 		message: string;
 
 		/// Advanced error details.
+		[csharp(name: DetailsObject)]
 		details: object;
 
 		/// The inner error.

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -16,7 +14,7 @@ namespace Facility.Core
 		{
 			var error = ServiceErrors.CreateInternalError(exception.Message);
 			var jException = new JObject { ["details"] = new JArray(exception.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable()) };
-			error.Details = new JObject { ["exception"] = jException };
+			error.DetailsObject = ServiceObject.Create(new JObject { ["exception"] = jException });
 			return error;
 		}
 	}

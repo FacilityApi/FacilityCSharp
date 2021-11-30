@@ -8,19 +8,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
+using Facility.Core;
 using Facility.Core.Http;
 using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests
 {
+	[TestFixture(typeof(NewtonsoftJsonServiceSerializer))]
 	public class ConformanceTests
 	{
+		public ConformanceTests(Type serializerType)
+		{
+			m_serializer = (ServiceSerializer) Activator.CreateInstance(serializerType)!;
+			m_httpClient = CreateHttpClient(m_serializer);
+		}
+
 		[TestCaseSource(nameof(TestNames))]
 		public async Task RunTest(string testName)
 		{
-			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = s_httpClient });
+			var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient });
 			var test = s_tests.Single(x => x.Test == testName);
-			var result = await new ConformanceApiTester(s_tests, api, s_httpClient).RunTestAsync(test).ConfigureAwait(false);
+			var result = await new ConformanceApiTester(s_tests, api, m_httpClient, m_serializer).RunTestAsync(test).ConfigureAwait(false);
 			if (result.Status != ConformanceTestStatus.Pass)
 				Assert.Fail(result.Message);
 		}
@@ -31,10 +39,10 @@ namespace Facility.ConformanceApi.UnitTests
 			return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
 		}
 
-		private static HttpClient CreateHttpClient()
+		private static HttpClient CreateHttpClient(ServiceSerializer serviceSerializer)
 		{
 			var handler = new ConformanceApiHttpHandler(
-					service: new ConformanceApiService(s_tests),
+					service: new ConformanceApiService(s_tests, serviceSerializer),
 					settings: new ServiceHttpHandlerSettings())
 			{ InnerHandler = new NotFoundHttpHandler() };
 			return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
@@ -50,6 +58,7 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static IReadOnlyList<string> TestNames => s_tests.Select(x => x.Test!).ToList();
 
-		private static readonly HttpClient s_httpClient = CreateHttpClient();
+		private readonly ServiceSerializer m_serializer;
+		private readonly HttpClient m_httpClient;
 	}
 }

@@ -28,6 +28,11 @@ namespace Facility.Core
 		public static bool AreEquivalentObjects(JObject? first, JObject? second) => JToken.DeepEquals(first, second);
 
 		/// <summary>
+		/// True if the objects are equivalent.
+		/// </summary>
+		public static bool AreEquivalentObjects(ServiceObject? first, ServiceObject? second) => first == second || first != null && first.IsEquivalentTo(second);
+
+		/// <summary>
 		/// True if the bytes are equivalent.
 		/// </summary>
 		public static bool AreEquivalentBytes(byte[]? first, byte[]? second)
@@ -161,6 +166,9 @@ namespace Facility.Core
 				if (typeof(ServiceResult).GetTypeInfo().IsAssignableFrom(typeInfo))
 					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceResultEquivalenceComparer<>).MakeGenericType(type))!;
 
+				if (type == typeof(ServiceObject))
+					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(ServiceObjectEquivalenceComparer))!;
+
 				if (type == typeof(JObject))
 					return (IEqualityComparer<T>) Activator.CreateInstance(typeof(JObjectEquivalenceComparer))!;
 
@@ -202,6 +210,11 @@ namespace Facility.Core
 			where T : ServiceResult
 		{
 			public override bool Equals(T? x, T? y) => AreEquivalentResults(x, y);
+		}
+
+		private sealed class ServiceObjectEquivalenceComparer : NoHashCodeEqualityComparer<ServiceObject>
+		{
+			public override bool Equals(ServiceObject? x, ServiceObject? y) => AreEquivalentObjects(x, y);
 		}
 
 		private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>

@@ -1,4 +1,4 @@
-using Newtonsoft.Json.Linq;
+using Facility.Core;
 
 namespace Facility.ConformanceApi.Testing
 {
@@ -20,17 +20,17 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// The API request being sent.
 		/// </summary>
-		public JObject? Request { get; set; }
+		public ServiceObject? Request { get; set; }
 
 		/// <summary>
 		/// The API response being received, if the method should succeed.
 		/// </summary>
-		public JObject? Response { get; set; }
+		public ServiceObject? Response { get; set; }
 
 		/// <summary>
 		/// The API error being received, if the method should fail.
 		/// </summary>
-		public JObject? Error { get; set; }
+		public ServiceObject? Error { get; set; }
 
 		/// <summary>
 		/// A raw HTTP request.

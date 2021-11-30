@@ -26,11 +26,11 @@ namespace Facility.Core.UnitTests
 
 			full.IsEquivalentTo(null).Should().BeFalse();
 			full.IsEquivalentTo(empty).Should().BeFalse();
-			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code, s_error.Message) { Details = s_error.Details, InnerError = s_error.InnerError }).Should().BeTrue();
+			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code, s_error.Message) { DetailsObject = s_error.DetailsObject, InnerError = s_error.InnerError }).Should().BeTrue();
 			full.IsEquivalentTo(full).Should().BeTrue();
 			full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 		}
 
-		private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { Details = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
+		private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { DetailsObject = ServiceObject.Create(new JObject { ["Some"] = "details." }), InnerError = new ServiceErrorDto("Inner") };
 	}
 }

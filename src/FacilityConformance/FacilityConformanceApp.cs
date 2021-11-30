@@ -183,7 +183,7 @@ namespace FacilityConformance
 			var httpRequest = httpContext.Request;
 			var requestUrl = httpRequest.GetEncodedUrl();
 
-			var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests));
+			var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests, NewtonsoftJsonServiceSerializer.Instance));
 
 			var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 			{

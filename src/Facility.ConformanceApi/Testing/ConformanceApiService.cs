@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Facility.Core;
-using Newtonsoft.Json.Linq;
 
 namespace Facility.ConformanceApi.Testing
 {
@@ -16,9 +10,19 @@ namespace Facility.ConformanceApi.Testing
 		/// <summary>
 		/// Creates a service for the specified test.
 		/// </summary>
+		[Obsolete("Use constructor with ServiceSerializer.")]
 		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
+			: this(tests, serializer: NewtonsoftJsonServiceSerializer.Instance)
+		{
+		}
+
+		/// <summary>
+		/// Creates a service for the specified test.
+		/// </summary>
+		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer serializer)
 		{
 			m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
+			m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 		}
 
 		/// <inheritdoc />
@@ -91,30 +95,30 @@ namespace Facility.ConformanceApi.Testing
 			if (testsWithMethodName.Count == 0)
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"No tests found for method {methodName}."));
 
-			var actualRequest = (JObject) ServiceJsonUtility.ToJToken(request);
-			var testsWithMatchingRequest = testsWithMethodName.Where(x => JToken.DeepEquals(x.Request, actualRequest)).ToList();
+			var actualRequest = m_serializer.ToServiceObject(request);
+			var testsWithMatchingRequest = testsWithMethodName.Where(x => ServiceObjectUtility.DeepEquals(x.Request, actualRequest)).ToList();
 			if (testsWithMatchingRequest.Count != 1)
 			{
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(
 					$"{testsWithMatchingRequest.Count} of {testsWithMethodName.Count} tests for method {methodName} matched request: " +
-					$"{ServiceJsonUtility.ToJson(actualRequest)} ({string.Join(", ", testsWithMethodName.Select(x => ServiceJsonUtility.ToJson(x.Request)))})"));
+					$"{m_serializer.ToString(actualRequest)} ({string.Join(", ", testsWithMethodName.Select(x => m_serializer.ToString(x.Request)))})"));
 			}
 			var testInfo = testsWithMatchingRequest[0];
 
 			if (testInfo.Error != null)
 			{
-				var error = ServiceJsonUtility.FromJToken<ServiceErrorDto>(testInfo.Error);
-				var errorRoundTrip = ServiceJsonUtility.ToJToken(error);
-				if (!JToken.DeepEquals(testInfo.Error, errorRoundTrip))
-					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Error round trip failed for test {testInfo.Test}. expected={ServiceJsonUtility.ToJson(testInfo.Error)} actual={ServiceJsonUtility.ToJson(errorRoundTrip)}"));
+				var error = m_serializer.FromServiceObject<ServiceErrorDto>(testInfo.Error);
+				var errorRoundTrip = m_serializer.ToServiceObject(error);
+				if (!ServiceObjectUtility.DeepEquals(testInfo.Error, errorRoundTrip))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Error round trip failed for test {testInfo.Test}. expected={m_serializer.ToString(testInfo.Error)} actual={m_serializer.ToString(errorRoundTrip)}"));
 				return ServiceResult.Failure(error);
 			}
 			else
 			{
-				var response = ServiceJsonUtility.FromJToken<T>(testInfo.Response);
-				var responseRoundTrip = ServiceJsonUtility.ToJToken(response);
-				if (!JToken.DeepEquals(testInfo.Response, responseRoundTrip))
-					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={ServiceJsonUtility.ToJson(testInfo.Response)} actual={ServiceJsonUtility.ToJson(responseRoundTrip)}"));
+				var response = m_serializer.FromServiceObject<T>(testInfo.Response!);
+				var responseRoundTrip = m_serializer.ToServiceObject(response);
+				if (!ServiceObjectUtility.DeepEquals(testInfo.Response, responseRoundTrip))
+					return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={m_serializer.ToString(testInfo.Response)} actual={m_serializer.ToString(responseRoundTrip)}"));
 				return ServiceResult.Success(response);
 			}
 		}
@@ -122,5 +126,6 @@ namespace Facility.ConformanceApi.Testing
 		private static string Uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
+		private readonly ServiceSerializer m_serializer;
 	}
 }

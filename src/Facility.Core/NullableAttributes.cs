@@ -19,6 +19,17 @@ namespace System.Diagnostics.CodeAnalysis
 	internal sealed class NotNullAttribute : Attribute
 	{
 	}
+
+	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true)]
+	internal sealed class NotNullIfNotNullAttribute : Attribute
+	{
+		public NotNullIfNotNullAttribute(string parameterName)
+		{
+			ParameterName = parameterName;
+		}
+
+		public string ParameterName { get; }
+	}
 }
 
 #endif

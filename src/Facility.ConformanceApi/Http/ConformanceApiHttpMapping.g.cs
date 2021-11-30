@@ -9,7 +9,6 @@ using System.Net;
 using System.Net.Http;
 using Facility.Core;
 using Facility.Core.Http;
-using Newtonsoft.Json.Linq;
 
 #pragma warning disable 612, 618 // member is obsolete
 
@@ -524,10 +523,10 @@ namespace Facility.ConformanceApi.Http
 					new HttpResponseMapping<MixedResponseDto>.Builder
 					{
 						StatusCode = (HttpStatusCode) 202,
-						ResponseBodyType = typeof(JObject),
+						ResponseBodyType = typeof(ServiceObject),
 						MatchesResponse = response => response.Body != null,
 						GetResponseBody = response => response.Body,
-						CreateResponse = body => new MixedResponseDto { Body = (JObject?) body },
+						CreateResponse = body => new MixedResponseDto { Body = (ServiceObject?) body },
 					}.Build(),
 					new HttpResponseMapping<MixedResponseDto>.Builder
 					{

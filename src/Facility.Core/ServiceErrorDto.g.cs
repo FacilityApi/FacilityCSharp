@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
 {
@@ -35,7 +34,8 @@ namespace Facility.Core
 		/// <summary>
 		/// Advanced error details.
 		/// </summary>
-		public JObject? Details { get; set; }
+		[JsonProperty("details")]
+		public ServiceObject? DetailsObject { get; set; }
 
 		/// <summary>
 		/// The inner error.
@@ -50,7 +50,7 @@ namespace Facility.Core
 			return other != null &&
 				Code == other.Code &&
 				Message == other.Message &&
-				ServiceDataUtility.AreEquivalentObjects(Details, other.Details) &&
+				ServiceDataUtility.AreEquivalentObjects(DetailsObject, other.DetailsObject) &&
 				ServiceDataUtility.AreEquivalentDtos(InnerError, other.InnerError);
 		}
 	}

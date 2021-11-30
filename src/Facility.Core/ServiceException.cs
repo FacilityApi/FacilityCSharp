@@ -59,8 +59,8 @@ namespace Facility.Core
 			if (error.Code != null)
 				text += " (" + error.Code + ")";
 
-			if (error.Details != null)
-				text += Environment.NewLine + indent + "  Details: " + error.Details;
+			if (error.DetailsObject != null)
+				text += Environment.NewLine + indent + "  Details: " + error.DetailsObject;
 
 			if (error.InnerError != null)
 				text += Environment.NewLine + indent + "  InnerError: " + GetErrorString(error.InnerError, indent + "  ");

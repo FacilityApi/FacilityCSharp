@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using Facility.Core;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Facility.ConformanceApi
 {
@@ -27,7 +26,7 @@ namespace Facility.ConformanceApi
 
 		public string? Normal { get; set; }
 
-		public JObject? Body { get; set; }
+		public ServiceObject? Body { get; set; }
 
 		public bool? Empty { get; set; }
 

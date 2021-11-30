@@ -1,3 +1,6 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Facility.Core
 {
 	/// <summary>
@@ -20,6 +23,14 @@ namespace Facility.Core
 		{
 			Code = code;
 			Message = message;
+		}
+
+		[Obsolete("Use DetailsObject.")]
+		[JsonIgnore]
+		public JObject? Details
+		{
+			get => DetailsObject?.AsJObject();
+			set => DetailsObject = ServiceObject.Create(value);
 		}
 	}
 }
