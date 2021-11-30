@@ -5,8 +5,14 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests
 {
-	public class ServiceDtoTests
+	[TestFixtureSource(nameof(ServiceSerializers))]
+	public class ServiceDtoTests : ServiceSerializerTestBase
 	{
+		public ServiceDtoTests(ServiceSerializer serializer)
+			: base(serializer)
+		{
+		}
+
 		[Test]
 		public void ToStringUsesJson()
 		{
@@ -37,7 +43,7 @@ namespace Facility.Core.UnitTests
 		public void BasicCloning()
 		{
 			var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-			var second = ServiceDataUtility.Clone(first);
+			var second = ServiceDataUtility.Clone(first, Serializer);
 			first.IsEquivalentTo(second).Should().Be(true);
 			second.Id += 1;
 			first.IsEquivalentTo(second).Should().Be(false);
