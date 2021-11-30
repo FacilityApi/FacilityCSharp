@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,18 +11,23 @@ namespace Facility.Core
 
 		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 		{
+			if (typeToConvert == typeof(ServiceResultFailure))
+				return new ServiceResultSystemTextJsonConverter<ServiceResultFailure>();
+			if (typeToConvert == typeof(ServiceResult))
+				return new ServiceResultSystemTextJsonConverter<ServiceResult>();
 			var valueType = typeToConvert.GetGenericArguments()[0];
-			return (JsonConverter) Activator.CreateInstance(typeof(ServiceResultSystemTextJsonConverter<>).MakeGenericType(valueType))!;
+			return (JsonConverter) Activator.CreateInstance(typeof(ServiceResultSystemTextJsonConverter<>).MakeGenericType(typeof(ServiceResult<>).MakeGenericType(valueType)))!;
 		}
 	}
 
-#pragma warning disable SA1402
-	public sealed class ServiceResultSystemTextJsonConverter<T> : JsonConverter<ServiceResult<T>>
+	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
+	public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonConverter<TServiceResult>
+		where TServiceResult : ServiceResult
 	{
 		/// <summary>
 		/// Reads the JSON representation of the object.
 		/// </summary>
-		public override ServiceResult<T>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override TServiceResult? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Null)
 				return null;
@@ -62,26 +66,24 @@ namespace Facility.Core
 
 			if (valueType == null)
 			{
-				// TODO
-				// return error != null ? ServiceResult.Failure(error) : ServiceResult.Success();
-				throw new NotImplementedException();
+				return (TServiceResult) (error != null ? ServiceResult.Failure(error) : ServiceResult.Success());
 			}
 			if (error != null)
 			{
-				return (ServiceResult<T>) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), Array.Empty<object>())!;
+				return (TServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), Array.Empty<object>())!;
 			}
 			else
 			{
 				if (value == null && valueType.GetTypeInfo().IsValueType)
 					value = Activator.CreateInstance(valueType);
-				return (ServiceResult<T>) s_genericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
+				return (TServiceResult) s_genericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
 			}
 		}
 
 		/// <summary>
 		/// Writes the JSON representation of the object.
 		/// </summary>
-		public override void Write(Utf8JsonWriter writer, ServiceResult<T> value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, TServiceResult value, JsonSerializerOptions options)
 		{
 			var valueType = value.InternalValueType;
 
