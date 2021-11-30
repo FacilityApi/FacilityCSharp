@@ -56,7 +56,7 @@ namespace Facility.ConformanceApi.UnitTests
 				Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 		}
 
-		private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(NewtonsoftJsonServiceSerializer.Instance).Select(x => x.Test!).ToList();
+		private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(ServiceSerializer.Default).Select(x => x.Test!).ToList();
 
 		private readonly ServiceSerializer m_serializer;
 		private readonly IReadOnlyList<ConformanceTestInfo> m_tests;

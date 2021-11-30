@@ -28,7 +28,7 @@ namespace Facility.Core.Http
 		{
 			m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 			m_memoryStreamCreator = settings?.MemoryStreamCreator;
-			m_serializer = settings?.Serializer ?? NewtonsoftJsonServiceSerializer.Instance;
+			m_serializer = settings?.Serializer ?? ServiceSerializer.Default;
 
 			SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 		}

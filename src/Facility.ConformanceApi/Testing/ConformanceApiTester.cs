@@ -25,7 +25,7 @@ namespace Facility.ConformanceApi.Testing
 		/// <param name="api">The API interface to test.</param>
 		/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
 		public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
-			: this(tests, api, httpClient, serializer: NewtonsoftJsonServiceSerializer.Instance)
+			: this(tests, api, httpClient, serializer: ServiceSerializer.Default)
 		{
 		}
 

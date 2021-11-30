@@ -14,7 +14,7 @@ public sealed class ServiceObject
 	[return: NotNullIfNotNull("jsonObject")]
 	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
-	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromString<JObject>(ToJsonString())!;
+	public JObject AsJObject() => m_jObject ?? ServiceSerializer.Default.FromString<JObject>(ToJsonString())!;
 
 	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromString<JsonObject>(ToJsonString())!;
 
@@ -36,7 +36,7 @@ public sealed class ServiceObject
 	}
 
 	private string ToJsonString() =>
-		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToString(jObject) :
+		m_jObject is { } jObject ? ServiceSerializer.Default.ToString(jObject) :
 		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToString(jsonObject) :
 		throw new InvalidOperationException();
 

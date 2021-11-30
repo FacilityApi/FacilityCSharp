@@ -8,6 +8,11 @@ namespace Facility.Core;
 public abstract class ServiceSerializer
 {
 	/// <summary>
+	/// The default serializer, <see cref="NewtonsoftJsonServiceSerializer"/>.
+	/// </summary>
+	public static ServiceSerializer Default => NewtonsoftJsonServiceSerializer.Instance;
+
+	/// <summary>
 	/// Serializes a value to the serialization format.
 	/// </summary>
 	public abstract string ToString(object? value);
