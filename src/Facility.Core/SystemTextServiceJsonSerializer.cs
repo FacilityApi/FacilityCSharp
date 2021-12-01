@@ -83,9 +83,5 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new(JsonSerializerDefaults.Web)
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-		Converters =
-		{
-			new ServiceResultSystemTextJsonConverter(),
-		},
 	};
 }

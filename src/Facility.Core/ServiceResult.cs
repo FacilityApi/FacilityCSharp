@@ -242,6 +242,7 @@ namespace Facility.Core
 	/// A service result value or error.
 	/// </summary>
 	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
+	[System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
 	public sealed class ServiceResult<T> : ServiceResult
 	{
 		/// <summary>
@@ -328,6 +329,7 @@ namespace Facility.Core
 	/// A failed service result.
 	/// </summary>
 	[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
+	[System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
 	public sealed class ServiceResultFailure : ServiceResult
 	{
 		internal ServiceResultFailure(ServiceErrorDto error)
