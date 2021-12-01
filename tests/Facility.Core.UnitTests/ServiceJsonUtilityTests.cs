@@ -4,6 +4,8 @@ using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
+#pragma warning disable 618 // obsolete
+
 namespace Facility.Core.UnitTests
 {
 	public sealed class ServiceJsonUtilityTests

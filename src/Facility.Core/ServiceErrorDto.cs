@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core
@@ -26,7 +25,8 @@ namespace Facility.Core
 		}
 
 		[Obsolete("Use DetailsObject.")]
-		[JsonIgnore]
+		[Newtonsoft.Json.JsonIgnore]
+		[System.Text.Json.Serialization.JsonIgnore]
 		public JObject? Details
 		{
 			get => DetailsObject?.AsJObject();

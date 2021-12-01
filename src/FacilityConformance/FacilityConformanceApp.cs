@@ -56,7 +56,7 @@ namespace FacilityConformance
 			using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")!))
 				m_testsJson = testsJsonReader.ReadToEnd();
 
-			m_tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests!;
+			m_tests = ConformanceTestsInfo.FromJson(m_testsJson, ServiceSerializer.Default).Tests!;
 		}
 
 		public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -183,7 +183,7 @@ namespace FacilityConformance
 			var httpRequest = httpContext.Request;
 			var requestUrl = httpRequest.GetEncodedUrl();
 
-			var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests, NewtonsoftJsonServiceSerializer.Instance));
+			var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests, ServiceSerializer.Default));
 
 			var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 			{

@@ -13,8 +13,14 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests
 {
-	public sealed class DtoValidationTests
+	[TestFixtureSource(nameof(ServiceSerializers))]
+	public sealed class DtoValidationTests : ServiceSerializerTestBase
 	{
+		public DtoValidationTests(ServiceSerializer serializer)
+			: base(serializer)
+		{
+		}
+
 		[Test]
 		public void RequiredRequestFieldsSpecified()
 		{
@@ -308,9 +314,9 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private static WidgetDto CreateWidget() => new WidgetDto { Name = "name" };
 
-		private static HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
+		private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 		{
-			var service = new FakeConformanceApiService(requiredResponse: requiredResponse);
+			var service = new FakeConformanceApiService(Serializer, requiredResponse: requiredResponse);
 			var settings = new ServiceHttpHandlerSettings
 			{
 				SkipRequestValidation = skipServerValidation,
@@ -328,22 +334,24 @@ namespace Facility.ConformanceApi.UnitTests
 
 		private sealed class FakeConformanceApiService : DelegatingConformanceApi
 		{
-			public FakeConformanceApiService(RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
+			public FakeConformanceApiService(ServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
 				: base(ServiceDelegators.NotImplemented)
 			{
+				m_serializer = serializer;
 				m_requiredResponse = requiredResponse ?? CreateRequiredResponse();
 				m_widgetResponse = widgetResponse ?? CreateWidget();
 			}
 
 			public override async Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken = default) =>
-				ServiceResult.Success(new GetWidgetResponseDto { Widget = ServiceDataUtility.Clone(m_widgetResponse) });
+				ServiceResult.Success(new GetWidgetResponseDto { Widget = ServiceDataUtility.Clone(m_widgetResponse, m_serializer) });
 
 			public override async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
 				ServiceResult.Success(new GetWidgetBatchResponseDto { Results = Array.Empty<ServiceResult<WidgetDto>>() });
 
 			public override async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
-				ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse));
+				ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse, m_serializer));
 
+			private readonly ServiceSerializer m_serializer;
 			private readonly RequiredResponseDto m_requiredResponse;
 			private readonly WidgetDto m_widgetResponse;
 		}

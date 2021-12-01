@@ -1,23 +1,45 @@
 using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
+using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 
 namespace Facility.Core;
 
-[JsonConverter(typeof(ServiceObjectNewtonsoftJsonConverter))]
+[Newtonsoft.Json.JsonConverter(typeof(ServiceObjectNewtonsoftJsonConverter))]
+[System.Text.Json.Serialization.JsonConverter(typeof(ServiceObjectSystemTextJsonConverter))]
 public sealed class ServiceObject
 {
 	[return: NotNullIfNotNull("jObject")]
 	public static ServiceObject? Create(JObject? jObject) => jObject is null ? null : new(jObject);
 
-	public JObject AsJObject() => m_jObject;
+	[return: NotNullIfNotNull("jsonObject")]
+	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
-	public bool IsEquivalentTo(ServiceObject? other) => other is not null && JToken.DeepEquals(AsJObject(), other.AsJObject());
+	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromString<JObject>(ToString())!;
+
+	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromString<JsonObject>(ToString())!;
+
+	public bool IsEquivalentTo(ServiceObject? other) => other is not null &&
+		(
+			m_jObject is { } jObject ? JToken.DeepEquals(jObject, other.AsJObject()) :
+			m_jsonObject is { } jsonObject ? SystemTextJsonUtility.DeepEquals(jsonObject, other.AsJsonObject()) :
+			throw new InvalidOperationException()
+		);
+
+	public override string ToString() =>
+		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToString(jObject) :
+		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToString(jsonObject) :
+		"";
 
 	private ServiceObject(JObject jObject)
 	{
 		m_jObject = jObject;
 	}
 
-	private readonly JObject m_jObject;
+	private ServiceObject(JsonObject jsonObject)
+	{
+		m_jsonObject = jsonObject;
+	}
+
+	private readonly JObject? m_jObject;
+	private readonly JsonObject? m_jsonObject;
 }

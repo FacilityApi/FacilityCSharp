@@ -162,7 +162,6 @@ namespace Facility.CodeGen.CSharp
 					"System.Collections.Generic",
 					"System.Collections.ObjectModel",
 					"Facility.Core",
-					"Newtonsoft.Json",
 				};
 				CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
@@ -179,7 +178,8 @@ namespace Facility.CodeGen.CSharp
 					CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 					CSharpUtility.WriteObsoleteAttribute(code, enumInfo);
 
-					code.WriteLine($"[JsonConverter(typeof({enumName}JsonConverter))]");
+					code.WriteLine($"[Newtonsoft.Json.JsonConverter(typeof({enumName}JsonConverter))]");
+					code.WriteLine($"[System.Text.Json.Serialization.JsonConverter(typeof({enumName}SystemTextJsonConverter))]");
 					code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 					using (code.Block())
 					{
@@ -245,13 +245,21 @@ namespace Facility.CodeGen.CSharp
 							}
 						}
 
-						code.WriteLine();
-						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
-						code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
-						using (code.Block())
+						foreach (var serializer in s_serializers)
 						{
-							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
-							code.WriteLine($"protected override {enumName} CreateCore(string value) => new {enumName}(value);");
+							code.WriteLine();
+							CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
+							if (serializer is ServiceSerializerKind.NewtonsoftJson)
+								code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
+							else if (serializer is ServiceSerializerKind.SystemTextJson)
+								code.WriteLine($"public sealed class {enumName}SystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<{enumName}>");
+							else
+								throw new InvalidOperationException($"Unsupported serializer: {serializer}");
+							using (code.Block())
+							{
+								CSharpUtility.WriteSummary(code, "Creates the value from a string.");
+								code.WriteLine($"protected override {enumName} CreateCore(string value) => new {enumName}(value);");
+							}
 						}
 
 						code.WriteLine();
@@ -314,7 +322,6 @@ namespace Facility.CodeGen.CSharp
 					"System",
 					"System.Collections.Generic",
 					"Facility.Core",
-					"Newtonsoft.Json",
 				};
 
 				var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
@@ -1221,7 +1228,10 @@ namespace Facility.CodeGen.CSharp
 				CSharpUtility.WriteSummary(code, fieldInfo.Summary);
 				CSharpUtility.WriteObsoleteAttribute(code, fieldInfo);
 				if (propertyName != normalPropertyName)
-					code.WriteLine($"[JsonProperty(\"{fieldInfo.Name}\")]");
+				{
+					code.WriteLine($"[Newtonsoft.Json.JsonProperty(\"{fieldInfo.Name}\")]");
+					code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{fieldInfo.Name}\")]");
+				}
 				code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
 			}
 		}
@@ -1463,5 +1473,7 @@ namespace Facility.CodeGen.CSharp
 			private readonly CSharpServiceInfo m_csharpServiceInfo;
 			private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 		}
+
+		private static readonly IReadOnlyCollection<ServiceSerializerKind> s_serializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
 	}
 }

@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="ArgsReading" Version="2.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>

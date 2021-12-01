@@ -12,7 +12,7 @@ namespace Facility.ConformanceApi.Testing
 		/// </summary>
 		[Obsolete("Use constructor with ServiceSerializer.")]
 		public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
-			: this(tests, serializer: NewtonsoftJsonServiceSerializer.Instance)
+			: this(tests, serializer: ServiceSerializer.Default)
 		{
 		}
 

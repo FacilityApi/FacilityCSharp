@@ -11,6 +11,7 @@ namespace Facility.Core
 	/// <summary>
 	/// Helper methods for working with JSON.
 	/// </summary>
+	[Obsolete("Use ServiceSerializer")]
 	public static class ServiceJsonUtility
 	{
 		/// <summary>

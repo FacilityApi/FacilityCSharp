@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -111,7 +112,14 @@ namespace Facility.Core
 		/// <summary>
 		/// Clones the data element.
 		/// </summary>
-		public static T Clone<T>(T value) => value is null ? default! : ServiceJsonUtility.FromJson<T>(ServiceJsonUtility.ToJson(value));
+		[Obsolete("Use the overload with ServiceSerializer.")]
+		public static T Clone<T>(T value) => Clone(value, ServiceSerializer.Default);
+
+		/// <summary>
+		/// Clones the data element.
+		/// </summary>
+		[return: NotNullIfNotNull("value")]
+		public static T Clone<T>(T value, ServiceSerializer serializer) => value is null ? default! : serializer.FromString<T>(serializer.ToString(value))!;
 
 		/// <summary>
 		/// Attempts to parse a Boolean.
