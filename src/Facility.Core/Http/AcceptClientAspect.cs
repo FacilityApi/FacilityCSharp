@@ -1,37 +1,36 @@
 using System.Net.Http.Headers;
 
-namespace Facility.Core.Http
+namespace Facility.Core.Http;
+
+/// <summary>
+/// Sets the Accept header of the request.
+/// </summary>
+[Obsolete("Use CommonClientAspects.RequestAccept.")]
+public sealed class AcceptClientAspect : HttpClientServiceAspect
 {
 	/// <summary>
-	/// Sets the Accept header of the request.
+	/// Creates an aspect that sets the Accept header to the specified string.
 	/// </summary>
-	[Obsolete("Use CommonClientAspects.RequestAccept.")]
-	public sealed class AcceptClientAspect : HttpClientServiceAspect
+	public static HttpClientServiceAspect Create(string acceptHeader)
 	{
-		/// <summary>
-		/// Creates an aspect that sets the Accept header to the specified string.
-		/// </summary>
-		public static HttpClientServiceAspect Create(string acceptHeader)
-		{
-			return new AcceptClientAspect(acceptHeader);
-		}
-
-		/// <summary>
-		/// Called right before the request is sent.
-		/// </summary>
-		protected override Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
-		{
-			if (m_acceptHeader != null)
-				httpRequest.Headers.Accept.Add(m_acceptHeader);
-			return Task.CompletedTask;
-		}
-
-		private AcceptClientAspect(string acceptHeader)
-		{
-			if (!string.IsNullOrWhiteSpace(acceptHeader))
-				m_acceptHeader = MediaTypeWithQualityHeaderValue.Parse(acceptHeader);
-		}
-
-		private readonly MediaTypeWithQualityHeaderValue? m_acceptHeader;
+		return new AcceptClientAspect(acceptHeader);
 	}
+
+	/// <summary>
+	/// Called right before the request is sent.
+	/// </summary>
+	protected override Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
+	{
+		if (m_acceptHeader != null)
+			httpRequest.Headers.Accept.Add(m_acceptHeader);
+		return Task.CompletedTask;
+	}
+
+	private AcceptClientAspect(string acceptHeader)
+	{
+		if (!string.IsNullOrWhiteSpace(acceptHeader))
+			m_acceptHeader = MediaTypeWithQualityHeaderValue.Parse(acceptHeader);
+	}
+
+	private readonly MediaTypeWithQualityHeaderValue? m_acceptHeader;
 }

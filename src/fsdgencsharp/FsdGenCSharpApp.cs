@@ -3,32 +3,31 @@ using Facility.CodeGen.Console;
 using Facility.CodeGen.CSharp;
 using Facility.Definition.CodeGen;
 
-namespace fsdgencsharp
+namespace fsdgencsharp;
+
+public sealed class FsdGenCSharpApp : CodeGeneratorApp
 {
-	public sealed class FsdGenCSharpApp : CodeGeneratorApp
+	public static int Main(string[] args) => new FsdGenCSharpApp().Run(args);
+
+	protected override IReadOnlyList<string> Description => new[]
 	{
-		public static int Main(string[] args) => new FsdGenCSharpApp().Run(args);
+		"Generates C# for a Facility Service Definition.",
+	};
 
-		protected override IReadOnlyList<string> Description => new[]
+	protected override IReadOnlyList<string> ExtraUsage => new[]
+	{
+		"   --namespace <name>",
+		"      The namespace used by the generated C#.",
+		"   --nullable",
+		"      Use nullable reference syntax in the generated C#.",
+	};
+
+	protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
+
+	protected override FileGeneratorSettings CreateSettings(ArgsReader args) =>
+		new CSharpGeneratorSettings
 		{
-			"Generates C# for a Facility Service Definition.",
+			NamespaceName = args.ReadOption("namespace"),
+			UseNullableReferences = args.ReadFlag("nullable"),
 		};
-
-		protected override IReadOnlyList<string> ExtraUsage => new[]
-		{
-			"   --namespace <name>",
-			"      The namespace used by the generated C#.",
-			"   --nullable",
-			"      Use nullable reference syntax in the generated C#.",
-		};
-
-		protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
-
-		protected override FileGeneratorSettings CreateSettings(ArgsReader args) =>
-			new CSharpGeneratorSettings
-			{
-				NamespaceName = args.ReadOption("namespace"),
-				UseNullableReferences = args.ReadFlag("nullable"),
-			};
-	}
 }

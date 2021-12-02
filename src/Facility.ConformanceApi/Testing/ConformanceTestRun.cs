@@ -1,21 +1,20 @@
-namespace Facility.ConformanceApi.Testing
+namespace Facility.ConformanceApi.Testing;
+
+/// <summary>
+/// The results of a test run.
+/// </summary>
+public sealed class ConformanceTestRun
 {
 	/// <summary>
-	/// The results of a test run.
+	/// Creates a test run from results.
 	/// </summary>
-	public sealed class ConformanceTestRun
+	public ConformanceTestRun(IReadOnlyList<ConformanceTestResult> results)
 	{
-		/// <summary>
-		/// Creates a test run from results.
-		/// </summary>
-		public ConformanceTestRun(IReadOnlyList<ConformanceTestResult> results)
-		{
-			Results = results;
-		}
-
-		/// <summary>
-		/// The test results.
-		/// </summary>
-		public IReadOnlyList<ConformanceTestResult> Results { get; }
+		Results = results;
 	}
+
+	/// <summary>
+	/// The test results.
+	/// </summary>
+	public IReadOnlyList<ConformanceTestResult> Results { get; }
 }

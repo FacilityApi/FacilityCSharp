@@ -1,18 +1,17 @@
-namespace Facility.ConformanceApi.Testing
+namespace Facility.ConformanceApi.Testing;
+
+/// <summary>
+/// The test status.
+/// </summary>
+public enum ConformanceTestStatus
 {
 	/// <summary>
-	/// The test status.
+	/// The test failed.
 	/// </summary>
-	public enum ConformanceTestStatus
-	{
-		/// <summary>
-		/// The test failed.
-		/// </summary>
-		Fail,
+	Fail,
 
-		/// <summary>
-		/// The test passed.
-		/// </summary>
-		Pass,
-	}
+	/// <summary>
+	/// The test passed.
+	/// </summary>
+	Pass,
 }
