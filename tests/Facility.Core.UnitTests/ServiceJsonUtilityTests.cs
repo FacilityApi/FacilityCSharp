@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;

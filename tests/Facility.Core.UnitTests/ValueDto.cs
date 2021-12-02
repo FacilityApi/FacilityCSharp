@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Facility.Core.UnitTests
 {
 	public sealed class ValueDto : ServiceDto<ValueDto>

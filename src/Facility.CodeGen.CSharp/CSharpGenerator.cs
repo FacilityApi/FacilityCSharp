@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net.Http;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Http;

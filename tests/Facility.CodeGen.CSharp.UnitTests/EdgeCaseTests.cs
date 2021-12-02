@@ -1,4 +1,3 @@
-using System.IO;
 using Facility.Definition;
 using Facility.Definition.Fsd;
 using NUnit.Framework;

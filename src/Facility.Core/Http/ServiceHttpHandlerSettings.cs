@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Facility.Core.Http
 {
 	/// <summary>

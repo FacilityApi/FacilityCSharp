@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Facility.Core;
 using Facility.Core.Assertions;
 using FluentAssertions;

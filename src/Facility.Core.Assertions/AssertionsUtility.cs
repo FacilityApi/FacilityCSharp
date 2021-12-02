@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using FluentAssertions.Collections;
 
 namespace Facility.Core.Assertions

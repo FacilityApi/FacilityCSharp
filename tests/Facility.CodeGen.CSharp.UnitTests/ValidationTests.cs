@@ -1,4 +1,3 @@
-using System.Linq;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
