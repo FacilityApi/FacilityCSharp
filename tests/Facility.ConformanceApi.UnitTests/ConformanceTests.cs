@@ -23,7 +23,7 @@ public class ConformanceTests : ServiceSerializerTestBase
 		var settings = new ConformanceApiTesterSettings
 		{
 			Tests = m_tests,
-			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ContentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = Serializer }) }),
+			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ServiceSerializer = Serializer }),
 			ServiceSerializer = Serializer,
 			HttpClient = m_httpClient,
 		};
@@ -43,7 +43,7 @@ public class ConformanceTests : ServiceSerializerTestBase
 	{
 		var handler = new ConformanceApiHttpHandler(
 				service: new ConformanceApiService(tests, serviceSerializer),
-				settings: new ServiceHttpHandlerSettings { ContentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = serviceSerializer })})
+				settings: new ServiceHttpHandlerSettings { ServiceSerializer = serviceSerializer })
 			{ InnerHandler = new NotFoundHttpHandler() };
 		return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 	}

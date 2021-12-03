@@ -97,7 +97,6 @@ public sealed class FacilityConformanceApp
 				new HttpClientServiceSettings
 				{
 					BaseUri = baseUri,
-					ContentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = serializer }),
 				});
 
 			var tester = new ConformanceApiTester(
@@ -200,8 +199,7 @@ public sealed class FacilityConformanceApp
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = serializer });
-		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = contentSerializer });
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ServiceSerializer = serializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{
@@ -234,7 +232,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = contentSerializer.CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = new JsonHttpContentSerializer(serializer).CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)

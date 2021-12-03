@@ -20,7 +20,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the service.
 		/// </summary>
 		public HttpClientConformanceApi(HttpClientServiceSettings? settings = null)
-			: base(settings, defaultBaseUri: null)
+			: base(settings, defaultBaseUri: null, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 		}
 

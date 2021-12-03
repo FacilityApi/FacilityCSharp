@@ -17,18 +17,27 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 	/// <summary>
 	/// Creates an instance.
 	/// </summary>
-	protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
+	protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings, ServiceSerializer defaultSerializer)
 	{
 		settings ??= new ServiceHttpHandlerSettings();
 
 		m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 		m_synchronous = settings.Synchronous;
-		m_contentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+		m_contentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.ServiceSerializer ?? defaultSerializer);
 		m_bytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		m_textSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 		m_aspects = settings.Aspects;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
+	}
+
+	/// <summary>
+	/// Creates an instance.
+	/// </summary>
+	[Obsolete("Regenerate code to use the constructor with the serializer.")]
+	protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
+		: this(settings, ServiceSerializer.Legacy)
+	{
 	}
 
 	/// <summary>

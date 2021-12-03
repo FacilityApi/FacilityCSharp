@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core;
 using Facility.Core.Http;
 
 namespace Facility.ConformanceApi.Http
@@ -21,7 +22,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the handler.
 		/// </summary>
 		public ConformanceApiHttpHandler(IConformanceApi service, ServiceHttpHandlerSettings? settings = null)
-			: base(settings)
+			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
@@ -30,7 +31,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the handler.
 		/// </summary>
 		public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, ServiceHttpHandlerSettings? settings = null)
-			: base(settings)
+			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}
