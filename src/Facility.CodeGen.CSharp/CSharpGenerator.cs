@@ -1453,7 +1453,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				{
 					foreach (var field in dto.Fields)
 					{
-						if (TryGetDtoInfo(service.GetFieldType(field)) is ServiceDtoInfo fieldDto && dtosNeedingValidation.Contains(fieldDto))
+						if (TryGetDtoInfo(service.GetFieldType(field)) is { } fieldDto && dtosNeedingValidation.Contains(fieldDto))
 						{
 							dtosNeedingValidation.Add(dto);
 							addedDto = true;

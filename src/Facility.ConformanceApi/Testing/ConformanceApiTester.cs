@@ -140,7 +140,7 @@ public sealed class ConformanceApiTester
 					return Failure($"Got error; expected valid response. expected={m_serializer.ToString(expectedResponseServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
 				if (!ServiceObjectUtility.DeepEquals(expectedErrorServiceObject, actualErrorServiceObject))
 					return Failure($"Error JSON did not match. expected={m_serializer.ToString(expectedErrorServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
-				var expectedErrorDto = m_serializer.FromServiceObject<ServiceErrorDto>(expectedErrorServiceObject)!;
+				var expectedErrorDto = m_serializer.FromServiceObject<ServiceErrorDto>(expectedErrorServiceObject);
 				if (!expectedErrorDto.IsEquivalentTo(actualErrorDto))
 					return Failure($"Error DTO did not match. expected={expectedErrorDto} actual={actualErrorDto}");
 			}

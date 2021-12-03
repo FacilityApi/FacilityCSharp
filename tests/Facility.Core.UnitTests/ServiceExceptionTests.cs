@@ -38,7 +38,7 @@ public class ServiceExceptionTests
 	[Test]
 	public void RequireError()
 	{
-		Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null!); });
-		Assert.Throws<ArgumentNullException>(() => { throw new ServiceException(null!, new ArgumentException()); });
+		Assert.Throws<ArgumentNullException>(() => throw new ServiceException(null!));
+		Assert.Throws<ArgumentNullException>(() => throw new ServiceException(null!, new ArgumentException()));
 	}
 }

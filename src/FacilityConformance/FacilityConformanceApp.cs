@@ -61,16 +61,18 @@ public sealed class FacilityConformanceApp
 			throw new ArgsReaderException("");
 
 		var command = argsReader.ReadArgument();
+
 		if (command == "host")
 		{
 			var url = argsReader.ReadOption("url") ?? defaultUrl;
 			argsReader.VerifyComplete();
 
-			new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().Run();
+			await new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().RunAsync();
 
 			return 0;
 		}
-		else if (command == "test")
+
+		if (command == "test")
 		{
 			var baseUri = new Uri(argsReader.ReadOption("url") ?? defaultUrl);
 			var testNames = argsReader.ReadArguments();
@@ -116,7 +118,8 @@ public sealed class FacilityConformanceApp
 
 			return failureCount == 0 ? 0 : 1;
 		}
-		else if (command == "fsd")
+
+		if (command == "fsd")
 		{
 			var outputPath = argsReader.ReadOption("output");
 			var shouldVerify = argsReader.ReadFlag("verify");
@@ -124,7 +127,8 @@ public sealed class FacilityConformanceApp
 
 			return WriteText(path: outputPath, contents: m_fsdText, shouldVerify: shouldVerify);
 		}
-		else if (command == "json")
+
+		if (command == "json")
 		{
 			var outputPath = argsReader.ReadOption("output");
 			var shouldVerify = argsReader.ReadFlag("verify");
@@ -132,14 +136,11 @@ public sealed class FacilityConformanceApp
 
 			return WriteText(path: outputPath, contents: m_testsJson, shouldVerify: shouldVerify);
 		}
-		else if (command != null)
-		{
+
+		if (command != null)
 			throw new ArgsReaderException($"Invalid command: {command}");
-		}
-		else
-		{
-			throw new ArgsReaderException("Missing command.");
-		}
+
+		throw new ArgsReaderException("Missing command.");
 	}
 
 	private static int WriteText(string? path, string contents, bool shouldVerify)

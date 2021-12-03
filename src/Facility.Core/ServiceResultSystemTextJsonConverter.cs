@@ -5,11 +5,20 @@ using System.Text.Json.Serialization;
 
 namespace Facility.Core;
 
+/// <summary>
+/// Used by <c>System.Text.Json</c> to convert <see cref="ServiceResult" />.
+/// </summary>
 public sealed class ServiceResultSystemTextJsonConverter : JsonConverterFactory
 {
+	/// <summary>
+	/// Determines whether this instance can convert the specified object type.
+	/// </summary>
 	public override bool CanConvert(Type typeToConvert) => typeof(ServiceResult).IsAssignableFrom(typeToConvert);
 
-	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+	/// <summary>
+	/// Creates a converter for the specified object type.
+	/// </summary>
+	public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (typeToConvert == typeof(ServiceResultFailure))
 			return new ServiceResultSystemTextJsonConverter<ServiceResultFailure>();
@@ -18,8 +27,14 @@ public sealed class ServiceResultSystemTextJsonConverter : JsonConverterFactory
 		var valueType = typeToConvert.GetGenericArguments()[0];
 		return (JsonConverter) Activator.CreateInstance(typeof(ServiceResultSystemTextJsonConverter<>).MakeGenericType(typeof(ServiceResult<>).MakeGenericType(valueType)))!;
 	}
+
+	internal static readonly MethodInfo GenericSuccessMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Success" && x.IsStatic && x.IsGenericMethodDefinition);
+	internal static readonly MethodInfo GenericCastMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Cast" && !x.IsStatic && x.IsGenericMethodDefinition);
 }
 
+/// <summary>
+/// Used by <c>System.Text.Json</c> to convert <see cref="ServiceResult" />.
+/// </summary>
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonConverter<TServiceResult>
 	where TServiceResult : ServiceResult
@@ -70,13 +85,13 @@ public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonC
 		}
 		if (error != null)
 		{
-			return (TServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), Array.Empty<object>())!;
+			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), Array.Empty<object>())!;
 		}
 		else
 		{
 			if (value == null && valueType.GetTypeInfo().IsValueType)
 				value = Activator.CreateInstance(valueType);
-			return (TServiceResult) s_genericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
+			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
 		}
 	}
 
@@ -115,6 +130,4 @@ public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonC
 
 	private const string c_valuePropertyName = "value";
 	private const string c_errorPropertyName = "error";
-	private static readonly MethodInfo s_genericSuccessMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Success" && x.IsStatic && x.IsGenericMethodDefinition);
-	private static readonly MethodInfo s_genericCastMethod = typeof(ServiceResult).GetRuntimeMethods().First(x => x.Name == "Cast" && !x.IsStatic && x.IsGenericMethodDefinition);
 }

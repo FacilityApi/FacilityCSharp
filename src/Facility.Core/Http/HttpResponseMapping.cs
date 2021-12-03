@@ -78,7 +78,7 @@ public sealed class HttpResponseMapping<TResponse>
 		/// <summary>
 		/// Builds the mapping.
 		/// </summary>
-		public HttpResponseMapping<TResponse> Build() => new HttpResponseMapping<TResponse>(this);
+		public HttpResponseMapping<TResponse> Build() => new(this);
 	}
 
 	private HttpResponseMapping(Builder builder)

@@ -4,10 +4,19 @@ using System.Text.Json.Serialization;
 
 namespace Facility.Core;
 
+/// <summary>
+/// Serializes and deserializes values to and from JSON using <c>System.Text.Json</c>.
+/// </summary>
 public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 {
+	/// <summary>
+	/// The serializer instance.
+	/// </summary>
 	public static readonly SystemTextJsonServiceSerializer Instance = new();
 
+	/// <summary>
+	/// Serializes a value to the serialization format.
+	/// </summary>
 	public override string ToString(object? value)
 	{
 		try
@@ -20,6 +29,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Serializes a value to the serialization format.
+	/// </summary>
 	public override void ToStream(object? value, Stream outputStream)
 	{
 		try
@@ -32,6 +44,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
 	public override object? FromString(string stringValue, Type type)
 	{
 		try
@@ -44,6 +59,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
 	public override object? FromStream(Stream stream, Type type)
 	{
 		try
@@ -56,6 +74,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Serializes a value to a <see cref="ServiceObject"/> representation of the serialization format.
+	/// </summary>
 	public override ServiceObject? ToServiceObject(object? value)
 	{
 		try
@@ -68,6 +89,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Deserializes a value from a <see cref="ServiceObject"/> representation of the serialization format.
+	/// </summary>
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type)
 	{
 		try

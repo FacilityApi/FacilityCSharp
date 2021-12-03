@@ -47,8 +47,8 @@ public static partial class HttpServiceErrors
 	internal static ServiceErrorDto CreateErrorForStatusCode(HttpStatusCode statusCode, string? reasonPhrase)
 	{
 		var statusCodeNumber = (int) statusCode;
-		var isClientError = statusCodeNumber >= 400 && statusCodeNumber <= 499;
-		var isServerError = statusCodeNumber >= 500 && statusCodeNumber <= 599;
+		var isClientError = statusCodeNumber is >= 400 and <= 499;
+		var isServerError = statusCodeNumber is >= 500 and <= 599;
 		var errorCode = TryGetErrorCode(statusCode) ?? (isClientError ? ServiceErrors.InvalidRequest : ServiceErrors.InvalidResponse);
 		var message = isServerError ? "HTTP server error" : isClientError ? "HTTP client error" : "Unexpected HTTP status code";
 		var statusCodeString = statusCodeNumber.ToString(CultureInfo.InvariantCulture);

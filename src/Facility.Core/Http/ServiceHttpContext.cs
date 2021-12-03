@@ -22,10 +22,11 @@ public sealed class ServiceHttpContext
 	{
 #if NET6_0_OR_GREATER
 		httpRequest.Options.TryGetValue(s_requestPropertyContextKey, out var context);
+		return context;
 #else
 		httpRequest.Properties.TryGetValue(c_requestPropertyContextKey, out var context);
-#endif
 		return context as ServiceHttpContext;
+#endif
 	}
 
 	/// <summary>

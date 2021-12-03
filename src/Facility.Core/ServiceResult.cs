@@ -14,17 +14,17 @@ public class ServiceResult
 	/// <summary>
 	/// Creates a successful result.
 	/// </summary>
-	public static ServiceResult Success() => new ServiceResult(null);
+	public static ServiceResult Success() => new(null);
 
 	/// <summary>
 	/// Creates a successful result.
 	/// </summary>
-	public static ServiceResult<T> Success<T>(T value) => new ServiceResult<T>(value);
+	public static ServiceResult<T> Success<T>(T value) => new(value);
 
 	/// <summary>
 	/// Creates a failed result.
 	/// </summary>
-	public static ServiceResultFailure Failure(ServiceErrorDto error) => new ServiceResultFailure(error ?? throw new ArgumentNullException(nameof(error)));
+	public static ServiceResultFailure Failure(ServiceErrorDto error) => new(error ?? throw new ArgumentNullException(nameof(error)));
 
 	/// <summary>
 	/// True if the result has a value.
@@ -112,7 +112,7 @@ public class ServiceResult
 	public override string ToString() => IsSuccess ? "<Success>" : $"<Failure={Error}>";
 
 	/// <summary>
-	/// Used for JSON serialization.
+	/// Used by Json.NET to convert <see cref="ServiceResult" />.
 	/// </summary>
 	[SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "Legacy.")]
 	public sealed class ServiceResultJsonConverter : JsonConverter
@@ -247,7 +247,7 @@ public sealed class ServiceResult<T> : ServiceResult
 	/// Implicitly create a failed result from an error.
 	/// </summary>
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Used to create results from failures.")]
-	public static implicit operator ServiceResult<T>(ServiceResultFailure failure) => new ServiceResult<T>(failure.Error);
+	public static implicit operator ServiceResult<T>(ServiceResultFailure failure) => new(failure.Error);
 
 	/// <summary>
 	/// The value. (Throws a ServiceException on failure.)

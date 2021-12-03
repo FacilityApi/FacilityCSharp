@@ -11,6 +11,9 @@ namespace Facility.Core;
 /// </summary>
 public sealed class NewtonsoftJsonServiceSerializer : ServiceSerializer
 {
+	/// <summary>
+	/// The serializer instance.
+	/// </summary>
 	public static readonly NewtonsoftJsonServiceSerializer Instance = new();
 
 	/// <summary>
@@ -97,15 +100,27 @@ public sealed class NewtonsoftJsonServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
 	public override object? FromStream(Stream stream, Type type)
 	{
 		using var textReader = new StreamReader(stream);
 		return FromJsonTextReader(textReader, type);
 	}
 
-	// use JSON to avoid unusual types like byte arrays in the JToken
-	public override ServiceObject? ToServiceObject(object? value) => value is null ? null : ServiceObject.Create(FromString<JObject>(ToString(value)));
+	/// <summary>
+	/// Serializes a value to a <see cref="ServiceObject"/> representation of the serialization format.
+	/// </summary>
+	public override ServiceObject? ToServiceObject(object? value)
+	{
+		// use JSON to avoid unusual types like byte arrays in the JToken
+		return value is null ? null : ServiceObject.Create(FromString<JObject>(ToString(value)));
+	}
 
+	/// <summary>
+	/// Deserializes a value from a <see cref="ServiceObject"/> representation of the serialization format.
+	/// </summary>
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type) => serviceObject?.AsJObject().ToObject(type, CreateJsonSerializer());
 
 	/// <summary>

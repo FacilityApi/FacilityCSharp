@@ -24,6 +24,10 @@ public sealed partial class ServiceErrorDto
 		Message = message;
 	}
 
+	/// <summary>
+	/// Advanced error details.
+	/// </summary>
+	/// <remarks>Obsolete; use <see cref="DetailsObject" />.</remarks>
 	[Obsolete("Use DetailsObject.")]
 	[Newtonsoft.Json.JsonIgnore]
 	[System.Text.Json.Serialization.JsonIgnore]

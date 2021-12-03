@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Facility.Core;
 
+/// <summary>
+/// Used by <c>System.Text.Json</c> to convert <see cref="ServiceObject" />.
+/// </summary>
 public sealed class ServiceObjectSystemTextJsonConverter : JsonConverter<ServiceObject>
 {
 	/// <summary>

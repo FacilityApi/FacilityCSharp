@@ -31,5 +31,5 @@ public class ServiceErrorDtoTests
 		full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 	}
 
-	private static readonly ServiceErrorDto s_error = new ServiceErrorDto("Test", "Message.") { DetailsObject = ServiceObject.Create(new JObject { ["Some"] = "details." }), InnerError = new ServiceErrorDto("Inner") };
+	private static readonly ServiceErrorDto s_error = new("Test", "Message.") { DetailsObject = ServiceObject.Create(new JObject { ["Some"] = "details." }), InnerError = new ServiceErrorDto("Inner") };
 }

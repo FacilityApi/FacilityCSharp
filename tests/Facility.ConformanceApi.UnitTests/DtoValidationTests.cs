@@ -303,11 +303,11 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("name", "Length must be at most 10."));
 	}
 
-	private static RequiredRequestDto CreateRequiredRequest() => new RequiredRequestDto { Query = "query", Normal = "normal" };
+	private static RequiredRequestDto CreateRequiredRequest() => new() { Query = "query", Normal = "normal" };
 
-	private static RequiredResponseDto CreateRequiredResponse() => new RequiredResponseDto { Normal = "normal" };
+	private static RequiredResponseDto CreateRequiredResponse() => new() { Normal = "normal" };
 
-	private static WidgetDto CreateWidget() => new WidgetDto { Name = "name" };
+	private static WidgetDto CreateWidget() => new() { Name = "name" };
 
 	private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 	{
