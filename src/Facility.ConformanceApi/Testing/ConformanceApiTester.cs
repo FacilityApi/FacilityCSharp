@@ -78,7 +78,7 @@ public sealed class ConformanceApiTester
 	/// </summary>
 	public async Task<ConformanceTestResult> RunTestAsync(ConformanceTestInfo test, CancellationToken cancellationToken = default)
 	{
-		string testName = test.Test!;
+		var testName = test.Test!;
 		ConformanceTestResult Failure(string message) => new ConformanceTestResult(testName, ConformanceTestStatus.Fail, message);
 
 		try
@@ -114,7 +114,7 @@ public sealed class ConformanceApiTester
 			var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
 			await task.ConfigureAwait(false);
 
-			dynamic result = ((dynamic) task).Result;
+			var result = ((dynamic) task).Result;
 			var actualResponseDto = (ServiceDto?) result.GetValueOrDefault();
 			var expectedResponseServiceObject = test.Response;
 			var expectedErrorServiceObject = test.Error;

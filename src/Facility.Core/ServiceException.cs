@@ -37,7 +37,7 @@ public class ServiceException : Exception
 	/// </summary>
 	public override string ToString()
 	{
-		string text = GetType().Name + ": " + GetErrorString(Error);
+		var text = GetType().Name + ": " + GetErrorString(Error);
 
 		var innerException = InnerException;
 		if (innerException != null)
@@ -52,7 +52,7 @@ public class ServiceException : Exception
 
 	private static string GetErrorString(ServiceErrorDto error, string indent = "")
 	{
-		string text = error.Message ?? "";
+		var text = error.Message ?? "";
 
 		if (error.Code != null)
 			text += " (" + error.Code + ")";

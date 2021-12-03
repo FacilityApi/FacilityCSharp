@@ -13,7 +13,7 @@ public sealed class ServiceJsonUtilityTests
 	public void CamelCase()
 	{
 		var dto = ValueDto.Create(true);
-		string json = "{\"booleanValue\":true}";
+		var json = "{\"booleanValue\":true}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -27,7 +27,7 @@ public sealed class ServiceJsonUtilityTests
 	public void CamelCaseExceptDictionaryKeys()
 	{
 		var dto = ValueDto.Create(new Dictionary<string, bool> { ["Key"] = true });
-		string json = "{\"booleanMapValue\":{\"Key\":true}}";
+		var json = "{\"booleanMapValue\":{\"Key\":true}}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -41,7 +41,7 @@ public sealed class ServiceJsonUtilityTests
 	public void DateParseHandlingNone()
 	{
 		var dto = ValueDto.Create("2016-10-21T15:31:00Z");
-		string json = $"{{\"stringValue\":\"{dto.StringValue}\"}}";
+		var json = $"{{\"stringValue\":\"{dto.StringValue}\"}}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -55,7 +55,7 @@ public sealed class ServiceJsonUtilityTests
 	public void NullValueHandlingIgnore()
 	{
 		var dto = ValueDto.Create(default(bool?));
-		string json = "{}";
+		var json = "{}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -69,7 +69,7 @@ public sealed class ServiceJsonUtilityTests
 	public void MissingMemberHandlingIgnore()
 	{
 		var dto = ValueDto.Create(true);
-		string json = "{\"booleanValue\":true,\"missing\":false}";
+		var json = "{\"booleanValue\":true,\"missing\":false}";
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 	}
 
@@ -77,7 +77,7 @@ public sealed class ServiceJsonUtilityTests
 	public void MetadataPropertyHandlingIgnore()
 	{
 		var dto = ValueDto.Create(true);
-		string json = "{\"$ref\":\"xyzzy\",\"booleanValue\":true}";
+		var json = "{\"$ref\":\"xyzzy\",\"booleanValue\":true}";
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 	}
 
@@ -91,7 +91,7 @@ public sealed class ServiceJsonUtilityTests
 			invalidRequest,
 			invalidResponse,
 		});
-		string json = "{\"errorArrayValue\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
+		var json = "{\"errorArrayValue\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -112,7 +112,7 @@ public sealed class ServiceJsonUtilityTests
 			["response"] = invalidResponse,
 		});
 
-		string json = "{\"errorMapValue\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
+		var json = "{\"errorMapValue\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
 
 		ServiceJsonUtility.ToJson(dto).Should().Be(json);
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);

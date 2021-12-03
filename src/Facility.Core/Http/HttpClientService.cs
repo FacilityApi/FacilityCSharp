@@ -103,7 +103,7 @@ public abstract class HttpClientService
 			if (responseMapping.ResponseBodyType != null)
 			{
 				var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
-				ServiceResult<object> responseResult = await serializer.ReadHttpContentAsync(
+				var responseResult = await serializer.ReadHttpContentAsync(
 					responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 				if (responseResult.IsFailure)
 				{
@@ -193,7 +193,7 @@ public abstract class HttpClientService
 
 	private ServiceResult<HttpRequestMessage> TryCreateHttpRequest(HttpMethod httpMethod, string relativeUrlPattern, IEnumerable<KeyValuePair<string, string?>>? uriParameters, IEnumerable<KeyValuePair<string, string?>>? requestHeaders)
 	{
-		string url = m_baseUrl + relativeUrlPattern.TrimStart('/');
+		var url = m_baseUrl + relativeUrlPattern.TrimStart('/');
 		if (uriParameters != null)
 			url = GetUrlFromPattern(url, uriParameters);
 
@@ -214,7 +214,7 @@ public abstract class HttpClientService
 		{
 			if (parameter.Key != null && parameter.Value != null)
 			{
-				string bracketedKey = "{" + parameter.Key + "}";
+				var bracketedKey = "{" + parameter.Key + "}";
 				var bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
 				if (bracketedKeyIndex != -1)
 				{

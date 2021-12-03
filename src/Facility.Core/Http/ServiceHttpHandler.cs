@@ -231,18 +231,18 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 	private static IReadOnlyDictionary<string, string>? TryMatchHttpRoute(Uri requestUri, string routePath)
 	{
-		string requestPath = requestUri.AbsolutePath.Trim('/');
+		var requestPath = requestUri.AbsolutePath.Trim('/');
 		routePath = routePath.Trim('/');
 
 		if (routePath.IndexOfOrdinal('{') != -1)
 		{
 			// ReSharper disable once RedundantEnumerableCastCall (needed for .NET Standard 2.0)
 			var names = s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
-			string regexPattern = Regex.Escape(routePath);
-			foreach (string name in names)
+			var regexPattern = Regex.Escape(routePath);
+			foreach (var name in names)
 				regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
 			regexPattern = "^(?:" + regexPattern + ")$";
-			Match match = new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).Match(requestPath);
+			var match = new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).Match(requestPath);
 			return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
 		}
 

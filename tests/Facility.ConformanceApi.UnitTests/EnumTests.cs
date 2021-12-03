@@ -47,7 +47,7 @@ public sealed class EnumTests
 	[Test]
 	public void AvoidsCrashOnDefaultEnumToString()
 	{
-		Func<string> toString = () => default(Answer).ToString();
+		var toString = () => default(Answer).ToString();
 		toString.Should().NotThrow();
 	}
 
@@ -77,7 +77,7 @@ public sealed class EnumTests
 	[Test]
 	public void AvoidsCrashOnDefaultIsDefined()
 	{
-		Func<bool> isDefined = () => default(Answer).IsDefined();
+		var isDefined = () => default(Answer).IsDefined();
 		isDefined.Should().NotThrow();
 	}
 }

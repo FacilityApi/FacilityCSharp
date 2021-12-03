@@ -35,7 +35,7 @@ internal static class CSharpUtility
 		sortedNamespaceNames.Sort(CompareUsings);
 		if (sortedNamespaceNames.Count != 0)
 		{
-			foreach (string namepaceName in sortedNamespaceNames)
+			foreach (var namepaceName in sortedNamespaceNames)
 				code.WriteLine("using " + namepaceName + ";");
 			code.WriteLine();
 		}

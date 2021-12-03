@@ -102,7 +102,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void AlwaysCastFailure()
 	{
-		ServiceResultFailure failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
+		var failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
 		failure.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("Failure"));
 		ServiceResult noValue = ServiceResult.Failure(new ServiceErrorDto("NoValue"));
 		noValue.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("NoValue"));
@@ -113,7 +113,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void ReferenceCasts()
 	{
-		ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(new ArgumentNullException());
+		var result = ServiceResult.Success<ArgumentException>(new ArgumentNullException());
 		result.Value.GetType().Should().Be(typeof(ArgumentNullException));
 		result.Cast<ArgumentNullException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
 		result.Cast<ArgumentException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
@@ -125,7 +125,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void ValueCasts()
 	{
-		ServiceResult<long> result = ServiceResult.Success(1L);
+		var result = ServiceResult.Success(1L);
 		result.Value.GetType().Should().Be(typeof(long));
 		result.Cast<long>().Value.GetType().Should().Be(typeof(long));
 		Assert.Throws<InvalidCastException>(() => result.Cast<int>().Value.Should().Be(1));
@@ -134,7 +134,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void NullCasts()
 	{
-		ServiceResult<ArgumentException> result = ServiceResult.Success<ArgumentException>(null!);
+		var result = ServiceResult.Success<ArgumentException>(null!);
 		result.Cast<InvalidOperationException>().Value.Should().BeNull();
 		result.Cast<long?>().Value.Should().BeNull();
 	}
@@ -142,7 +142,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void NoValueCasts()
 	{
-		ServiceResult result = ServiceResult.Success();
+		var result = ServiceResult.Success();
 		Assert.Throws<InvalidCastException>(() => result.Cast<object>());
 	}
 
@@ -150,7 +150,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void FailureAsFailure()
 	{
 		var error = new ServiceErrorDto("Error");
-		ServiceResultFailure failure = ServiceResult.Failure(error);
+		var failure = ServiceResult.Failure(error);
 		failure.AsFailure()!.Error!.Should().BeDto(error);
 		ServiceResult failedResult = ServiceResult.Failure(error);
 		failedResult.AsFailure()!.Error!.Should().BeDto(error);
@@ -161,9 +161,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void SuccessAsFailure()
 	{
-		ServiceResult successResult = ServiceResult.Success();
+		var successResult = ServiceResult.Success();
 		successResult.AsFailure().Should().BeNull();
-		ServiceResult<int> successValue = ServiceResult.Success(1);
+		var successValue = ServiceResult.Success(1);
 		successValue.AsFailure().Should().BeNull();
 	}
 
@@ -171,7 +171,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void FailureToFailure()
 	{
 		var error = new ServiceErrorDto("Error");
-		ServiceResultFailure failure = ServiceResult.Failure(error);
+		var failure = ServiceResult.Failure(error);
 		failure.ToFailure().Error!.Should().BeDto(error);
 		ServiceResult failedResult = ServiceResult.Failure(error);
 		failedResult.ToFailure().Error!.Should().BeDto(error);
@@ -182,9 +182,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void SuccessToFailure()
 	{
-		ServiceResult successResult = ServiceResult.Success();
+		var successResult = ServiceResult.Success();
 		Invoking(() => successResult.ToFailure()).Should().Throw<InvalidOperationException>();
-		ServiceResult<int> successValue = ServiceResult.Success(1);
+		var successValue = ServiceResult.Success(1);
 		Invoking(() => successValue.ToFailure()).Should().Throw<InvalidOperationException>();
 	}
 
@@ -199,7 +199,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	[Test]
 	public void MapSuccess()
 	{
-		ServiceResult<int> successValue = ServiceResult.Success(1);
+		var successValue = ServiceResult.Success(1);
 		successValue.Map(x => x.ToString(CultureInfo.InvariantCulture)).Value.Should().Be("1");
 	}
 
@@ -207,7 +207,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueSuccessJson()
 	{
 		var before = ServiceResult.Success();
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{}");
 		var after = Serializer.FromString<ServiceResult>(json);
 		after.Should().BeResult(before);
@@ -217,7 +217,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueEmptyFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"error\":{}}");
 		var after = Serializer.FromString<ServiceResult>(json);
 		after.Should().BeResult(before);
@@ -227,7 +227,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
 		var after = Serializer.FromString<ServiceResult>(json);
 		after.Should().BeResult(before);
@@ -237,7 +237,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerSuccessJson()
 	{
 		var before = ServiceResult.Success(1337);
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"value\":1337}");
 		var after = Serializer.FromString<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
@@ -247,7 +247,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerEmptyFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"error\":{}}");
 		var after = Serializer.FromString<ServiceResult<int?>>(json);
 		after.Should().BeResult(before);
@@ -257,7 +257,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
 		var after = Serializer.FromString<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
@@ -267,7 +267,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NullIntegerSuccessJson()
 	{
 		var before = ServiceResult.Success(default(int?));
-		string json = Serializer.ToString(before);
+		var json = Serializer.ToString(before);
 		json.Should().Be("{\"value\":null}");
 		var after = Serializer.FromString<ServiceResult<int?>>(json);
 		after.Should().BeResult(before);
@@ -293,7 +293,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void ExtraFieldSuccessJson()
 	{
 		var before = ServiceResult.Success(1337);
-		string json = "{\"values\":1337,\"value\":1337,\"valuex\":1337}";
+		var json = "{\"values\":1337,\"value\":1337,\"valuex\":1337}";
 		var after = Serializer.FromString<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}
@@ -302,7 +302,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void ExtraFieldFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
-		string json = "{\"values\":1337,\"error\":{},\"valuex\":1337}";
+		var json = "{\"values\":1337,\"error\":{},\"valuex\":1337}";
 		var after = Serializer.FromString<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}

@@ -69,7 +69,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 		}
 
-		string codeGenComment = CodeGenUtility.GetCodeGenComment(context.GeneratorName);
+		var codeGenComment = CodeGenUtility.GetCodeGenComment(context.GeneratorName);
 		var patternsToClean = new[]
 		{
 			new CodeGenPattern("*.g.cs", codeGenComment),
@@ -95,7 +95,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private CodeGenFile GenerateErrorSet(ServiceErrorSetInfo errorSetInfo, Context context)
 	{
-		string fullErrorSetName = CSharpUtility.GetErrorSetName(errorSetInfo);
+		var fullErrorSetName = CSharpUtility.GetErrorSetName(errorSetInfo);
 
 		return CreateFile(fullErrorSetName + CSharpUtility.FileExtension, code =>
 		{
@@ -120,8 +120,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				{
 					foreach (var errorInfo in errorSetInfo.Errors)
 					{
-						string errorsValue = errorInfo.Name;
-						string memberName = CSharpUtility.GetErrorName(errorInfo);
+						var errorsValue = errorInfo.Name;
+						var memberName = CSharpUtility.GetErrorName(errorInfo);
 
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteSummary(code, errorInfo.Summary);
@@ -132,7 +132,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					foreach (var errorInfo in errorSetInfo.Errors)
 					{
 						code.WriteLine();
-						string memberName = CSharpUtility.GetErrorName(errorInfo);
+						var memberName = CSharpUtility.GetErrorName(errorInfo);
 						CSharpUtility.WriteSummary(code, errorInfo.Summary);
 						CSharpUtility.WriteObsoleteAttribute(code, errorInfo);
 						code.WriteLine($"public static ServiceErrorDto Create{memberName}(string{NullableReferenceSuffix} message = null) => " +
@@ -146,7 +146,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private CodeGenFile GenerateEnum(ServiceEnumInfo enumInfo, Context context)
 	{
-		string enumName = CSharpUtility.GetEnumName(enumInfo);
+		var enumName = CSharpUtility.GetEnumName(enumInfo);
 
 		return CreateFile(enumName + CSharpUtility.FileExtension, code =>
 		{
@@ -181,7 +181,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				{
 					foreach (var enumValue in enumInfo.Values)
 					{
-						string memberName = CSharpUtility.GetEnumValueName(enumValue);
+						var memberName = CSharpUtility.GetEnumValueName(enumValue);
 
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteSummary(code, enumValue.Summary);
@@ -232,7 +232,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					{
 						foreach (var enumValue in enumInfo.Values)
 						{
-							string memberName = CSharpUtility.GetEnumValueName(enumValue);
+							var memberName = CSharpUtility.GetEnumValueName(enumValue);
 
 							code.WriteLineSkipOnce();
 							CSharpUtility.WriteSummary(code, enumValue.Summary);
@@ -276,7 +276,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					{
 						foreach (var value in enumInfo.Values)
 						{
-							string memberName = CSharpUtility.GetEnumValueName(value);
+							var memberName = CSharpUtility.GetEnumValueName(value);
 							code.WriteLine($"{{ Strings.{memberName}, Strings.{memberName} }},");
 						}
 					}
@@ -307,7 +307,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private CodeGenFile GenerateDto(ServiceDtoInfo dtoInfo, Context context)
 	{
-		string fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
+		var fullDtoName = CSharpUtility.GetDtoName(dtoInfo);
 
 		return CreateFile(fullDtoName + CSharpUtility.FileExtension, code =>
 		{
@@ -543,8 +543,8 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var errorSetInfo = httpErrorSetInfo.ServiceErrorSet;
 
-		string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
-		string className = "Http" + errorSetInfo.Name;
+		var namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
+		var className = "Http" + errorSetInfo.Name;
 
 		var errorsAndStatusCodes = httpErrorSetInfo.Errors
 			.Select(x => new { x.ServiceError, x.StatusCode })
@@ -593,7 +593,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 						foreach (var errorAndCodeGroup in errorsAndStatusCodes.GroupBy(x => (int) x.StatusCode).OrderBy(x => x.Key))
 						{
-							string statusCode = errorAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
+							var statusCode = errorAndCodeGroup.Key.ToString(CultureInfo.InvariantCulture);
 							code.WriteLine($"case {statusCode}:");
 							using (code.Indent())
 								code.WriteLine($"return {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndCodeGroup.First().ServiceError)};");
@@ -612,7 +612,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					{
 						foreach (var errorAndStatusCode in errorsAndStatusCodes)
 						{
-							string statusCode = ((int) errorAndStatusCode.StatusCode).ToString(CultureInfo.InvariantCulture);
+							var statusCode = ((int) errorAndStatusCode.StatusCode).ToString(CultureInfo.InvariantCulture);
 							code.WriteLine($"{{ {CSharpUtility.GetErrorSetName(errorSetInfo)}.{CSharpUtility.GetErrorName(errorAndStatusCode.ServiceError)}, {statusCode} }},");
 						}
 					}
@@ -625,8 +625,8 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var serviceInfo = httpServiceInfo.Service;
 
-		string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
-		string httpMappingName = $"{serviceInfo.Name}HttpMapping";
+		var namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
+		var httpMappingName = $"{serviceInfo.Name}HttpMapping";
 
 		return CreateFile($"{CSharpUtility.HttpDirectoryName}/{httpMappingName}{CSharpUtility.FileExtension}", code =>
 		{
@@ -657,13 +657,13 @@ public sealed class CSharpGenerator : CodeGenerator
 				code.WriteLine($"public static partial class {httpMappingName}");
 				using (code.Block())
 				{
-					foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+					foreach (var httpMethodInfo in httpServiceInfo.Methods)
 					{
 						var methodInfo = httpMethodInfo.ServiceMethod;
-						string methodName = CSharpUtility.GetMethodName(methodInfo);
-						string requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
-						string responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
-						string httpPath = httpMethodInfo.Path;
+						var methodName = CSharpUtility.GetMethodName(methodInfo);
+						var requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
+						var responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
+						var httpPath = httpMethodInfo.Path;
 
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
@@ -677,12 +677,12 @@ public sealed class CSharpGenerator : CodeGenerator
 								if (httpMethodInfo.Method == HttpMethod.Delete.ToString() || httpMethodInfo.Method == HttpMethod.Get.ToString() ||
 									httpMethodInfo.Method == HttpMethod.Post.ToString() || httpMethodInfo.Method == HttpMethod.Put.ToString())
 								{
-									string httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToLowerInvariant());
+									var httpMethodName = CodeGenUtility.Capitalize(httpMethodInfo.Method.ToLowerInvariant());
 									code.WriteLine($"HttpMethod = HttpMethod.{httpMethodName},");
 								}
 								else
 								{
-									string httpMethodName = httpMethodInfo.Method;
+									var httpMethodName = httpMethodInfo.Method;
 									code.WriteLine($"HttpMethod = new HttpMethod(\"{httpMethodName}\"),");
 								}
 
@@ -696,7 +696,7 @@ public sealed class CSharpGenerator : CodeGenerator
 										foreach (var pathField in httpMethodInfo.PathFields)
 										{
 											var serviceField = pathField.ServiceField;
-											string fieldName = context.GetFieldPropertyName(serviceField);
+											var fieldName = context.GetFieldPropertyName(serviceField);
 											var fieldType = context.GetFieldType(serviceField);
 											if (fieldType.Kind == ServiceTypeKind.String)
 												code.WriteLine($"if (string.IsNullOrEmpty(request.{fieldName}))");
@@ -709,7 +709,7 @@ public sealed class CSharpGenerator : CodeGenerator
 										if (httpMethodInfo.RequestBodyField != null)
 										{
 											var serviceField = httpMethodInfo.RequestBodyField.ServiceField;
-											string fieldName = context.GetFieldPropertyName(serviceField);
+											var fieldName = context.GetFieldPropertyName(serviceField);
 											code.WriteLine($"if (request.{fieldName} == null)");
 											using (code.Indent())
 												code.WriteLine($"return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired(\"{serviceField.Name}\"));");
@@ -729,14 +729,14 @@ public sealed class CSharpGenerator : CodeGenerator
 										{
 											foreach (var pathField in httpMethodInfo.PathFields)
 											{
-												string fieldName = context.GetFieldPropertyName(pathField.ServiceField);
-												string fieldValue = GenerateFieldToStringCode(context.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
+												var fieldName = context.GetFieldPropertyName(pathField.ServiceField);
+												var fieldValue = GenerateFieldToStringCode(context.GetFieldType(pathField.ServiceField), $"request.{fieldName}");
 												code.WriteLine($"{{ \"{pathField.Name}\", {fieldValue} }},");
 											}
 											foreach (var queryField in httpMethodInfo.QueryFields)
 											{
-												string fieldName = context.GetFieldPropertyName(queryField.ServiceField);
-												string fieldValue = GenerateFieldToStringCode(context.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
+												var fieldName = context.GetFieldPropertyName(queryField.ServiceField);
+												var fieldValue = GenerateFieldToStringCode(context.GetFieldType(queryField.ServiceField), $"request.{fieldName}");
 												code.WriteLine($"{{ \"{queryField.Name}\", {fieldValue} }},");
 											}
 										}
@@ -747,16 +747,16 @@ public sealed class CSharpGenerator : CodeGenerator
 									{
 										foreach (var queryField in httpMethodInfo.QueryFields)
 										{
-											string dtoFieldName = context.GetFieldPropertyName(queryField.ServiceField);
-											string queryParameterName = $"queryParameter{dtoFieldName}";
+											var dtoFieldName = context.GetFieldPropertyName(queryField.ServiceField);
+											var queryParameterName = $"queryParameter{dtoFieldName}";
 											code.WriteLine($"parameters.TryGetValue(\"{queryField.Name}\", out var {queryParameterName});");
 											code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(queryField.ServiceField), queryParameterName)};");
 										}
 
 										foreach (var pathField in httpMethodInfo.PathFields)
 										{
-											string dtoFieldName = context.GetFieldPropertyName(pathField.ServiceField);
-											string queryParameterName = $"queryParameter{dtoFieldName}";
+											var dtoFieldName = context.GetFieldPropertyName(pathField.ServiceField);
+											var queryParameterName = $"queryParameter{dtoFieldName}";
 											code.WriteLine($"parameters.TryGetValue(\"{pathField.Name}\", out var {queryParameterName});");
 											code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(pathField.ServiceField), queryParameterName)};");
 										}
@@ -775,8 +775,8 @@ public sealed class CSharpGenerator : CodeGenerator
 										{
 											foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 											{
-												string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
-												string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
+												var fieldName = context.GetFieldPropertyName(headerField.ServiceField);
+												var fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"request.{fieldName}");
 												code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 											}
 										}
@@ -787,8 +787,8 @@ public sealed class CSharpGenerator : CodeGenerator
 									{
 										foreach (var headerField in httpMethodInfo.RequestHeaderFields)
 										{
-											string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
-											string headerVariableName = $"header{dtoFieldName}";
+											var dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
+											var headerVariableName = $"header{dtoFieldName}";
 											code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out var {headerVariableName});");
 											code.WriteLine($"request.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 										}
@@ -825,7 +825,7 @@ public sealed class CSharpGenerator : CodeGenerator
 											{
 												foreach (var field in httpMethodInfo.RequestNormalFields)
 												{
-													string fieldName = context.GetFieldPropertyName(field.ServiceField);
+													var fieldName = context.GetFieldPropertyName(field.ServiceField);
 													code.WriteLine($"{fieldName} = request.{fieldName},");
 												}
 											}
@@ -839,7 +839,7 @@ public sealed class CSharpGenerator : CodeGenerator
 											{
 												foreach (var field in httpMethodInfo.RequestNormalFields)
 												{
-													string fieldName = context.GetFieldPropertyName(field.ServiceField);
+													var fieldName = context.GetFieldPropertyName(field.ServiceField);
 													code.WriteLine($"{fieldName} = (({requestTypeName}) body{NullableReferenceBang}).{fieldName},");
 												}
 											}
@@ -855,13 +855,13 @@ public sealed class CSharpGenerator : CodeGenerator
 										code.WriteLine($"new HttpResponseMapping<{responseTypeName}>.Builder");
 										using (code.Block("{", "}.Build(),"))
 										{
-											string statusCode = ((int) validResponse.StatusCode).ToString(CultureInfo.InvariantCulture);
+											var statusCode = ((int) validResponse.StatusCode).ToString(CultureInfo.InvariantCulture);
 											code.WriteLine($"StatusCode = (HttpStatusCode) {statusCode},");
 
 											var bodyField = validResponse.BodyField;
 											if (bodyField != null)
 											{
-												string responseBodyFieldName = context.GetFieldPropertyName(bodyField.ServiceField);
+												var responseBodyFieldName = context.GetFieldPropertyName(bodyField.ServiceField);
 
 												var bodyFieldType = context.GetFieldType(bodyField.ServiceField);
 												if (bodyFieldType.Kind == ServiceTypeKind.Boolean)
@@ -896,7 +896,7 @@ public sealed class CSharpGenerator : CodeGenerator
 														{
 															foreach (var field in validResponse.NormalFields)
 															{
-																string fieldName = context.GetFieldPropertyName(field.ServiceField);
+																var fieldName = context.GetFieldPropertyName(field.ServiceField);
 																code.WriteLine($"{fieldName} = response.{fieldName},");
 															}
 														}
@@ -910,7 +910,7 @@ public sealed class CSharpGenerator : CodeGenerator
 														{
 															foreach (var field in validResponse.NormalFields)
 															{
-																string fieldName = context.GetFieldPropertyName(field.ServiceField);
+																var fieldName = context.GetFieldPropertyName(field.ServiceField);
 																code.WriteLine($"{fieldName} = (({responseTypeName}) body{NullableReferenceBang}).{fieldName},");
 															}
 														}
@@ -931,8 +931,8 @@ public sealed class CSharpGenerator : CodeGenerator
 										{
 											foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 											{
-												string fieldName = context.GetFieldPropertyName(headerField.ServiceField);
-												string fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
+												var fieldName = context.GetFieldPropertyName(headerField.ServiceField);
+												var fieldValue = GenerateFieldToStringCode(context.GetFieldType(headerField.ServiceField), $"response.{fieldName}");
 												code.WriteLine($"[\"{headerField.Name}\"] = {fieldValue},");
 											}
 										}
@@ -943,8 +943,8 @@ public sealed class CSharpGenerator : CodeGenerator
 									{
 										foreach (var headerField in httpMethodInfo.ResponseHeaderFields)
 										{
-											string dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
-											string headerVariableName = $"header{dtoFieldName}";
+											var dtoFieldName = context.GetFieldPropertyName(headerField.ServiceField);
+											var headerVariableName = $"header{dtoFieldName}";
 											code.WriteLine($"headers.TryGetValue(\"{headerField.Name}\", out var {headerVariableName});");
 											code.WriteLine($"response.{dtoFieldName} = {GenerateStringToFieldCode(context.GetFieldType(headerField.ServiceField), headerVariableName)};");
 										}
@@ -984,7 +984,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		switch (serviceType.Kind)
 		{
 			case ServiceTypeKind.Enum:
-				string enumName = CSharpUtility.GetEnumName(serviceType.Enum!);
+				var enumName = CSharpUtility.GetEnumName(serviceType.Enum!);
 				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
 			case ServiceTypeKind.Boolean:
 				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
@@ -1007,11 +1007,11 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var serviceInfo = httpServiceInfo.Service;
 
-		string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
-		string fullServiceName = serviceInfo.Name;
-		string fullHttpClientName = "HttpClient" + fullServiceName;
-		string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
-		string httpMappingName = serviceInfo.Name + "HttpMapping";
+		var namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
+		var fullServiceName = serviceInfo.Name;
+		var fullHttpClientName = "HttpClient" + fullServiceName;
+		var fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+		var httpMappingName = serviceInfo.Name + "HttpMapping";
 
 		return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpClientName}{CSharpUtility.FileExtension}", code =>
 		{
@@ -1042,17 +1042,17 @@ public sealed class CSharpGenerator : CodeGenerator
 					using (code.Indent())
 					{
 						var url = httpServiceInfo.Url;
-						string urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
+						var urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
 						code.WriteLine($": base(settings, defaultBaseUri: {urlCode})");
 					}
 					code.Block().Dispose();
 
-					foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+					foreach (var httpMethodInfo in httpServiceInfo.Methods)
 					{
 						var methodInfo = httpMethodInfo.ServiceMethod;
-						string methodName = CSharpUtility.GetMethodName(methodInfo);
-						string requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
-						string responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
+						var methodName = CSharpUtility.GetMethodName(methodInfo);
+						var requestTypeName = CSharpUtility.GetRequestDtoName(methodInfo);
+						var responseTypeName = CSharpUtility.GetResponseDtoName(methodInfo);
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
@@ -1070,11 +1070,11 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var serviceInfo = httpServiceInfo.Service;
 
-		string namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
-		string fullServiceName = serviceInfo.Name;
-		string fullHttpHandlerName = fullServiceName + "HttpHandler";
-		string fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
-		string httpMappingName = serviceInfo.Name + "HttpMapping";
+		var namespaceName = $"{context.NamespaceName}.{CSharpUtility.HttpDirectoryName}";
+		var fullServiceName = serviceInfo.Name;
+		var fullHttpHandlerName = fullServiceName + "HttpHandler";
+		var fullInterfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+		var httpMappingName = serviceInfo.Name + "HttpMapping";
 
 		return CreateFile($"{CSharpUtility.HttpDirectoryName}/{fullHttpHandlerName}{CSharpUtility.FileExtension}", code =>
 		{
@@ -1134,7 +1134,7 @@ public sealed class CSharpGenerator : CodeGenerator
 						{
 							if (indent != null)
 								code.WriteLine(" ??");
-							string methodName = CSharpUtility.GetMethodName(httpServiceMethod.ServiceMethod);
+							var methodName = CSharpUtility.GetMethodName(httpServiceMethod.ServiceMethod);
 							code.Write($"await AdaptTask(TryHandle{methodName}Async(httpRequest, cancellationToken)).ConfigureAwait(true)");
 							indent ??= code.Indent();
 						}
@@ -1142,10 +1142,10 @@ public sealed class CSharpGenerator : CodeGenerator
 						indent?.Dispose();
 					}
 
-					foreach (HttpMethodInfo httpMethodInfo in httpServiceInfo.Methods)
+					foreach (var httpMethodInfo in httpServiceInfo.Methods)
 					{
 						var methodInfo = httpMethodInfo.ServiceMethod;
-						string methodName = CSharpUtility.GetMethodName(methodInfo);
+						var methodName = CSharpUtility.GetMethodName(methodInfo);
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
@@ -1162,7 +1162,7 @@ public sealed class CSharpGenerator : CodeGenerator
 						code.WriteLine("protected override HttpStatusCode? TryGetCustomHttpStatusCode(string errorCode) =>");
 						using (code.Indent())
 						{
-							string tryGetCustomHttpStatusCode = string.Join(" ?? ", httpServiceInfo.ErrorSets.Select(x => $"Http{x.ServiceErrorSet.Name}.TryGetHttpStatusCode(errorCode)"));
+							var tryGetCustomHttpStatusCode = string.Join(" ?? ", httpServiceInfo.ErrorSets.Select(x => $"Http{x.ServiceErrorSet.Name}.TryGetHttpStatusCode(errorCode)"));
 							code.WriteLine($"{tryGetCustomHttpStatusCode};");
 						}
 					}
@@ -1216,9 +1216,9 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		foreach (var fieldInfo in fieldInfos)
 		{
-			string propertyName = context.GetFieldPropertyName(fieldInfo);
-			string normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
-			string nullableFieldType = RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo));
+			var propertyName = context.GetFieldPropertyName(fieldInfo);
+			var normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
+			var nullableFieldType = RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo));
 
 			code.WriteLine();
 			CSharpUtility.WriteSummary(code, fieldInfo.Summary);
@@ -1234,7 +1234,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private CodeGenFile GenerateInterface(ServiceInfo serviceInfo, Context context)
 	{
-		string interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
+		var interfaceName = CSharpUtility.GetInterfaceName(serviceInfo);
 
 		return CreateFile(interfaceName + CSharpUtility.FileExtension, code =>
 		{
@@ -1259,7 +1259,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				code.WriteLine($"public partial interface {interfaceName}");
 				using (code.Block())
 				{
-					foreach (ServiceMethodInfo methodInfo in serviceInfo.Methods)
+					foreach (var methodInfo in serviceInfo.Methods)
 					{
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);

@@ -63,7 +63,7 @@ public sealed class FacilityConformanceApp
 		var command = argsReader.ReadArgument();
 		if (command == "host")
 		{
-			string url = argsReader.ReadOption("url") ?? defaultUrl;
+			var url = argsReader.ReadOption("url") ?? defaultUrl;
 			argsReader.VerifyComplete();
 
 			new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().Run();

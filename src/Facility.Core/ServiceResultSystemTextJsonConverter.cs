@@ -41,7 +41,7 @@ public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonC
 
 		while (reader.TokenType == JsonTokenType.PropertyName)
 		{
-			string propertyName = reader.GetString()!;
+			var propertyName = reader.GetString()!;
 			ReadOrThrow(ref reader);
 
 			if (string.Equals(propertyName, c_valuePropertyName, StringComparison.OrdinalIgnoreCase))

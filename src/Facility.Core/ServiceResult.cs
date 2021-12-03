@@ -139,7 +139,7 @@ public class ServiceResult
 
 			while (reader.TokenType == JsonToken.PropertyName)
 			{
-				string propertyName = (string) reader.Value;
+				var propertyName = (string) reader.Value;
 				ReadOrThrow(reader);
 
 				if (string.Equals(propertyName, c_valuePropertyName, StringComparison.OrdinalIgnoreCase))
