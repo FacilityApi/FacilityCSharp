@@ -1,4 +1,5 @@
 using System.Net;
+using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
@@ -48,8 +49,6 @@ public sealed class FacilityConformanceApp
 
 		using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")!))
 			m_testsJson = testsJsonReader.ReadToEnd();
-
-		m_tests = ConformanceTestsInfo.FromJson(m_testsJson, ServiceSerializer.Default).Tests!;
 	}
 
 	public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -60,6 +59,15 @@ public sealed class FacilityConformanceApp
 		if (argsReader.ReadFlag("?|h|help"))
 			throw new ArgsReaderException("");
 
+		ServiceSerializer serializer = argsReader.ReadOption("serializer")?.ToLowerInvariant() switch
+		{
+			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
+			"newtonsoftjson" => NewtonsoftJsonServiceSerializer.Instance,
+			_ => throw new ArgsReaderException("Unsupported serializer."),
+		};
+
+		var tests = ConformanceTestsInfo.FromJson(m_testsJson, serializer).Tests!;
+
 		var command = argsReader.ReadArgument();
 
 		if (command == "host")
@@ -67,7 +75,14 @@ public sealed class FacilityConformanceApp
 			var url = argsReader.ReadOption("url") ?? defaultUrl;
 			argsReader.VerifyComplete();
 
-			await new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().RunAsync();
+			var service = new ConformanceApiService(tests, serializer);
+
+			await new WebHostBuilder()
+				.UseKestrel(options => options.AllowSynchronousIO = true)
+				.UseUrls(url)
+				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, serializer)))
+				.Build()
+				.RunAsync();
 
 			return 0;
 		}
@@ -82,9 +97,17 @@ public sealed class FacilityConformanceApp
 				new HttpClientServiceSettings
 				{
 					BaseUri = baseUri,
+					ContentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = serializer }),
 				});
 
-			var tester = new ConformanceApiTester(m_tests, api, new HttpClient { BaseAddress = baseUri });
+			var tester = new ConformanceApiTester(
+				new ConformanceApiTesterSettings
+				{
+					Tests = tests,
+					Api = api,
+					HttpClient = new HttpClient { BaseAddress = baseUri },
+					ServiceSerializer = serializer,
+				});
 
 			var results = new List<ConformanceTestResult>();
 
@@ -96,7 +119,7 @@ public sealed class FacilityConformanceApp
 			{
 				foreach (var testName in testNames)
 				{
-					var testInfo = m_tests.SingleOrDefault(x => x.Test == testName);
+					var testInfo = tests.SingleOrDefault(x => x.Test == testName);
 					if (testInfo == null)
 					{
 						Console.WriteLine($"Test not found: {testName}");
@@ -172,12 +195,13 @@ public sealed class FacilityConformanceApp
 		return 0;
 	}
 
-	private async Task HostAsync(HttpContext httpContext)
+	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, ServiceSerializer serializer)
 	{
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests, ServiceSerializer.Default));
+		var contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { Serializer = serializer });
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = contentSerializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{
@@ -210,7 +234,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = JsonHttpContentSerializer.Instance.CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = contentSerializer.CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)
@@ -251,5 +275,4 @@ public sealed class FacilityConformanceApp
 
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;
-	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 }
