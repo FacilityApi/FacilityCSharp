@@ -116,7 +116,7 @@ public static class ServiceDataUtility
 	/// Clones the data element.
 	/// </summary>
 	[return: NotNullIfNotNull("value")]
-	public static T Clone<T>(T value, ServiceSerializer serializer) => value is null ? default! : serializer.FromString<T>(serializer.ToString(value))!;
+	public static T Clone<T>(T value, ServiceSerializer serializer) => value is null ? default! : serializer.FromBytes<T>(serializer.ToBytes(value))!;
 
 	/// <summary>
 	/// Attempts to parse a Boolean.

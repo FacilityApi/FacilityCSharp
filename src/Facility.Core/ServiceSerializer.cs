@@ -22,6 +22,16 @@ public abstract class ServiceSerializer
 	/// <summary>
 	/// Serializes a value to the serialization format.
 	/// </summary>
+	public virtual byte[] ToBytes(object? value)
+	{
+		var memoryStream = new MemoryStream();
+		ToStream(value, memoryStream);
+		return memoryStream.ToArray();
+	}
+
+	/// <summary>
+	/// Serializes a value to the serialization format.
+	/// </summary>
 	public abstract void ToStream(object? value, Stream outputStream);
 
 	/// <summary>
@@ -42,6 +52,16 @@ public abstract class ServiceSerializer
 	/// Deserializes a value from the serialization format.
 	/// </summary>
 	public virtual T? FromString<T>(string stringValue) => (T?) FromString(stringValue, typeof(T));
+
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
+	public virtual object? FromBytes(byte[] bytesValue, Type type) => FromStream(new MemoryStream(bytesValue), type);
+
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
+	public virtual T? FromBytes<T>(byte[] bytesValue) => (T?) FromBytes(bytesValue, typeof(T));
 
 	/// <summary>
 	/// Deserializes a value from the serialization format.

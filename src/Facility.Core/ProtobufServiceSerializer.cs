@@ -31,13 +31,4 @@ public sealed class ProtobufServiceSerializer : ServiceSerializer
 	public override ServiceObject? ToServiceObject(object? value) => SystemTextJsonServiceSerializer.Instance.ToServiceObject(value);
 
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type) => SystemTextJsonServiceSerializer.Instance.FromServiceObject(serviceObject, type);
-
-	private object? FromBytes(byte[] bytesValue, Type type) => FromStream(new MemoryStream(bytesValue), type);
-
-	private byte[] ToBytes(object? value)
-	{
-		var memoryStream = new MemoryStream();
-		ToStream(value, memoryStream);
-		return memoryStream.ToArray();
-	}
 }
