@@ -20,9 +20,15 @@ public class ConformanceTests : ServiceSerializerTestBase
 	[TestCaseSource(nameof(TestNames))]
 	public async Task RunTest(string testName)
 	{
-		var api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient });
+		var settings = new ConformanceApiTesterSettings
+		{
+			Tests = m_tests,
+			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ServiceSerializer = Serializer }),
+			ServiceSerializer = Serializer,
+			HttpClient = m_httpClient,
+		};
 		var test = m_tests.Single(x => x.Test == testName);
-		var result = await new ConformanceApiTester(m_tests, api, m_httpClient, Serializer).RunTestAsync(test).ConfigureAwait(false);
+		var result = await new ConformanceApiTester(settings).RunTestAsync(test).ConfigureAwait(false);
 		if (result.Status != ConformanceTestStatus.Pass)
 			Assert.Fail(result.Message);
 	}
@@ -37,7 +43,7 @@ public class ConformanceTests : ServiceSerializerTestBase
 	{
 		var handler = new ConformanceApiHttpHandler(
 				service: new ConformanceApiService(tests, serviceSerializer),
-				settings: new ServiceHttpHandlerSettings())
+				settings: new ServiceHttpHandlerSettings { ServiceSerializer = serviceSerializer })
 			{ InnerHandler = new NotFoundHttpHandler() };
 		return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 	}
@@ -48,7 +54,7 @@ public class ConformanceTests : ServiceSerializerTestBase
 			Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 	}
 
-	private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(ServiceSerializer.Default).Select(x => x.Test!).ToList();
+	private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(NewtonsoftJsonServiceSerializer.Instance).Select(x => x.Test!).ToList();
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly HttpClient m_httpClient;

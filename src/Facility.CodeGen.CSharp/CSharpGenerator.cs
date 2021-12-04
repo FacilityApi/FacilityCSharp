@@ -1045,7 +1045,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					{
 						var url = httpServiceInfo.Url;
 						var urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
-						code.WriteLine($": base(settings, defaultBaseUri: {urlCode})");
+						code.WriteLine($": base(settings, defaultBaseUri: {urlCode}, defaultSerializer: SystemTextJsonServiceSerializer.Instance)");
 					}
 					code.Block().Dispose();
 
@@ -1089,6 +1089,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Net.Http",
 				"System.Threading",
 				"System.Threading.Tasks",
+				"Facility.Core",
 				"Facility.Core.Http",
 			};
 			CSharpUtility.WriteUsings(code, usings, namespaceName);
@@ -1112,7 +1113,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings)");
+						code.WriteLine(": base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)");
 					using (code.Block())
 						code.WriteLine("m_service = service ?? throw new ArgumentNullException(nameof(service));");
 
@@ -1120,7 +1121,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings)");
+						code.WriteLine(": base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)");
 					using (code.Block())
 						code.WriteLine("m_getService = getService ?? throw new ArgumentNullException(nameof(getService));");
 

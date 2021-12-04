@@ -10,7 +10,7 @@ public abstract class HttpClientService
 	/// <summary>
 	/// Creates an instance with the specified settings.
 	/// </summary>
-	protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
+	protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri, ServiceSerializer defaultSerializer)
 	{
 		settings ??= new HttpClientServiceSettings();
 
@@ -24,9 +24,18 @@ public abstract class HttpClientService
 		m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
 
 		BaseUri = baseUri;
-		ContentSerializer = settings.ContentSerializer ?? JsonHttpContentSerializer.Instance;
+		ContentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.ServiceSerializer ?? defaultSerializer);
 		BytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		TextSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
+	}
+
+	/// <summary>
+	/// Creates an instance with the specified settings.
+	/// </summary>
+	[Obsolete("Regenerate code to use the constructor with the serializer.")]
+	protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
+		: this(settings, defaultBaseUri, ServiceSerializer.Legacy)
+	{
 	}
 
 	/// <summary>

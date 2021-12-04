@@ -7,11 +7,6 @@ namespace Facility.Core;
 /// </summary>
 public abstract class ServiceSerializer
 {
-	/// <summary>
-	/// The default serializer, <see cref="NewtonsoftJsonServiceSerializer"/>.
-	/// </summary>
-	public static ServiceSerializer Default => NewtonsoftJsonServiceSerializer.Instance;
-
 	public abstract string DefaultMediaType { get; }
 
 	/// <summary>
@@ -92,4 +87,11 @@ public abstract class ServiceSerializer
 	public virtual T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
 
 	public virtual bool IsSupportedMediaType(string mediaType) => mediaType == DefaultMediaType;
+
+	/// <summary>
+	/// The legacy serializer, <see cref="NewtonsoftJsonServiceSerializer"/>.
+	/// </summary>
+	/// <remarks>This must be used by default to support older client libraries that don't support
+	/// <c>System.Text.Json</c>.</remarks>
+	internal static ServiceSerializer Legacy => NewtonsoftJsonServiceSerializer.Instance;
 }

@@ -17,7 +17,7 @@ namespace EdgeCases.Http
 		/// Creates the service.
 		/// </summary>
 		public HttpClientEdgeCases(HttpClientServiceSettings? settings = null)
-			: base(settings, defaultBaseUri: null)
+			: base(settings, defaultBaseUri: null, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 		}
 

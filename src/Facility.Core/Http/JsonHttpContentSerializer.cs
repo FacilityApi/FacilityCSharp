@@ -9,34 +9,45 @@ namespace Facility.Core.Http;
 public class JsonHttpContentSerializer : HttpContentSerializer
 {
 	/// <summary>
-	/// An instance of JsonHttpContentSerializer.
+	/// Creates an instance.
 	/// </summary>
-	public static readonly JsonHttpContentSerializer Instance = new();
+	public JsonHttpContentSerializer(ServiceSerializer serializer, JsonHttpContentSerializerSettings? settings = null)
+	{
+		m_serializer = serializer;
+		m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
+		m_memoryStreamCreator = settings?.MemoryStreamCreator;
+
+		SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
+	}
 
 	/// <summary>
 	/// Creates an instance.
 	/// </summary>
+	[Obsolete("Create an instance with the desired serializer and settings.")]
 	public JsonHttpContentSerializer()
-		: this(settings: null)
+		: this(ServiceSerializer.Legacy)
 	{
 	}
 
 	/// <summary>
 	/// Creates an instance.
 	/// </summary>
+	[Obsolete("Create an instance with the desired serializer and settings.")]
 	public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
+		: this(ServiceSerializer.Legacy, settings)
 	{
-		m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
-		m_memoryStreamCreator = settings?.MemoryStreamCreator;
-		m_serializer = settings?.Serializer ?? ServiceSerializer.Default;
-
-		SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 	}
 
 	/// <summary>
 	/// The supported media types. Defaults to "application/json".
 	/// </summary>
 	public IReadOnlyList<string> SupportedMediaTypes { get; }
+
+	/// <summary>
+	/// An instance of JsonHttpContentSerializer.
+	/// </summary>
+	[Obsolete("Create an instance with the desired serializer and settings.")]
+	public static readonly JsonHttpContentSerializer Instance = new();
 
 	/// <summary>
 	/// Creates a memory stream.

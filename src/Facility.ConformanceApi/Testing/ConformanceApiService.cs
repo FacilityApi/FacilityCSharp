@@ -12,7 +12,7 @@ public sealed class ConformanceApiService : IConformanceApi
 	/// </summary>
 	[Obsolete("Use constructor with ServiceSerializer.")]
 	public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
-		: this(tests, serializer: ServiceSerializer.Default)
+		: this(tests, serializer: NewtonsoftJsonServiceSerializer.Instance)
 	{
 	}
 

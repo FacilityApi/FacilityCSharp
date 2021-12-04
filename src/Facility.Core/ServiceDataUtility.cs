@@ -110,7 +110,7 @@ public static class ServiceDataUtility
 	/// Clones the data element.
 	/// </summary>
 	[Obsolete("Use the overload with ServiceSerializer.")]
-	public static T Clone<T>(T value) => Clone(value, ServiceSerializer.Default);
+	public static T Clone<T>(T value) => Clone(value, ServiceSerializer.Legacy);
 
 	/// <summary>
 	/// Clones the data element.

@@ -1,5 +1,6 @@
 using ProtoBuf;
 using ProtoBuf.Meta;
+using ProtoBuf.Serializers;
 
 namespace Facility.Core;
 

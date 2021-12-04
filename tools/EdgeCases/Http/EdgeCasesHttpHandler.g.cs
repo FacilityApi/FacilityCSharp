@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Facility.Core;
 using Facility.Core.Http;
 
 #pragma warning disable 612, 618 // member is obsolete
@@ -20,7 +21,7 @@ namespace EdgeCases.Http
 		/// Creates the handler.
 		/// </summary>
 		public EdgeCasesHttpHandler(IEdgeCases service, ServiceHttpHandlerSettings? settings = null)
-			: base(settings)
+			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
@@ -29,7 +30,7 @@ namespace EdgeCases.Http
 		/// Creates the handler.
 		/// </summary>
 		public EdgeCasesHttpHandler(Func<HttpRequestMessage, IEdgeCases> getService, ServiceHttpHandlerSettings? settings = null)
-			: base(settings)
+			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}

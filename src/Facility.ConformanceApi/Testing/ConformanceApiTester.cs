@@ -11,37 +11,13 @@ public sealed class ConformanceApiTester
 	/// <summary>
 	/// Creates a tester.
 	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
-		: this(tests, api, httpClient: null)
+	public ConformanceApiTester(ConformanceApiTesterSettings settings)
 	{
-	}
-
-	/// <summary>
-	/// Creates a tester.
-	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
-		: this(tests, api, httpClient, serializer: ServiceSerializer.Default)
-	{
-	}
-
-	/// <summary>
-	/// Creates a tester.
-	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
-	/// <param name="serializer">The optional serializer.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient, ServiceSerializer serializer)
-	{
-		m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
-		m_api = api ?? throw new ArgumentNullException(nameof(api));
-		m_httpClient = httpClient;
-		m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+		_ = settings ?? throw new ArgumentNullException(nameof(settings));
+		m_tests = settings.Tests ?? throw new ArgumentException($"{nameof(settings.Tests)} is required.", nameof(settings));
+		m_api = settings.Api ?? throw new ArgumentException($"{nameof(settings.Api)} is required.", nameof(settings));
+		m_serializer = settings.ServiceSerializer ?? throw new ArgumentException($"{nameof(settings.ServiceSerializer)} is required.", nameof(settings));
+		m_httpClient = settings.HttpClient;
 
 		var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
 		if (sameNameTests != null)
@@ -58,6 +34,29 @@ public sealed class ConformanceApiTester
 				}
 			}
 		}
+	}
+
+	/// <summary>
+	/// Creates a tester.
+	/// </summary>
+	/// <param name="tests">The conformance tests.</param>
+	/// <param name="api">The API interface to test.</param>
+	[Obsolete("Use settings overload.")]
+	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
+		: this(new ConformanceApiTesterSettings { Tests = tests, Api = api, ServiceSerializer = NewtonsoftJsonServiceSerializer.Instance })
+	{
+	}
+
+	/// <summary>
+	/// Creates a tester.
+	/// </summary>
+	/// <param name="tests">The conformance tests.</param>
+	/// <param name="api">The API interface to test.</param>
+	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
+	[Obsolete("Use settings overload.")]
+	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
+		: this(new ConformanceApiTesterSettings { Tests = tests, Api = api, ServiceSerializer = NewtonsoftJsonServiceSerializer.Instance, HttpClient = httpClient })
+	{
 	}
 
 	/// <summary>
@@ -155,6 +154,6 @@ public sealed class ConformanceApiTester
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly IConformanceApi m_api;
-	private readonly HttpClient? m_httpClient;
 	private readonly ServiceSerializer m_serializer;
+	private readonly HttpClient? m_httpClient;
 }
