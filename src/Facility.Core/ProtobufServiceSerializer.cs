@@ -1,4 +1,5 @@
 using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace Facility.Core;
 
@@ -31,4 +32,13 @@ public sealed class ProtobufServiceSerializer : ServiceSerializer
 	public override ServiceObject? ToServiceObject(object? value) => SystemTextJsonServiceSerializer.Instance.ToServiceObject(value);
 
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type) => SystemTextJsonServiceSerializer.Instance.FromServiceObject(serviceObject, type);
+
+	static ProtobufServiceSerializer()
+	{
+		RuntimeTypeModel.Default.Add(typeof(ServiceObject), false)
+			.SetSurrogate(typeof(ServiceObjectSurrogate));
+
+		RuntimeTypeModel.Default.Add(typeof(ServiceResultFailure), false)
+			.SetSurrogate(typeof(ServiceResultFailureSurrogate));
+	}
 }
