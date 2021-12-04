@@ -6,6 +6,7 @@ namespace Facility.Core.Http;
 /// <summary>
 /// Uses JSON to serialize and deserialize DTOs for HTTP requests and responses.
 /// </summary>
+[Obsolete("Use ServiceSerializerHttpContentSerializer")]
 public class JsonHttpContentSerializer : HttpContentSerializer
 {
 	/// <summary>
