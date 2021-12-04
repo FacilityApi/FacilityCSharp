@@ -63,10 +63,11 @@ public sealed class FacilityConformanceApp
 		{
 			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
 			"newtonsoftjson" => NewtonsoftJsonServiceSerializer.Instance,
+			"protobufnet" => ProtobufServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
 
-		var tests = ConformanceTestsInfo.FromJson(m_testsJson, serializer).Tests!;
+		var tests = ConformanceTestsInfo.FromJson(m_testsJson, serializer.IsSupportedMediaType("application/json") ? serializer : SystemTextJsonServiceSerializer.Instance).Tests!;
 
 		var command = argsReader.ReadArgument();
 
@@ -97,6 +98,7 @@ public sealed class FacilityConformanceApp
 				new HttpClientServiceSettings
 				{
 					BaseUri = baseUri,
+					ServiceSerializer = serializer,
 				});
 
 			var tester = new ConformanceApiTester(
@@ -232,7 +234,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = new JsonHttpContentSerializer(serializer).CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = new ServiceSerializerHttpContentSerializer(serializer).CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)
