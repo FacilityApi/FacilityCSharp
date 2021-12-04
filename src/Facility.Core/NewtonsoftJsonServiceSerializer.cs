@@ -112,6 +112,18 @@ public sealed class NewtonsoftJsonServiceSerializer : ServiceSerializer
 	}
 
 	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
+	/// <remarks>Copies the stream content into a buffer to avoid blocking IO.</remarks>
+	public override async Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken)
+	{
+		using var memoryStream = new MemoryStream();
+		await stream.CopyToAsync(memoryStream, 80 * 1024, cancellationToken).ConfigureAwait(false);
+		memoryStream.Seek(0, SeekOrigin.Begin);
+		return FromStream(memoryStream, type);
+	}
+
+	/// <summary>
 	/// Serializes a value to a <see cref="ServiceObject"/> representation of the serialization format.
 	/// </summary>
 	public override ServiceObject? ToServiceObject(object? value)
