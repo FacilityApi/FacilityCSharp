@@ -12,6 +12,8 @@ public abstract class ServiceSerializer
 	/// </summary>
 	public static ServiceSerializer Default => NewtonsoftJsonServiceSerializer.Instance;
 
+	public abstract string DefaultMediaType { get; }
+
 	/// <summary>
 	/// Serializes a value to the serialization format.
 	/// </summary>
@@ -68,4 +70,6 @@ public abstract class ServiceSerializer
 	/// </summary>
 	[return: NotNullIfNotNull("serviceObject")]
 	public virtual T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
+
+	public virtual bool IsSupportedMediaType(string mediaType) => mediaType == DefaultMediaType;
 }

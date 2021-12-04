@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for CheckPath.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class CheckPathRequestDto : ServiceDto<CheckPathRequestDto>
 	{
 		/// <summary>
@@ -21,18 +23,25 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public string? String { get; set; }
 
+		[ProtoMember(2)]
 		public bool? Boolean { get; set; }
 
+		[ProtoMember(3)]
 		public double? Double { get; set; }
 
+		[ProtoMember(4)]
 		public int? Int32 { get; set; }
 
+		[ProtoMember(5)]
 		public long? Int64 { get; set; }
 
+		[ProtoMember(6)]
 		public decimal? Decimal { get; set; }
 
+		[ProtoMember(7)]
 		public Answer? Enum { get; set; }
 
 		/// <summary>

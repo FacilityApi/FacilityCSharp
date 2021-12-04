@@ -1,5 +1,8 @@
+using ProtoBuf;
+
 namespace Facility.Core.UnitTests;
 
+[ProtoContract]
 public sealed class ValueDto : ServiceDto<ValueDto>
 {
 	public static ValueDto Create(bool? value)
@@ -27,14 +30,19 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 		return new ValueDto { ErrorMapValue = value };
 	}
 
+	[ProtoMember(1)]
 	public bool? BooleanValue { get; set; }
 
+	[ProtoMember(2)]
 	public string? StringValue { get; set; }
 
+	[ProtoMember(3)]
 	public IReadOnlyList<ServiceErrorDto>? ErrorArrayValue { get; set; }
 
+	[ProtoMember(4)]
 	public IReadOnlyDictionary<string, bool>? BooleanMapValue { get; set; }
 
+	[ProtoMember(5)]
 	public IReadOnlyDictionary<string, ServiceErrorDto>? ErrorMapValue { get; set; }
 
 	public override bool IsEquivalentTo(ValueDto? other)

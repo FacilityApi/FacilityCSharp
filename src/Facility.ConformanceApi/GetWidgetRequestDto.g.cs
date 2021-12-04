@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for GetWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class GetWidgetRequestDto : ServiceDto<GetWidgetRequestDto>
 	{
 		/// <summary>
@@ -24,11 +26,13 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widget ID.
 		/// </summary>
+		[ProtoMember(1)]
 		public int? Id { get; set; }
 
 		/// <summary>
 		/// Don't get the widget if it has this ETag.
 		/// </summary>
+		[ProtoMember(2)]
 		public string? IfNotETag { get; set; }
 
 		/// <summary>

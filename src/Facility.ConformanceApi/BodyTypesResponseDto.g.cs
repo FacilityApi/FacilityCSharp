@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for BodyTypes.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class BodyTypesResponseDto : ServiceDto<BodyTypesResponseDto>
 	{
 		/// <summary>
@@ -21,6 +23,7 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public byte[]? Content { get; set; }
 
 		/// <summary>

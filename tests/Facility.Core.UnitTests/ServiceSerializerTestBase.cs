@@ -6,6 +6,7 @@ public abstract class ServiceSerializerTestBase
 	{
 		NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
+		ProtobufServiceSerializer.Instance,
 	};
 
 	protected ServiceSerializerTestBase(ServiceSerializer serializer)

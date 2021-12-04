@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -13,6 +14,7 @@ namespace Facility.ConformanceApi
 	/// A widget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class WidgetDto : ServiceDto<WidgetDto>
 	{
 		/// <summary>
@@ -25,11 +27,13 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// A unique identifier for the widget.
 		/// </summary>
+		[ProtoMember(1)]
 		public int? Id { get; set; }
 
 		/// <summary>
 		/// The name of the widget.
 		/// </summary>
+		[ProtoMember(2)]
 		public string? Name { get; set; }
 
 		private static readonly Regex s_validNameRegex = new Regex("^[_a-zA-Z0-9]+$", RegexOptions.CultureInvariant);

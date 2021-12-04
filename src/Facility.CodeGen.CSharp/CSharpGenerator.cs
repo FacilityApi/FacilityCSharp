@@ -318,6 +318,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System",
 				"System.Collections.Generic",
 				"Facility.Core",
+				"ProtoBuf",
 			};
 
 			var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
@@ -339,6 +340,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 				CSharpUtility.WriteObsoleteAttribute(code, dtoInfo);
 
+				code.WriteLine("[ProtoContract]");
 				code.WriteLine($"public sealed partial class {fullDtoName} : ServiceDto<{fullDtoName}>");
 				using (code.Block())
 				{
@@ -1214,6 +1216,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private void GenerateFieldProperties(CodeWriter code, IEnumerable<ServiceFieldInfo> fieldInfos, Context context)
 	{
+		int protoMember = 0;
 		foreach (var fieldInfo in fieldInfos)
 		{
 			var propertyName = context.GetFieldPropertyName(fieldInfo);
@@ -1228,6 +1231,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				code.WriteLine($"[Newtonsoft.Json.JsonProperty(\"{fieldInfo.Name}\")]");
 				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{fieldInfo.Name}\")]");
 			}
+			code.WriteLine(FormattableString.Invariant($"[ProtoMember({++protoMember})]"));
 			code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
 		}
 	}

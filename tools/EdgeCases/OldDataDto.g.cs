@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 #pragma warning disable 612, 618 // member is obsolete
 
@@ -14,6 +15,7 @@ namespace EdgeCases
 	/// An old DTO.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class OldDataDto : ServiceDto<OldDataDto>
 	{
 		/// <summary>
@@ -27,9 +29,11 @@ namespace EdgeCases
 		/// An old field.
 		/// </summary>
 		[Obsolete]
+		[ProtoMember(1)]
 		public string? Old { get; set; }
 
 		[Obsolete]
+		[ProtoMember(2)]
 		public string? Older { get; set; }
 
 		/// <summary>

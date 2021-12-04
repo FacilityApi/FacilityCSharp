@@ -16,6 +16,8 @@ public sealed class NewtonsoftJsonServiceSerializer : ServiceSerializer
 	/// </summary>
 	public static readonly NewtonsoftJsonServiceSerializer Instance = new();
 
+	public override string DefaultMediaType => "application/json";
+
 	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>

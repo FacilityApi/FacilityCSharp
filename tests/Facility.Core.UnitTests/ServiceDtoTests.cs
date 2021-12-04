@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using NUnit.Framework;
+using ProtoBuf;
 
 namespace Facility.Core.UnitTests;
 
@@ -49,12 +50,16 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 	}
 
 	[SuppressMessage("ReSharper", "All", Justification = "unit test")]
+	[ProtoContract]
 	private class TestDto : ServiceDto<TestDto>
 	{
+		[ProtoMember(1)]
 		public int? Id { get; set; }
 
+		[ProtoMember(2)]
 		public string? Name { get; set; }
 
+		[ProtoMember(3)]
 		public IReadOnlyList<TestDto>? Children { get; set; }
 
 		public override bool IsEquivalentTo(TestDto? other)

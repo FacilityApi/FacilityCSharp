@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class AnyResultDto : ServiceDto<AnyResultDto>
 	{
 		/// <summary>
@@ -18,32 +20,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public ServiceResult<string>? String { get; set; }
 
+		[ProtoMember(2)]
 		public ServiceResult<bool>? Boolean { get; set; }
 
+		[ProtoMember(3)]
 		public ServiceResult<double>? Double { get; set; }
 
+		[ProtoMember(4)]
 		public ServiceResult<int>? Int32 { get; set; }
 
+		[ProtoMember(5)]
 		public ServiceResult<long>? Int64 { get; set; }
 
+		[ProtoMember(6)]
 		public ServiceResult<decimal>? Decimal { get; set; }
 
+		[ProtoMember(7)]
 		public ServiceResult<byte[]>? Bytes { get; set; }
 
+		[ProtoMember(8)]
 		public ServiceResult<ServiceObject>? Object { get; set; }
 
+		[ProtoMember(9)]
 		public ServiceResult<ServiceErrorDto>? Error { get; set; }
 
+		[ProtoMember(10)]
 		public ServiceResult<AnyDto>? Data { get; set; }
 
+		[ProtoMember(11)]
 		public ServiceResult<Answer>? Enum { get; set; }
 
+		[ProtoMember(12)]
 		public ServiceResult<IReadOnlyList<int>>? Array { get; set; }
 
+		[ProtoMember(13)]
 		public ServiceResult<IReadOnlyDictionary<string, int>>? Map { get; set; }
 
+		[ProtoMember(14)]
 		public ServiceResult<ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

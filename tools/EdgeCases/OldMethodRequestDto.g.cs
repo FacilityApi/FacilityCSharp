@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace EdgeCases
 {
@@ -12,6 +13,7 @@ namespace EdgeCases
 	/// Request for OldMethod.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class OldMethodRequestDto : ServiceDto<OldMethodRequestDto>
 	{
 		/// <summary>

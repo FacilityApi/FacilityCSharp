@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for MirrorText.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class MirrorTextRequestDto : ServiceDto<MirrorTextRequestDto>
 	{
 		/// <summary>
@@ -21,8 +23,10 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public string? Content { get; set; }
 
+		[ProtoMember(2)]
 		public string? Type { get; set; }
 
 		/// <summary>

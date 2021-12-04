@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace EdgeCases
 {
@@ -13,6 +14,7 @@ namespace EdgeCases
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Obsolete]
+	[ProtoContract]
 	public sealed partial class OldEmptyDataDto : ServiceDto<OldEmptyDataDto>
 	{
 		/// <summary>

@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using ProtoBuf;
 
 namespace Facility.Core;
 
@@ -31,6 +32,7 @@ public sealed partial class ServiceErrorDto
 	[Obsolete("Use DetailsObject.")]
 	[Newtonsoft.Json.JsonIgnore]
 	[System.Text.Json.Serialization.JsonIgnore]
+	[ProtoIgnore]
 	public JObject? Details
 	{
 		get => DetailsObject?.AsJObject();

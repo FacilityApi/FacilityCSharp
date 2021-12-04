@@ -30,7 +30,7 @@ public class ConformanceTests : ServiceSerializerTestBase
 	private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider(ServiceSerializer serializer)
 	{
 		using var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")!);
-		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), serializer).Tests!;
+		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), serializer.IsSupportedMediaType("application/json") ? serializer : SystemTextJsonServiceSerializer.Instance).Tests!;
 	}
 
 	private static HttpClient CreateHttpClient(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer serviceSerializer)

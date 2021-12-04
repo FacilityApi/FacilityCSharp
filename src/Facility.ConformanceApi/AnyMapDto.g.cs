@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class AnyMapDto : ServiceDto<AnyMapDto>
 	{
 		/// <summary>
@@ -18,32 +20,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public IReadOnlyDictionary<string, string>? String { get; set; }
 
+		[ProtoMember(2)]
 		public IReadOnlyDictionary<string, bool>? Boolean { get; set; }
 
+		[ProtoMember(3)]
 		public IReadOnlyDictionary<string, double>? Double { get; set; }
 
+		[ProtoMember(4)]
 		public IReadOnlyDictionary<string, int>? Int32 { get; set; }
 
+		[ProtoMember(5)]
 		public IReadOnlyDictionary<string, long>? Int64 { get; set; }
 
+		[ProtoMember(6)]
 		public IReadOnlyDictionary<string, decimal>? Decimal { get; set; }
 
+		[ProtoMember(7)]
 		public IReadOnlyDictionary<string, byte[]>? Bytes { get; set; }
 
+		[ProtoMember(8)]
 		public IReadOnlyDictionary<string, ServiceObject>? Object { get; set; }
 
+		[ProtoMember(9)]
 		public IReadOnlyDictionary<string, ServiceErrorDto>? Error { get; set; }
 
+		[ProtoMember(10)]
 		public IReadOnlyDictionary<string, AnyDto>? Data { get; set; }
 
+		[ProtoMember(11)]
 		public IReadOnlyDictionary<string, Answer>? Enum { get; set; }
 
+		[ProtoMember(12)]
 		public IReadOnlyDictionary<string, IReadOnlyList<int>>? Array { get; set; }
 
+		[ProtoMember(13)]
 		public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>>? Map { get; set; }
 
+		[ProtoMember(14)]
 		public IReadOnlyDictionary<string, ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

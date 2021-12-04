@@ -14,6 +14,8 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	/// </summary>
 	public static readonly SystemTextJsonServiceSerializer Instance = new();
 
+	public override string DefaultMediaType => "application/json";
+
 	/// <summary>
 	/// Serializes a value to the serialization format.
 	/// </summary>

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for GetWidgets.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class GetWidgetsResponseDto : ServiceDto<GetWidgetsResponseDto>
 	{
 		/// <summary>
@@ -24,6 +26,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widgets.
 		/// </summary>
+		[ProtoMember(1)]
 		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 
 		/// <summary>

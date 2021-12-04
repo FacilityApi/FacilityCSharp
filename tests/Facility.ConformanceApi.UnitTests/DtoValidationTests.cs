@@ -316,6 +316,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 		{
 			SkipRequestValidation = skipServerValidation,
 			SkipResponseValidation = skipServerValidation,
+			ContentSerializer = new ServiceSerializerHttpContentSerializer(Serializer),
 		};
 		var handler = new ConformanceApiHttpHandler(service, settings) { InnerHandler = new NotFoundHttpHandler() };
 		var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
@@ -324,6 +325,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 			HttpClient = httpClient,
 			SkipRequestValidation = skipClientValidation,
 			SkipResponseValidation = skipClientValidation,
+			ContentSerializer = new ServiceSerializerHttpContentSerializer(Serializer),
 		});
 	}
 

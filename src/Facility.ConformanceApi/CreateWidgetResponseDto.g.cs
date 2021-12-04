@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for CreateWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class CreateWidgetResponseDto : ServiceDto<CreateWidgetResponseDto>
 	{
 		/// <summary>
@@ -24,16 +26,19 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The created widget.
 		/// </summary>
+		[ProtoMember(1)]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
 		/// The URL of the created widget.
 		/// </summary>
+		[ProtoMember(2)]
 		public string? Url { get; set; }
 
 		/// <summary>
 		/// The ETag of the created widget.
 		/// </summary>
+		[ProtoMember(3)]
 		public string? ETag { get; set; }
 
 		/// <summary>

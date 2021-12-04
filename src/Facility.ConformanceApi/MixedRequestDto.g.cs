@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for Mixed.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class MixedRequestDto : ServiceDto<MixedRequestDto>
 	{
 		/// <summary>
@@ -21,12 +23,16 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public string? Path { get; set; }
 
+		[ProtoMember(2)]
 		public string? Query { get; set; }
 
+		[ProtoMember(3)]
 		public string? Header { get; set; }
 
+		[ProtoMember(4)]
 		public string? Normal { get; set; }
 
 		/// <summary>

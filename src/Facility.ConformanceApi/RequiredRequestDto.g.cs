@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for Required.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class RequiredRequestDto : ServiceDto<RequiredRequestDto>
 	{
 		/// <summary>
@@ -21,24 +23,34 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[ProtoMember(1)]
 		public string? Query { get; set; }
 
+		[ProtoMember(2)]
 		public string? Normal { get; set; }
 
+		[ProtoMember(3)]
 		public WidgetDto? Widget { get; set; }
 
+		[ProtoMember(4)]
 		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 
+		[ProtoMember(5)]
 		public IReadOnlyList<IReadOnlyList<WidgetDto>>? WidgetMatrix { get; set; }
 
+		[ProtoMember(6)]
 		public ServiceResult<WidgetDto>? WidgetResult { get; set; }
 
+		[ProtoMember(7)]
 		public IReadOnlyList<ServiceResult<WidgetDto>>? WidgetResults { get; set; }
 
+		[ProtoMember(8)]
 		public IReadOnlyDictionary<string, WidgetDto>? WidgetMap { get; set; }
 
+		[ProtoMember(9)]
 		public HasWidgetDto? HasWidget { get; set; }
 
+		[ProtoMember(10)]
 		public IReadOnlyList<double>? Point { get; set; }
 
 		/// <summary>

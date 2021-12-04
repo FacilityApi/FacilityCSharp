@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for CreateWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[ProtoContract]
 	public sealed partial class CreateWidgetRequestDto : ServiceDto<CreateWidgetRequestDto>
 	{
 		/// <summary>
@@ -24,6 +26,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widget to create.
 		/// </summary>
+		[ProtoMember(1)]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
