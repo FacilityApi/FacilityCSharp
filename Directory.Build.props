@@ -9,7 +9,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NeutralLanguage>en-US</NeutralLanguage>
     <NoWarn>$(NoWarn);1591;1998;NU5105;CA1014;CA1508</NoWarn>
-    <DebugType>embedded</DebugType>
+    <DebugType>portable</DebugType>
     <GitHubOrganization>FacilityApi</GitHubOrganization>
     <RepositoryName>FacilityCSharp</RepositoryName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
