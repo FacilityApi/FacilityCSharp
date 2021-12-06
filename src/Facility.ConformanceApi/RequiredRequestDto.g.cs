@@ -110,5 +110,10 @@ namespace Facility.ConformanceApi
 
 			return null;
 		}
+
+		static RequiredRequestDto()
+		{
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<WidgetDto>>(false).SetSurrogate(typeof(ServiceResultSurrogate<WidgetDto>));
+		}
 	}
 }

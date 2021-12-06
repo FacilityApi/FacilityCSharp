@@ -83,5 +83,23 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentResults(Map, other.Map) &&
 				ServiceDataUtility.AreEquivalentResults(Result, other.Result);
 		}
+
+		static AnyResultDto()
+		{
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<string>>(false).SetSurrogate(typeof(ServiceResultSurrogate<string>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<bool>>(false).SetSurrogate(typeof(ServiceResultSurrogate<bool>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<double>>(false).SetSurrogate(typeof(ServiceResultSurrogate<double>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<int>>(false).SetSurrogate(typeof(ServiceResultSurrogate<int>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<long>>(false).SetSurrogate(typeof(ServiceResultSurrogate<long>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<decimal>>(false).SetSurrogate(typeof(ServiceResultSurrogate<decimal>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<byte[]>>(false).SetSurrogate(typeof(ServiceResultSurrogate<byte[]>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<ServiceObject>>(false).SetSurrogate(typeof(ServiceResultSurrogate<ServiceObject>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<ServiceErrorDto>>(false).SetSurrogate(typeof(ServiceResultSurrogate<ServiceErrorDto>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<AnyDto>>(false).SetSurrogate(typeof(ServiceResultSurrogate<AnyDto>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<Answer>>(false).SetSurrogate(typeof(ServiceResultSurrogate<Answer>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<IReadOnlyList<int>>>(false).SetSurrogate(typeof(ServiceResultSurrogate<IReadOnlyList<int>>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<IReadOnlyDictionary<string, int>>>(false).SetSurrogate(typeof(ServiceResultSurrogate<IReadOnlyDictionary<string, int>>));
+			ProtoBuf.Meta.RuntimeTypeModel.Default.Add<ServiceResult<ServiceResult<int>>>(false).SetSurrogate(typeof(ServiceResultSurrogate<ServiceResult<int>>));
+		}
 	}
 }

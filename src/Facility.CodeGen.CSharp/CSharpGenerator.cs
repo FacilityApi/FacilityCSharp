@@ -536,6 +536,22 @@ public sealed class CSharpGenerator : CodeGenerator
 							code.WriteLine("return null;");
 						}
 					}
+
+					var fieldInfosForProtobufModel = fieldInfos.Where(x => context.GetFieldType(x).Kind is ServiceTypeKind.Result).ToList();
+					if (fieldInfosForProtobufModel.Count != 0)
+					{
+						code.WriteLine();
+						code.WriteLine($"static {fullDtoName}()");
+						using (code.Block())
+						{
+							foreach (var fieldInfo in fieldInfosForProtobufModel)
+							{
+								// TODO: this won't work when multiple types use the same ServiceResult<T>
+								var fieldType = context.GetFieldType(fieldInfo);
+								code.WriteLine($"ProtoBuf.Meta.RuntimeTypeModel.Default.Add<{RenderNonNullableFieldType(fieldType)}>(false).SetSurrogate(typeof(ServiceResultSurrogate<{RenderNonNullableFieldType(fieldType.ValueType!)}>));");
+							}
+						}
+					}
 				}
 			}
 		});

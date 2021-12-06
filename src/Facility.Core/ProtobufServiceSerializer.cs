@@ -39,7 +39,10 @@ public sealed class ProtobufServiceSerializer : ServiceSerializer
 		RuntimeTypeModel.Default.Add(typeof(ServiceObject), false)
 			.SetSurrogate(typeof(ServiceObjectSurrogate));
 
+		RuntimeTypeModel.Default.Add(typeof(ServiceResult), false)
+			.SetSurrogate(typeof(ServiceResultSurrogate));
+
 		RuntimeTypeModel.Default.Add(typeof(ServiceResultFailure), false)
-			.SetSurrogate(typeof(ServiceResultFailureSurrogate));
+			.SetSurrogate(typeof(ServiceResultSurrogate));
 	}
 }
