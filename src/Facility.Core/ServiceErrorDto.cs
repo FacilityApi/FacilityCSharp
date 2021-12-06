@@ -31,6 +31,7 @@ public sealed partial class ServiceErrorDto
 	[Obsolete("Use DetailsObject.")]
 	[Newtonsoft.Json.JsonIgnore]
 	[System.Text.Json.Serialization.JsonIgnore]
+	[System.Text.Json.Serialization.JsonPropertyName("_details")] //// HACK: without this, details is serialized first
 	public JObject? Details
 	{
 		get => DetailsObject?.AsJObject();
