@@ -27,6 +27,11 @@ namespace Facility.ConformanceApi
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
+		/// Returns the DTO as JSON.
+		/// </summary>
+		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToString(this);
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(CreateWidgetRequestDto? other)

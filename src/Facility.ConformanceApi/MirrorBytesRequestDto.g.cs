@@ -26,6 +26,11 @@ namespace Facility.ConformanceApi
 		public string? Type { get; set; }
 
 		/// <summary>
+		/// Returns the DTO as JSON.
+		/// </summary>
+		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToString(this);
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(MirrorBytesRequestDto? other)
