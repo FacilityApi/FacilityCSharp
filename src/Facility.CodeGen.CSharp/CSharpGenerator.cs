@@ -1040,11 +1040,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the service.");
 					code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-					{
-						var url = httpServiceInfo.Url;
-						var urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
-						code.WriteLine($": base(settings, defaultBaseUri: {urlCode}, defaultSerializer: SystemTextJsonServiceSerializer.Instance)");
-					}
+						code.WriteLine(": base(settings, s_defaults)");
 					code.Block().Dispose();
 
 					foreach (var httpMethodInfo in httpServiceInfo.Methods)
@@ -1060,6 +1056,17 @@ public sealed class CSharpGenerator : CodeGenerator
 						code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken = default) =>");
 						using (code.Indent())
 							code.WriteLine($"TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+					}
+
+					code.WriteLine();
+					code.WriteLine("private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults");
+					using (code.Block("{", "};"))
+					{
+						var url = httpServiceInfo.Url;
+						if (url != null)
+							code.WriteLine($"BaseUri = new Uri({CSharpUtility.CreateString(url)}),");
+
+						code.WriteLine("ServiceSerializer = SystemTextJsonServiceSerializer.Instance,");
 					}
 				}
 			}

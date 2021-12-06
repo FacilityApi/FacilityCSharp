@@ -8,9 +8,9 @@ namespace Facility.Core.Http;
 public abstract class HttpClientService
 {
 	/// <summary>
-	/// Creates an instance with the specified settings.
+	/// Creates an instance with the specified settings and defaults.
 	/// </summary>
-	protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri, ServiceSerializer defaultSerializer)
+	protected HttpClientService(HttpClientServiceSettings? settings, HttpClientServiceDefaults defaults)
 	{
 		settings ??= new HttpClientServiceSettings();
 
@@ -20,11 +20,11 @@ public abstract class HttpClientService
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
 
-		var baseUri = settings.BaseUri ?? defaultBaseUri;
+		var baseUri = settings.BaseUri ?? defaults.BaseUri;
 		m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
 
 		BaseUri = baseUri;
-		ContentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.ServiceSerializer ?? defaultSerializer);
+		ContentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.ServiceSerializer ?? defaults.ServiceSerializer ?? ServiceSerializer.Legacy);
 		BytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		TextSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 	}
@@ -32,9 +32,9 @@ public abstract class HttpClientService
 	/// <summary>
 	/// Creates an instance with the specified settings.
 	/// </summary>
-	[Obsolete("Regenerate code to use the constructor with the serializer.")]
+	[Obsolete("Regenerate code to use the new constructor.")]
 	protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
-		: this(settings, defaultBaseUri, ServiceSerializer.Legacy)
+		: this(settings, new HttpClientServiceDefaults { BaseUri = defaultBaseUri })
 	{
 	}
 

@@ -20,7 +20,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the service.
 		/// </summary>
 		public HttpClientConformanceApi(HttpClientServiceSettings? settings = null)
-			: base(settings, defaultBaseUri: null, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
+			: base(settings, s_defaults)
 		{
 		}
 
@@ -86,5 +86,10 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.BodyTypesMapping, request, cancellationToken);
+
+		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
+		{
+			ServiceSerializer = SystemTextJsonServiceSerializer.Instance,
+		};
 	}
 }
