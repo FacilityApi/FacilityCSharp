@@ -361,6 +361,10 @@ public sealed class CSharpGenerator : CodeGenerator
 					}
 
 					code.WriteLine();
+					CSharpUtility.WriteSummary(code, "Returns the DTO as JSON.");
+					code.WriteLine("public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToString(this);");
+
+					code.WriteLine();
 					CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
 					code.WriteLine($"public override bool IsEquivalentTo({NullableReference(fullDtoName)} other)");
 					using (code.Block())
