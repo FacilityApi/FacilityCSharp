@@ -13,3 +13,4 @@ nCrunchTemp*
 _ReSharper*
 .DS_Store
 launchSettings.json
+/BenchmarkDotNet.Artifacts/

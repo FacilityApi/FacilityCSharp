@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacilityConformance", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocGen", "tools\XmlDocGen\XmlDocGen.csproj", "{636E5B36-4AA8-47D8-884C-AE4D80B49A14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Benchmarks", "tests\Facility.Benchmarks\Facility.Benchmarks.csproj", "{A194668B-265F-453F-A90B-B2B3FB1ADD15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A194668B-265F-453F-A90B-B2B3FB1ADD15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A194668B-265F-453F-A90B-B2B3FB1ADD15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A194668B-265F-453F-A90B-B2B3FB1ADD15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A194668B-265F-453F-A90B-B2B3FB1ADD15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

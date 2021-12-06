@@ -88,6 +88,8 @@ public abstract class ServiceSerializer
 
 	public virtual bool IsSupportedMediaType(string mediaType) => mediaType == DefaultMediaType;
 
+	public override string ToString() => GetType().Name;
+
 	/// <summary>
 	/// The legacy serializer, <see cref="NewtonsoftJsonServiceSerializer"/>.
 	/// </summary>

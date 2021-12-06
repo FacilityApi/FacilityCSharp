@@ -42,10 +42,11 @@ return BuildRunner.Execute(args, build =>
 	{
 		var verifyOption = verify ? "--verify" : null;
 
-		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable", "--newline", "lf", verifyOption);
-		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--newline", "lf", "--clean", verifyOption);
-		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--newline", "lf", "--clean", verifyOption);
+		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/");
+		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/");
+		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/");
+		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/");
 
-		void RunCodeGen(params string?[] args) => RunDotNet(new[] { "run", "--project", $"src/{codegen}", "--framework", "net6.0" }.Concat(args));
+		void RunCodeGen(params string?[] args) => RunDotNet(new[] { "run", "--project", $"src/{codegen}", "--framework", "net6.0", "--nullable", "--newline", "lf", "--clean", verifyOption }.Concat(args));
 	}
 });
