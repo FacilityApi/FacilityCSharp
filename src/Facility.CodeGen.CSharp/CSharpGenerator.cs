@@ -1122,7 +1122,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)");
+						code.WriteLine(": base(settings, s_defaults)");
 					using (code.Block())
 						code.WriteLine("m_service = service ?? throw new ArgumentNullException(nameof(service));");
 
@@ -1130,7 +1130,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)");
+						code.WriteLine(": base(settings, s_defaults)");
 					using (code.Block())
 						code.WriteLine("m_getService = getService ?? throw new ArgumentNullException(nameof(getService));");
 
@@ -1181,6 +1181,11 @@ public sealed class CSharpGenerator : CodeGenerator
 
 					code.WriteLine();
 					code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService{NullableReferenceBang}(httpRequest);");
+
+					code.WriteLine();
+					code.WriteLine("private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults");
+					using (code.Block("{", "};"))
+						code.WriteLine("JsonSerializer = SystemTextJsonServiceSerializer.Instance,");
 
 					code.WriteLine();
 					code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");

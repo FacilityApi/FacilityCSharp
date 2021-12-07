@@ -22,7 +22,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the handler.
 		/// </summary>
 		public ConformanceApiHttpHandler(IConformanceApi service, ServiceHttpHandlerSettings? settings = null)
-			: base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)
+			: base(settings, s_defaults)
 		{
 			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
@@ -31,7 +31,7 @@ namespace Facility.ConformanceApi.Http
 		/// Creates the handler.
 		/// </summary>
 		public ConformanceApiHttpHandler(Func<HttpRequestMessage, IConformanceApi> getService, ServiceHttpHandlerSettings? settings = null)
-			: base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)
+			: base(settings, s_defaults)
 		{
 			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}
@@ -128,6 +128,11 @@ namespace Facility.ConformanceApi.Http
 			HttpApiErrors.TryGetHttpStatusCode(errorCode);
 
 		private IConformanceApi GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService!(httpRequest);
+
+		private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults
+		{
+			JsonSerializer = SystemTextJsonServiceSerializer.Instance,
+		};
 
 		private readonly IConformanceApi? m_service;
 		private readonly Func<HttpRequestMessage, IConformanceApi>? m_getService;
