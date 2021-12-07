@@ -60,12 +60,20 @@ public sealed class FacilityConformanceApp
 		if (argsReader.ReadFlag("?|h|help"))
 			throw new ArgsReaderException("");
 
-		JsonServiceSerializer jsonSerializer = argsReader.ReadOption("serializer")?.ToLowerInvariant() switch
+		var serializerName = argsReader.ReadOption("serializer")?.ToLowerInvariant();
+		JsonServiceSerializer jsonSerializer = serializerName switch
 		{
 			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
-			"newtonsoftjson" => NewtonsoftJsonServiceSerializer.Instance,
+			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
+
+		var contentSerializer = HttpContentSerializer.Create(jsonSerializer, s_memoryStreamManager.GetStream);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+		if (serializerName is "obsoletejson")
+			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { MemoryStreamCreator = s_memoryStreamManager.GetStream });
+#pragma warning restore CS0618 // Type or member is obsolete
 
 		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
 
@@ -86,7 +94,7 @@ public sealed class FacilityConformanceApp
 			await new WebHostBuilder()
 				.UseKestrel()
 				.UseUrls(url)
-				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, jsonSerializer)))
+				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, contentSerializer)))
 				.Build()
 				.RunAsync();
 
@@ -103,6 +111,7 @@ public sealed class FacilityConformanceApp
 				new HttpClientServiceSettings
 				{
 					BaseUri = baseUri,
+					ContentSerializer = contentSerializer,
 				});
 
 			var tester = new ConformanceApiTester(
@@ -200,12 +209,11 @@ public sealed class FacilityConformanceApp
 		return 0;
 	}
 
-	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, JsonServiceSerializer serializer)
+	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, HttpContentSerializer contentSerializer)
 	{
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
 		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = contentSerializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
