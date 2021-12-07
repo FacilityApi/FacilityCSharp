@@ -237,7 +237,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = new JsonHttpContentSerializer(serializer).CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = HttpContentSerializer.Create(serializer).CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)

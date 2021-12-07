@@ -1,10 +1,15 @@
 namespace Facility.Core.Http;
 
 /// <summary>
-/// Serializes and deserializes DTOs for HTTP requests and responses.
+/// Serializes and deserializes values for HTTP requests and responses.
 /// </summary>
 public abstract class HttpContentSerializer
 {
+	/// <summary>
+	/// Creates a standard HTTP content serializer from a service serializer.
+	/// </summary>
+	public static HttpContentSerializer Create(ServiceSerializer serviceSerializer) => new StandardHttpContentSerializer(serviceSerializer);
+
 	/// <summary>
 	/// The default media type for the serializer.
 	/// </summary>

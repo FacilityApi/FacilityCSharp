@@ -1,12 +1,18 @@
 using System.Diagnostics.CodeAnalysis;
+using Facility.Core.Http;
 
 namespace Facility.Core;
 
 /// <summary>
 /// Serializes and deserializes values to and from JSON.
 /// </summary>
-public abstract class JsonServiceSerializer
+public abstract class JsonServiceSerializer : ServiceSerializer
 {
+	/// <summary>
+	/// The media type used by default.
+	/// </summary>
+	public override string DefaultMediaType => HttpServiceUtility.JsonMediaType;
+
 	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
@@ -39,16 +45,6 @@ public abstract class JsonServiceSerializer
 	/// </summary>
 	[return: NotNullIfNotNull("serviceObject")]
 	public virtual T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
-
-	/// <summary>
-	/// Serializes a value to JSON.
-	/// </summary>
-	public abstract void ToStream(object? value, Stream stream);
-
-	/// <summary>
-	/// Deserializes a value from JSON.
-	/// </summary>
-	public abstract object? FromStream(Stream stream, Type type);
 
 	/// <summary>
 	/// The legacy serializer, <see cref="NewtonsoftJsonServiceSerializer"/>.
