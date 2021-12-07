@@ -204,7 +204,7 @@ public sealed class FacilityConformanceApp
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { JsonSerializer = serializer });
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(serializer) });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{

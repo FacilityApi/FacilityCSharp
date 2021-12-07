@@ -44,9 +44,4 @@ public class ServiceHttpHandlerSettings
 	/// True to prevent the validation of response DTOs before they are sent.
 	/// </summary>
 	public bool SkipResponseValidation { get; set; }
-
-	/// <summary>
-	/// The JSON serializer (optional).
-	/// </summary>
-	public JsonServiceSerializer? JsonSerializer { get; set; }
 }

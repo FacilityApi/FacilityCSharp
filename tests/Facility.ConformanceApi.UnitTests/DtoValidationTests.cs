@@ -312,11 +312,12 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 	private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 	{
 		var service = new FakeConformanceApiService(JsonSerializer, requiredResponse: requiredResponse);
+		var contentSerializer = HttpContentSerializer.Create(JsonSerializer);
 		var settings = new ServiceHttpHandlerSettings
 		{
 			SkipRequestValidation = skipServerValidation,
 			SkipResponseValidation = skipServerValidation,
-			JsonSerializer = JsonSerializer,
+			ContentSerializer = contentSerializer,
 		};
 		var handler = new ConformanceApiHttpHandler(service, settings) { InnerHandler = new NotFoundHttpHandler() };
 		var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
@@ -325,7 +326,7 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 			HttpClient = httpClient,
 			SkipRequestValidation = skipClientValidation,
 			SkipResponseValidation = skipClientValidation,
-			JsonSerializer = JsonSerializer,
+			ContentSerializer = contentSerializer,
 		});
 	}
 
