@@ -24,7 +24,7 @@ namespace EdgeCases
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
-		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToString(this);
+		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToJson(this);
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

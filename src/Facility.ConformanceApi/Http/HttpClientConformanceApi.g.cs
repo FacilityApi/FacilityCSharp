@@ -89,7 +89,7 @@ namespace Facility.ConformanceApi.Http
 
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{
-			ServiceSerializer = SystemTextJsonServiceSerializer.Instance,
+			JsonSerializer = SystemTextJsonServiceSerializer.Instance,
 		};
 	}
 }

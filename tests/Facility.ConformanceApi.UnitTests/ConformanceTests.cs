@@ -7,14 +7,14 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-[TestFixtureSource(nameof(ServiceSerializers))]
-public class ConformanceTests : ServiceSerializerTestBase
+[TestFixtureSource(nameof(JsonServiceSerializers))]
+public class ConformanceTests : JsonServiceSerializerTestsBase
 {
-	public ConformanceTests(ServiceSerializer serializer)
-		: base(serializer)
+	public ConformanceTests(JsonServiceSerializer jsonSerializer)
+		: base(jsonSerializer)
 	{
-		m_tests = CreateTestProvider(Serializer);
-		m_httpClient = CreateHttpClient(m_tests, Serializer);
+		m_tests = CreateTestProvider(JsonSerializer);
+		m_httpClient = CreateHttpClient(m_tests, JsonSerializer);
 	}
 
 	[TestCaseSource(nameof(TestNames))]
@@ -23,8 +23,8 @@ public class ConformanceTests : ServiceSerializerTestBase
 		var settings = new ConformanceApiTesterSettings
 		{
 			Tests = m_tests,
-			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ServiceSerializer = Serializer }),
-			ServiceSerializer = Serializer,
+			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, JsonSerializer = JsonSerializer }),
+			JsonSerializer = JsonSerializer,
 			HttpClient = m_httpClient,
 		};
 		var test = m_tests.Single(x => x.Test == testName);
@@ -33,17 +33,17 @@ public class ConformanceTests : ServiceSerializerTestBase
 			Assert.Fail(result.Message);
 	}
 
-	private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider(ServiceSerializer serializer)
+	private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider(JsonServiceSerializer jsonSerializer)
 	{
 		using var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")!);
-		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), serializer).Tests!;
+		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), jsonSerializer).Tests!;
 	}
 
-	private static HttpClient CreateHttpClient(IReadOnlyList<ConformanceTestInfo> tests, ServiceSerializer serviceSerializer)
+	private static HttpClient CreateHttpClient(IReadOnlyList<ConformanceTestInfo> tests, JsonServiceSerializer jsonSerializer)
 	{
 		var handler = new ConformanceApiHttpHandler(
-				service: new ConformanceApiService(tests, serviceSerializer),
-				settings: new ServiceHttpHandlerSettings { ServiceSerializer = serviceSerializer })
+				service: new ConformanceApiService(new ConformanceApiServiceSettings { Tests = tests, JsonSerializer = jsonSerializer }),
+				settings: new ServiceHttpHandlerSettings { JsonSerializer = jsonSerializer })
 			{ InnerHandler = new NotFoundHttpHandler() };
 		return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 	}

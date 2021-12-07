@@ -4,11 +4,11 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-[TestFixtureSource(nameof(ServiceSerializers))]
-public class ServiceDtoTests : ServiceSerializerTestBase
+[TestFixtureSource(nameof(JsonServiceSerializers))]
+public class ServiceDtoTests : JsonServiceSerializerTestsBase
 {
-	public ServiceDtoTests(ServiceSerializer serializer)
-		: base(serializer)
+	public ServiceDtoTests(JsonServiceSerializer jsonSerializer)
+		: base(jsonSerializer)
 	{
 	}
 
@@ -16,7 +16,9 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 	public void ToStringUsesJson()
 	{
 		var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-		dto.ToString().Should().Be(@"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}");
+		var json = @"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}";
+		dto.ToString().Should().Be(json);
+		JsonSerializer.ToJson(dto).Should().Be(json);
 	}
 
 	[Test]
@@ -42,7 +44,7 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 	public void BasicCloning()
 	{
 		var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-		var second = ServiceDataUtility.Clone(first, Serializer);
+		var second = ServiceDataUtility.Clone(first, JsonSerializer);
 		first.IsEquivalentTo(second).Should().Be(true);
 		second.Id += 1;
 		first.IsEquivalentTo(second).Should().Be(false);

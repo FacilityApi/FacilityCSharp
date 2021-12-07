@@ -3,9 +3,9 @@ using Facility.Core;
 namespace Facility.ConformanceApi.Testing;
 
 /// <summary>
-/// Settings for <see cref="ConformanceApiTester"/>.
+/// Settings for <see cref="ConformanceApiService"/>.
 /// </summary>
-public sealed class ConformanceApiTesterSettings
+public sealed class ConformanceApiServiceSettings
 {
 	/// <summary>
 	/// The tests.
@@ -13,17 +13,7 @@ public sealed class ConformanceApiTesterSettings
 	public IReadOnlyList<ConformanceTestInfo>? Tests { get; set; }
 
 	/// <summary>
-	/// The API to test.
-	/// </summary>
-	public IConformanceApi? Api { get; set; }
-
-	/// <summary>
 	/// The JSON serializer to use.
 	/// </summary>
 	public JsonServiceSerializer? JsonSerializer { get; set; }
-
-	/// <summary>
-	/// The HTTP client to use (optional).
-	/// </summary>
-	public HttpClient? HttpClient { get; set; }
 }

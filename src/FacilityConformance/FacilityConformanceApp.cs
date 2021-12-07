@@ -59,14 +59,14 @@ public sealed class FacilityConformanceApp
 		if (argsReader.ReadFlag("?|h|help"))
 			throw new ArgsReaderException("");
 
-		ServiceSerializer serializer = argsReader.ReadOption("serializer")?.ToLowerInvariant() switch
+		JsonServiceSerializer jsonSerializer = argsReader.ReadOption("serializer")?.ToLowerInvariant() switch
 		{
 			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
 			"newtonsoftjson" => NewtonsoftJsonServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
 
-		var tests = ConformanceTestsInfo.FromJson(m_testsJson, serializer).Tests!;
+		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
 
 		var command = argsReader.ReadArgument();
 
@@ -75,12 +75,17 @@ public sealed class FacilityConformanceApp
 			var url = argsReader.ReadOption("url") ?? defaultUrl;
 			argsReader.VerifyComplete();
 
-			var service = new ConformanceApiService(tests, serializer);
+			var service = new ConformanceApiService(
+				new ConformanceApiServiceSettings
+				{
+					Tests = tests,
+					JsonSerializer = jsonSerializer,
+				});
 
 			await new WebHostBuilder()
 				.UseKestrel(options => options.AllowSynchronousIO = true)
 				.UseUrls(url)
-				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, serializer)))
+				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, jsonSerializer)))
 				.Build()
 				.RunAsync();
 
@@ -105,7 +110,7 @@ public sealed class FacilityConformanceApp
 					Tests = tests,
 					Api = api,
 					HttpClient = new HttpClient { BaseAddress = baseUri },
-					ServiceSerializer = serializer,
+					JsonSerializer = jsonSerializer,
 				});
 
 			var results = new List<ConformanceTestResult>();
@@ -194,12 +199,12 @@ public sealed class FacilityConformanceApp
 		return 0;
 	}
 
-	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, ServiceSerializer serializer)
+	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, JsonServiceSerializer serializer)
 	{
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ServiceSerializer = serializer });
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { JsonSerializer = serializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{

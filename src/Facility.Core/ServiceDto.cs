@@ -13,7 +13,7 @@ public abstract class ServiceDto
 	public override string ToString()
 	{
 		// use the legacy serializer for the sake of older client libraries that inherit this type but don't support System.Text.Json
-		return ServiceSerializer.Legacy.ToString(this);
+		return JsonServiceSerializer.Legacy.ToJson(this);
 	}
 
 	/// <summary>

@@ -24,7 +24,7 @@ public abstract class HttpClientService
 		m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
 
 		BaseUri = baseUri;
-		ContentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.ServiceSerializer ?? defaults.ServiceSerializer ?? ServiceSerializer.Legacy);
+		ContentSerializer = settings.ContentSerializer ?? new JsonHttpContentSerializer(settings.JsonSerializer ?? defaults.JsonSerializer ?? JsonServiceSerializer.Legacy);
 		BytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		TextSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 	}

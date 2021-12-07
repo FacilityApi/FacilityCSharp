@@ -3,11 +3,11 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-[TestFixtureSource(nameof(ServiceSerializers))]
-public sealed class ServiceDataUtilityTests : ServiceSerializerTestBase
+[TestFixtureSource(nameof(JsonServiceSerializers))]
+public sealed class ServiceDataUtilityTests : JsonServiceSerializerTestsBase
 {
-	public ServiceDataUtilityTests(ServiceSerializer serializer)
-		: base(serializer)
+	public ServiceDataUtilityTests(JsonServiceSerializer jsonSerializer)
+		: base(jsonSerializer)
 	{
 	}
 
@@ -22,7 +22,7 @@ public sealed class ServiceDataUtilityTests : ServiceSerializerTestBase
 			["response"] = invalidResponse,
 		});
 
-		var clone = ServiceDataUtility.Clone(dto, Serializer);
+		var clone = ServiceDataUtility.Clone(dto, JsonSerializer);
 		clone.Should().NotBeSameAs(dto);
 		clone.ErrorMapValue.Should().NotBeSameAs(dto.ErrorMapValue);
 		clone.IsEquivalentTo(dto).Should().Be(true);

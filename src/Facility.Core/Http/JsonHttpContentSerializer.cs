@@ -11,9 +11,9 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	/// <summary>
 	/// Creates an instance.
 	/// </summary>
-	public JsonHttpContentSerializer(ServiceSerializer serializer, JsonHttpContentSerializerSettings? settings = null)
+	public JsonHttpContentSerializer(JsonServiceSerializer jsonSerializer, JsonHttpContentSerializerSettings? settings = null)
 	{
-		m_serializer = serializer;
+		m_jsonSerializer = jsonSerializer;
 		m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 		m_memoryStreamCreator = settings?.MemoryStreamCreator;
 
@@ -25,7 +25,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	/// </summary>
 	[Obsolete("Create an instance with the desired serializer and settings.")]
 	public JsonHttpContentSerializer()
-		: this(ServiceSerializer.Legacy)
+		: this(JsonServiceSerializer.Legacy)
 	{
 	}
 
@@ -34,7 +34,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	/// </summary>
 	[Obsolete("Create an instance with the desired serializer and settings.")]
 	public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
-		: this(ServiceSerializer.Legacy, settings)
+		: this(JsonServiceSerializer.Legacy, settings)
 	{
 	}
 
@@ -70,7 +70,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 	{
 		var memoryStream = CreateMemoryStream();
-		m_serializer.ToStream(content, memoryStream);
+		m_jsonSerializer.ToStream(content, memoryStream);
 		return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
 	}
 
@@ -111,7 +111,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 
 	private ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
 	{
-		var deserializedContent = m_serializer.FromStream(stream, objectType);
+		var deserializedContent = m_jsonSerializer.FromStream(stream, objectType);
 		if (deserializedContent is null)
 			return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 		return ServiceResult.Success(deserializedContent);
@@ -156,5 +156,5 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 
 	private readonly bool m_forceAsyncIO;
 	private readonly Func<Stream>? m_memoryStreamCreator;
-	private readonly ServiceSerializer m_serializer;
+	private readonly JsonServiceSerializer m_jsonSerializer;
 }

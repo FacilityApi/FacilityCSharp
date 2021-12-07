@@ -7,7 +7,7 @@ namespace Facility.Core;
 /// <summary>
 /// Serializes and deserializes values to and from JSON using <c>System.Text.Json</c>.
 /// </summary>
-public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
+public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 {
 	/// <summary>
 	/// The serializer instance.
@@ -15,9 +15,9 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	public static readonly SystemTextJsonServiceSerializer Instance = new();
 
 	/// <summary>
-	/// Serializes a value to the serialization format.
+	/// Serializes a value to JSON.
 	/// </summary>
-	public override string ToString(object? value)
+	public override string ToJson(object? value)
 	{
 		try
 		{
@@ -30,13 +30,13 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	}
 
 	/// <summary>
-	/// Serializes a value to the serialization format.
+	/// Deserializes a value from JSON.
 	/// </summary>
-	public override void ToStream(object? value, Stream outputStream)
+	public override object? FromJson(string json, Type type)
 	{
 		try
 		{
-			JsonSerializer.Serialize(outputStream, value, s_jsonSerializerOptions);
+			return JsonSerializer.Deserialize(json, type, s_jsonSerializerOptions);
 		}
 		catch (JsonException exception)
 		{
@@ -45,13 +45,14 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	}
 
 	/// <summary>
-	/// Deserializes a value from the serialization format.
+	/// Deserializes a value from JSON.
 	/// </summary>
-	public override object? FromString(string stringValue, Type type)
+	public override T? FromJson<T>(string json)
+		where T : default
 	{
 		try
 		{
-			return JsonSerializer.Deserialize(stringValue, type, s_jsonSerializerOptions);
+			return JsonSerializer.Deserialize<T>(json, s_jsonSerializerOptions);
 		}
 		catch (JsonException exception)
 		{
@@ -60,22 +61,7 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	}
 
 	/// <summary>
-	/// Deserializes a value from the serialization format.
-	/// </summary>
-	public override object? FromStream(Stream stream, Type type)
-	{
-		try
-		{
-			return JsonSerializer.Deserialize(stream, type, s_jsonSerializerOptions);
-		}
-		catch (JsonException exception)
-		{
-			throw new ServiceSerializationException(exception);
-		}
-	}
-
-	/// <summary>
-	/// Serializes a value to a <see cref="ServiceObject"/> representation of the serialization format.
+	/// Serializes a value to a <see cref="ServiceObject"/> representation of JSON.
 	/// </summary>
 	public override ServiceObject? ToServiceObject(object? value)
 	{
@@ -90,7 +76,7 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 	}
 
 	/// <summary>
-	/// Deserializes a value from a <see cref="ServiceObject"/> representation of the serialization format.
+	/// Deserializes a value from a <see cref="ServiceObject"/> representation of JSON.
 	/// </summary>
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type)
 	{
@@ -102,6 +88,56 @@ public sealed class SystemTextJsonServiceSerializer : ServiceSerializer
 		{
 			throw new ServiceSerializationException(exception);
 		}
+	}
+
+	/// <summary>
+	/// Deserializes a value from a <see cref="ServiceObject"/> representation of JSON.
+	/// </summary>
+	public override T? FromServiceObject<T>(ServiceObject? serviceObject)
+		where T : default
+	{
+		try
+		{
+			return serviceObject is null ? default : serviceObject.AsJsonObject().Deserialize<T>(s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
+	/// Serializes a value to JSON.
+	/// </summary>
+	public override void ToStream(object? value, Stream stream)
+	{
+		try
+		{
+			JsonSerializer.Serialize(stream, value, s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public override object? FromStream(Stream stream, Type type)
+	{
+		try
+		{
+			return JsonSerializer.Deserialize(stream, type, s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	private SystemTextJsonServiceSerializer()
+	{
 	}
 
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new(JsonSerializerDefaults.Web)

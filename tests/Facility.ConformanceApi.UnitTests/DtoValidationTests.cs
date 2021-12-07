@@ -8,11 +8,11 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-[TestFixtureSource(nameof(ServiceSerializers))]
-public sealed class DtoValidationTests : ServiceSerializerTestBase
+[TestFixtureSource(nameof(JsonServiceSerializers))]
+public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 {
-	public DtoValidationTests(ServiceSerializer serializer)
-		: base(serializer)
+	public DtoValidationTests(JsonServiceSerializer jsonSerializer)
+		: base(jsonSerializer)
 	{
 	}
 
@@ -311,12 +311,12 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 
 	private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 	{
-		var service = new FakeConformanceApiService(Serializer, requiredResponse: requiredResponse);
+		var service = new FakeConformanceApiService(JsonSerializer, requiredResponse: requiredResponse);
 		var settings = new ServiceHttpHandlerSettings
 		{
 			SkipRequestValidation = skipServerValidation,
 			SkipResponseValidation = skipServerValidation,
-			ServiceSerializer = Serializer,
+			JsonSerializer = JsonSerializer,
 		};
 		var handler = new ConformanceApiHttpHandler(service, settings) { InnerHandler = new NotFoundHttpHandler() };
 		var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
@@ -325,13 +325,13 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 			HttpClient = httpClient,
 			SkipRequestValidation = skipClientValidation,
 			SkipResponseValidation = skipClientValidation,
-			ServiceSerializer = Serializer,
+			JsonSerializer = JsonSerializer,
 		});
 	}
 
 	private sealed class FakeConformanceApiService : DelegatingConformanceApi
 	{
-		public FakeConformanceApiService(ServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
+		public FakeConformanceApiService(JsonServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
 			: base(ServiceDelegators.NotImplemented)
 		{
 			m_serializer = serializer;
@@ -348,7 +348,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestBase
 		public override async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
 			ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse, m_serializer));
 
-		private readonly ServiceSerializer m_serializer;
+		private readonly JsonServiceSerializer m_serializer;
 		private readonly RequiredResponseDto m_requiredResponse;
 		private readonly WidgetDto m_widgetResponse;
 	}

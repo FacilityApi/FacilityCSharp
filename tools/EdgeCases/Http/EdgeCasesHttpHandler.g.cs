@@ -21,7 +21,7 @@ namespace EdgeCases.Http
 		/// Creates the handler.
 		/// </summary>
 		public EdgeCasesHttpHandler(IEdgeCases service, ServiceHttpHandlerSettings? settings = null)
-			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
+			: base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
@@ -30,7 +30,7 @@ namespace EdgeCases.Http
 		/// Creates the handler.
 		/// </summary>
 		public EdgeCasesHttpHandler(Func<HttpRequestMessage, IEdgeCases> getService, ServiceHttpHandlerSettings? settings = null)
-			: base(settings, defaultSerializer: SystemTextJsonServiceSerializer.Instance)
+			: base(settings, defaultJsonSerializer: SystemTextJsonServiceSerializer.Instance)
 		{
 			m_getService = getService ?? throw new ArgumentNullException(nameof(getService));
 		}

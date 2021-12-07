@@ -51,7 +51,7 @@ public sealed class HttpClientServiceSettings
 	public bool SkipResponseValidation { get; set; }
 
 	/// <summary>
-	/// The service serializer (optional).
+	/// The JSON serializer (optional).
 	/// </summary>
-	public ServiceSerializer? ServiceSerializer { get; set; }
+	public JsonServiceSerializer? JsonSerializer { get; set; }
 }

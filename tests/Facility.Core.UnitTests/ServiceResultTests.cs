@@ -6,11 +6,11 @@ using static FluentAssertions.FluentActions;
 
 namespace Facility.Core.UnitTests;
 
-[TestFixtureSource(nameof(ServiceSerializers))]
-public class ServiceResultTests : ServiceSerializerTestBase
+[TestFixtureSource(nameof(JsonServiceSerializers))]
+public class ServiceResultTests : JsonServiceSerializerTestsBase
 {
-	public ServiceResultTests(ServiceSerializer serializer)
-		: base(serializer)
+	public ServiceResultTests(JsonServiceSerializer jsonSerializer)
+		: base(jsonSerializer)
 	{
 	}
 
@@ -207,9 +207,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueSuccessJson()
 	{
 		var before = ServiceResult.Success();
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{}");
-		var after = Serializer.FromString<ServiceResult>(json);
+		var after = JsonSerializer.FromJson<ServiceResult>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -217,9 +217,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueEmptyFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"error\":{}}");
-		var after = Serializer.FromString<ServiceResult>(json);
+		var after = JsonSerializer.FromJson<ServiceResult>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -227,9 +227,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NoValueFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
-		var after = Serializer.FromString<ServiceResult>(json);
+		var after = JsonSerializer.FromJson<ServiceResult>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -237,9 +237,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerSuccessJson()
 	{
 		var before = ServiceResult.Success(1337);
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"value\":1337}");
-		var after = Serializer.FromString<ServiceResult<int>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -247,9 +247,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerEmptyFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"error\":{}}");
-		var after = Serializer.FromString<ServiceResult<int?>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int?>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -257,9 +257,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void IntegerFailureJson()
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto("Xyzzy", "Xyzzy unexpected."));
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"error\":{\"code\":\"Xyzzy\",\"message\":\"Xyzzy unexpected.\"}}");
-		var after = Serializer.FromString<ServiceResult<int>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -267,9 +267,9 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void NullIntegerSuccessJson()
 	{
 		var before = ServiceResult.Success(default(int?));
-		var json = Serializer.ToString(before);
+		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("{\"value\":null}");
-		var after = Serializer.FromString<ServiceResult<int?>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int?>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -278,7 +278,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	{
 		var before = ServiceResult.Success(default(int?));
 		const string json = "{}";
-		var after = Serializer.FromString<ServiceResult<int?>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int?>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -286,7 +286,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	public void ValueAndErrorThrows()
 	{
 		const string json = "{\"value\":1337,\"error\":{}}";
-		Assert.Throws<ServiceSerializationException>(() => Serializer.FromString<ServiceResult<int?>>(json));
+		Assert.Throws<ServiceSerializationException>(() => JsonSerializer.FromJson<ServiceResult<int?>>(json));
 	}
 
 	[Test]
@@ -294,7 +294,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	{
 		var before = ServiceResult.Success(1337);
 		var json = "{\"values\":1337,\"value\":1337,\"valuex\":1337}";
-		var after = Serializer.FromString<ServiceResult<int>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}
 
@@ -303,7 +303,7 @@ public class ServiceResultTests : ServiceSerializerTestBase
 	{
 		var before = ServiceResult.Failure(new ServiceErrorDto());
 		var json = "{\"values\":1337,\"error\":{},\"valuex\":1337}";
-		var after = Serializer.FromString<ServiceResult<int>>(json);
+		var after = JsonSerializer.FromJson<ServiceResult<int>>(json);
 		after.Should().BeResult(before);
 	}
 }
