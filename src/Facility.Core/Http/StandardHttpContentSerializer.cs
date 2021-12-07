@@ -5,9 +5,10 @@ namespace Facility.Core.Http;
 
 internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 {
-	public StandardHttpContentSerializer(ServiceSerializer serializer)
+	public StandardHttpContentSerializer(ServiceSerializer serializer, Func<Stream>? memoryStreamCreator = null)
 	{
 		m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+		m_memoryStreamCreator = memoryStreamCreator;
 	}
 
 	protected override string DefaultMediaTypeCore => m_serializer.DefaultMediaType;
@@ -16,14 +17,11 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 
 	protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 	{
-		var memoryStream = new MemoryStream();
+		var memoryStream = CreateMemoryStream();
 		m_serializer.ToStream(content, memoryStream);
 		return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
 	}
 
-	/// <summary>
-	/// Reads a DTO from the specified HTTP content.
-	/// </summary>
 	protected override async Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken)
 	{
 		try
@@ -33,7 +31,7 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 #else
 			using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
-			using var memoryStream = new MemoryStream();
+			using var memoryStream = CreateMemoryStream();
 			await stream.CopyToAsync(memoryStream, 80 * 1024, cancellationToken).ConfigureAwait(false);
 			memoryStream.Seek(0, SeekOrigin.Begin);
 			var deserializedContent = m_serializer.FromStream(memoryStream, objectType);
@@ -46,6 +44,8 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 			return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent(exception.Message));
 		}
 	}
+
+	private Stream CreateMemoryStream() => m_memoryStreamCreator is null ? new MemoryStream() : m_memoryStreamCreator();
 
 	private sealed class DelegateHttpContent : HttpContent
 	{
@@ -85,4 +85,5 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 	}
 
 	private readonly ServiceSerializer m_serializer;
+	private readonly Func<Stream>? m_memoryStreamCreator;
 }

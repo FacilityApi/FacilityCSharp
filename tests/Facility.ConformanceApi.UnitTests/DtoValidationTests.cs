@@ -312,7 +312,7 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 	private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 	{
 		var service = new FakeConformanceApiService(JsonSerializer, requiredResponse: requiredResponse);
-		var contentSerializer = HttpContentSerializer.Create(JsonSerializer);
+		var contentSerializer = HttpContentSerializer.Create(JsonSerializer, MemoryStreamManager.GetStream);
 		var settings = new ServiceHttpHandlerSettings
 		{
 			SkipRequestValidation = skipServerValidation,

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.IO;
 
 namespace FacilityConformance;
 
@@ -204,7 +205,8 @@ public sealed class FacilityConformanceApp
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(serializer) });
+		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = contentSerializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{
@@ -237,7 +239,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = HttpContentSerializer.Create(serializer).CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = contentSerializer.CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)
@@ -275,6 +277,8 @@ public sealed class FacilityConformanceApp
 			}
 		}
 	}
+
+	private static readonly RecyclableMemoryStreamManager s_memoryStreamManager = new();
 
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;

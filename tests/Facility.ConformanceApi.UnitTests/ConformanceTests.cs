@@ -20,10 +20,11 @@ public class ConformanceTests : JsonServiceSerializerTestsBase
 	[TestCaseSource(nameof(TestNames))]
 	public async Task RunTest(string testName)
 	{
+		var contentSerializer = HttpContentSerializer.Create(JsonSerializer, MemoryStreamManager.GetStream);
 		var settings = new ConformanceApiTesterSettings
 		{
 			Tests = m_tests,
-			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ContentSerializer = HttpContentSerializer.Create(JsonSerializer) }),
+			Api = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = m_httpClient, ContentSerializer = contentSerializer }),
 			JsonSerializer = JsonSerializer,
 			HttpClient = m_httpClient,
 		};
@@ -43,7 +44,7 @@ public class ConformanceTests : JsonServiceSerializerTestsBase
 	{
 		var handler = new ConformanceApiHttpHandler(
 				service: new ConformanceApiService(new ConformanceApiServiceSettings { Tests = tests, JsonSerializer = jsonSerializer }),
-				settings: new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(jsonSerializer) })
+				settings: new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(jsonSerializer, MemoryStreamManager.GetStream) })
 			{ InnerHandler = new NotFoundHttpHandler() };
 		return new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 	}

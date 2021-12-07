@@ -1,4 +1,5 @@
 using Facility.Core;
+using Microsoft.IO;
 
 namespace Facility.ConformanceApi.UnitTests;
 
@@ -16,4 +17,6 @@ public abstract class JsonServiceSerializerTestsBase
 	}
 
 	protected JsonServiceSerializer JsonSerializer { get; }
+
+	protected static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new();
 }
