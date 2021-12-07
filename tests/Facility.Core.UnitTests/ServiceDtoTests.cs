@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using MessagePack;
 using NUnit.Framework;
 using ProtoBuf;
 
@@ -51,15 +52,21 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 
 	[SuppressMessage("ReSharper", "All", Justification = "unit test")]
 	[ProtoContract]
-	private class TestDto : ServiceDto<TestDto>
+	[MessagePackObject]
+#pragma warning disable CA1034
+	public class TestDto : ServiceDto<TestDto>
+#pragma warning restore CA1034
 	{
 		[ProtoMember(1)]
+		[Key(0)]
 		public int? Id { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public string? Name { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public IReadOnlyList<TestDto>? Children { get; set; }
 
 		public override bool IsEquivalentTo(TestDto? other)

@@ -5,12 +5,14 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.Benchmarks
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class UserDto : ServiceDto<UserDto>
 	{
 		/// <summary>
@@ -21,18 +23,23 @@ namespace Facility.Benchmarks
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public int? Id { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public string? Name { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public string? Email { get; set; }
 
 		[ProtoMember(4)]
+		[Key(3)]
 		public string? Phone { get; set; }
 
 		[ProtoMember(5)]
+		[Key(4)]
 		public string? About { get; set; }
 
 		/// <summary>

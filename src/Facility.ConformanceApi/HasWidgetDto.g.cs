@@ -5,12 +5,14 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class HasWidgetDto : ServiceDto<HasWidgetDto>
 	{
 		/// <summary>
@@ -21,6 +23,7 @@ namespace Facility.ConformanceApi
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>

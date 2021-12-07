@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
@@ -14,6 +15,7 @@ namespace Facility.ConformanceApi
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class GetApiInfoResponseDto : ServiceDto<GetApiInfoResponseDto>
 	{
 		/// <summary>
@@ -27,12 +29,14 @@ namespace Facility.ConformanceApi
 		/// The name of the service.
 		/// </summary>
 		[ProtoMember(1)]
+		[Key(0)]
 		public string? Service { get; set; }
 
 		/// <summary>
 		/// The version of the service.
 		/// </summary>
 		[ProtoMember(2)]
+		[Key(1)]
 		public string? Version { get; set; }
 
 		/// <summary>

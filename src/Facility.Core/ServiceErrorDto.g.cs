@@ -4,6 +4,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.Core
@@ -13,6 +14,7 @@ namespace Facility.Core
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 	{
 		/// <summary>
@@ -26,12 +28,14 @@ namespace Facility.Core
 		/// The error code.
 		/// </summary>
 		[ProtoMember(1)]
+		[Key(0)]
 		public string? Code { get; set; }
 
 		/// <summary>
 		/// The error message.
 		/// </summary>
 		[ProtoMember(2)]
+		[Key(1)]
 		public string? Message { get; set; }
 
 		/// <summary>
@@ -40,12 +44,14 @@ namespace Facility.Core
 		[Newtonsoft.Json.JsonProperty("details")]
 		[System.Text.Json.Serialization.JsonPropertyName("details")]
 		[ProtoMember(3)]
+		[Key(2)]
 		public ServiceObject? DetailsObject { get; set; }
 
 		/// <summary>
 		/// The inner error.
 		/// </summary>
 		[ProtoMember(4)]
+		[Key(3)]
 		public ServiceErrorDto? InnerError { get; set; }
 
 		/// <summary>

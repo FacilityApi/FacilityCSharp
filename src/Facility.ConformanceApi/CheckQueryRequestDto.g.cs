@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
@@ -14,6 +15,7 @@ namespace Facility.ConformanceApi
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 	{
 		/// <summary>
@@ -24,24 +26,31 @@ namespace Facility.ConformanceApi
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public string? String { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public bool? Boolean { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public double? Double { get; set; }
 
 		[ProtoMember(4)]
+		[Key(3)]
 		public int? Int32 { get; set; }
 
 		[ProtoMember(5)]
+		[Key(4)]
 		public long? Int64 { get; set; }
 
 		[ProtoMember(6)]
+		[Key(5)]
 		public decimal? Decimal { get; set; }
 
 		[ProtoMember(7)]
+		[Key(6)]
 		public Answer? Enum { get; set; }
 
 		/// <summary>

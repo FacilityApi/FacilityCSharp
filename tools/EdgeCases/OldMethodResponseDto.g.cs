@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace EdgeCases
@@ -14,6 +15,7 @@ namespace EdgeCases
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class OldMethodResponseDto : ServiceDto<OldMethodResponseDto>
 	{
 		/// <summary>

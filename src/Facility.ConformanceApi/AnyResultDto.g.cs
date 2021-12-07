@@ -5,12 +5,14 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class AnyResultDto : ServiceDto<AnyResultDto>
 	{
 		/// <summary>
@@ -21,45 +23,59 @@ namespace Facility.ConformanceApi
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public ServiceResult<string>? String { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public ServiceResult<bool>? Boolean { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public ServiceResult<double>? Double { get; set; }
 
 		[ProtoMember(4)]
+		[Key(3)]
 		public ServiceResult<int>? Int32 { get; set; }
 
 		[ProtoMember(5)]
+		[Key(4)]
 		public ServiceResult<long>? Int64 { get; set; }
 
 		[ProtoMember(6)]
+		[Key(5)]
 		public ServiceResult<decimal>? Decimal { get; set; }
 
 		[ProtoMember(7)]
+		[Key(6)]
 		public ServiceResult<byte[]>? Bytes { get; set; }
 
 		[ProtoMember(8)]
+		[Key(7)]
 		public ServiceResult<ServiceObject>? Object { get; set; }
 
 		[ProtoMember(9)]
+		[Key(8)]
 		public ServiceResult<ServiceErrorDto>? Error { get; set; }
 
 		[ProtoMember(10)]
+		[Key(9)]
 		public ServiceResult<AnyDto>? Data { get; set; }
 
 		[ProtoMember(11)]
+		[Key(10)]
 		public ServiceResult<Answer>? Enum { get; set; }
 
 		[ProtoMember(12)]
+		[Key(11)]
 		public ServiceResult<IReadOnlyList<int>>? Array { get; set; }
 
 		[ProtoMember(13)]
+		[Key(12)]
 		public ServiceResult<IReadOnlyDictionary<string, int>>? Map { get; set; }
 
 		[ProtoMember(14)]
+		[Key(13)]
 		public ServiceResult<ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

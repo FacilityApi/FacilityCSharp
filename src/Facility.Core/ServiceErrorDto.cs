@@ -33,6 +33,7 @@ public sealed partial class ServiceErrorDto
 	[Newtonsoft.Json.JsonIgnore]
 	[System.Text.Json.Serialization.JsonIgnore]
 	[ProtoIgnore]
+	[MessagePack.IgnoreMember]
 	public JObject? Details
 	{
 		get => DetailsObject?.AsJObject();

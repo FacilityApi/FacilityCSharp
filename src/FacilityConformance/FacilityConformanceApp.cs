@@ -64,6 +64,7 @@ public sealed class FacilityConformanceApp
 			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
 			"newtonsoftjson" => NewtonsoftJsonServiceSerializer.Instance,
 			"protobufnet" => ProtobufServiceSerializer.Instance,
+			"messagepack" => MessagePackServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
 

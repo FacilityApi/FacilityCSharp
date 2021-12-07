@@ -21,9 +21,10 @@ public class HttpBenchmarks
 
 	public IReadOnlyList<ServiceSerializer> Serializers => new ServiceSerializer[]
 	{
-		NewtonsoftJsonServiceSerializer.Instance,
+		//// NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
-		ProtobufServiceSerializer.Instance,
+		//// ProtobufServiceSerializer.Instance,
+		MessagePackServiceSerializer.Instance,
 	};
 
 	[GlobalSetup]

@@ -1,8 +1,10 @@
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.Core.UnitTests;
 
 [ProtoContract]
+[MessagePackObject]
 public sealed class ValueDto : ServiceDto<ValueDto>
 {
 	public static ValueDto Create(bool? value)
@@ -31,18 +33,23 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 	}
 
 	[ProtoMember(1)]
+	[Key(0)]
 	public bool? BooleanValue { get; set; }
 
 	[ProtoMember(2)]
+	[Key(1)]
 	public string? StringValue { get; set; }
 
 	[ProtoMember(3)]
+	[Key(2)]
 	public IReadOnlyList<ServiceErrorDto>? ErrorArrayValue { get; set; }
 
 	[ProtoMember(4)]
+	[Key(3)]
 	public IReadOnlyDictionary<string, bool>? BooleanMapValue { get; set; }
 
 	[ProtoMember(5)]
+	[Key(4)]
 	public IReadOnlyDictionary<string, ServiceErrorDto>? ErrorMapValue { get; set; }
 
 	public override bool IsEquivalentTo(ValueDto? other)

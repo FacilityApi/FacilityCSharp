@@ -5,12 +5,14 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class AnyDto : ServiceDto<AnyDto>
 	{
 		/// <summary>
@@ -21,45 +23,59 @@ namespace Facility.ConformanceApi
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public string? String { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public bool? Boolean { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public double? Double { get; set; }
 
 		[ProtoMember(4)]
+		[Key(3)]
 		public int? Int32 { get; set; }
 
 		[ProtoMember(5)]
+		[Key(4)]
 		public long? Int64 { get; set; }
 
 		[ProtoMember(6)]
+		[Key(5)]
 		public decimal? Decimal { get; set; }
 
 		[ProtoMember(7)]
+		[Key(6)]
 		public byte[]? Bytes { get; set; }
 
 		[ProtoMember(8)]
+		[Key(7)]
 		public ServiceObject? Object { get; set; }
 
 		[ProtoMember(9)]
+		[Key(8)]
 		public ServiceErrorDto? Error { get; set; }
 
 		[ProtoMember(10)]
+		[Key(9)]
 		public AnyDto? Data { get; set; }
 
 		[ProtoMember(11)]
+		[Key(10)]
 		public Answer? Enum { get; set; }
 
 		[ProtoMember(12)]
+		[Key(11)]
 		public AnyArrayDto? Array { get; set; }
 
 		[ProtoMember(13)]
+		[Key(12)]
 		public AnyMapDto? Map { get; set; }
 
 		[ProtoMember(14)]
+		[Key(13)]
 		public AnyResultDto? Result { get; set; }
 
 		/// <summary>

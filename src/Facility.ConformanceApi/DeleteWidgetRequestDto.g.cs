@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
@@ -14,6 +15,7 @@ namespace Facility.ConformanceApi
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class DeleteWidgetRequestDto : ServiceDto<DeleteWidgetRequestDto>
 	{
 		/// <summary>
@@ -27,12 +29,14 @@ namespace Facility.ConformanceApi
 		/// The widget ID.
 		/// </summary>
 		[ProtoMember(1)]
+		[Key(0)]
 		public int? Id { get; set; }
 
 		/// <summary>
 		/// Don't delete the widget unless it has this ETag.
 		/// </summary>
 		[ProtoMember(2)]
+		[Key(1)]
 		public string? IfETag { get; set; }
 
 		/// <summary>

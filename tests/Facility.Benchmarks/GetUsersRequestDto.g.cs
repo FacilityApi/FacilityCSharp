@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.Benchmarks
@@ -14,6 +15,7 @@ namespace Facility.Benchmarks
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class GetUsersRequestDto : ServiceDto<GetUsersRequestDto>
 	{
 		/// <summary>
@@ -24,6 +26,7 @@ namespace Facility.Benchmarks
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public int? Limit { get; set; }
 
 		/// <summary>

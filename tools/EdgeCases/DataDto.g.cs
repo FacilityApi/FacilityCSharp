@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace EdgeCases
@@ -14,6 +15,7 @@ namespace EdgeCases
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class DataDto : ServiceDto<DataDto>
 	{
 		/// <summary>
@@ -26,6 +28,7 @@ namespace EdgeCases
 		[Newtonsoft.Json.JsonProperty("f")]
 		[System.Text.Json.Serialization.JsonPropertyName("f")]
 		[ProtoMember(1)]
+		[Key(0)]
 		public string? Field { get; set; }
 
 		/// <summary>

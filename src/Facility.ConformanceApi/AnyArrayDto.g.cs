@@ -5,12 +5,14 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using MessagePack;
 using ProtoBuf;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[ProtoContract]
+	[MessagePackObject]
 	public sealed partial class AnyArrayDto : ServiceDto<AnyArrayDto>
 	{
 		/// <summary>
@@ -21,45 +23,59 @@ namespace Facility.ConformanceApi
 		}
 
 		[ProtoMember(1)]
+		[Key(0)]
 		public IReadOnlyList<string>? String { get; set; }
 
 		[ProtoMember(2)]
+		[Key(1)]
 		public IReadOnlyList<bool>? Boolean { get; set; }
 
 		[ProtoMember(3)]
+		[Key(2)]
 		public IReadOnlyList<double>? Double { get; set; }
 
 		[ProtoMember(4)]
+		[Key(3)]
 		public IReadOnlyList<int>? Int32 { get; set; }
 
 		[ProtoMember(5)]
+		[Key(4)]
 		public IReadOnlyList<long>? Int64 { get; set; }
 
 		[ProtoMember(6)]
+		[Key(5)]
 		public IReadOnlyList<decimal>? Decimal { get; set; }
 
 		[ProtoMember(7)]
+		[Key(6)]
 		public IReadOnlyList<byte[]>? Bytes { get; set; }
 
 		[ProtoMember(8)]
+		[Key(7)]
 		public IReadOnlyList<ServiceObject>? Object { get; set; }
 
 		[ProtoMember(9)]
+		[Key(8)]
 		public IReadOnlyList<ServiceErrorDto>? Error { get; set; }
 
 		[ProtoMember(10)]
+		[Key(9)]
 		public IReadOnlyList<AnyDto>? Data { get; set; }
 
 		[ProtoMember(11)]
+		[Key(10)]
 		public IReadOnlyList<Answer>? Enum { get; set; }
 
 		[ProtoMember(12)]
+		[Key(11)]
 		public IReadOnlyList<IReadOnlyList<int>>? Array { get; set; }
 
 		[ProtoMember(13)]
+		[Key(12)]
 		public IReadOnlyList<IReadOnlyDictionary<string, int>>? Map { get; set; }
 
 		[ProtoMember(14)]
+		[Key(13)]
 		public IReadOnlyList<ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>
