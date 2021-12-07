@@ -6,14 +6,27 @@ namespace Facility.Core.Http;
 /// <summary>
 /// Uses JSON to serialize and deserialize DTOs for HTTP requests and responses.
 /// </summary>
+[Obsolete("Use HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance).")]
 public class JsonHttpContentSerializer : HttpContentSerializer
 {
 	/// <summary>
+	/// An instance of JsonHttpContentSerializer.
+	/// </summary>
+	public static readonly JsonHttpContentSerializer Instance = new();
+
+	/// <summary>
 	/// Creates an instance.
 	/// </summary>
-	public JsonHttpContentSerializer(JsonServiceSerializer jsonSerializer, JsonHttpContentSerializerSettings? settings = null)
+	public JsonHttpContentSerializer()
+		: this(settings: null)
 	{
-		m_jsonSerializer = jsonSerializer;
+	}
+
+	/// <summary>
+	/// Creates an instance.
+	/// </summary>
+	public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
+	{
 		m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 		m_memoryStreamCreator = settings?.MemoryStreamCreator;
 
@@ -21,33 +34,9 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	}
 
 	/// <summary>
-	/// Creates an instance.
-	/// </summary>
-	[Obsolete("Create an instance with the desired serializer and settings.")]
-	public JsonHttpContentSerializer()
-		: this(JsonServiceSerializer.Legacy)
-	{
-	}
-
-	/// <summary>
-	/// Creates an instance.
-	/// </summary>
-	[Obsolete("Create an instance with the desired serializer and settings.")]
-	public JsonHttpContentSerializer(JsonHttpContentSerializerSettings? settings)
-		: this(JsonServiceSerializer.Legacy, settings)
-	{
-	}
-
-	/// <summary>
 	/// The supported media types. Defaults to "application/json".
 	/// </summary>
 	public IReadOnlyList<string> SupportedMediaTypes { get; }
-
-	/// <summary>
-	/// An instance of JsonHttpContentSerializer.
-	/// </summary>
-	[Obsolete("Create an instance with the desired serializer and settings.")]
-	public static readonly JsonHttpContentSerializer Instance = new();
 
 	/// <summary>
 	/// Creates a memory stream.
@@ -70,7 +59,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	protected override HttpContent CreateHttpContentCore(object content, string? mediaType)
 	{
 		var memoryStream = CreateMemoryStream();
-		m_jsonSerializer.ToStream(content, memoryStream);
+		NewtonsoftJsonServiceSerializer.Instance.ToStream(content, memoryStream);
 		return new DelegateHttpContent(mediaType ?? DefaultMediaType, memoryStream);
 	}
 
@@ -111,7 +100,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 
 	private ServiceResult<object> ReadJsonStream(Type objectType, Stream stream)
 	{
-		var deserializedContent = m_jsonSerializer.FromStream(stream, objectType);
+		var deserializedContent = NewtonsoftJsonServiceSerializer.Instance.FromStream(stream, objectType);
 		if (deserializedContent is null)
 			return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 		return ServiceResult.Success(deserializedContent);
@@ -156,5 +145,4 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 
 	private readonly bool m_forceAsyncIO;
 	private readonly Func<Stream>? m_memoryStreamCreator;
-	private readonly JsonServiceSerializer m_jsonSerializer;
 }

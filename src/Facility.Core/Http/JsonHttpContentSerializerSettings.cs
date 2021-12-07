@@ -3,6 +3,7 @@ namespace Facility.Core.Http;
 /// <summary>
 /// Settings for <see cref="JsonHttpContentSerializer" />.
 /// </summary>
+[Obsolete("JsonHttpContentSerializer is obsolete.")]
 public class JsonHttpContentSerializerSettings
 {
 	/// <summary>
