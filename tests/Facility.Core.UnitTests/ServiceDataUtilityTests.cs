@@ -22,7 +22,7 @@ public sealed class ServiceDataUtilityTests : JsonServiceSerializerTestsBase
 			["response"] = invalidResponse,
 		});
 
-		var clone = ServiceDataUtility.Clone(dto, JsonSerializer);
+		var clone = JsonSerializer.Clone(dto);
 		clone.Should().NotBeSameAs(dto);
 		clone.ErrorMapValue.Should().NotBeSameAs(dto.ErrorMapValue);
 		clone.IsEquivalentTo(dto).Should().Be(true);

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Facility.Core;
 
 /// <summary>
@@ -19,4 +21,19 @@ public abstract class ServiceSerializer
 	/// Deserializes a value.
 	/// </summary>
 	public abstract object? FromStream(Stream stream, Type type);
+
+	/// <summary>
+	/// Clones a value by serializing and deserializing.
+	/// </summary>
+	[return: NotNullIfNotNull("value")]
+	public virtual T Clone<T>(T value)
+	{
+		if (value is null)
+			return default!;
+
+		using var memoryStream = new MemoryStream();
+		ToStream(value, memoryStream);
+		memoryStream.Position = 0;
+		return (T) FromStream(memoryStream, typeof(T))!;
+	}
 }

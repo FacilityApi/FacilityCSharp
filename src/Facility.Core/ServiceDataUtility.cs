@@ -109,14 +109,8 @@ public static class ServiceDataUtility
 	/// <summary>
 	/// Clones the data element.
 	/// </summary>
-	[Obsolete("Use the overload with the serializer.")]
-	public static T Clone<T>(T value) => Clone(value, JsonServiceSerializer.Legacy);
-
-	/// <summary>
-	/// Clones the data element.
-	/// </summary>
 	[return: NotNullIfNotNull("value")]
-	public static T Clone<T>(T value, JsonServiceSerializer serializer) => value is null ? default! : serializer.FromJson<T>(serializer.ToJson(value))!;
+	public static T Clone<T>(T value) => JsonServiceSerializer.Legacy.Clone(value);
 
 	/// <summary>
 	/// Attempts to parse a Boolean.

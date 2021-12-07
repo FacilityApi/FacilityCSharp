@@ -332,7 +332,7 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 
 	private sealed class FakeConformanceApiService : DelegatingConformanceApi
 	{
-		public FakeConformanceApiService(JsonServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
+		public FakeConformanceApiService(ServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
 			: base(ServiceDelegators.NotImplemented)
 		{
 			m_serializer = serializer;
@@ -341,15 +341,15 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 		}
 
 		public override async Task<ServiceResult<GetWidgetResponseDto>> GetWidgetAsync(GetWidgetRequestDto request, CancellationToken cancellationToken = default) =>
-			ServiceResult.Success(new GetWidgetResponseDto { Widget = ServiceDataUtility.Clone(m_widgetResponse, m_serializer) });
+			ServiceResult.Success(new GetWidgetResponseDto { Widget = m_serializer.Clone(m_widgetResponse) });
 
 		public override async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
 			ServiceResult.Success(new GetWidgetBatchResponseDto { Results = Array.Empty<ServiceResult<WidgetDto>>() });
 
 		public override async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
-			ServiceResult.Success(ServiceDataUtility.Clone(m_requiredResponse, m_serializer));
+			ServiceResult.Success(m_serializer.Clone(m_requiredResponse));
 
-		private readonly JsonServiceSerializer m_serializer;
+		private readonly ServiceSerializer m_serializer;
 		private readonly RequiredResponseDto m_requiredResponse;
 		private readonly WidgetDto m_widgetResponse;
 	}

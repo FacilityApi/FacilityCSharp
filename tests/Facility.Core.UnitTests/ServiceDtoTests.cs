@@ -44,7 +44,7 @@ public class ServiceDtoTests : JsonServiceSerializerTestsBase
 	public void BasicCloning()
 	{
 		var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-		var second = ServiceDataUtility.Clone(first, JsonSerializer);
+		var second = JsonSerializer.Clone(first);
 		first.IsEquivalentTo(second).Should().Be(true);
 		second.Id += 1;
 		first.IsEquivalentTo(second).Should().Be(false);
