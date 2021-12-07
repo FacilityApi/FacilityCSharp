@@ -83,7 +83,7 @@ public sealed class FacilityConformanceApp
 				});
 
 			await new WebHostBuilder()
-				.UseKestrel(options => options.AllowSynchronousIO = true)
+				.UseKestrel()
 				.UseUrls(url)
 				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, jsonSerializer)))
 				.Build()
