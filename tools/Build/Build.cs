@@ -28,27 +28,30 @@ return BuildRunner.Execute(args, build =>
 	build.AddDotNetTargets(dotNetBuildSettings);
 
 	build.Target("codegen")
-		.DependsOn("build")
 		.Describe("Generates code from the FSD")
 		.Does(() => CodeGen(verify: false));
 
 	build.Target("verify-codegen")
-		.DependsOn("build")
 		.Describe("Ensures the generated code is up-to-date")
 		.Does(() => CodeGen(verify: true));
 
 	build.Target("test")
 		.DependsOn("verify-codegen");
 
+	build.Target("benchmark")
+		.Does(() => RunDotNet("run", "--project", "tests/Facility.Benchmarks", "--configuration", "release"));
+
 	void CodeGen(bool verify)
 	{
-		var configuration = dotNetBuildSettings.GetConfiguration();
-		var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/net6.0/{codegen}.dll").FirstOrDefault() ?? throw new BuildException($"Missing {codegen}.dll.");
+		RunDotNet("build", "--framework", "net6.0", $"src/{codegen}");
 
 		var verifyOption = verify ? "--verify" : null;
 
-		RunDotNet(toolPath, "fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable", "--newline", "lf", verifyOption);
-		RunDotNet(toolPath, "conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--newline", "lf", "--clean", verifyOption);
-		RunDotNet(toolPath, "tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--newline", "lf", "--clean", verifyOption);
+		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/");
+		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/");
+		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/");
+		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/");
+
+		void RunCodeGen(params string?[] args) => RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "--framework", "net6.0", "--nullable", "--newline", "lf", "--clean", verifyOption }.Concat(args));
 	}
 });

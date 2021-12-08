@@ -36,4 +36,6 @@ public abstract class ServiceSerializer
 		memoryStream.Position = 0;
 		return (T) FromStream(memoryStream, typeof(T))!;
 	}
+
+	public override string ToString() => GetType().Name;
 }
