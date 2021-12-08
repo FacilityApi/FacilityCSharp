@@ -47,6 +47,21 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 		}
 	}
 
+	public override T Clone<T>(T value)
+	{
+		if (value is null)
+			return default!;
+
+		try
+		{
+			return MessagePackSerializer.Deserialize<T>(MessagePackSerializer.Serialize(value, s_serializerOptions));
+		}
+		catch (MessagePackSerializationException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
 	private MessagePackServiceSerializer()
 	{
 	}
