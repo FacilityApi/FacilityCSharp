@@ -1,11 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
 [TestFixtureSource(nameof(ServiceSerializers))]
-public class ServiceDtoTests : ServiceSerializerTestBase
+public class ServiceDtoTests : ServiceSerializerTestsBase
 {
 	public ServiceDtoTests(ServiceSerializer serializer)
 		: base(serializer)
@@ -16,7 +15,11 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 	public void ToStringUsesJson()
 	{
 		var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-		dto.ToString().Should().Be(@"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}");
+		var json = @"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}]}";
+		dto.ToString().Should().Be(json);
+
+		if (Serializer is JsonServiceSerializer jsonSerializer)
+			jsonSerializer.ToJson(dto).Should().Be(json);
 	}
 
 	[Test]
@@ -42,27 +45,9 @@ public class ServiceDtoTests : ServiceSerializerTestBase
 	public void BasicCloning()
 	{
 		var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } } };
-		var second = ServiceDataUtility.Clone(first, Serializer);
+		var second = Serializer.Clone(first);
 		first.IsEquivalentTo(second).Should().Be(true);
 		second.Id += 1;
 		first.IsEquivalentTo(second).Should().Be(false);
-	}
-
-	[SuppressMessage("ReSharper", "All", Justification = "unit test")]
-	private class TestDto : ServiceDto<TestDto>
-	{
-		public int? Id { get; set; }
-
-		public string? Name { get; set; }
-
-		public IReadOnlyList<TestDto>? Children { get; set; }
-
-		public override bool IsEquivalentTo(TestDto? other)
-		{
-			return other != null &&
-				other.Id == Id &&
-				other.Name == Name &&
-				ServiceDataUtility.AreEquivalentArrays(other.Children, Children, ServiceDataUtility.AreEquivalentDtos);
-		}
 	}
 }

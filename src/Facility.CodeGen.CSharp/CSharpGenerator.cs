@@ -241,16 +241,14 @@ public sealed class CSharpGenerator : CodeGenerator
 						}
 					}
 
-					foreach (var serializer in s_serializers)
+					WriteEnumSerializer("JsonConverter");
+					WriteEnumSerializer("SystemTextJsonConverter");
+
+					void WriteEnumSerializer(string classSuffix)
 					{
 						code.WriteLine();
-						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
-						if (serializer is ServiceSerializerKind.NewtonsoftJson)
-							code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
-						else if (serializer is ServiceSerializerKind.SystemTextJson)
-							code.WriteLine($"public sealed class {enumName}SystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<{enumName}>");
-						else
-							throw new InvalidOperationException($"Unsupported serializer: {serializer}");
+						CSharpUtility.WriteSummary(code, "Used for serialization.");
+						code.WriteLine($"public sealed class {enumName}{classSuffix} : ServiceEnum{classSuffix}<{enumName}>");
 						using (code.Block())
 						{
 							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
@@ -359,6 +357,10 @@ public sealed class CSharpGenerator : CodeGenerator
 							code.WriteLine($"private static readonly Regex s_valid{propertyName}Regex = new Regex({CSharpUtility.CreateString(validPattern)}, RegexOptions.CultureInvariant);");
 						}
 					}
+
+					code.WriteLine();
+					CSharpUtility.WriteSummary(code, "Returns the DTO as JSON.");
+					code.WriteLine("public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToJson(this);");
 
 					code.WriteLine();
 					CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
@@ -1040,11 +1042,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the service.");
 					code.WriteLine($"public {fullHttpClientName}(HttpClientServiceSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-					{
-						var url = httpServiceInfo.Url;
-						var urlCode = url != null ? $"new Uri({CSharpUtility.CreateString(url)})" : "null";
-						code.WriteLine($": base(settings, defaultBaseUri: {urlCode})");
-					}
+						code.WriteLine(": base(settings, s_defaults)");
 					code.Block().Dispose();
 
 					foreach (var httpMethodInfo in httpServiceInfo.Methods)
@@ -1060,6 +1058,17 @@ public sealed class CSharpGenerator : CodeGenerator
 						code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken = default) =>");
 						using (code.Indent())
 							code.WriteLine($"TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+					}
+
+					code.WriteLine();
+					code.WriteLine("private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults");
+					using (code.Block("{", "};"))
+					{
+						var url = httpServiceInfo.Url;
+						if (url != null)
+							code.WriteLine($"BaseUri = new Uri({CSharpUtility.CreateString(url)}),");
+
+						code.WriteLine("JsonSerializer = SystemTextJsonServiceSerializer.Instance,");
 					}
 				}
 			}
@@ -1087,6 +1096,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Net.Http",
 				"System.Threading",
 				"System.Threading.Tasks",
+				"Facility.Core",
 				"Facility.Core.Http",
 			};
 			CSharpUtility.WriteUsings(code, usings, namespaceName);
@@ -1110,7 +1120,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}({fullInterfaceName} service, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings)");
+						code.WriteLine(": base(settings, s_defaults)");
 					using (code.Block())
 						code.WriteLine("m_service = service ?? throw new ArgumentNullException(nameof(service));");
 
@@ -1118,7 +1128,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					CSharpUtility.WriteSummary(code, "Creates the handler.");
 					code.WriteLine($"public {fullHttpHandlerName}(Func<HttpRequestMessage, {fullInterfaceName}> getService, ServiceHttpHandlerSettings{NullableReferenceSuffix} settings = null)");
 					using (code.Indent())
-						code.WriteLine(": base(settings)");
+						code.WriteLine(": base(settings, s_defaults)");
 					using (code.Block())
 						code.WriteLine("m_getService = getService ?? throw new ArgumentNullException(nameof(getService));");
 
@@ -1169,6 +1179,11 @@ public sealed class CSharpGenerator : CodeGenerator
 
 					code.WriteLine();
 					code.WriteLine($"private {fullInterfaceName} GetService(HttpRequestMessage httpRequest) => m_service ?? m_getService{NullableReferenceBang}(httpRequest);");
+
+					code.WriteLine();
+					code.WriteLine("private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults");
+					using (code.Block("{", "};"))
+						code.WriteLine("JsonSerializer = SystemTextJsonServiceSerializer.Instance,");
 
 					code.WriteLine();
 					code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
@@ -1469,6 +1484,4 @@ public sealed class CSharpGenerator : CodeGenerator
 		private readonly CSharpServiceInfo m_csharpServiceInfo;
 		private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 	}
-
-	private static readonly IReadOnlyCollection<ServiceSerializerKind> s_serializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
 }

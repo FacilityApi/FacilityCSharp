@@ -1,4 +1,5 @@
 using System.Net;
+using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.IO;
 
 namespace FacilityConformance;
 
@@ -48,8 +50,6 @@ public sealed class FacilityConformanceApp
 
 		using (var testsJsonReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("FacilityConformance.ConformanceTests.json")!))
 			m_testsJson = testsJsonReader.ReadToEnd();
-
-		m_tests = ConformanceTestsInfo.FromJson(m_testsJson, ServiceSerializer.Default).Tests!;
 	}
 
 	public async Task<int> RunAsync(IReadOnlyList<string> args)
@@ -60,6 +60,23 @@ public sealed class FacilityConformanceApp
 		if (argsReader.ReadFlag("?|h|help"))
 			throw new ArgsReaderException("");
 
+		var serializerName = argsReader.ReadOption("serializer")?.ToLowerInvariant();
+		ServiceSerializer serializer = serializerName switch
+		{
+			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
+			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
+			_ => throw new ArgsReaderException("Unsupported serializer."),
+		};
+		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+		if (serializerName is "obsoletejson")
+			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { MemoryStreamCreator = s_memoryStreamManager.GetStream });
+#pragma warning restore CS0618 // Type or member is obsolete
+
+		var jsonSerializer = serializer as JsonServiceSerializer ?? NewtonsoftJsonServiceSerializer.Instance;
+		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
+
 		var command = argsReader.ReadArgument();
 
 		if (command == "host")
@@ -67,7 +84,19 @@ public sealed class FacilityConformanceApp
 			var url = argsReader.ReadOption("url") ?? defaultUrl;
 			argsReader.VerifyComplete();
 
-			await new WebHostBuilder().UseKestrel().UseUrls(url).Configure(app => app.Run(HostAsync)).Build().RunAsync();
+			var service = new ConformanceApiService(
+				new ConformanceApiServiceSettings
+				{
+					Tests = tests,
+					JsonSerializer = jsonSerializer,
+				});
+
+			await new WebHostBuilder()
+				.UseKestrel()
+				.UseUrls(url)
+				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, contentSerializer)))
+				.Build()
+				.RunAsync();
 
 			return 0;
 		}
@@ -82,9 +111,17 @@ public sealed class FacilityConformanceApp
 				new HttpClientServiceSettings
 				{
 					BaseUri = baseUri,
+					ContentSerializer = contentSerializer,
 				});
 
-			var tester = new ConformanceApiTester(m_tests, api, new HttpClient { BaseAddress = baseUri });
+			var tester = new ConformanceApiTester(
+				new ConformanceApiTesterSettings
+				{
+					Tests = tests,
+					Api = api,
+					HttpClient = new HttpClient { BaseAddress = baseUri },
+					JsonSerializer = jsonSerializer,
+				});
 
 			var results = new List<ConformanceTestResult>();
 
@@ -96,7 +133,7 @@ public sealed class FacilityConformanceApp
 			{
 				foreach (var testName in testNames)
 				{
-					var testInfo = m_tests.SingleOrDefault(x => x.Test == testName);
+					var testInfo = tests.SingleOrDefault(x => x.Test == testName);
 					if (testInfo == null)
 					{
 						Console.WriteLine($"Test not found: {testName}");
@@ -172,12 +209,12 @@ public sealed class FacilityConformanceApp
 		return 0;
 	}
 
-	private async Task HostAsync(HttpContext httpContext)
+	private async Task HostAsync(HttpContext httpContext, IConformanceApi service, HttpContentSerializer contentSerializer)
 	{
 		var httpRequest = httpContext.Request;
 		var requestUrl = httpRequest.GetEncodedUrl();
 
-		var apiHandler = new ConformanceApiHttpHandler(new ConformanceApiService(m_tests, ServiceSerializer.Default));
+		var apiHandler = new ConformanceApiHttpHandler(service, new ServiceHttpHandlerSettings { ContentSerializer = contentSerializer });
 
 		var requestMessage = new HttpRequestMessage(new HttpMethod(httpRequest.Method), requestUrl)
 		{
@@ -210,7 +247,7 @@ public sealed class FacilityConformanceApp
 		if (error != null)
 		{
 			var statusCode = HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError;
-			responseMessage = new HttpResponseMessage(statusCode) { Content = JsonHttpContentSerializer.Instance.CreateHttpContent(error) };
+			responseMessage = new HttpResponseMessage(statusCode) { Content = contentSerializer.CreateHttpContent(error) };
 		}
 
 		if (responseMessage != null)
@@ -249,7 +286,8 @@ public sealed class FacilityConformanceApp
 		}
 	}
 
+	private static readonly RecyclableMemoryStreamManager s_memoryStreamManager = new();
+
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;
-	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 }

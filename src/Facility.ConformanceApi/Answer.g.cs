@@ -99,7 +99,7 @@ namespace Facility.ConformanceApi
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class AnswerJsonConverter : ServiceEnumJsonConverter<Answer>
 		{
@@ -110,7 +110,7 @@ namespace Facility.ConformanceApi
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class AnswerSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<Answer>
 		{

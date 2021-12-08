@@ -37,6 +37,11 @@ namespace Facility.ConformanceApi
 		public string? ETag { get; set; }
 
 		/// <summary>
+		/// Returns the DTO as JSON.
+		/// </summary>
+		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToJson(this);
+
+		/// <summary>
 		/// Determines if two DTOs are equivalent.
 		/// </summary>
 		public override bool IsEquivalentTo(CreateWidgetResponseDto? other)

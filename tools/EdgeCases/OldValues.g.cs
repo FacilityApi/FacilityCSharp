@@ -89,7 +89,7 @@ namespace EdgeCases
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class OldValuesJsonConverter : ServiceEnumJsonConverter<OldValues>
 		{
@@ -100,7 +100,7 @@ namespace EdgeCases
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class OldValuesSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<OldValues>
 		{

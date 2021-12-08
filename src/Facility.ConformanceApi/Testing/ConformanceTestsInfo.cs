@@ -10,13 +10,13 @@ public sealed class ConformanceTestsInfo
 	/// <summary>
 	/// Load tests from JSON.
 	/// </summary>
-	[Obsolete("Use the overload with ServiceSerializer.")]
-	public static ConformanceTestsInfo FromJson(string json) => FromJson(json, ServiceSerializer.Default);
+	[Obsolete("Use the overload with the serializer.")]
+	public static ConformanceTestsInfo FromJson(string json) => FromJson(json, NewtonsoftJsonServiceSerializer.Instance);
 
 	/// <summary>
 	/// Load tests from JSON.
 	/// </summary>
-	public static ConformanceTestsInfo FromJson(string json, ServiceSerializer serializer) => serializer.FromString<ConformanceTestsInfo>(json)!;
+	public static ConformanceTestsInfo FromJson(string json, JsonServiceSerializer jsonSerializer) => jsonSerializer.FromJson<ConformanceTestsInfo>(json)!;
 
 	/// <summary>
 	/// The name of the test.

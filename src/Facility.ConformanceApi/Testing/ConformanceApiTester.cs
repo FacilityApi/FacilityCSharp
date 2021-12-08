@@ -11,37 +11,13 @@ public sealed class ConformanceApiTester
 	/// <summary>
 	/// Creates a tester.
 	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
-		: this(tests, api, httpClient: null)
+	public ConformanceApiTester(ConformanceApiTesterSettings settings)
 	{
-	}
-
-	/// <summary>
-	/// Creates a tester.
-	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
-		: this(tests, api, httpClient, serializer: ServiceSerializer.Default)
-	{
-	}
-
-	/// <summary>
-	/// Creates a tester.
-	/// </summary>
-	/// <param name="tests">The conformance tests.</param>
-	/// <param name="api">The API interface to test.</param>
-	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
-	/// <param name="serializer">The optional serializer.</param>
-	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient, ServiceSerializer serializer)
-	{
-		m_tests = tests ?? throw new ArgumentNullException(nameof(tests));
-		m_api = api ?? throw new ArgumentNullException(nameof(api));
-		m_httpClient = httpClient;
-		m_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+		_ = settings ?? throw new ArgumentNullException(nameof(settings));
+		m_tests = settings.Tests ?? throw new ArgumentException($"{nameof(settings.Tests)} is required.", nameof(settings));
+		m_api = settings.Api ?? throw new ArgumentException($"{nameof(settings.Api)} is required.", nameof(settings));
+		m_jsonSerializer = settings.JsonSerializer ?? throw new ArgumentException($"{nameof(settings.JsonSerializer)} is required.", nameof(settings));
+		m_httpClient = settings.HttpClient;
 
 		var sameNameTests = m_tests.GroupBy(x => x.Test).FirstOrDefault(x => x.Count() != 1);
 		if (sameNameTests != null)
@@ -58,6 +34,29 @@ public sealed class ConformanceApiTester
 				}
 			}
 		}
+	}
+
+	/// <summary>
+	/// Creates a tester.
+	/// </summary>
+	/// <param name="tests">The conformance tests.</param>
+	/// <param name="api">The API interface to test.</param>
+	[Obsolete("Use settings overload.")]
+	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
+		: this(new ConformanceApiTesterSettings { Tests = tests, Api = api, JsonSerializer = NewtonsoftJsonServiceSerializer.Instance })
+	{
+	}
+
+	/// <summary>
+	/// Creates a tester.
+	/// </summary>
+	/// <param name="tests">The conformance tests.</param>
+	/// <param name="api">The API interface to test.</param>
+	/// <param name="httpClient">The optional HTTP client for HTTP tests.</param>
+	[Obsolete("Use settings overload.")]
+	public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, HttpClient? httpClient)
+		: this(new ConformanceApiTesterSettings { Tests = tests, Api = api, JsonSerializer = NewtonsoftJsonServiceSerializer.Instance, HttpClient = httpClient })
+	{
 	}
 
 	/// <summary>
@@ -106,10 +105,10 @@ public sealed class ConformanceApiTester
 			var requestServiceObject = test.Request;
 			if (requestServiceObject is null)
 				return Failure($"Missing request for {test.Method}");
-			var requestDto = m_serializer.FromServiceObject(requestServiceObject, methodInfo.GetParameters()[0].ParameterType);
-			var requestRoundTripServiceObject = m_serializer.ToServiceObject(requestDto);
+			var requestDto = m_jsonSerializer.FromServiceObject(requestServiceObject, methodInfo.GetParameters()[0].ParameterType);
+			var requestRoundTripServiceObject = m_jsonSerializer.ToServiceObject(requestDto);
 			if (!ServiceObjectUtility.DeepEquals(requestServiceObject, requestRoundTripServiceObject))
-				return Failure($"Request round trip failed. expected={m_serializer.ToString(requestServiceObject)} actual={m_serializer.ToString(requestRoundTripServiceObject)}");
+				return Failure($"Request round trip failed. expected={m_jsonSerializer.ToJson(requestServiceObject)} actual={m_jsonSerializer.ToJson(requestRoundTripServiceObject)}");
 
 			var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
 			await task.ConfigureAwait(false);
@@ -120,27 +119,27 @@ public sealed class ConformanceApiTester
 			var expectedErrorServiceObject = test.Error;
 			if (actualResponseDto != null)
 			{
-				var actualResponseServiceObject = m_serializer.ToServiceObject(actualResponseDto);
+				var actualResponseServiceObject = m_jsonSerializer.ToServiceObject(actualResponseDto);
 
 				if (expectedErrorServiceObject != null)
-					return Failure($"Got valid response; expected error. expected={m_serializer.ToString(expectedErrorServiceObject)} actual={m_serializer.ToString(actualResponseServiceObject)}");
+					return Failure($"Got valid response; expected error. expected={m_jsonSerializer.ToJson(expectedErrorServiceObject)} actual={m_jsonSerializer.ToJson(actualResponseServiceObject)}");
 				if (!ServiceObjectUtility.DeepEquals(expectedResponseServiceObject, actualResponseServiceObject))
-					return Failure($"Response JSON did not match. expected={m_serializer.ToString(expectedResponseServiceObject)} actual={m_serializer.ToString(actualResponseServiceObject)}");
+					return Failure($"Response content did not match. expected={m_jsonSerializer.ToJson(expectedResponseServiceObject)} actual={m_jsonSerializer.ToJson(actualResponseServiceObject)}");
 				var responseType = methodInfo.ReturnType.GetGenericArguments()[0].GetGenericArguments()[0];
-				var expectedResponseDto = (ServiceDto) m_serializer.FromServiceObject(expectedResponseServiceObject, responseType)!;
+				var expectedResponseDto = (ServiceDto) m_jsonSerializer.FromServiceObject(expectedResponseServiceObject, responseType)!;
 				if (!expectedResponseDto.IsEquivalentTo(actualResponseDto))
-					return Failure($"Response DTO did not match. expected={expectedResponseDto} actual={m_serializer.ToString(actualResponseDto)}");
+					return Failure($"Response DTO did not match. expected={expectedResponseDto} actual={m_jsonSerializer.ToJson(actualResponseDto)}");
 			}
 			else
 			{
 				var actualErrorDto = (ServiceErrorDto) result.Error;
-				var actualErrorServiceObject = m_serializer.ToServiceObject(actualErrorDto);
+				var actualErrorServiceObject = m_jsonSerializer.ToServiceObject(actualErrorDto);
 
 				if (expectedErrorServiceObject == null)
-					return Failure($"Got error; expected valid response. expected={m_serializer.ToString(expectedResponseServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
+					return Failure($"Got error; expected valid response. expected={m_jsonSerializer.ToJson(expectedResponseServiceObject)} actual={m_jsonSerializer.ToJson(actualErrorServiceObject)}");
 				if (!ServiceObjectUtility.DeepEquals(expectedErrorServiceObject, actualErrorServiceObject))
-					return Failure($"Error JSON did not match. expected={m_serializer.ToString(expectedErrorServiceObject)} actual={m_serializer.ToString(actualErrorServiceObject)}");
-				var expectedErrorDto = m_serializer.FromServiceObject<ServiceErrorDto>(expectedErrorServiceObject);
+					return Failure($"Error content did not match. expected={m_jsonSerializer.ToJson(expectedErrorServiceObject)} actual={m_jsonSerializer.ToJson(actualErrorServiceObject)}");
+				var expectedErrorDto = m_jsonSerializer.FromServiceObject<ServiceErrorDto>(expectedErrorServiceObject);
 				if (!expectedErrorDto.IsEquivalentTo(actualErrorDto))
 					return Failure($"Error DTO did not match. expected={expectedErrorDto} actual={actualErrorDto}");
 			}
@@ -155,6 +154,6 @@ public sealed class ConformanceApiTester
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly IConformanceApi m_api;
+	private readonly JsonServiceSerializer m_jsonSerializer;
 	private readonly HttpClient? m_httpClient;
-	private readonly ServiceSerializer m_serializer;
 }

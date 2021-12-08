@@ -17,7 +17,7 @@ namespace EdgeCases.Http
 		/// Creates the service.
 		/// </summary>
 		public HttpClientEdgeCases(HttpClientServiceSettings? settings = null)
-			: base(settings, defaultBaseUri: null)
+			: base(settings, s_defaults)
 		{
 		}
 
@@ -27,5 +27,10 @@ namespace EdgeCases.Http
 		[Obsolete]
 		public Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.OldMethodMapping, request, cancellationToken);
+
+		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
+		{
+			JsonSerializer = SystemTextJsonServiceSerializer.Instance,
+		};
 	}
 }

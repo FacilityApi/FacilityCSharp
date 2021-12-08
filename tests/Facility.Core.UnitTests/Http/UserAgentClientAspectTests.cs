@@ -17,12 +17,4 @@ public class UserAgentClientAspectTests
 		await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
 		httpRequest.Headers.UserAgent.ToString().Should().Be(header);
 	}
-
-	private class TestDto : ServiceDto<TestDto>
-	{
-		public override bool IsEquivalentTo(TestDto? other)
-		{
-			return other != null;
-		}
-	}
 }

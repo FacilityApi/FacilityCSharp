@@ -1,6 +1,6 @@
 namespace Facility.Core.UnitTests;
 
-public abstract class ServiceSerializerTestBase
+public abstract class ServiceSerializerTestsBase
 {
 	public static IReadOnlyList<ServiceSerializer> ServiceSerializers => new ServiceSerializer[]
 	{
@@ -8,7 +8,7 @@ public abstract class ServiceSerializerTestBase
 		SystemTextJsonServiceSerializer.Instance,
 	};
 
-	protected ServiceSerializerTestBase(ServiceSerializer serializer)
+	protected ServiceSerializerTestsBase(ServiceSerializer serializer)
 	{
 		Serializer = serializer;
 	}

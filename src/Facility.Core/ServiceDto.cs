@@ -10,7 +10,11 @@ public abstract class ServiceDto
 	/// <summary>
 	/// Returns the DTO as JSON.
 	/// </summary>
-	public override string ToString() => ServiceSerializer.Default.ToString(this);
+	public override string ToString()
+	{
+		// use the legacy serializer for the sake of older client libraries that inherit this type but don't support System.Text.Json
+		return JsonServiceSerializer.Legacy.ToJson(this);
+	}
 
 	/// <summary>
 	/// Determines if two DTOs are equivalent.

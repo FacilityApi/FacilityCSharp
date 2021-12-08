@@ -26,12 +26,12 @@ public sealed class ServiceObject
 	/// <summary>
 	/// Returns the JSON object as a <c>Newtonsoft.Json.Linq.JObject</c>.
 	/// </summary>
-	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromString<JObject>(ToString())!;
+	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
 
 	/// <summary>
 	/// Returns the JSON object as a <c>System.Text.Json.Nodes.JsonObject</c>.
 	/// </summary>
-	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromString<JsonObject>(ToString())!;
+	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
 
 	/// <summary>
 	/// Returns true if the JSON objects are equivalent.
@@ -47,8 +47,8 @@ public sealed class ServiceObject
 	/// Returns a JSON string for the JSON object.
 	/// </summary>
 	public override string ToString() =>
-		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToString(jObject) :
-		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToString(jsonObject) :
+		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToJson(jObject) :
+		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToJson(jsonObject) :
 		"";
 
 	private ServiceObject(JObject jObject) => m_jObject = jObject;
