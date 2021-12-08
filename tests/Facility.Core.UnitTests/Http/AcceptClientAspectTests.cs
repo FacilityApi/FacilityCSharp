@@ -17,12 +17,4 @@ public class AcceptClientAspectTests
 		await aspect.RequestReadyAsync(httpRequest, new TestDto(), CancellationToken.None);
 		httpRequest.Headers.Accept.ToString().Should().Be(header);
 	}
-
-	private class TestDto : ServiceDto<TestDto>
-	{
-		public override bool IsEquivalentTo(TestDto? other)
-		{
-			return other != null;
-		}
-	}
 }

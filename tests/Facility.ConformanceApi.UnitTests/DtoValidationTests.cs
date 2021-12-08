@@ -8,11 +8,11 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-[TestFixtureSource(nameof(JsonServiceSerializers))]
-public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
+[TestFixtureSource(nameof(ServiceSerializers))]
+public sealed class DtoValidationTests : ServiceSerializerTestsBase
 {
-	public DtoValidationTests(JsonServiceSerializer jsonSerializer)
-		: base(jsonSerializer)
+	public DtoValidationTests(ServiceSerializer serializer)
+		: base(serializer)
 	{
 	}
 
@@ -311,8 +311,8 @@ public sealed class DtoValidationTests : JsonServiceSerializerTestsBase
 
 	private HttpClientConformanceApi CreateHttpApi(bool skipClientValidation = false, bool skipServerValidation = false, RequiredResponseDto? requiredResponse = null)
 	{
-		var service = new FakeConformanceApiService(JsonSerializer, requiredResponse: requiredResponse);
-		var contentSerializer = HttpContentSerializer.Create(JsonSerializer, MemoryStreamManager.GetStream);
+		var service = new FakeConformanceApiService(Serializer, requiredResponse: requiredResponse);
+		var contentSerializer = HttpContentSerializer.Create(Serializer, MemoryStreamManager.GetStream);
 		var settings = new ServiceHttpHandlerSettings
 		{
 			SkipRequestValidation = skipServerValidation,

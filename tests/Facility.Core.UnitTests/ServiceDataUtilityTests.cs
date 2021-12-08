@@ -3,11 +3,11 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-[TestFixtureSource(nameof(JsonServiceSerializers))]
-public sealed class ServiceDataUtilityTests : JsonServiceSerializerTestsBase
+[TestFixtureSource(nameof(ServiceSerializers))]
+public sealed class ServiceDataUtilityTests : ServiceSerializerTestsBase
 {
-	public ServiceDataUtilityTests(JsonServiceSerializer jsonSerializer)
-		: base(jsonSerializer)
+	public ServiceDataUtilityTests(ServiceSerializer serializer)
+		: base(serializer)
 	{
 	}
 
@@ -22,9 +22,39 @@ public sealed class ServiceDataUtilityTests : JsonServiceSerializerTestsBase
 			["response"] = invalidResponse,
 		});
 
-		var clone = JsonSerializer.Clone(dto);
+		var clone = Serializer.Clone(dto);
 		clone.Should().NotBeSameAs(dto);
 		clone.ErrorMapValue.Should().NotBeSameAs(dto.ErrorMapValue);
 		clone.IsEquivalentTo(dto).Should().Be(true);
+	}
+
+	[Test]
+	public void ServiceResultClone()
+	{
+		var result = ServiceResult.Success(ValueDto.Create(true));
+
+		var clone = Serializer.Clone(result);
+		clone.Should().NotBeSameAs(result);
+		ServiceDataUtility.AreEquivalentResults(clone, result).Should().Be(true);
+	}
+
+	[Test]
+	public void ServiceResultNoValueClone()
+	{
+		var result = ServiceResult.Success();
+
+		var clone = Serializer.Clone(result);
+		clone.Should().NotBeSameAs(result);
+		ServiceDataUtility.AreEquivalentResults(clone, result).Should().Be(true);
+	}
+
+	[Test]
+	public void ServiceResultFailureClone()
+	{
+		var result = ServiceResult.Failure(ServiceErrors.CreateConflict());
+
+		var clone = Serializer.Clone(result);
+		clone.Should().NotBeSameAs(result);
+		ServiceDataUtility.AreEquivalentResults(clone, result).Should().Be(true);
 	}
 }
