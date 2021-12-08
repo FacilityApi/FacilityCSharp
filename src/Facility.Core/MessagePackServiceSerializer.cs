@@ -51,6 +51,5 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	{
 	}
 
-	private static readonly MessagePackSerializerOptions s_serializerOptions =
-		MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+	private static readonly MessagePackSerializerOptions s_serializerOptions = MessagePackSerializerOptions.Standard;
 }
