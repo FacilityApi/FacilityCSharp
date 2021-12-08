@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.14.0-beta.2
+
+* Support `System.Text.Json`. Use it by default.
+* Use `ServiceObject` instead of `JObject` for FSD `object` fields.
+* Support .NET 6.
+
 ## 2.13.5
 
 * Add .NET 6 support to tools.
