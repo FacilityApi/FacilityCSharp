@@ -176,6 +176,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 				code.WriteLine($"[Newtonsoft.Json.JsonConverter(typeof({enumName}JsonConverter))]");
 				code.WriteLine($"[System.Text.Json.Serialization.JsonConverter(typeof({enumName}SystemTextJsonConverter))]");
+				code.WriteLine($"[MessagePack.MessagePackFormatter(typeof({enumName}MessagePackFormatter))]");
 				code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 				using (code.Block())
 				{
@@ -241,16 +242,15 @@ public sealed class CSharpGenerator : CodeGenerator
 						}
 					}
 
-					foreach (var serializer in s_serializers)
+					WriteEnumSerializer("JsonConverter");
+					WriteEnumSerializer("SystemTextJsonConverter");
+					WriteEnumSerializer("MessagePackFormatter");
+
+					void WriteEnumSerializer(string classSuffix)
 					{
 						code.WriteLine();
-						CSharpUtility.WriteSummary(code, "Used for JSON serialization.");
-						if (serializer is ServiceSerializerKind.NewtonsoftJson)
-							code.WriteLine($"public sealed class {enumName}JsonConverter : ServiceEnumJsonConverter<{enumName}>");
-						else if (serializer is ServiceSerializerKind.SystemTextJson)
-							code.WriteLine($"public sealed class {enumName}SystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<{enumName}>");
-						else
-							throw new InvalidOperationException($"Unsupported serializer: {serializer}");
+						CSharpUtility.WriteSummary(code, "Used for serialization.");
+						code.WriteLine($"public sealed class {enumName}{classSuffix} : ServiceEnum{classSuffix}<{enumName}>");
 						using (code.Block())
 						{
 							CSharpUtility.WriteSummary(code, "Creates the value from a string.");
@@ -1486,6 +1486,4 @@ public sealed class CSharpGenerator : CodeGenerator
 		private readonly CSharpServiceInfo m_csharpServiceInfo;
 		private readonly HashSet<ServiceDtoInfo> m_dtosNeedingValidation;
 	}
-
-	private static readonly IReadOnlyCollection<ServiceSerializerKind> s_serializers = (ServiceSerializerKind[]) Enum.GetValues(typeof(ServiceSerializerKind));
 }

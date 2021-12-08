@@ -9,6 +9,7 @@ namespace Facility.Core;
 /// </summary>
 [JsonConverter(typeof(ServiceResultJsonConverter))]
 [System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
+[MessagePack.MessagePackFormatter(typeof(ServiceResultMessagePackFormatter))]
 public class ServiceResult
 {
 	/// <summary>
@@ -241,6 +242,7 @@ public class ServiceResult
 /// </summary>
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 [System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
+[MessagePack.MessagePackFormatter(typeof(ServiceResultMessagePackFormatter<>))]
 public sealed class ServiceResult<T> : ServiceResult
 {
 	/// <summary>
@@ -328,6 +330,7 @@ public sealed class ServiceResult<T> : ServiceResult
 /// </summary>
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 [System.Text.Json.Serialization.JsonConverter(typeof(ServiceResultSystemTextJsonConverter))]
+[MessagePack.MessagePackFormatter(typeof(ServiceResultFailureMessagePackFormatter))]
 public sealed class ServiceResultFailure : ServiceResult
 {
 	internal ServiceResultFailure(ServiceErrorDto error)

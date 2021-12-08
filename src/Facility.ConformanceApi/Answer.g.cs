@@ -15,6 +15,7 @@ namespace Facility.ConformanceApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Newtonsoft.Json.JsonConverter(typeof(AnswerJsonConverter))]
 	[System.Text.Json.Serialization.JsonConverter(typeof(AnswerSystemTextJsonConverter))]
+	[MessagePack.MessagePackFormatter(typeof(AnswerMessagePackFormatter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
 		/// <summary>
@@ -99,7 +100,7 @@ namespace Facility.ConformanceApi
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class AnswerJsonConverter : ServiceEnumJsonConverter<Answer>
 		{
@@ -110,9 +111,20 @@ namespace Facility.ConformanceApi
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class AnswerSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<Answer>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override Answer CreateCore(string value) => new Answer(value);
+		}
+
+		/// <summary>
+		/// Used for serialization.
+		/// </summary>
+		public sealed class AnswerMessagePackFormatter : ServiceEnumMessagePackFormatter<Answer>
 		{
 			/// <summary>
 			/// Creates the value from a string.

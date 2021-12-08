@@ -61,20 +61,21 @@ public sealed class FacilityConformanceApp
 			throw new ArgsReaderException("");
 
 		var serializerName = argsReader.ReadOption("serializer")?.ToLowerInvariant();
-		JsonServiceSerializer jsonSerializer = serializerName switch
+		ServiceSerializer serializer = serializerName switch
 		{
 			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
 			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
+			"messagepack" => MessagePackServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
-
-		var contentSerializer = HttpContentSerializer.Create(jsonSerializer, s_memoryStreamManager.GetStream);
+		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")
 			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { MemoryStreamCreator = s_memoryStreamManager.GetStream });
 #pragma warning restore CS0618 // Type or member is obsolete
 
+		var jsonSerializer = serializer as JsonServiceSerializer ?? NewtonsoftJsonServiceSerializer.Instance;
 		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
 
 		var command = argsReader.ReadArgument();

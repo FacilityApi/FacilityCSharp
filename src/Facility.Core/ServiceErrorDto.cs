@@ -32,6 +32,7 @@ public sealed partial class ServiceErrorDto
 	[Newtonsoft.Json.JsonIgnore]
 	[System.Text.Json.Serialization.JsonIgnore]
 	[System.Text.Json.Serialization.JsonPropertyName("_details")] //// HACK: without this, details is serialized first
+	[MessagePack.IgnoreMember]
 	public JObject? Details
 	{
 		get => DetailsObject?.AsJObject();

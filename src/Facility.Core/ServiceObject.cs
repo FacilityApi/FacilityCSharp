@@ -9,6 +9,7 @@ namespace Facility.Core;
 /// </summary>
 [Newtonsoft.Json.JsonConverter(typeof(ServiceObjectNewtonsoftJsonConverter))]
 [System.Text.Json.Serialization.JsonConverter(typeof(ServiceObjectSystemTextJsonConverter))]
+[MessagePack.MessagePackFormatter(typeof(ServiceObjectMessagePackFormatter))]
 public sealed class ServiceObject
 {
 	/// <summary>

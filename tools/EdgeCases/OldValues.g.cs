@@ -17,6 +17,7 @@ namespace EdgeCases
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Newtonsoft.Json.JsonConverter(typeof(OldValuesJsonConverter))]
 	[System.Text.Json.Serialization.JsonConverter(typeof(OldValuesSystemTextJsonConverter))]
+	[MessagePack.MessagePackFormatter(typeof(OldValuesMessagePackFormatter))]
 	public partial struct OldValues : IEquatable<OldValues>
 	{
 		/// <summary>
@@ -89,7 +90,7 @@ namespace EdgeCases
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class OldValuesJsonConverter : ServiceEnumJsonConverter<OldValues>
 		{
@@ -100,9 +101,20 @@ namespace EdgeCases
 		}
 
 		/// <summary>
-		/// Used for JSON serialization.
+		/// Used for serialization.
 		/// </summary>
 		public sealed class OldValuesSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<OldValues>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override OldValues CreateCore(string value) => new OldValues(value);
+		}
+
+		/// <summary>
+		/// Used for serialization.
+		/// </summary>
+		public sealed class OldValuesMessagePackFormatter : ServiceEnumMessagePackFormatter<OldValues>
 		{
 			/// <summary>
 			/// Creates the value from a string.
