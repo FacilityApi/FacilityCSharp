@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for GetWidgets.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetWidgetsResponseDto : ServiceDto<GetWidgetsResponseDto>
 	{
 		/// <summary>
@@ -24,6 +25,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widgets.
 		/// </summary>
+		[MessagePack.Key("widgets")]
 		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 
 		/// <summary>

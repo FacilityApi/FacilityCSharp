@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for MirrorBytes.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class MirrorBytesRequestDto : ServiceDto<MirrorBytesRequestDto>
 	{
 		/// <summary>
@@ -21,8 +22,10 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("content")]
 		public byte[]? Content { get; set; }
 
+		[MessagePack.Key("type")]
 		public string? Type { get; set; }
 
 		/// <summary>

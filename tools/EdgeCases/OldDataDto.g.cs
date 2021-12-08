@@ -14,6 +14,7 @@ namespace EdgeCases
 	/// An old DTO.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class OldDataDto : ServiceDto<OldDataDto>
 	{
 		/// <summary>
@@ -27,9 +28,11 @@ namespace EdgeCases
 		/// An old field.
 		/// </summary>
 		[Obsolete]
+		[MessagePack.Key("old")]
 		public string? Old { get; set; }
 
 		[Obsolete]
+		[MessagePack.Key("older")]
 		public string? Older { get; set; }
 
 		/// <summary>

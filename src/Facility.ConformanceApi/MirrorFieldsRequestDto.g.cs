@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for MirrorFields.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class MirrorFieldsRequestDto : ServiceDto<MirrorFieldsRequestDto>
 	{
 		/// <summary>
@@ -21,8 +22,10 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("field")]
 		public AnyDto? Field { get; set; }
 
+		[MessagePack.Key("matrix")]
 		public IReadOnlyList<IReadOnlyList<IReadOnlyList<double>>>? Matrix { get; set; }
 
 		/// <summary>

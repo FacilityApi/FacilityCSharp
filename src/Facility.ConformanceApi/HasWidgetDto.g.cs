@@ -9,6 +9,7 @@ using Facility.Core;
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class HasWidgetDto : ServiceDto<HasWidgetDto>
 	{
 		/// <summary>
@@ -18,6 +19,7 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("widget")]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>

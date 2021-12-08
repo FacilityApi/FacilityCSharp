@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for GetWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetWidgetResponseDto : ServiceDto<GetWidgetResponseDto>
 	{
 		/// <summary>
@@ -24,16 +25,19 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The requested widget.
 		/// </summary>
+		[MessagePack.Key("widget")]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
 		/// The ETag of the widget.
 		/// </summary>
+		[MessagePack.Key("eTag")]
 		public string? ETag { get; set; }
 
 		/// <summary>
 		/// The widget still has the specified ETag.
 		/// </summary>
+		[MessagePack.Key("notModified")]
 		public bool? NotModified { get; set; }
 
 		/// <summary>

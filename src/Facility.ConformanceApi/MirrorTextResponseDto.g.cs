@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for MirrorText.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class MirrorTextResponseDto : ServiceDto<MirrorTextResponseDto>
 	{
 		/// <summary>
@@ -21,8 +22,10 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("content")]
 		public string? Content { get; set; }
 
+		[MessagePack.Key("type")]
 		public string? Type { get; set; }
 
 		/// <summary>

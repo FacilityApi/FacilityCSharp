@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for GetApiInfo.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetApiInfoResponseDto : ServiceDto<GetApiInfoResponseDto>
 	{
 		/// <summary>
@@ -24,11 +25,13 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The name of the service.
 		/// </summary>
+		[MessagePack.Key("service")]
 		public string? Service { get; set; }
 
 		/// <summary>
 		/// The version of the service.
 		/// </summary>
+		[MessagePack.Key("version")]
 		public string? Version { get; set; }
 
 		/// <summary>

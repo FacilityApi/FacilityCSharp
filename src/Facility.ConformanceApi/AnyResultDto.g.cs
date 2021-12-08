@@ -9,6 +9,7 @@ using Facility.Core;
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class AnyResultDto : ServiceDto<AnyResultDto>
 	{
 		/// <summary>
@@ -18,32 +19,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public ServiceResult<string>? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public ServiceResult<bool>? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public ServiceResult<double>? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public ServiceResult<int>? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public ServiceResult<long>? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public ServiceResult<decimal>? Decimal { get; set; }
 
+		[MessagePack.Key("bytes")]
 		public ServiceResult<byte[]>? Bytes { get; set; }
 
+		[MessagePack.Key("object")]
 		public ServiceResult<ServiceObject>? Object { get; set; }
 
+		[MessagePack.Key("error")]
 		public ServiceResult<ServiceErrorDto>? Error { get; set; }
 
+		[MessagePack.Key("data")]
 		public ServiceResult<AnyDto>? Data { get; set; }
 
+		[MessagePack.Key("enum")]
 		public ServiceResult<Answer>? Enum { get; set; }
 
+		[MessagePack.Key("array")]
 		public ServiceResult<IReadOnlyList<int>>? Array { get; set; }
 
+		[MessagePack.Key("map")]
 		public ServiceResult<IReadOnlyDictionary<string, int>>? Map { get; set; }
 
+		[MessagePack.Key("result")]
 		public ServiceResult<ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

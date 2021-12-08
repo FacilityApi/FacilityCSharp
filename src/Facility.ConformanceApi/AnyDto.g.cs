@@ -9,6 +9,7 @@ using Facility.Core;
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class AnyDto : ServiceDto<AnyDto>
 	{
 		/// <summary>
@@ -18,32 +19,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public string? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public bool? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public double? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public int? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public long? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public decimal? Decimal { get; set; }
 
+		[MessagePack.Key("bytes")]
 		public byte[]? Bytes { get; set; }
 
+		[MessagePack.Key("object")]
 		public ServiceObject? Object { get; set; }
 
+		[MessagePack.Key("error")]
 		public ServiceErrorDto? Error { get; set; }
 
+		[MessagePack.Key("data")]
 		public AnyDto? Data { get; set; }
 
+		[MessagePack.Key("enum")]
 		public Answer? Enum { get; set; }
 
+		[MessagePack.Key("array")]
 		public AnyArrayDto? Array { get; set; }
 
+		[MessagePack.Key("map")]
 		public AnyMapDto? Map { get; set; }
 
+		[MessagePack.Key("result")]
 		public AnyResultDto? Result { get; set; }
 
 		/// <summary>

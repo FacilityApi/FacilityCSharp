@@ -9,6 +9,7 @@ using Facility.Core;
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class AnyMapDto : ServiceDto<AnyMapDto>
 	{
 		/// <summary>
@@ -18,32 +19,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public IReadOnlyDictionary<string, string>? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public IReadOnlyDictionary<string, bool>? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public IReadOnlyDictionary<string, double>? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public IReadOnlyDictionary<string, int>? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public IReadOnlyDictionary<string, long>? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public IReadOnlyDictionary<string, decimal>? Decimal { get; set; }
 
+		[MessagePack.Key("bytes")]
 		public IReadOnlyDictionary<string, byte[]>? Bytes { get; set; }
 
+		[MessagePack.Key("object")]
 		public IReadOnlyDictionary<string, ServiceObject>? Object { get; set; }
 
+		[MessagePack.Key("error")]
 		public IReadOnlyDictionary<string, ServiceErrorDto>? Error { get; set; }
 
+		[MessagePack.Key("data")]
 		public IReadOnlyDictionary<string, AnyDto>? Data { get; set; }
 
+		[MessagePack.Key("enum")]
 		public IReadOnlyDictionary<string, Answer>? Enum { get; set; }
 
+		[MessagePack.Key("array")]
 		public IReadOnlyDictionary<string, IReadOnlyList<int>>? Array { get; set; }
 
+		[MessagePack.Key("map")]
 		public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>>? Map { get; set; }
 
+		[MessagePack.Key("result")]
 		public IReadOnlyDictionary<string, ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

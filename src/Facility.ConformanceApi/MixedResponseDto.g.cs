@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for Mixed.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class MixedResponseDto : ServiceDto<MixedResponseDto>
 	{
 		/// <summary>
@@ -21,12 +22,16 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("header")]
 		public string? Header { get; set; }
 
+		[MessagePack.Key("normal")]
 		public string? Normal { get; set; }
 
+		[MessagePack.Key("body")]
 		public ServiceObject? Body { get; set; }
 
+		[MessagePack.Key("empty")]
 		public bool? Empty { get; set; }
 
 		/// <summary>

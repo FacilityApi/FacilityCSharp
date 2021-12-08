@@ -339,6 +339,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 				CSharpUtility.WriteObsoleteAttribute(code, dtoInfo);
 
+				code.WriteLine("[MessagePack.MessagePackObject]");
 				code.WriteLine($"public sealed partial class {fullDtoName} : ServiceDto<{fullDtoName}>");
 				using (code.Block())
 				{
@@ -1242,9 +1243,10 @@ public sealed class CSharpGenerator : CodeGenerator
 			CSharpUtility.WriteObsoleteAttribute(code, fieldInfo);
 			if (propertyName != normalPropertyName)
 			{
-				code.WriteLine($"[Newtonsoft.Json.JsonProperty(\"{fieldInfo.Name}\")]");
-				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{fieldInfo.Name}\")]");
+				code.WriteLine($"[Newtonsoft.Json.JsonProperty({CSharpUtility.CreateString(fieldInfo.Name)})]");
+				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName({CSharpUtility.CreateString(fieldInfo.Name)})]");
 			}
+			code.WriteLine(FormattableString.Invariant($"[MessagePack.Key({CSharpUtility.CreateString(fieldInfo.Name)})]"));
 			code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
 		}
 	}

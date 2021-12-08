@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for BodyTypes.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class BodyTypesRequestDto : ServiceDto<BodyTypesRequestDto>
 	{
 		/// <summary>
@@ -21,6 +22,7 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("content")]
 		public string? Content { get; set; }
 
 		/// <summary>

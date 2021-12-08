@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for CheckPath.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CheckPathResponseDto : ServiceDto<CheckPathResponseDto>
 	{
 		/// <summary>

@@ -12,6 +12,7 @@ namespace EdgeCases
 	/// Request for OldMethod.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class OldMethodRequestDto : ServiceDto<OldMethodRequestDto>
 	{
 		/// <summary>

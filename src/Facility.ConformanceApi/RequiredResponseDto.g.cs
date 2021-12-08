@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for Required.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class RequiredResponseDto : ServiceDto<RequiredResponseDto>
 	{
 		/// <summary>
@@ -21,6 +22,7 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("normal")]
 		public string? Normal { get; set; }
 
 		/// <summary>

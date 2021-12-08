@@ -12,6 +12,7 @@ namespace EdgeCases
 	/// A DTO.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class DataDto : ServiceDto<DataDto>
 	{
 		/// <summary>
@@ -23,6 +24,7 @@ namespace EdgeCases
 
 		[Newtonsoft.Json.JsonProperty("f")]
 		[System.Text.Json.Serialization.JsonPropertyName("f")]
+		[MessagePack.Key("f")]
 		public string? Field { get; set; }
 
 		/// <summary>

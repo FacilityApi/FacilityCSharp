@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for CheckPath.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CheckPathRequestDto : ServiceDto<CheckPathRequestDto>
 	{
 		/// <summary>
@@ -21,18 +22,25 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public string? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public bool? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public double? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public int? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public long? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public decimal? Decimal { get; set; }
 
+		[MessagePack.Key("enum")]
 		public Answer? Enum { get; set; }
 
 		/// <summary>

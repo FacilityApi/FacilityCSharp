@@ -13,6 +13,7 @@ namespace EdgeCases
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Obsolete]
+	[MessagePack.MessagePackObject]
 	public sealed partial class OldEmptyDataDto : ServiceDto<OldEmptyDataDto>
 	{
 		/// <summary>

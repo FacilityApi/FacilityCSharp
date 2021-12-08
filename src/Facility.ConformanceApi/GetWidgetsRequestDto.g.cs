@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for GetWidgets.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetWidgetsRequestDto : ServiceDto<GetWidgetsRequestDto>
 	{
 		/// <summary>
@@ -24,6 +25,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The query.
 		/// </summary>
+		[MessagePack.Key("query")]
 		public string? Query { get; set; }
 
 		/// <summary>

@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Response for CheckQuery.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CheckQueryResponseDto : ServiceDto<CheckQueryResponseDto>
 	{
 		/// <summary>

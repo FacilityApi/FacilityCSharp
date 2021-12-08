@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for GetApiInfo.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetApiInfoRequestDto : ServiceDto<GetApiInfoRequestDto>
 	{
 		/// <summary>

@@ -12,6 +12,7 @@ namespace Facility.ConformanceApi
 	/// Request for CreateWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CreateWidgetRequestDto : ServiceDto<CreateWidgetRequestDto>
 	{
 		/// <summary>
@@ -24,6 +25,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widget to create.
 		/// </summary>
+		[MessagePack.Key("widget")]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
