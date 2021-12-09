@@ -31,6 +31,11 @@ public sealed class HttpClientServiceSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
+	/// The memory stream creator to be used by content serializers (optional).
+	/// </summary>
+	public Func<Stream>? MemoryStreamCreator { get; set; }
+
+	/// <summary>
 	/// The aspects used when sending requests and receiving responses (optional).
 	/// </summary>
 	public IReadOnlyList<HttpClientServiceAspect>? Aspects { get; set; }

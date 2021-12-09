@@ -31,6 +31,11 @@ public class ServiceHttpHandlerSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
+	/// The memory stream creator to be used by content serializers (optional).
+	/// </summary>
+	public Func<Stream>? MemoryStreamCreator { get; set; }
+
+	/// <summary>
 	/// The aspects used when receiving requests and sending responses.
 	/// </summary>
 	public IReadOnlyList<ServiceHttpHandlerAspect>? Aspects { get; set; }

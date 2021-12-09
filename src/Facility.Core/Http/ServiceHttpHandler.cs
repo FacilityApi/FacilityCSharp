@@ -23,9 +23,9 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 		m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 		m_synchronous = settings.Synchronous;
-		m_contentSerializer = settings.ContentSerializer ?? defaults.ContentSerializer ?? HttpContentSerializer.Legacy;
-		m_bytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
-		m_textSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
+		m_contentSerializer = (settings.ContentSerializer ?? defaults.ContentSerializer ?? HttpContentSerializer.Legacy).WithMemoryStreamCreatorIfNotNull(settings.MemoryStreamCreator);
+		m_bytesSerializer = (settings.BytesSerializer ?? BytesHttpContentSerializer.Instance).WithMemoryStreamCreatorIfNotNull(settings.MemoryStreamCreator);
+		m_textSerializer = (settings.TextSerializer ?? TextHttpContentSerializer.Instance).WithMemoryStreamCreatorIfNotNull(settings.MemoryStreamCreator);
 		m_aspects = settings.Aspects;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
