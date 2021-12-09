@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.14.0-beta.3
+
+* Un-obsolete `ServiceJsonUtility`.
+* Make it easier to use a memory stream creator.
+* Support implicit cast from `JObject` and `JsonObject` to `ServiceObject`.
+
 ## 2.14.0-beta.2
 
 * Support `System.Text.Json`. Use it by default.
