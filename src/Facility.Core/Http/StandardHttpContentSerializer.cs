@@ -45,6 +45,9 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 		}
 	}
 
+	protected override HttpContentSerializer WithMemoryStreamCreatorCore(Func<Stream> memoryStreamCreator) =>
+		new StandardHttpContentSerializer(m_serializer, memoryStreamCreator);
+
 	private Stream CreateMemoryStream() => m_memoryStreamCreator is null ? new MemoryStream() : m_memoryStreamCreator();
 
 	private sealed class DelegateHttpContent : HttpContent

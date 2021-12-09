@@ -13,8 +13,13 @@ public abstract class HttpContentSerializer
 	/// the length of the content. Consider using <c>Microsoft.IO.RecyclableMemoryStream</c> to improve performance
 	/// by setting <c>memoryStreamCreator</c> to <c>RecyclableMemoryStreamManager.GetStream</c>. Otherwise
 	/// <c>System.IO.MemoryStream</c> is used.</remarks>
-	public static HttpContentSerializer Create(ServiceSerializer serviceSerializer, Func<Stream>? memoryStreamCreator = null) =>
-		new StandardHttpContentSerializer(serviceSerializer, memoryStreamCreator);
+	public static HttpContentSerializer Create(ServiceSerializer serviceSerializer) => new StandardHttpContentSerializer(serviceSerializer);
+
+	/// <summary>
+	/// Returns an identical HTTP content serializer that uses the specified memory stream creator as needed.
+	/// </summary>
+	public HttpContentSerializer WithMemoryStreamCreator(Func<Stream> memoryStreamCreator) =>
+		WithMemoryStreamCreatorCore(memoryStreamCreator ?? throw new ArgumentNullException(nameof(memoryStreamCreator)));
 
 	/// <summary>
 	/// The default media type for the serializer.
@@ -86,6 +91,11 @@ public abstract class HttpContentSerializer
 	/// Reads a DTO from the specified HTTP content.
 	/// </summary>
 	protected abstract Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken);
+
+	/// <summary>
+	/// Creates an identical HTTP content serializer that uses the specified memory stream creator as needed.
+	/// </summary>
+	protected virtual HttpContentSerializer WithMemoryStreamCreatorCore(Func<Stream> memoryStreamCreator) => this;
 
 	internal static HttpContentSerializer Legacy { get; } = Create(NewtonsoftJsonServiceSerializer.Instance);
 }
