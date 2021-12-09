@@ -131,7 +131,7 @@ namespace Facility.ConformanceApi.Http
 
 		private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults
 		{
-			JsonSerializer = SystemTextJsonServiceSerializer.Instance,
+			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
 		};
 
 		private readonly IConformanceApi? m_service;

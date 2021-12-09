@@ -23,7 +23,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 		m_rootPath = (settings.RootPath ?? "").TrimEnd('/');
 		m_synchronous = settings.Synchronous;
-		m_contentSerializer = settings.ContentSerializer ?? HttpContentSerializer.Create(defaults.JsonSerializer ?? JsonServiceSerializer.Legacy);
+		m_contentSerializer = settings.ContentSerializer ?? defaults.ContentSerializer ?? HttpContentSerializer.Legacy;
 		m_bytesSerializer = settings.BytesSerializer ?? BytesHttpContentSerializer.Instance;
 		m_textSerializer = settings.TextSerializer ?? TextHttpContentSerializer.Instance;
 		m_aspects = settings.Aspects;

@@ -86,4 +86,6 @@ public abstract class HttpContentSerializer
 	/// Reads a DTO from the specified HTTP content.
 	/// </summary>
 	protected abstract Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken);
+
+	internal static HttpContentSerializer Legacy { get; } = Create(NewtonsoftJsonServiceSerializer.Instance);
 }
