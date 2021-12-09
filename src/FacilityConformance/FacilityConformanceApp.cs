@@ -67,7 +67,7 @@ public sealed class FacilityConformanceApp
 			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
-		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
+		var contentSerializer = HttpContentSerializer.Create(serializer).WithMemoryStreamCreator(s_memoryStreamManager.GetStream);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")

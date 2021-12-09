@@ -26,7 +26,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 	{
 		// we always force async I/O now, so we can ignore settings.ForceAsyncIO
 		m_memoryStreamCreator = settings?.MemoryStreamCreator;
-		m_contentSerializer = Create(JsonServiceSerializer.Legacy, CreateMemoryStream);
+		m_contentSerializer = Legacy.WithMemoryStreamCreatorIfNotNull(m_memoryStreamCreator);
 
 		SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
 	}
