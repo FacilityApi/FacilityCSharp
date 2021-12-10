@@ -53,7 +53,22 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
-	public override void ToStream(object? value, Stream stream)
+	public override Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken)
+	{
+		ToStream(value, stream);
+		return Task.CompletedTask;
+	}
+
+	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public override Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken) =>
+		Task.FromResult(FromStream(stream, type));
+
+	/// <summary>
+	/// Serializes a value to JSON.
+	/// </summary>
+	public void ToStream(object? value, Stream stream)
 	{
 		// don't dispose the StreamWriter to avoid closing the stream
 		var textWriter = new StreamWriter(stream);
@@ -62,12 +77,26 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
-	/// Deserializes a value from the serialization format.
+	/// Deserializes a value from JSON.
 	/// </summary>
-	public override object? FromStream(Stream stream, Type type)
+	public object? FromStream(Stream stream, Type type)
 	{
 		using var textReader = new StreamReader(stream);
 		return FromJsonTextReader(textReader, type);
+	}
+
+	/// <summary>
+	/// Clones a value by serializing and deserializing.
+	/// </summary>
+	public override T Clone<T>(T value)
+	{
+		if (value is null)
+			return default!;
+
+		using var memoryStream = new MemoryStream();
+		ToStream(value, memoryStream);
+		memoryStream.Position = 0;
+		return (T) FromStream(memoryStream, typeof(T))!;
 	}
 
 	/// <summary>

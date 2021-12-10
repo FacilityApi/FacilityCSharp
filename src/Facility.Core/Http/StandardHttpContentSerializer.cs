@@ -30,7 +30,7 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 #else
 			using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
-			var deserializedContent = m_serializer.FromStream(stream, objectType);
+			var deserializedContent = await m_serializer.FromStreamAsync(stream, objectType, cancellationToken).ConfigureAwait(false);
 			if (deserializedContent is null)
 				return ServiceResult.Failure(HttpServiceErrors.CreateInvalidContent("Content must not be empty."));
 			return ServiceResult.Success(deserializedContent);
@@ -52,7 +52,7 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 		}
 
 		protected override async Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
-			m_serializer.ToStream(m_content, stream);
+			await m_serializer.ToStreamAsync(m_content, stream, CancellationToken.None).ConfigureAwait(false);
 
 		protected override bool TryComputeLength(out long length)
 		{

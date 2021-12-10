@@ -109,11 +109,11 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
-	public override void ToStream(object? value, Stream stream)
+	public override async Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken)
 	{
 		try
 		{
-			JsonSerializer.Serialize(stream, value, s_jsonSerializerOptions);
+			await JsonSerializer.SerializeAsync(stream, value, s_jsonSerializerOptions, cancellationToken).ConfigureAwait(false);
 		}
 		catch (JsonException exception)
 		{
@@ -124,16 +124,30 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	/// <summary>
 	/// Deserializes a value from JSON.
 	/// </summary>
-	public override object? FromStream(Stream stream, Type type)
+	public override async Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken)
 	{
 		try
 		{
-			return JsonSerializer.Deserialize(stream, type, s_jsonSerializerOptions);
+			return await JsonSerializer.DeserializeAsync(stream, type, s_jsonSerializerOptions, cancellationToken).ConfigureAwait(false);
 		}
 		catch (JsonException exception)
 		{
 			throw new ServiceSerializationException(exception);
 		}
+	}
+
+	/// <summary>
+	/// Clones a value by serializing and deserializing.
+	/// </summary>
+	public override T Clone<T>(T value)
+	{
+		if (value is null)
+			return default!;
+
+		using var memoryStream = new MemoryStream();
+		JsonSerializer.Serialize(memoryStream, value, s_jsonSerializerOptions);
+		memoryStream.Position = 0;
+		return JsonSerializer.Deserialize<T>(memoryStream, s_jsonSerializerOptions)!;
 	}
 
 	private SystemTextJsonServiceSerializer()

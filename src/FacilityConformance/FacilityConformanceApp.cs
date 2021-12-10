@@ -70,7 +70,7 @@ public sealed class FacilityConformanceApp
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")
-			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings());
+			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { ForceAsyncIO = true });
 #pragma warning restore CS0618 // Type or member is obsolete
 
 		var jsonSerializer = serializer as JsonServiceSerializer ?? NewtonsoftJsonServiceSerializer.Instance;
@@ -91,7 +91,7 @@ public sealed class FacilityConformanceApp
 				});
 
 			await new WebHostBuilder()
-				.UseKestrel(options => options.AllowSynchronousIO = false)
+				.UseKestrel(options => options.AllowSynchronousIO = serializerName is "newtonsoftjson")
 				.UseUrls(url)
 				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, contentSerializer)))
 				.Build()

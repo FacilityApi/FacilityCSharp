@@ -15,25 +15,16 @@ public abstract class ServiceSerializer
 	/// <summary>
 	/// Serializes a value.
 	/// </summary>
-	public abstract void ToStream(object? value, Stream stream);
+	public abstract Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deserializes a value.
 	/// </summary>
-	public abstract object? FromStream(Stream stream, Type type);
+	public abstract Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	[return: NotNullIfNotNull("value")]
-	public virtual T Clone<T>(T value)
-	{
-		if (value is null)
-			return default!;
-
-		using var memoryStream = new MemoryStream();
-		ToStream(value, memoryStream);
-		memoryStream.Position = 0;
-		return (T) FromStream(memoryStream, typeof(T))!;
-	}
+	public abstract T Clone<T>(T value);
 }
