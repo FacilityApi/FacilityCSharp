@@ -27,7 +27,11 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 		try
 		{
 #if NET6_0_OR_GREATER
-			using var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+			var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+			await using var streamScope = stream.ConfigureAwait(false);
+#elif NETSTANDARD2_1_OR_GREATER
+			var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+			await using var streamScope = stream.ConfigureAwait(false);
 #else
 			using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
 #endif
