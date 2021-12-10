@@ -57,7 +57,7 @@ public static class HttpServiceUtility
 	internal static int IndexOfOrdinal(this string value, char ch)
 	{
 #if NETSTANDARD2_0
-			return value.IndexOf(ch);
+		return value.IndexOf(ch);
 #else
 		return value.IndexOf(ch, StringComparison.Ordinal);
 #endif
@@ -66,7 +66,7 @@ public static class HttpServiceUtility
 	internal static string ReplaceOrdinal(this string value, string oldValue, string newValue)
 	{
 #if NETSTANDARD2_0
-			return value.Replace(oldValue, newValue);
+		return value.Replace(oldValue, newValue);
 #else
 		return value.Replace(oldValue, newValue, StringComparison.Ordinal);
 #endif
