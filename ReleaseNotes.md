@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.14.0-beta.4
+
+* Serialize and deserialize JSON using async I/O.
+* Don't use memory streams for JSON serialization.
+* Allow "chunked transfer encoding" when sending/receiving JSON.
+
 ## 2.14.0-beta.3
 
 * Un-obsolete `ServiceJsonUtility`.
