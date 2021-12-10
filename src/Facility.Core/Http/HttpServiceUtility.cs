@@ -76,9 +76,6 @@ public static class HttpServiceUtility
 
 	internal static bool UsesTextSerializer(Type objectType) => objectType == typeof(string);
 
-	internal static HttpContentSerializer WithMemoryStreamCreatorIfNotNull(this HttpContentSerializer contentSerializer, Func<Stream>? memoryStreamCreator) =>
-		memoryStreamCreator is null ? contentSerializer : contentSerializer.WithMemoryStreamCreator(memoryStreamCreator);
-
 	private sealed class DictionaryFromHeaders : IReadOnlyDictionary<string, string>
 	{
 		public DictionaryFromHeaders(IReadOnlyList<HttpHeaders> httpHeaders)

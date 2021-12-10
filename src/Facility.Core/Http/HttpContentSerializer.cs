@@ -8,18 +8,7 @@ public abstract class HttpContentSerializer
 	/// <summary>
 	/// Creates a standard HTTP content serializer.
 	/// </summary>
-	/// <remarks>Values are serialized and deserialized via memory streams so that the actual I/O can be asynchronous
-	/// whether or not the serialization format supports asynchronous I/O directly. This also makes it simple to calculate
-	/// the length of the content. Consider using <c>Microsoft.IO.RecyclableMemoryStream</c> to improve performance
-	/// by setting <c>memoryStreamCreator</c> to <c>RecyclableMemoryStreamManager.GetStream</c>. Otherwise
-	/// <c>System.IO.MemoryStream</c> is used.</remarks>
 	public static HttpContentSerializer Create(ServiceSerializer serviceSerializer) => new StandardHttpContentSerializer(serviceSerializer);
-
-	/// <summary>
-	/// Returns an identical HTTP content serializer that uses the specified memory stream creator as needed.
-	/// </summary>
-	public HttpContentSerializer WithMemoryStreamCreator(Func<Stream> memoryStreamCreator) =>
-		WithMemoryStreamCreatorCore(memoryStreamCreator ?? throw new ArgumentNullException(nameof(memoryStreamCreator)));
 
 	/// <summary>
 	/// The default media type for the serializer.
@@ -91,11 +80,6 @@ public abstract class HttpContentSerializer
 	/// Reads a DTO from the specified HTTP content.
 	/// </summary>
 	protected abstract Task<ServiceResult<object>> ReadHttpContentAsyncCore(Type objectType, HttpContent content, CancellationToken cancellationToken);
-
-	/// <summary>
-	/// Creates an identical HTTP content serializer that uses the specified memory stream creator as needed.
-	/// </summary>
-	protected virtual HttpContentSerializer WithMemoryStreamCreatorCore(Func<Stream> memoryStreamCreator) => this;
 
 	internal static HttpContentSerializer Legacy { get; } = Create(NewtonsoftJsonServiceSerializer.Instance);
 }

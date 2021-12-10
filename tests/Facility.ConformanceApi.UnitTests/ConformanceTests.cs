@@ -14,7 +14,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 		: base(serializer)
 	{
 		m_tests = CreateTestProvider(JsonSerializer);
-		m_contentSerializer = HttpContentSerializer.Create(Serializer).WithMemoryStreamCreator(MemoryStreamManager.GetStream);
+		m_contentSerializer = HttpContentSerializer.Create(Serializer);
 
 		var handler = new ConformanceApiHttpHandler(
 				service: new ConformanceApiService(new ConformanceApiServiceSettings { Tests = m_tests, JsonSerializer = JsonSerializer }),
