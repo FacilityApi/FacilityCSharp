@@ -1260,7 +1260,13 @@ public sealed class CSharpGenerator : CodeGenerator
 				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName({CSharpUtility.CreateString(fieldInfo.Name)})]");
 			}
 			if (SupportMessagePack)
-				code.WriteLine(FormattableString.Invariant($"[MessagePack.Key({CSharpUtility.CreateString(fieldInfo.Name)})]"));
+			{
+				var keyString = fieldInfo.Attributes.FirstOrDefault(x => x.Name == "msgpack")?.TryGetParameterValue("key");
+				var keyCSharp = int.TryParse(keyString, NumberStyles.None, CultureInfo.InvariantCulture, out var keyInteger)
+					? keyInteger.ToString(CultureInfo.InvariantCulture)
+					: CSharpUtility.CreateString(fieldInfo.Name);
+				code.WriteLine(FormattableString.Invariant($"[MessagePack.Key({keyCSharp})]"));
+			}
 			code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
 		}
 	}

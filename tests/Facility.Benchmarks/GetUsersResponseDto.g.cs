@@ -23,7 +23,7 @@ namespace Facility.Benchmarks
 		{
 		}
 
-		[MessagePack.Key("items")]
+		[MessagePack.Key(0)]
 		public IReadOnlyList<UserDto>? Items { get; set; }
 
 		/// <summary>

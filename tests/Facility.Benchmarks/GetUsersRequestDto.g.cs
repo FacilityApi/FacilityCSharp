@@ -23,7 +23,7 @@ namespace Facility.Benchmarks
 		{
 		}
 
-		[MessagePack.Key("limit")]
+		[MessagePack.Key(0)]
 		public int? Limit { get; set; }
 
 		/// <summary>

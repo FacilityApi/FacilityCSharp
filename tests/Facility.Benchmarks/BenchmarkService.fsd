@@ -5,18 +5,29 @@ service BenchmarkService
 	[http(method: GET, path: "/users")]
 	method getUsers
 	{
+		[msgpack(key: 0)]
 		limit: int32;
 	}:
 	{
+		[msgpack(key: 0)]
 		items: User[];
 	}
 
 	data User
 	{
+		[msgpack(key: 0)]
 		id: int32;
+
+		[msgpack(key: 1)]
 		name: string;
+
+		[msgpack(key: 2)]
 		email: string;
+
+		[msgpack(key: 3)]
 		phone: string;
+
+		[msgpack(key: 4)]
 		about: string;
 	}
 }

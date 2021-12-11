@@ -20,19 +20,19 @@ namespace Facility.Benchmarks
 		{
 		}
 
-		[MessagePack.Key("id")]
+		[MessagePack.Key(0)]
 		public int? Id { get; set; }
 
-		[MessagePack.Key("name")]
+		[MessagePack.Key(1)]
 		public string? Name { get; set; }
 
-		[MessagePack.Key("email")]
+		[MessagePack.Key(2)]
 		public string? Email { get; set; }
 
-		[MessagePack.Key("phone")]
+		[MessagePack.Key(3)]
 		public string? Phone { get; set; }
 
-		[MessagePack.Key("about")]
+		[MessagePack.Key(4)]
 		public string? About { get; set; }
 
 		/// <summary>
