@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
-    <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
     <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using Facility.AspNetCore;
 using Facility.Benchmarks.Http;
 using Facility.Core;
 using Facility.Core.Http;
+using Facility.Core.MessagePack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

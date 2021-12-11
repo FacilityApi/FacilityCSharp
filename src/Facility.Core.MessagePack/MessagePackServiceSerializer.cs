@@ -1,6 +1,7 @@
 using MessagePack;
+using MessagePack.Resolvers;
 
-namespace Facility.Core;
+namespace Facility.Core.MessagePack;
 
 /// <summary>
 /// Serializes and deserializes values using MessagePack.
@@ -54,7 +55,7 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 
 		try
 		{
-			return MessagePackSerializer.Deserialize<T>(MessagePackSerializer.Serialize(value, s_serializerOptions));
+			return MessagePackSerializer.Deserialize<T>(MessagePackSerializer.Serialize(value, s_serializerOptions), s_serializerOptions);
 		}
 		catch (MessagePackSerializationException exception)
 		{
@@ -66,5 +67,6 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	{
 	}
 
-	private static readonly MessagePackSerializerOptions s_serializerOptions = MessagePackSerializerOptions.Standard;
+	private static readonly MessagePackSerializerOptions s_serializerOptions =
+		MessagePackSerializerOptions.Standard.WithResolver(CompositeResolver.Create(MessagePackServiceResolver.Instance, MessagePackSerializerOptions.Standard.Resolver));
 }

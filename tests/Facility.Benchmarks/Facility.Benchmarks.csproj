@@ -12,7 +12,7 @@
 
     <ItemGroup>
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
-      <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+      <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
     </ItemGroup>
 
 </Project>

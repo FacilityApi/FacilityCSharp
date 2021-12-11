@@ -16,4 +16,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	/// True if the code should use nullable reference syntax.
 	/// </summary>
 	public bool UseNullableReferences { get; set; }
+
+	/// <summary>
+	/// True to support MessagePack serialization.
+	/// </summary>
+	public bool SupportMessagePack { get; set; }
 }

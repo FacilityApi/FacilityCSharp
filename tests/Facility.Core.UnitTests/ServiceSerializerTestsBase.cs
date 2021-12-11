@@ -1,3 +1,5 @@
+using Facility.Core.MessagePack;
+
 namespace Facility.Core.UnitTests;
 
 public abstract class ServiceSerializerTestsBase

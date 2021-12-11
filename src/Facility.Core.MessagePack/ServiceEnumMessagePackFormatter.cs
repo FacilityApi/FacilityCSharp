@@ -1,7 +1,7 @@
 using MessagePack;
 using MessagePack.Formatters;
 
-namespace Facility.Core;
+namespace Facility.Core.MessagePack;
 
 /// <summary>
 /// Used by MessagePack to convert string-based enumerated types.

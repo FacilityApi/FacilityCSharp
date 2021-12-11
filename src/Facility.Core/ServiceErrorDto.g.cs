@@ -11,7 +11,6 @@ namespace Facility.Core
 	/// An error.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	[MessagePack.MessagePackObject]
 	public sealed partial class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 	{
 		/// <summary>
@@ -24,13 +23,11 @@ namespace Facility.Core
 		/// <summary>
 		/// The error code.
 		/// </summary>
-		[MessagePack.Key("code")]
 		public string? Code { get; set; }
 
 		/// <summary>
 		/// The error message.
 		/// </summary>
-		[MessagePack.Key("message")]
 		public string? Message { get; set; }
 
 		/// <summary>
@@ -38,13 +35,11 @@ namespace Facility.Core
 		/// </summary>
 		[Newtonsoft.Json.JsonProperty("details")]
 		[System.Text.Json.Serialization.JsonPropertyName("details")]
-		[MessagePack.Key("details")]
 		public ServiceObject? DetailsObject { get; set; }
 
 		/// <summary>
 		/// The inner error.
 		/// </summary>
-		[MessagePack.Key("innerError")]
 		public ServiceErrorDto? InnerError { get; set; }
 
 		/// <summary>

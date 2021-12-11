@@ -2,16 +2,12 @@ using System.Buffers;
 using MessagePack;
 using MessagePack.Formatters;
 
-namespace Facility.Core;
+namespace Facility.Core.MessagePack;
 
-/// <summary>
-/// Used by MessagePack to convert <see cref="ServiceObject" />.
-/// </summary>
-public sealed class ServiceObjectMessagePackFormatter : IMessagePackFormatter<ServiceObject>
+internal sealed class ServiceObjectMessagePackFormatter : IMessagePackFormatter<ServiceObject>
 {
-	/// <summary>
-	/// Serializes a value.
-	/// </summary>
+	public static readonly ServiceObjectMessagePackFormatter Instance = new();
+
 	public void Serialize(ref MessagePackWriter writer, ServiceObject? value, MessagePackSerializerOptions options)
 	{
 		if (value is null)
@@ -26,9 +22,6 @@ public sealed class ServiceObjectMessagePackFormatter : IMessagePackFormatter<Se
 		}
 	}
 
-	/// <summary>
-	/// Deserializes a value.
-	/// </summary>
 	public ServiceObject Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 	{
 		var jsonBytes = reader.ReadStringSequence();

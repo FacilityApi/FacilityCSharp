@@ -20,6 +20,8 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"      The namespace used by the generated C#.",
 		"   --nullable",
 		"      Use nullable reference syntax in the generated C#.",
+		"   --msgpack",
+		"      Support MessagePack serialization.",
 	};
 
 	protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
@@ -29,5 +31,6 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		{
 			NamespaceName = args.ReadOption("namespace"),
 			UseNullableReferences = args.ReadFlag("nullable"),
+			SupportMessagePack = args.ReadFlag("msgpack"),
 		};
 }

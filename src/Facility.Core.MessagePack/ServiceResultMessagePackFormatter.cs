@@ -1,16 +1,12 @@
 using MessagePack;
 using MessagePack.Formatters;
 
-namespace Facility.Core;
+namespace Facility.Core.MessagePack;
 
-/// <summary>
-/// Used by MessagePack to convert <see cref="ServiceResult" />.
-/// </summary>
-public sealed class ServiceResultMessagePackFormatter : IMessagePackFormatter<ServiceResult>
+internal sealed class ServiceResultMessagePackFormatter : IMessagePackFormatter<ServiceResult>
 {
-	/// <summary>
-	/// Serializes a value.
-	/// </summary>
+	public static readonly ServiceResultMessagePackFormatter Instance = new();
+
 	public void Serialize(ref MessagePackWriter writer, ServiceResult? value, MessagePackSerializerOptions options)
 	{
 		if (value is null)
@@ -26,9 +22,6 @@ public sealed class ServiceResultMessagePackFormatter : IMessagePackFormatter<Se
 		resolver.GetFormatterWithVerify<ServiceErrorDto>().Serialize(ref writer, value.Error!, options);
 	}
 
-	/// <summary>
-	/// Deserializes a value.
-	/// </summary>
 	public ServiceResult Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 	{
 		if (reader.TryReadNil())
@@ -55,14 +48,8 @@ public sealed class ServiceResultMessagePackFormatter : IMessagePackFormatter<Se
 	}
 }
 
-/// <summary>
-/// Used by MessagePack to convert <see cref="ServiceResult{T}" />.
-/// </summary>
 public sealed class ServiceResultMessagePackFormatter<T> : IMessagePackFormatter<ServiceResult<T>>
 {
-	/// <summary>
-	/// Serializes a value.
-	/// </summary>
 	public void Serialize(ref MessagePackWriter writer, ServiceResult<T>? value, MessagePackSerializerOptions options)
 	{
 		if (value is null)
@@ -78,9 +65,6 @@ public sealed class ServiceResultMessagePackFormatter<T> : IMessagePackFormatter
 		resolver.GetFormatterWithVerify<ServiceErrorDto>().Serialize(ref writer, value.Error!, options);
 	}
 
-	/// <summary>
-	/// Deserializes a value.
-	/// </summary>
 	public ServiceResult<T> Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 	{
 		if (reader.TryReadNil())
@@ -105,14 +89,10 @@ public sealed class ServiceResultMessagePackFormatter<T> : IMessagePackFormatter
 	}
 }
 
-/// <summary>
-/// Used by MessagePack to convert <see cref="ServiceResultFailure" />.
-/// </summary>
-public sealed class ServiceResultFailureMessagePackFormatter : IMessagePackFormatter<ServiceResultFailure>
+internal sealed class ServiceResultFailureMessagePackFormatter : IMessagePackFormatter<ServiceResultFailure>
 {
-	/// <summary>
-	/// Serializes a value.
-	/// </summary>
+	public static readonly ServiceResultFailureMessagePackFormatter Instance = new();
+
 	public void Serialize(ref MessagePackWriter writer, ServiceResultFailure? value, MessagePackSerializerOptions options)
 	{
 		if (value is null)
@@ -128,9 +108,6 @@ public sealed class ServiceResultFailureMessagePackFormatter : IMessagePackForma
 		resolver.GetFormatterWithVerify<ServiceErrorDto>().Serialize(ref writer, value.Error!, options);
 	}
 
-	/// <summary>
-	/// Deserializes a value.
-	/// </summary>
 	public ServiceResultFailure Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 	{
 		if (reader.TryReadNil())
