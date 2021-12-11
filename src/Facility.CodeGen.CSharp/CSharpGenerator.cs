@@ -1071,7 +1071,7 @@ public sealed class CSharpGenerator : CodeGenerator
 						if (url != null)
 							code.WriteLine($"BaseUri = new Uri({CSharpUtility.CreateString(url)}),");
 
-						code.WriteLine("JsonSerializer = SystemTextJsonServiceSerializer.Instance,");
+						code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
 					}
 				}
 			}
@@ -1186,7 +1186,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					code.WriteLine();
 					code.WriteLine("private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults");
 					using (code.Block("{", "};"))
-						code.WriteLine("JsonSerializer = SystemTextJsonServiceSerializer.Instance,");
+						code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
 
 					code.WriteLine();
 					code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.IO;
 
 namespace FacilityConformance;
 
@@ -68,11 +67,11 @@ public sealed class FacilityConformanceApp
 			"messagepack" => MessagePackServiceSerializer.Instance,
 			_ => throw new ArgsReaderException("Unsupported serializer."),
 		};
-		var contentSerializer = HttpContentSerializer.Create(serializer, s_memoryStreamManager.GetStream);
+		var contentSerializer = HttpContentSerializer.Create(serializer);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")
-			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { MemoryStreamCreator = s_memoryStreamManager.GetStream });
+			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { ForceAsyncIO = true });
 #pragma warning restore CS0618 // Type or member is obsolete
 
 		var jsonSerializer = serializer as JsonServiceSerializer ?? NewtonsoftJsonServiceSerializer.Instance;
@@ -93,7 +92,7 @@ public sealed class FacilityConformanceApp
 				});
 
 			await new WebHostBuilder()
-				.UseKestrel()
+				.UseKestrel(options => options.AllowSynchronousIO = serializerName is "newtonsoftjson")
 				.UseUrls(url)
 				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, contentSerializer)))
 				.Build()
@@ -286,8 +285,6 @@ public sealed class FacilityConformanceApp
 			}
 		}
 	}
-
-	private static readonly RecyclableMemoryStreamManager s_memoryStreamManager = new();
 
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;

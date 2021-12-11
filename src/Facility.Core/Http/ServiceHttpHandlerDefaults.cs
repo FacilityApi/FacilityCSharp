@@ -1,12 +1,12 @@
 namespace Facility.Core.Http;
 
 /// <summary>
-/// Settings for service HTTP handlers.
+/// Defaults for service HTTP handlers.
 /// </summary>
 public sealed class ServiceHttpHandlerDefaults
 {
 	/// <summary>
-	/// The default JSON serializer.
+	/// The default content serializer.
 	/// </summary>
-	public JsonServiceSerializer? JsonSerializer { get; set; }
+	public HttpContentSerializer? ContentSerializer { get; set; }
 }

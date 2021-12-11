@@ -7,9 +7,11 @@ using Newtonsoft.Json.Serialization;
 namespace Facility.Core;
 
 /// <summary>
-/// Helper methods for working with JSON.
+/// Helper methods for working with Json.NET.
 /// </summary>
-[Obsolete("Use ServiceSerializer")]
+/// <remarks>Consider using <see cref="NewtonsoftJsonServiceSerializer" /> or <see cref="SystemTextJsonServiceSerializer" />
+/// instead, but keep in mind that those classes throw <see cref="ServiceSerializationException" /> on error. This class may
+/// be obsoleted in the future.</remarks>
 public static class ServiceJsonUtility
 {
 	/// <summary>

@@ -11,7 +11,7 @@ public sealed class HttpClientServiceDefaults
 	public Uri? BaseUri { get; set; }
 
 	/// <summary>
-	/// The default JSON serializer.
+	/// The default content serializer.
 	/// </summary>
-	public JsonServiceSerializer? JsonSerializer { get; set; }
+	public HttpContentSerializer? ContentSerializer { get; set; }
 }

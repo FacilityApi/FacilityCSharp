@@ -52,6 +52,12 @@ public sealed class ServiceObject
 		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToJson(jsonObject) :
 		"";
 
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
+	public static implicit operator ServiceObject?(JObject? jObject) => Create(jObject);
+
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
+	public static implicit operator ServiceObject?(JsonObject? jsonObject) => Create(jsonObject);
+
 	private ServiceObject(JObject jObject) => m_jObject = jObject;
 
 	private ServiceObject(JsonObject jsonObject) => m_jsonObject = jsonObject;

@@ -1,5 +1,23 @@
 # Release Notes
 
+## 2.14.0-beta.4
+
+* Serialize and deserialize JSON using async I/O.
+* Don't use memory streams for JSON serialization.
+* Allow "chunked transfer encoding" when sending/receiving JSON.
+
+## 2.14.0-beta.3
+
+* Un-obsolete `ServiceJsonUtility`.
+* Make it easier to use a memory stream creator.
+* Support implicit cast from `JObject` and `JsonObject` to `ServiceObject`.
+
+## 2.14.0-beta.2
+
+* Support `System.Text.Json`. Use it by default.
+* Use `ServiceObject` instead of `JObject` for FSD `object` fields.
+* Support .NET 6.
+
 ## 2.13.5
 
 * Add .NET 6 support to tools.
