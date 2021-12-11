@@ -11,9 +11,27 @@ public abstract class HttpContentSerializer
 	public static HttpContentSerializer Create(ServiceSerializer serviceSerializer) => new StandardHttpContentSerializer(serviceSerializer);
 
 	/// <summary>
+	/// Combines HTTP content serializers.
+	/// </summary>
+	/// <remarks>The first content serializer is preferred, but subsequent content serializers will be used as needed to
+	/// satisfy the desired media type.</remarks>
+	public static HttpContentSerializer Combine(params HttpContentSerializer[] contentSerializers)
+	{
+		if ((contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers))).Length == 0)
+			throw new ArgumentException("At least one serializer must be specified.", nameof(contentSerializers));
+
+		return contentSerializers.Length == 1 ? contentSerializers[0] : new CompositeHttpContentSerializer(contentSerializers);
+	}
+
+	/// <summary>
 	/// The default media type for the serializer.
 	/// </summary>
 	public string DefaultMediaType => DefaultMediaTypeCore;
+
+	/// <summary>
+	/// The accepted media types that clients should send in the <c>Accept</c> header.
+	/// </summary>
+	public IReadOnlyList<string> AcceptMediaTypes => AcceptMediaTypesCore;
 
 	/// <summary>
 	/// Determines if the specified media type can be read by this serializer.
@@ -59,6 +77,11 @@ public abstract class HttpContentSerializer
 	/// The default media type for the serializer.
 	/// </summary>
 	protected abstract string DefaultMediaTypeCore { get; }
+
+	/// <summary>
+	/// The accepted media types that clients should send in the <c>Accept</c> header.
+	/// </summary>
+	protected virtual IReadOnlyList<string> AcceptMediaTypesCore => new[] { DefaultMediaType };
 
 	/// <summary>
 	/// Determines if the specified media type can be read by this serializer.
