@@ -31,6 +31,12 @@ public sealed class HttpClientServiceSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
+	/// True to allow chunked transfer encoding (default false).
+	/// </summary>
+	/// <remarks>If false, the response is serialized into memory before sending it to the service.</remarks>
+	public bool AllowChunkedTransfer { get; set; }
+
+	/// <summary>
 	/// The aspects used when sending requests and receiving responses (optional).
 	/// </summary>
 	public IReadOnlyList<HttpClientServiceAspect>? Aspects { get; set; }
