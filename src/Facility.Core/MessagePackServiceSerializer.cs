@@ -15,7 +15,7 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	/// <summary>
 	/// The default media type.
 	/// </summary>
-	public override string DefaultMediaType => "application/x-msgpack";
+	public override string DefaultMediaType => "application/msgpack";
 
 	/// <summary>
 	/// Serializes a value to the serialization format.
