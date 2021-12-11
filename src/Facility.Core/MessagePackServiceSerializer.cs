@@ -20,11 +20,11 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	/// <summary>
 	/// Serializes a value to the serialization format.
 	/// </summary>
-	public override void ToStream(object? value, Stream stream)
+	public override async Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken)
 	{
 		try
 		{
-			MessagePackSerializer.Serialize(stream, value, s_serializerOptions);
+			await MessagePackSerializer.SerializeAsync(stream, value, s_serializerOptions, cancellationToken).ConfigureAwait(false);
 		}
 		catch (MessagePackSerializationException exception)
 		{
@@ -35,11 +35,11 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	/// <summary>
 	/// Deserializes a value from the serialization format.
 	/// </summary>
-	public override object? FromStream(Stream stream, Type type)
+	public override async Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken)
 	{
 		try
 		{
-			return MessagePackSerializer.Deserialize(type, stream, s_serializerOptions);
+			return await MessagePackSerializer.DeserializeAsync(type, stream, s_serializerOptions, cancellationToken).ConfigureAwait(false);
 		}
 		catch (MessagePackSerializationException exception)
 		{

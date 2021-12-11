@@ -29,7 +29,7 @@ namespace Facility.Benchmarks.Http
 
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{
-			JsonSerializer = SystemTextJsonServiceSerializer.Instance,
+			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
 		};
 	}
 }
