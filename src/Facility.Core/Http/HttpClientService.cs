@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 
 namespace Facility.Core.Http;
 
@@ -87,8 +88,16 @@ public abstract class HttpClientService
 			if (httpRequestResult.IsFailure)
 				return httpRequestResult.ToFailure();
 
-			// create the request body if necessary
+			// add Accept header if not JSON
 			using var httpRequest = httpRequestResult.Value;
+			var contentMediaType = ContentSerializer.DefaultMediaType;
+			if (contentMediaType != HttpServiceUtility.JsonMediaType)
+			{
+				httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentMediaType));
+				httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+			}
+
+			// create the request body if necessary
 			var requestBody = mapping.GetRequestBody(request);
 			if (requestBody != null)
 			{
