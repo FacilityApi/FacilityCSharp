@@ -14,16 +14,16 @@ namespace Facility.Benchmarks;
 public class HttpBenchmarks
 {
 	[ParamsSource(nameof(Serializers))]
-	public ServiceSerializer Serializer { get; set; } = default!;
+	public SerializerInfo Serializer { get; set; } = default!;
 
 	[Params(1, 10, 100, 1000)]
 	public int UserCount { get; set; }
 
-	public IReadOnlyList<ServiceSerializer> Serializers => new ServiceSerializer[]
+	public IReadOnlyList<SerializerInfo> Serializers => new[]
 	{
-		NewtonsoftJsonServiceSerializer.Instance,
-		SystemTextJsonServiceSerializer.Instance,
-		MessagePackServiceSerializer.Instance,
+		new SerializerInfo(NewtonsoftJsonServiceSerializer.Instance),
+		new SerializerInfo(SystemTextJsonServiceSerializer.Instance),
+		new SerializerInfo(MessagePackServiceSerializer.Instance),
 	};
 
 	[GlobalSetup]
@@ -31,11 +31,11 @@ public class HttpBenchmarks
 	{
 		var baseUrl = "http://localhost:5987";
 		m_webHost = new WebHostBuilder()
-			.UseKestrel()
+			.UseKestrel(options => options.AllowSynchronousIO = true)
 			.UseUrls(baseUrl)
 			.ConfigureServices(services =>
 			{
-				services.AddSingleton(Serializer);
+				services.AddSingleton(Serializer.ServiceSerializer);
 				services.AddSingleton<UserRepository>();
 				services.AddSingleton<IBenchmarkService, BenchmarkService>();
 				services.AddSingleton(x => new BenchmarkServiceHttpHandler(x.GetRequiredService<IBenchmarkService>(), new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(x.GetRequiredService<ServiceSerializer>()) }));
@@ -52,7 +52,12 @@ public class HttpBenchmarks
 
 		await m_webHost.StartAsync();
 
-		m_client = new HttpClientBenchmarkService(new HttpClientServiceSettings { BaseUri = new Uri(baseUrl), ContentSerializer = HttpContentSerializer.Create(Serializer) });
+		m_client = new HttpClientBenchmarkService(
+			new HttpClientServiceSettings
+			{
+				BaseUri = new Uri(baseUrl),
+				ContentSerializer = HttpContentSerializer.Create(Serializer.ServiceSerializer),
+			});
 	}
 
 	[GlobalCleanup]
