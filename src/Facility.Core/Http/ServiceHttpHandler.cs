@@ -274,11 +274,12 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 	private string? GetAcceptedMediaType(HttpRequestMessage httpRequest, HttpContentSerializer serializer) =>
 		httpRequest.Headers.Accept
+			.Where(x => x.MediaType is not null)
 			.OrderByDescending(x => x.Quality)
+			.ThenBy(x => !x.MediaType!.EndsWith("/*", StringComparison.Ordinal) ? 0 : x.MediaType != "*/*" ? 1 : 2)
 			.Select(x => x.MediaType)
-			.Where(x => x is not null)
 			.Select(x => x!)
-			.FirstOrDefault(serializer.IsAcceptedMediaType);
+			.FirstOrDefault(x => x == "*/*" || serializer.IsAcceptedMediaType(x));
 
 	private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 	{
