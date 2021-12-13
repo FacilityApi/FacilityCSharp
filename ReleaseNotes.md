@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.0-beta.5
+
+* Add setting to disable chunked transfer encoding.
+
 ## 2.14.0-beta.4
 
 * Serialize and deserialize JSON using async I/O.
