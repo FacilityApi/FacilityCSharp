@@ -1,4 +1,4 @@
-# ServiceDataUtility.AreEquivalentObjects method
+# ServiceDataUtility.AreEquivalentObjects method (1 of 2)
 
 True if the objects are equivalent.
 
@@ -8,6 +8,22 @@ public static bool AreEquivalentObjects(JObject? first, JObject? second)
 
 ## See Also
 
+* class [ServiceDataUtility](../ServiceDataUtility.md)
+* namespace [Facility.Core](../../Facility.Core.md)
+
+---
+
+# ServiceDataUtility.AreEquivalentObjects method (2 of 2)
+
+True if the objects are equivalent.
+
+```csharp
+public static bool AreEquivalentObjects(ServiceObject? first, ServiceObject? second)
+```
+
+## See Also
+
+* class [ServiceObject](../ServiceObject.md)
 * class [ServiceDataUtility](../ServiceDataUtility.md)
 * namespace [Facility.Core](../../Facility.Core.md)
 

@@ -1,6 +1,6 @@
 # ServiceResult.ServiceResultJsonConverter class
 
-Used for JSON serialization.
+Used by Json.NET to convert [`ServiceResult`](./ServiceResult.md).
 
 ```csharp
 public sealed class ServiceResultJsonConverter : JsonConverter

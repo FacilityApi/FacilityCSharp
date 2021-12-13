@@ -1,44 +1,14 @@
-# ConformanceApiTester constructor (1 of 2)
+# ConformanceApiTester constructor
 
 Creates a tester.
 
 ```csharp
-public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api)
+public ConformanceApiTester(ConformanceApiTesterSettings settings)
 ```
-
-| parameter | description |
-| --- | --- |
-| tests | The conformance tests. |
-| api | The API interface to test. |
 
 ## See Also
 
-* class [ConformanceTestInfo](../ConformanceTestInfo.md)
-* interface [IConformanceApi](../../Facility.ConformanceApi/IConformanceApi.md)
-* class [ConformanceApiTester](../ConformanceApiTester.md)
-* namespace [Facility.ConformanceApi.Testing](../../Facility.ConformanceApi.md)
-
----
-
-# ConformanceApiTester constructor (2 of 2)
-
-Creates a tester.
-
-```csharp
-public ConformanceApiTester(IReadOnlyList<ConformanceTestInfo> tests, IConformanceApi api, 
-    HttpClient? httpClient)
-```
-
-| parameter | description |
-| --- | --- |
-| tests | The conformance tests. |
-| api | The API interface to test. |
-| httpClient | The optional HTTP client for HTTP tests. |
-
-## See Also
-
-* class [ConformanceTestInfo](../ConformanceTestInfo.md)
-* interface [IConformanceApi](../../Facility.ConformanceApi/IConformanceApi.md)
+* class [ConformanceApiTesterSettings](../ConformanceApiTesterSettings.md)
 * class [ConformanceApiTester](../ConformanceApiTester.md)
 * namespace [Facility.ConformanceApi.Testing](../../Facility.ConformanceApi.md)
 

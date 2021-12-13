@@ -24,6 +24,7 @@ public sealed class AnyArrayDto : ServiceDto<AnyArrayDto>
 | [Result](AnyArrayDto/Result.md) { get; set; } |  |
 | [String](AnyArrayDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](AnyArrayDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](AnyArrayDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

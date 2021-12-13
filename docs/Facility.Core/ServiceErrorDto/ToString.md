@@ -1,9 +1,9 @@
-# ServiceErrorDto.Details property
+# ServiceErrorDto.ToString method
 
-Advanced error details.
+Returns the DTO as JSON.
 
 ```csharp
-public JObject? Details { get; set; }
+public override string ToString()
 ```
 
 ## See Also

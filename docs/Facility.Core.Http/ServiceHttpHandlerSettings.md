@@ -14,6 +14,7 @@ public class ServiceHttpHandlerSettings
 | [Aspects](ServiceHttpHandlerSettings/Aspects.md) { get; set; } | The aspects used when receiving requests and sending responses. |
 | [BytesSerializer](ServiceHttpHandlerSettings/BytesSerializer.md) { get; set; } | The content serializer used by requests and responses for bytes (optional). |
 | [ContentSerializer](ServiceHttpHandlerSettings/ContentSerializer.md) { get; set; } | The content serializer used by requests and responses. |
+| [DisableChunkedTransfer](ServiceHttpHandlerSettings/DisableChunkedTransfer.md) { get; set; } | True to disable chunked transfer encoding (default false). |
 | [RootPath](ServiceHttpHandlerSettings/RootPath.md) { get; set; } | The root path of the service, default "/". |
 | [SkipRequestValidation](ServiceHttpHandlerSettings/SkipRequestValidation.md) { get; set; } | True to prevent the validation of request DTOs after they are received. |
 | [SkipResponseValidation](ServiceHttpHandlerSettings/SkipResponseValidation.md) { get; set; } | True to prevent the validation of response DTOs before they are sent. |

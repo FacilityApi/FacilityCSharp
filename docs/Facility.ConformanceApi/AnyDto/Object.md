@@ -1,7 +1,7 @@
 # AnyDto.Object property
 
 ```csharp
-public JObject? Object { get; set; }
+public ServiceObject? Object { get; set; }
 ```
 
 ## See Also

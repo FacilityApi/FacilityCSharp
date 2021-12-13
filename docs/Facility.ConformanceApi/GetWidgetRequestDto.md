@@ -14,6 +14,7 @@ public sealed class GetWidgetRequestDto : ServiceDto<GetWidgetRequestDto>
 | [Id](GetWidgetRequestDto/Id.md) { get; set; } | The widget ID. |
 | [IfNotETag](GetWidgetRequestDto/IfNotETag.md) { get; set; } | Don't get the widget if it has this ETag. |
 | override [IsEquivalentTo](GetWidgetRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](GetWidgetRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](GetWidgetRequestDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also

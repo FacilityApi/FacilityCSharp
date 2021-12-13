@@ -19,6 +19,7 @@ public sealed class CheckPathRequestDto : ServiceDto<CheckPathRequestDto>
 | [Int64](CheckPathRequestDto/Int64.md) { get; set; } |  |
 | [String](CheckPathRequestDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](CheckPathRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](CheckPathRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](CheckPathRequestDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also

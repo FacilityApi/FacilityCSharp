@@ -22,7 +22,8 @@ public struct Answer : IEquatable<Answer>
 | static [GetValues](Answer/GetValues.md)() | Returns all of the defined values. |
 | [operator ==](Answer/op_Equality.md) | Checks for equality. |
 | [operator !=](Answer/op_Inequality.md) | Checks for inequality. |
-| class [AnswerJsonConverter](Answer.AnswerJsonConverter.md) | Used for JSON serialization. |
+| class [AnswerJsonConverter](Answer.AnswerJsonConverter.md) | Used for serialization. |
+| class [AnswerSystemTextJsonConverter](Answer.AnswerSystemTextJsonConverter.md) | Used for serialization. |
 | static class [Strings](Answer.Strings.md) | Provides string constants for defined values. |
 
 ## See Also

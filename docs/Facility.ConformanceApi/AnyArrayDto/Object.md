@@ -1,7 +1,7 @@
 # AnyArrayDto.Object property
 
 ```csharp
-public IReadOnlyList<JObject>? Object { get; set; }
+public IReadOnlyList<ServiceObject>? Object { get; set; }
 ```
 
 ## See Also

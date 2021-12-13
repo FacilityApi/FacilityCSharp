@@ -3,12 +3,12 @@
 Creates a service for the specified test.
 
 ```csharp
-public ConformanceApiService(IReadOnlyList<ConformanceTestInfo> tests)
+public ConformanceApiService(ConformanceApiServiceSettings settings)
 ```
 
 ## See Also
 
-* class [ConformanceTestInfo](../ConformanceTestInfo.md)
+* class [ConformanceApiServiceSettings](../ConformanceApiServiceSettings.md)
 * class [ConformanceApiService](../ConformanceApiService.md)
 * namespace [Facility.ConformanceApi.Testing](../../Facility.ConformanceApi.md)
 

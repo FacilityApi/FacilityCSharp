@@ -59,7 +59,9 @@
 | public type | description |
 | --- | --- |
 | class [ConformanceApiService](./Facility.ConformanceApi.Testing/ConformanceApiService.md) | Implements a conformance API service. |
+| class [ConformanceApiServiceSettings](./Facility.ConformanceApi.Testing/ConformanceApiServiceSettings.md) | Settings for [`ConformanceApiService`](./Facility.ConformanceApi.Testing/ConformanceApiService.md). |
 | class [ConformanceApiTester](./Facility.ConformanceApi.Testing/ConformanceApiTester.md) | Tests a conformance API service. |
+| class [ConformanceApiTesterSettings](./Facility.ConformanceApi.Testing/ConformanceApiTesterSettings.md) | Settings for [`ConformanceApiTester`](./Facility.ConformanceApi.Testing/ConformanceApiTester.md). |
 | class [ConformanceHttpRequestInfo](./Facility.ConformanceApi.Testing/ConformanceHttpRequestInfo.md) | A raw HTTP request. |
 | class [ConformanceTestInfo](./Facility.ConformanceApi.Testing/ConformanceTestInfo.md) | Information for a conformance test. |
 | class [ConformanceTestResult](./Facility.ConformanceApi.Testing/ConformanceTestResult.md) | A conformance test result. |

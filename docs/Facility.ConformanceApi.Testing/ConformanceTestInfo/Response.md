@@ -3,7 +3,7 @@
 The API response being received, if the method should succeed.
 
 ```csharp
-public JObject? Response { get; set; }
+public ServiceObject? Response { get; set; }
 ```
 
 ## See Also

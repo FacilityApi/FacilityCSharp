@@ -1,14 +1,15 @@
 # HttpClientService constructor
 
-Creates an instance with the specified settings.
+Creates an instance with the specified settings and defaults.
 
 ```csharp
-protected HttpClientService(HttpClientServiceSettings? settings, Uri? defaultBaseUri)
+protected HttpClientService(HttpClientServiceSettings? settings, HttpClientServiceDefaults defaults)
 ```
 
 ## See Also
 
 * class [HttpClientServiceSettings](../HttpClientServiceSettings.md)
+* class [HttpClientServiceDefaults](../HttpClientServiceDefaults.md)
 * class [HttpClientService](../HttpClientService.md)
 * namespace [Facility.Core.Http](../../Facility.Core.md)
 

@@ -12,6 +12,7 @@ public sealed class GetApiInfoRequestDto : ServiceDto<GetApiInfoRequestDto>
 | --- | --- |
 | [GetApiInfoRequestDto](GetApiInfoRequestDto/GetApiInfoRequestDto.md)() | Creates an instance. |
 | override [IsEquivalentTo](GetApiInfoRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](GetApiInfoRequestDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

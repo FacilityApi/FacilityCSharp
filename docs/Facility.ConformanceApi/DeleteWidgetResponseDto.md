@@ -14,6 +14,7 @@ public sealed class DeleteWidgetResponseDto : ServiceDto<DeleteWidgetResponseDto
 | [Conflict](DeleteWidgetResponseDto/Conflict.md) { get; set; } | The widget no longer has the specified ETag. |
 | [NotFound](DeleteWidgetResponseDto/NotFound.md) { get; set; } | The widget was not found. |
 | override [IsEquivalentTo](DeleteWidgetResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](DeleteWidgetResponseDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

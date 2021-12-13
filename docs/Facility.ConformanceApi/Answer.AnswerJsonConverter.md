@@ -1,6 +1,6 @@
 # Answer.AnswerJsonConverter class
 
-Used for JSON serialization.
+Used for serialization.
 
 ```csharp
 public sealed class AnswerJsonConverter : ServiceEnumJsonConverter<Answer>

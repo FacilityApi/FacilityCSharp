@@ -14,6 +14,7 @@ public sealed class MirrorFieldsRequestDto : ServiceDto<MirrorFieldsRequestDto>
 | [Field](MirrorFieldsRequestDto/Field.md) { get; set; } |  |
 | [Matrix](MirrorFieldsRequestDto/Matrix.md) { get; set; } |  |
 | override [IsEquivalentTo](MirrorFieldsRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](MirrorFieldsRequestDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

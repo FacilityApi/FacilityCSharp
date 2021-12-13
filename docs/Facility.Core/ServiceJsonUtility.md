@@ -1,6 +1,6 @@
 # ServiceJsonUtility class
 
-Helper methods for working with JSON.
+Helper methods for working with Json.NET.
 
 ```csharp
 public static class ServiceJsonUtility
@@ -27,6 +27,10 @@ public static class ServiceJsonUtility
 | static [ToJsonTextWriter](ServiceJsonUtility/ToJsonTextWriter.md)(…) | Serializes a value to JSON. |
 | static [ToJsonWriter](ServiceJsonUtility/ToJsonWriter.md)(…) | Serializes a value to JSON. |
 | static [ToJToken](ServiceJsonUtility/ToJToken.md)(…) | Converts the object to a JToken. |
+
+## Remarks
+
+Consider using [`NewtonsoftJsonServiceSerializer`](./NewtonsoftJsonServiceSerializer.md) or [`SystemTextJsonServiceSerializer`](./SystemTextJsonServiceSerializer.md) instead, but keep in mind that those classes throw [`ServiceSerializationException`](./ServiceSerializationException.md) on error. This class may be obsoleted in the future.
 
 ## See Also
 

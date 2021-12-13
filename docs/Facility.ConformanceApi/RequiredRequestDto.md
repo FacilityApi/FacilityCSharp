@@ -22,6 +22,7 @@ public sealed class RequiredRequestDto : ServiceDto<RequiredRequestDto>
 | [WidgetResults](RequiredRequestDto/WidgetResults.md) { get; set; } |  |
 | [Widgets](RequiredRequestDto/Widgets.md) { get; set; } |  |
 | override [IsEquivalentTo](RequiredRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](RequiredRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](RequiredRequestDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also
