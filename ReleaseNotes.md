@@ -7,7 +7,7 @@
   * ASP.NET Core applications that continue to use Json.NET will need to set `AllowSynchronousIO` to true, since Json.NET doesn't support async serialization.
 * Use chunked transfer encoding. Add `DisableChunkedTransfer` setting.
   * DTOs are no longer serialized to/from an intermediate memory stream, which should improve performance and memory usage on clients and servers.
-* Use `ServiceObject` instead of `JObject` for FSD `object` fields.
+* Use `ServiceObject` instead of `JObject` for FSD `object` fields. This is a **breaking change** in generated DTOs that use `object`.
 * Support .NET 6.
 
 ## 2.13.5
