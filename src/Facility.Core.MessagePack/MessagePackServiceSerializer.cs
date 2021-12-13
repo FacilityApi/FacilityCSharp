@@ -1,5 +1,4 @@
 using MessagePack;
-using MessagePack.Resolvers;
 
 namespace Facility.Core.MessagePack;
 
@@ -68,5 +67,5 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 	}
 
 	private static readonly MessagePackSerializerOptions s_serializerOptions =
-		MessagePackSerializerOptions.Standard.WithResolver(CompositeResolver.Create(MessagePackServiceResolver.Instance, MessagePackSerializerOptions.Standard.Resolver));
+		MessagePackSerializerOptions.Standard.WithResolver(MessagePackServiceResolver.Instance);
 }
