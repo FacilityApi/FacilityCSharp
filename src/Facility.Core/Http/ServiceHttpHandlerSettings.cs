@@ -31,6 +31,12 @@ public class ServiceHttpHandlerSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
+	/// True to disable chunked transfer encoding (default false).
+	/// </summary>
+	/// <remarks>If true, the response is serialized into memory before sending it to the client.</remarks>
+	public bool DisableChunkedTransfer { get; set; }
+
+	/// <summary>
 	/// The aspects used when receiving requests and sending responses.
 	/// </summary>
 	public IReadOnlyList<ServiceHttpHandlerAspect>? Aspects { get; set; }

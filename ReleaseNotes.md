@@ -1,21 +1,13 @@
 # Release Notes
 
-## 2.14.0-beta.4
+## 2.14.0
 
-* Serialize and deserialize JSON using async I/O.
-* Don't use memory streams for JSON serialization.
-* Allow "chunked transfer encoding" when sending/receiving JSON.
-
-## 2.14.0-beta.3
-
-* Un-obsolete `ServiceJsonUtility`.
-* Make it easier to use a memory stream creator.
-* Support implicit cast from `JObject` and `JsonObject` to `ServiceObject`.
-
-## 2.14.0-beta.2
-
-* Support `System.Text.Json`. Use it by default.
-* Use `ServiceObject` instead of `JObject` for FSD `object` fields.
+* Serialize and deserialize JSON using `System.Text.Json` and async I/O.
+  * Old clients and services will continue to use `Newtonsoft.Json` (Json.NET) until code is regenerated, after which `System.Text.Json` will be used unless `ContentSerializer` is set to `NewtonsoftJsonServiceSerializer.Instance`.
+  * ASP.NET Core applications that continue to use Json.NET will need to set `AllowSynchronousIO` to true, since Json.NET doesn't support async serialization.
+* Use chunked transfer encoding. Add `DisableChunkedTransfer` setting.
+  * DTOs are no longer serialized to/from an intermediate memory stream, which should improve performance and memory usage on clients and servers.
+* Use `ServiceObject` instead of `JObject` for FSD `object` fields. This is a **breaking change** in generated DTOs that use `object`.
 * Support .NET 6.
 
 ## 2.13.5

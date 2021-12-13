@@ -20,6 +20,7 @@ public abstract class HttpClientService
 		m_synchronous = settings.Synchronous;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
+		m_disableChunkedTransfer = settings.DisableChunkedTransfer;
 
 		var baseUri = settings.BaseUri ?? defaults.BaseUri;
 		m_baseUrl = baseUri == null ? "/" : (baseUri.IsAbsoluteUri ? baseUri.AbsoluteUri : baseUri.OriginalString).TrimEnd('/') + "/";
@@ -103,6 +104,8 @@ public abstract class HttpClientService
 			{
 				var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 				httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
+				if (m_disableChunkedTransfer)
+					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 			}
 
 			// send the HTTP request and get the HTTP response
@@ -285,5 +288,6 @@ public abstract class HttpClientService
 	private readonly bool m_synchronous;
 	private readonly bool m_skipRequestValidation;
 	private readonly bool m_skipResponseValidation;
+	private readonly bool m_disableChunkedTransfer;
 	private readonly string m_baseUrl;
 }
