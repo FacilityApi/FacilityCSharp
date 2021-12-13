@@ -29,7 +29,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		m_aspects = settings.Aspects;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
-		m_allowChunkedTransfer = settings.AllowChunkedTransfer;
+		m_disableChunkedTransfer = settings.DisableChunkedTransfer;
 	}
 
 	/// <summary>
@@ -159,7 +159,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 					var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
 					var mediaType = responseMapping.ResponseBodyContentType ?? responseHeaders?.GetContentType() ?? GetAcceptedMediaType(httpRequest, serializer);
 					httpResponse.Content = serializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
-					if (!m_allowChunkedTransfer)
+					if (m_disableChunkedTransfer)
 						await httpResponse.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 				}
 			}
@@ -177,7 +177,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			{
 				var mediaType = GetAcceptedMediaType(httpRequest, m_contentSerializer);
 				httpResponse.Content = m_contentSerializer.CreateHttpContent(error, mediaType);
-				if (!m_allowChunkedTransfer)
+				if (m_disableChunkedTransfer)
 					await httpResponse.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 			}
 		}
@@ -325,5 +325,5 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 	private readonly IReadOnlyList<ServiceHttpHandlerAspect>? m_aspects;
 	private readonly bool m_skipRequestValidation;
 	private readonly bool m_skipResponseValidation;
-	private readonly bool m_allowChunkedTransfer;
+	private readonly bool m_disableChunkedTransfer;
 }
