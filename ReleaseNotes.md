@@ -1,5 +1,13 @@
 # Release Notes
 
+## 2.15.0-beta.1
+
+* Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
+  * Use `--msgpack` with `fsdgencsharp` to generate MessagePack-compatible DTOs.
+  * Reference the `Facility.Core.MessagePack` NuGet package in your client and/or service.
+  * For clients, set `HttpClientServiceSettings.ContentSerializer` to `MessagePackServiceSerializer.Instance` to send and receive MessagePack (rather than JSON) by specifying `application/msgpack` in the `Content-Type` and `Accept` headers.
+  * For servers, set `ServiceHttpHandlerSettings.ContentSerializer` to `HttpContentSerializer.Combine(SystemTextJsonServiceSerializer.Instance, MessagePackServiceSerializer.Instance)` to support JSON by default but use MessagePack when `application/msgpack` is specified in the `Accept` header.
+
 ## 2.14.0
 
 * Serialize and deserialize JSON using `System.Text.Json` and async I/O.
