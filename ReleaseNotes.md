@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.1
+
+* Use conformance data that serializes precisely.
+
 ## 2.14.0
 
 * Serialize and deserialize JSON using `System.Text.Json` and async I/O.
