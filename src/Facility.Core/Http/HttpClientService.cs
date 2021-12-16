@@ -233,7 +233,7 @@ public abstract class HttpClientService
 #if NET6_0_OR_GREATER
 					url = string.Concat(url.AsSpan(0, bracketedKeyIndex), Uri.EscapeDataString(parameter.Value), url.AsSpan(bracketedKeyIndex + bracketedKey.Length));
 #else
-						url = url.Substring(0, bracketedKeyIndex) + Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);
+					url = url.Substring(0, bracketedKeyIndex) + Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);
 #endif
 				}
 				else
