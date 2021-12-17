@@ -172,6 +172,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JArray>(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JValue>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JToken>(),
 		},
 	};
 }
