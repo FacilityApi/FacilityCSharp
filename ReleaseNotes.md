@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.14.2
+## 2.14.2–2.14.3
 
 * Support `Newtonsoft.Json.Linq` properties with `SystemTextJsonServiceSerializer`.
 
