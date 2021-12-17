@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.2
+
+* Support `Newtonsoft.Json.Linq` properties with `SystemTextJsonServiceSerializer`.
+
 ## 2.14.1
 
 * Use conformance data that serializes precisely.
