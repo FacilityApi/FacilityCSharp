@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.4
+
+* Generated delegating service class as a partial class.
+
 ## 2.14.2–2.14.3
 
 * Support `Newtonsoft.Json.Linq` properties with `SystemTextJsonServiceSerializer`.

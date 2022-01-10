@@ -1355,7 +1355,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 				CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
 
-				code.WriteLine($"public class {className} : {interfaceName}");
+				code.WriteLine($"public partial class {className} : {interfaceName}");
 				using (code.Block())
 				{
 					CSharpUtility.WriteSummary(code, "Creates an instance with the specified delegator.");

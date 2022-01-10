@@ -13,7 +13,7 @@ namespace EdgeCases
 	/// A delegating implementation of EdgeCases.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public class DelegatingEdgeCases : IEdgeCases
+	public partial class DelegatingEdgeCases : IEdgeCases
 	{
 		/// <summary>
 		/// Creates an instance with the specified delegator.
