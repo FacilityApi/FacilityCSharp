@@ -13,7 +13,7 @@ namespace Facility.ConformanceApi
 	/// A delegating implementation of ConformanceApi.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public class DelegatingConformanceApi : IConformanceApi
+	public partial class DelegatingConformanceApi : IConformanceApi
 	{
 		/// <summary>
 		/// Creates an instance with the specified delegator.
