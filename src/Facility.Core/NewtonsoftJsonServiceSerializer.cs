@@ -93,10 +93,8 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 		if (value is null)
 			return default!;
 
-		using var memoryStream = new MemoryStream();
-		ToStream(value, memoryStream);
-		memoryStream.Position = 0;
-		return (T) FromStream(memoryStream, typeof(T))!;
+		var serializedValue = ToJson(value);
+		return FromJson<T>(serializedValue)!;
 	}
 
 	/// <summary>
