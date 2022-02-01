@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.6
+
+* Improve performance of `NewtonsoftJsonServiceSerializer.Clone`.
+
 ## 2.14.5
 
 * Fix build that didn't work properly on .NET 5 or .NET Core 3.1.
