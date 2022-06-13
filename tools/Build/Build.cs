@@ -43,7 +43,7 @@ return BuildRunner.Execute(args, build =>
 
 		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable");
 		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--clean");
-		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--clean");
+		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--fix-snake-case", "--clean");
 
 		void RunCodeGen(params string?[] args) =>
 			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));

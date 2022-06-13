@@ -16,4 +16,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	/// True if the code should use nullable reference syntax.
 	/// </summary>
 	public bool UseNullableReferences { get; set; }
+
+	/// <summary>
+	/// True if C# names should automatically use PascalCase instead of snake case.
+	/// </summary>
+	public bool FixSnakeCase { get; set; }
 }

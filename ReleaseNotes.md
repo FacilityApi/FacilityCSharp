@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.15.0
+
+* Support fixing snake case in definitions.
+
 ## 2.14.6
 
 * Improve performance of `NewtonsoftJsonServiceSerializer.Clone`.

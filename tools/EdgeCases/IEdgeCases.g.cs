@@ -17,5 +17,7 @@ namespace EdgeCases
 		/// </summary>
 		[Obsolete]
 		Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default);
+
+		Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default);
 	}
 }
