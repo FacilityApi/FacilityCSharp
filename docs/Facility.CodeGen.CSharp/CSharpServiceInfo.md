@@ -10,11 +10,11 @@ public sealed class CSharpServiceInfo
 
 | name | description |
 | --- | --- |
-| static [Create](CSharpServiceInfo/Create.md)(…) | Creates C# info for a service. |
+| static [Create](CSharpServiceInfo/Create.md)(…) | Creates C# info for a service. (2 methods) |
 | [Namespace](CSharpServiceInfo/Namespace.md) { get; } | The namespace. |
 | [Service](CSharpServiceInfo/Service.md) { get; } | The service. |
 | [GetFieldPropertyName](CSharpServiceInfo/GetFieldPropertyName.md)(…) | Gets the property name for the specified field. |
-| static [TryCreate](CSharpServiceInfo/TryCreate.md)(…) | Attempts to create C# info for a service. |
+| static [TryCreate](CSharpServiceInfo/TryCreate.md)(…) | Attempts to create C# info for a service. (2 methods) |
 
 ## See Also
 

@@ -1,4 +1,4 @@
-# CSharpServiceInfo.TryCreate method
+# CSharpServiceInfo.TryCreate method (1 of 2)
 
 Attempts to create C# info for a service.
 
@@ -17,6 +17,31 @@ Even if there are errors, an invalid HTTP mapping will be returned.
 
 ## See Also
 
+* class [CSharpServiceInfo](../CSharpServiceInfo.md)
+* namespace [Facility.CodeGen.CSharp](../../Facility.CodeGen.CSharp.md)
+
+---
+
+# CSharpServiceInfo.TryCreate method (2 of 2)
+
+Attempts to create C# info for a service.
+
+```csharp
+public static bool TryCreate(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, 
+    out CSharpServiceInfo csharpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
+```
+
+## Return Value
+
+True if there are no errors.
+
+## Remarks
+
+Even if there are errors, an invalid HTTP mapping will be returned.
+
+## See Also
+
+* class [CSharpServiceInfoSettings](../CSharpServiceInfoSettings.md)
 * class [CSharpServiceInfo](../CSharpServiceInfo.md)
 * namespace [Facility.CodeGen.CSharp](../../Facility.CodeGen.CSharp.md)
 
