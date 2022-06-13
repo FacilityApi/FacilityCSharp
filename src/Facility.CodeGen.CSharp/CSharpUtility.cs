@@ -55,24 +55,6 @@ internal static class CSharpUtility
 
 	public const string HttpDirectoryName = "Http";
 
-	public static string GetInterfaceName(ServiceInfo serviceInfo) => $"I{CodeGenUtility.Capitalize(serviceInfo.Name)}";
-
-	public static string GetMethodName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name);
-
-	public static string GetDtoName(ServiceDtoInfo dtoInfo) => CodeGenUtility.Capitalize(dtoInfo.Name) + "Dto";
-
-	public static string GetRequestDtoName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name) + "RequestDto";
-
-	public static string GetResponseDtoName(ServiceMethodInfo methodInfo) => CodeGenUtility.Capitalize(methodInfo.Name) + "ResponseDto";
-
-	public static string GetEnumName(ServiceEnumInfo enumInfo) => CodeGenUtility.Capitalize(enumInfo.Name);
-
-	public static string GetEnumValueName(ServiceEnumValueInfo enumValue) => CodeGenUtility.Capitalize(enumValue.Name);
-
-	public static string GetErrorSetName(ServiceErrorSetInfo errorSetInfo) => CodeGenUtility.Capitalize(errorSetInfo.Name);
-
-	public static string GetErrorName(ServiceErrorInfo errorInfo) => CodeGenUtility.Capitalize(errorInfo.Name);
-
 	public static string CreateString(string text)
 	{
 		var builder = new StringBuilder(text.Length + 2);

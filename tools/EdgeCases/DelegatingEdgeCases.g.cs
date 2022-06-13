@@ -28,6 +28,9 @@ namespace EdgeCases
 		public virtual async Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(EdgeCasesMethods.OldMethod, request, cancellationToken).ConfigureAwait(false)).Cast<OldMethodResponseDto>();
 
+		public virtual async Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(EdgeCasesMethods.SnakeMethod, request, cancellationToken).ConfigureAwait(false)).Cast<SnakeMethodResponseDto>();
+
 		private readonly ServiceDelegator m_delegator;
 	}
 }

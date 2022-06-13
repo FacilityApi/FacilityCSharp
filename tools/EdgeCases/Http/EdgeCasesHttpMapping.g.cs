@@ -34,5 +34,21 @@ namespace EdgeCases.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<SnakeMethodRequestDto, SnakeMethodResponseDto> SnakeMethodMapping =
+			new HttpMethodMapping<SnakeMethodRequestDto, SnakeMethodResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/snake_method",
+				RequestBodyType = typeof(SnakeMethodRequestDto),
+				ResponseMappings =
+				{
+					new HttpResponseMapping<SnakeMethodResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(SnakeMethodResponseDto),
+					}.Build(),
+				},
+			}.Build();
 	}
 }
