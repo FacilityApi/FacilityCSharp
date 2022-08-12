@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.15.1
+
+* Catch `UriFormatException` on request.
+
 ## 2.15.0
 
 * Support fixing snake case in definitions.
