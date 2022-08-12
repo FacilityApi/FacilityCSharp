@@ -169,7 +169,7 @@ public abstract class HttpClientService
 	/// </summary>
 	protected virtual bool ShouldCreateErrorFromException(Exception exception)
 	{
-		if (exception is ArgumentException || exception is ObjectDisposedException || exception is AggregateException)
+		if (exception is ArgumentException or ObjectDisposedException or AggregateException or UriFormatException)
 			return true;
 
 		var exceptionTypeName = exception.GetType().FullName;
