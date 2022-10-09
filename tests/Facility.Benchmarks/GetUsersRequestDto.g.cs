@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.Benchmarks
 {
@@ -12,6 +13,7 @@ namespace Facility.Benchmarks
 	/// Request for GetUsers.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetUsersRequestDto : ServiceDto<GetUsersRequestDto>
 	{
 		/// <summary>
@@ -21,6 +23,7 @@ namespace Facility.Benchmarks
 		{
 		}
 
+		[MessagePack.Key(0)]
 		public int? Limit { get; set; }
 
 		/// <summary>

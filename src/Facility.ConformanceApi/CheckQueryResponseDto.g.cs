@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for CheckQuery.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CheckQueryResponseDto : ServiceDto<CheckQueryResponseDto>
 	{
 		/// <summary>

@@ -137,6 +137,36 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Serializes a value to JSON.
+	/// </summary>
+	public void ToStream(object? value, Stream stream)
+	{
+		try
+		{
+			JsonSerializer.Serialize(stream, value, s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public object? FromStream(Stream stream, Type type)
+	{
+		try
+		{
+			return JsonSerializer.Deserialize(stream, type, s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	public override T Clone<T>(T value)

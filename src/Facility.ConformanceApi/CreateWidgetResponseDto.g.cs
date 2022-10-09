@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for CreateWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CreateWidgetResponseDto : ServiceDto<CreateWidgetResponseDto>
 	{
 		/// <summary>
@@ -24,16 +26,19 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The created widget.
 		/// </summary>
+		[MessagePack.Key("widget")]
 		public WidgetDto? Widget { get; set; }
 
 		/// <summary>
 		/// The URL of the created widget.
 		/// </summary>
+		[MessagePack.Key("url")]
 		public string? Url { get; set; }
 
 		/// <summary>
 		/// The ETag of the created widget.
 		/// </summary>
+		[MessagePack.Key("eTag")]
 		public string? ETag { get; set; }
 
 		/// <summary>

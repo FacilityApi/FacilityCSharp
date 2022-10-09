@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for BodyTypes.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class BodyTypesRequestDto : ServiceDto<BodyTypesRequestDto>
 	{
 		/// <summary>
@@ -21,6 +23,7 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("content")]
 		public string? Content { get; set; }
 
 		/// <summary>

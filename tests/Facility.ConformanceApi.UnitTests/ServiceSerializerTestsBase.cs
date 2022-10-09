@@ -1,4 +1,5 @@
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi.UnitTests;
 
@@ -8,6 +9,7 @@ public abstract class ServiceSerializerTestsBase
 	{
 		NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
+		MessagePackServiceSerializer.Instance,
 	};
 
 	protected ServiceSerializerTestsBase(ServiceSerializer serializer)

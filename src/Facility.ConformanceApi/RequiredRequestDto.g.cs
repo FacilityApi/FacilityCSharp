@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for Required.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class RequiredRequestDto : ServiceDto<RequiredRequestDto>
 	{
 		/// <summary>
@@ -21,24 +23,34 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("query")]
 		public string? Query { get; set; }
 
+		[MessagePack.Key("normal")]
 		public string? Normal { get; set; }
 
+		[MessagePack.Key("widget")]
 		public WidgetDto? Widget { get; set; }
 
+		[MessagePack.Key("widgets")]
 		public IReadOnlyList<WidgetDto>? Widgets { get; set; }
 
+		[MessagePack.Key("widgetMatrix")]
 		public IReadOnlyList<IReadOnlyList<WidgetDto>>? WidgetMatrix { get; set; }
 
+		[MessagePack.Key("widgetResult")]
 		public ServiceResult<WidgetDto>? WidgetResult { get; set; }
 
+		[MessagePack.Key("widgetResults")]
 		public IReadOnlyList<ServiceResult<WidgetDto>>? WidgetResults { get; set; }
 
+		[MessagePack.Key("widgetMap")]
 		public IReadOnlyDictionary<string, WidgetDto>? WidgetMap { get; set; }
 
+		[MessagePack.Key("hasWidget")]
 		public HasWidgetDto? HasWidget { get; set; }
 
+		[MessagePack.Key("point")]
 		public IReadOnlyList<double>? Point { get; set; }
 
 		/// <summary>

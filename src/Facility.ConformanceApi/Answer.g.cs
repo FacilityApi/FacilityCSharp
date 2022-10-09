@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -15,6 +16,7 @@ namespace Facility.ConformanceApi
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Newtonsoft.Json.JsonConverter(typeof(AnswerJsonConverter))]
 	[System.Text.Json.Serialization.JsonConverter(typeof(AnswerSystemTextJsonConverter))]
+	[MessagePack.MessagePackFormatter(typeof(AnswerMessagePackFormatter))]
 	public partial struct Answer : IEquatable<Answer>
 	{
 		/// <summary>
@@ -113,6 +115,17 @@ namespace Facility.ConformanceApi
 		/// Used for serialization.
 		/// </summary>
 		public sealed class AnswerSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<Answer>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override Answer CreateCore(string value) => new Answer(value);
+		}
+
+		/// <summary>
+		/// Used for serialization.
+		/// </summary>
+		public sealed class AnswerMessagePackFormatter : ServiceEnumMessagePackFormatter<Answer>
 		{
 			/// <summary>
 			/// Creates the value from a string.

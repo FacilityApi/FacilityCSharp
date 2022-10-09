@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for DeleteWidget.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class DeleteWidgetRequestDto : ServiceDto<DeleteWidgetRequestDto>
 	{
 		/// <summary>
@@ -24,11 +26,13 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widget ID.
 		/// </summary>
+		[MessagePack.Key("id")]
 		public int? Id { get; set; }
 
 		/// <summary>
 		/// Don't delete the widget unless it has this ETag.
 		/// </summary>
+		[MessagePack.Key("ifETag")]
 		public string? IfETag { get; set; }
 
 		/// <summary>

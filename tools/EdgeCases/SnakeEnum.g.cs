@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace EdgeCases
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Newtonsoft.Json.JsonConverter(typeof(SnakeEnumJsonConverter))]
 	[System.Text.Json.Serialization.JsonConverter(typeof(SnakeEnumSystemTextJsonConverter))]
+	[MessagePack.MessagePackFormatter(typeof(SnakeEnumMessagePackFormatter))]
 	public partial struct SnakeEnum : IEquatable<SnakeEnum>
 	{
 		public static readonly SnakeEnum SnakeValue = new SnakeEnum(Strings.SnakeValue);
@@ -84,6 +86,17 @@ namespace EdgeCases
 		/// Used for serialization.
 		/// </summary>
 		public sealed class SnakeEnumSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<SnakeEnum>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override SnakeEnum CreateCore(string value) => new SnakeEnum(value);
+		}
+
+		/// <summary>
+		/// Used for serialization.
+		/// </summary>
+		public sealed class SnakeEnumMessagePackFormatter : ServiceEnumMessagePackFormatter<SnakeEnum>
 		{
 			/// <summary>
 			/// Creates the value from a string.

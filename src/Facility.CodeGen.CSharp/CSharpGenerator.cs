@@ -34,6 +34,11 @@ public sealed class CSharpGenerator : CodeGenerator
 	public bool FixSnakeCase { get; set; }
 
 	/// <summary>
+	/// True to support MessagePack serialization.
+	/// </summary>
+	public bool SupportMessagePack { get; set; }
+
+	/// <summary>
 	/// Generates the C# output.
 	/// </summary>
 	public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -92,6 +97,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		NamespaceName = csharpSettings.NamespaceName;
 		UseNullableReferences = csharpSettings.UseNullableReferences;
 		FixSnakeCase = csharpSettings.FixSnakeCase;
+		SupportMessagePack = csharpSettings.SupportMessagePack;
 	}
 
 	/// <summary>
@@ -167,6 +173,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Collections.ObjectModel",
 				"Facility.Core",
 			};
+			if (SupportMessagePack)
+				usings.Add("Facility.Core.MessagePack");
 			CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 			if (!enumInfo.IsObsolete && enumInfo.Values.Any(x => x.IsObsolete))
@@ -184,6 +192,8 @@ public sealed class CSharpGenerator : CodeGenerator
 
 				code.WriteLine($"[Newtonsoft.Json.JsonConverter(typeof({enumName}JsonConverter))]");
 				code.WriteLine($"[System.Text.Json.Serialization.JsonConverter(typeof({enumName}SystemTextJsonConverter))]");
+				if (SupportMessagePack)
+					code.WriteLine($"[MessagePack.MessagePackFormatter(typeof({enumName}MessagePackFormatter))]");
 				code.WriteLine($"public partial struct {enumName} : IEquatable<{enumName}>");
 				using (code.Block())
 				{
@@ -251,6 +261,8 @@ public sealed class CSharpGenerator : CodeGenerator
 
 					WriteEnumSerializer("JsonConverter");
 					WriteEnumSerializer("SystemTextJsonConverter");
+					if (SupportMessagePack)
+						WriteEnumSerializer("MessagePackFormatter");
 
 					void WriteEnumSerializer(string classSuffix)
 					{
@@ -326,6 +338,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Collections.Generic",
 				"Facility.Core",
 			};
+			if (SupportMessagePack)
+				usings.Add("Facility.Core.MessagePack");
 
 			var regexFields = dtoInfo.Fields.Where(x => x.Validation?.RegexPattern != null).ToList();
 			if (regexFields.Count != 0)
@@ -346,6 +360,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				CSharpUtility.WriteCodeGenAttribute(code, context.GeneratorName);
 				CSharpUtility.WriteObsoleteAttribute(code, dtoInfo);
 
+				if (SupportMessagePack)
+					code.WriteLine("[MessagePack.MessagePackObject]");
 				code.WriteLine($"public sealed partial class {fullDtoName} : ServiceDto<{fullDtoName}>");
 				using (code.Block())
 				{
@@ -1255,8 +1271,16 @@ public sealed class CSharpGenerator : CodeGenerator
 			CSharpUtility.WriteObsoleteAttribute(code, fieldInfo);
 			if (propertyName != normalPropertyName)
 			{
-				code.WriteLine($"[Newtonsoft.Json.JsonProperty(\"{fieldInfo.Name}\")]");
-				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{fieldInfo.Name}\")]");
+				code.WriteLine($"[Newtonsoft.Json.JsonProperty({CSharpUtility.CreateString(fieldInfo.Name)})]");
+				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName({CSharpUtility.CreateString(fieldInfo.Name)})]");
+			}
+			if (SupportMessagePack)
+			{
+				var keyString = fieldInfo.Attributes.FirstOrDefault(x => x.Name == "msgpack")?.TryGetParameterValue("key");
+				var keyCSharp = int.TryParse(keyString, NumberStyles.None, CultureInfo.InvariantCulture, out var keyInteger)
+					? keyInteger.ToString(CultureInfo.InvariantCulture)
+					: CSharpUtility.CreateString(fieldInfo.Name);
+				code.WriteLine(FormattableString.Invariant($"[MessagePack.Key({keyCSharp})]"));
 			}
 			code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
 		}

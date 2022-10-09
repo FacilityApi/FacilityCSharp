@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.Benchmarks
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class UserDto : ServiceDto<UserDto>
 	{
 		/// <summary>
@@ -18,14 +20,19 @@ namespace Facility.Benchmarks
 		{
 		}
 
+		[MessagePack.Key(0)]
 		public int? Id { get; set; }
 
+		[MessagePack.Key(1)]
 		public string? Name { get; set; }
 
+		[MessagePack.Key(2)]
 		public string? Email { get; set; }
 
+		[MessagePack.Key(3)]
 		public string? Phone { get; set; }
 
+		[MessagePack.Key(4)]
 		public string? About { get; set; }
 
 		/// <summary>

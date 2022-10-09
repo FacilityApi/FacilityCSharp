@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Response for GetWidgetBatch.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetWidgetBatchResponseDto : ServiceDto<GetWidgetBatchResponseDto>
 	{
 		/// <summary>
@@ -24,6 +26,7 @@ namespace Facility.ConformanceApi
 		/// <summary>
 		/// The widget results.
 		/// </summary>
+		[MessagePack.Key("results")]
 		public IReadOnlyList<ServiceResult<WidgetDto>>? Results { get; set; }
 
 		/// <summary>

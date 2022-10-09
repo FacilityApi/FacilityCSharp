@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace EdgeCases
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
 	[Newtonsoft.Json.JsonConverter(typeof(SnakeErrorJsonConverter))]
 	[System.Text.Json.Serialization.JsonConverter(typeof(SnakeErrorSystemTextJsonConverter))]
+	[MessagePack.MessagePackFormatter(typeof(SnakeErrorMessagePackFormatter))]
 	public partial struct SnakeError : IEquatable<SnakeError>
 	{
 		public static readonly SnakeError SnakeValue = new SnakeError(Strings.SnakeValue);
@@ -84,6 +86,17 @@ namespace EdgeCases
 		/// Used for serialization.
 		/// </summary>
 		public sealed class SnakeErrorSystemTextJsonConverter : ServiceEnumSystemTextJsonConverter<SnakeError>
+		{
+			/// <summary>
+			/// Creates the value from a string.
+			/// </summary>
+			protected override SnakeError CreateCore(string value) => new SnakeError(value);
+		}
+
+		/// <summary>
+		/// Used for serialization.
+		/// </summary>
+		public sealed class SnakeErrorMessagePackFormatter : ServiceEnumMessagePackFormatter<SnakeError>
 		{
 			/// <summary>
 			/// Creates the value from a string.

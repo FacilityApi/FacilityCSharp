@@ -4,6 +4,7 @@ using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
 using Facility.Core.Http;
+using Facility.Core.MessagePack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -60,20 +61,15 @@ public sealed class FacilityConformanceApp
 			throw new ArgsReaderException("");
 
 		var serializerName = argsReader.ReadOption("serializer")?.ToLowerInvariant();
-		ServiceSerializer serializer = serializerName switch
-		{
-			null or "systemtextjson" => SystemTextJsonServiceSerializer.Instance,
-			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
-			_ => throw new ArgsReaderException("Unsupported serializer."),
-		};
-		var contentSerializer = HttpContentSerializer.Create(serializer);
+		var serializers = serializerName?.Split(',').Select(GetServiceSerializer).ToArray() ?? s_defaultSerializers;
+		var contentSerializer = HttpContentSerializer.Combine(serializers.Select(HttpContentSerializer.Create).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")
 			contentSerializer = new JsonHttpContentSerializer(new JsonHttpContentSerializerSettings { ForceAsyncIO = true });
 #pragma warning restore CS0618 // Type or member is obsolete
 
-		var jsonSerializer = serializer as JsonServiceSerializer ?? NewtonsoftJsonServiceSerializer.Instance;
+		var jsonSerializer = serializers.OfType<JsonServiceSerializer>().FirstOrDefault() ?? NewtonsoftJsonServiceSerializer.Instance;
 		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
 
 		var command = argsReader.ReadArgument();
@@ -178,6 +174,15 @@ public sealed class FacilityConformanceApp
 
 		throw new ArgsReaderException("Missing command.");
 	}
+
+	private static ServiceSerializer GetServiceSerializer(string serializerName) =>
+		serializerName switch
+		{
+			"systemtextjson" => SystemTextJsonServiceSerializer.Instance,
+			"newtonsoftjson" or "obsoletejson" => NewtonsoftJsonServiceSerializer.Instance,
+			"messagepack" => MessagePackServiceSerializer.Instance,
+			_ => throw new ArgsReaderException($"Unsupported serializer: {serializerName}"),
+		};
 
 	private static int WriteText(string? path, string contents, bool shouldVerify)
 	{
@@ -284,6 +289,12 @@ public sealed class FacilityConformanceApp
 			}
 		}
 	}
+
+	private static readonly IReadOnlyList<ServiceSerializer> s_defaultSerializers = new ServiceSerializer[]
+	{
+		SystemTextJsonServiceSerializer.Instance,
+		MessagePackServiceSerializer.Instance,
+	};
 
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;

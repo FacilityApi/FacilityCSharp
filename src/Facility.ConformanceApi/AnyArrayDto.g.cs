@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class AnyArrayDto : ServiceDto<AnyArrayDto>
 	{
 		/// <summary>
@@ -18,32 +20,46 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public IReadOnlyList<string>? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public IReadOnlyList<bool>? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public IReadOnlyList<double>? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public IReadOnlyList<int>? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public IReadOnlyList<long>? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public IReadOnlyList<decimal>? Decimal { get; set; }
 
+		[MessagePack.Key("bytes")]
 		public IReadOnlyList<byte[]>? Bytes { get; set; }
 
+		[MessagePack.Key("object")]
 		public IReadOnlyList<ServiceObject>? Object { get; set; }
 
+		[MessagePack.Key("error")]
 		public IReadOnlyList<ServiceErrorDto>? Error { get; set; }
 
+		[MessagePack.Key("data")]
 		public IReadOnlyList<AnyDto>? Data { get; set; }
 
+		[MessagePack.Key("enum")]
 		public IReadOnlyList<Answer>? Enum { get; set; }
 
+		[MessagePack.Key("array")]
 		public IReadOnlyList<IReadOnlyList<int>>? Array { get; set; }
 
+		[MessagePack.Key("map")]
 		public IReadOnlyList<IReadOnlyDictionary<string, int>>? Map { get; set; }
 
+		[MessagePack.Key("result")]
 		public IReadOnlyList<ServiceResult<int>>? Result { get; set; }
 
 		/// <summary>

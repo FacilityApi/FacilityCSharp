@@ -3,6 +3,7 @@ using Facility.AspNetCore;
 using Facility.Benchmarks.Http;
 using Facility.Core;
 using Facility.Core.Http;
+using Facility.Core.MessagePack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,13 +17,14 @@ public class HttpBenchmarks
 	[ParamsSource(nameof(Serializers))]
 	public SerializerInfo Serializer { get; set; } = default!;
 
-	[Params(1, 1000)]
+	[Params(1, 10, 100, 1000)]
 	public int UserCount { get; set; }
 
 	public IReadOnlyList<SerializerInfo> Serializers => new[]
 	{
 		new SerializerInfo(NewtonsoftJsonServiceSerializer.Instance),
 		new SerializerInfo(SystemTextJsonServiceSerializer.Instance),
+		new SerializerInfo(MessagePackServiceSerializer.Instance),
 	};
 
 	[GlobalSetup]

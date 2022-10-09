@@ -21,4 +21,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	/// True if C# names should automatically use PascalCase instead of snake case.
 	/// </summary>
 	public bool FixSnakeCase { get; set; }
+
+	/// <summary>
+	/// True to support MessagePack serialization.
+	/// </summary>
+	public bool SupportMessagePack { get; set; }
 }

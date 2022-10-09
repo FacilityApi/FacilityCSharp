@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace EdgeCases
 {
@@ -12,6 +13,7 @@ namespace EdgeCases
 	/// Request for SnakeMethod.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class SnakeMethodRequestDto : ServiceDto<SnakeMethodRequestDto>
 	{
 		/// <summary>
@@ -23,6 +25,7 @@ namespace EdgeCases
 
 		[Newtonsoft.Json.JsonProperty("snake_field")]
 		[System.Text.Json.Serialization.JsonPropertyName("snake_field")]
+		[MessagePack.Key("snake_field")]
 		public string? SnakeField { get; set; }
 
 		/// <summary>

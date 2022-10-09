@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi
 {
@@ -12,6 +13,7 @@ namespace Facility.ConformanceApi
 	/// Request for CheckQuery.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 	{
 		/// <summary>
@@ -21,18 +23,25 @@ namespace Facility.ConformanceApi
 		{
 		}
 
+		[MessagePack.Key("string")]
 		public string? String { get; set; }
 
+		[MessagePack.Key("boolean")]
 		public bool? Boolean { get; set; }
 
+		[MessagePack.Key("double")]
 		public double? Double { get; set; }
 
+		[MessagePack.Key("int32")]
 		public int? Int32 { get; set; }
 
+		[MessagePack.Key("int64")]
 		public long? Int64 { get; set; }
 
+		[MessagePack.Key("decimal")]
 		public decimal? Decimal { get; set; }
 
+		[MessagePack.Key("enum")]
 		public Answer? Enum { get; set; }
 
 		/// <summary>

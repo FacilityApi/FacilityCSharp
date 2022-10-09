@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Facility.Core;
+using Facility.Core.MessagePack;
 
 namespace Facility.Benchmarks
 {
@@ -12,6 +13,7 @@ namespace Facility.Benchmarks
 	/// Response for GetUsers.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
+	[MessagePack.MessagePackObject]
 	public sealed partial class GetUsersResponseDto : ServiceDto<GetUsersResponseDto>
 	{
 		/// <summary>
@@ -21,6 +23,7 @@ namespace Facility.Benchmarks
 		{
 		}
 
+		[MessagePack.Key(0)]
 		public IReadOnlyList<UserDto>? Items { get; set; }
 
 		/// <summary>

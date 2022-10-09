@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
+    <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
   </ItemGroup>
 
 </Project>
