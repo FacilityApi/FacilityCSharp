@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.15.2
+
+* Add .NET 6 targets.
+
 ## 2.15.1
 
 * Catch `UriFormatException` on request.
