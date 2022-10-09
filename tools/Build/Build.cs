@@ -36,6 +36,10 @@ return BuildRunner.Execute(args, build =>
 	build.Target("test")
 		.DependsOn("verify-codegen");
 
+	build.Target("benchmark")
+		.Describe("Run benchmarks.")
+		.Does(() => RunDotNet("run", "--project", "tests/Facility.Benchmarks", "-c", "Release"));
+
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
@@ -44,6 +48,7 @@ return BuildRunner.Execute(args, build =>
 		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable");
 		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--nullable", "--clean");
 		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--nullable", "--fix-snake-case", "--clean");
+		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/", "--nullable");
 
 		void RunCodeGen(params string?[] args) =>
 			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));
