@@ -96,6 +96,12 @@ internal static class CSharpUtility
 		return builder.ToString();
 	}
 
+#if NET6_0_OR_GREATER
+	internal static bool ContainsOrdinal(this string text, char ch) => text.Contains(ch, StringComparison.Ordinal);
+#else
+	internal static bool ContainsOrdinal(this string text, char ch) => text.Contains(ch);
+#endif
+
 	private static int CompareUsings(string left, string right)
 	{
 		var leftGroup = GetUsingGroup(left);

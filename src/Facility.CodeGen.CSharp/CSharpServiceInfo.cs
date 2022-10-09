@@ -82,7 +82,7 @@ public sealed class CSharpServiceInfo
 	internal string GetErrorName(ServiceErrorInfo errorInfo) => FixName(errorInfo.Name);
 
 	private string FixName(string name) =>
-		m_fixSnakeCase && name.Contains("_") ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
+		m_fixSnakeCase && name.ContainsOrdinal('_') ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
 
 	private CSharpServiceInfo(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
