@@ -37,7 +37,8 @@ return BuildRunner.Execute(args, build =>
 		.DependsOn("verify-codegen");
 
 	build.Target("benchmark")
-		.Does(() => RunDotNet("run", "--project", "tests/Facility.Benchmarks", "--configuration", "release"));
+		.Describe("Run benchmarks.")
+		.Does(() => RunDotNet("run", "--project", "tests/Facility.Benchmarks", "-c", "Release"));
 
 	void CodeGen(bool verify)
 	{
