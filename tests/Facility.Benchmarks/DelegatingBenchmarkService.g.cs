@@ -13,7 +13,7 @@ namespace Facility.Benchmarks
 	/// A delegating implementation of BenchmarkService.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public class DelegatingBenchmarkService : IBenchmarkService
+	public partial class DelegatingBenchmarkService : IBenchmarkService
 	{
 		/// <summary>
 		/// Creates an instance with the specified delegator.

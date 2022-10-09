@@ -13,7 +13,14 @@ public sealed class CSharpServiceInfo
 	/// </summary>
 	/// <exception cref="ServiceDefinitionException">Thrown if there are errors.</exception>
 	public static CSharpServiceInfo Create(ServiceInfo serviceInfo) =>
-		TryCreate(serviceInfo, out var service, out var errors) ? service : throw new ServiceDefinitionException(errors);
+		Create(serviceInfo, settings: null);
+
+	/// <summary>
+	/// Creates C# info for a service.
+	/// </summary>
+	/// <exception cref="ServiceDefinitionException">Thrown if there are errors.</exception>
+	public static CSharpServiceInfo Create(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings) =>
+		TryCreate(serviceInfo, settings, out var service, out var errors) ? service : throw new ServiceDefinitionException(errors);
 
 	/// <summary>
 	/// Attempts to create C# info for a service.
@@ -21,8 +28,16 @@ public sealed class CSharpServiceInfo
 	/// <returns>True if there are no errors.</returns>
 	/// <remarks>Even if there are errors, an invalid HTTP mapping will be returned.</remarks>
 	public static bool TryCreate(ServiceInfo serviceInfo, out CSharpServiceInfo csharpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
+		=> TryCreate(serviceInfo, settings: null, out csharpServiceInfo, out errors);
+
+	/// <summary>
+	/// Attempts to create C# info for a service.
+	/// </summary>
+	/// <returns>True if there are no errors.</returns>
+	/// <remarks>Even if there are errors, an invalid HTTP mapping will be returned.</remarks>
+	public static bool TryCreate(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, out CSharpServiceInfo csharpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
-		csharpServiceInfo = new CSharpServiceInfo(serviceInfo, out errors);
+		csharpServiceInfo = new CSharpServiceInfo(serviceInfo, settings, out errors);
 		return errors.Count == 0;
 	}
 
@@ -40,12 +55,40 @@ public sealed class CSharpServiceInfo
 	/// Gets the property name for the specified field.
 	/// </summary>
 	public string GetFieldPropertyName(ServiceFieldInfo field) =>
-		m_fieldPropertyNames.TryGetValue(field, out var value) ? value : CodeGenUtility.Capitalize(field.Name);
+		m_fieldPropertyNames.TryGetValue(field, out var value) ? value : FixName(field.Name);
 
-	private CSharpServiceInfo(ServiceInfo serviceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
+	internal string GetServiceName(ServiceInfo serviceInfo) => FixName(serviceInfo.Name);
+
+	internal string GetInterfaceName(ServiceInfo serviceInfo) => $"I{FixName(serviceInfo.Name)}";
+
+	internal string GetMethodName(ServiceMethodInfo methodInfo) => FixName(methodInfo.Name);
+
+	internal string GetDtoName(ServiceDtoInfo dtoInfo) => FixName(dtoInfo.Name) + "Dto";
+
+	internal string GetRequestName(ServiceMethodInfo methodInfo) => FixName(methodInfo.Name) + "Request";
+
+	internal string GetResponseName(ServiceMethodInfo methodInfo) => FixName(methodInfo.Name) + "Response";
+
+	internal string GetRequestDtoName(ServiceMethodInfo methodInfo) => FixName(methodInfo.Name) + "RequestDto";
+
+	internal string GetResponseDtoName(ServiceMethodInfo methodInfo) => FixName(methodInfo.Name) + "ResponseDto";
+
+	internal string GetEnumName(ServiceEnumInfo enumInfo) => FixName(enumInfo.Name);
+
+	internal string GetEnumValueName(ServiceEnumValueInfo enumValue) => FixName(enumValue.Name);
+
+	internal string GetErrorSetName(ServiceErrorSetInfo errorSetInfo) => FixName(errorSetInfo.Name);
+
+	internal string GetErrorName(ServiceErrorInfo errorInfo) => FixName(errorInfo.Name);
+
+	private string FixName(string name) =>
+		m_fixSnakeCase && name.ContainsOrdinal('_') ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
+
+	private CSharpServiceInfo(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
 		Service = serviceInfo;
 		m_fieldPropertyNames = new Dictionary<ServiceFieldInfo, string>();
+		m_fixSnakeCase = settings?.FixSnakeCase ?? false;
 
 		var validationErrors = new List<ServiceDefinitionError>();
 
@@ -78,7 +121,7 @@ public sealed class CSharpServiceInfo
 			}
 		}
 
-		var typeName = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { CSharpUtility.GetInterfaceName(serviceInfo) };
+		var typeName = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { GetInterfaceName(serviceInfo) };
 
 		void CheckTypeName(string name, ServiceDefinitionPosition? position)
 		{
@@ -90,20 +133,20 @@ public sealed class CSharpServiceInfo
 		{
 			if (member is ServiceMethodInfo method)
 			{
-				CheckTypeName(CSharpUtility.GetRequestDtoName(method), method.Position);
-				CheckTypeName(CSharpUtility.GetResponseDtoName(method), method.Position);
+				CheckTypeName(GetRequestDtoName(method), method.Position);
+				CheckTypeName(GetResponseDtoName(method), method.Position);
 			}
 			else if (member is ServiceDtoInfo dto)
 			{
-				CheckTypeName(CSharpUtility.GetDtoName(dto), dto.Position);
+				CheckTypeName(GetDtoName(dto), dto.Position);
 			}
 			else if (member is ServiceEnumInfo @enum)
 			{
-				CheckTypeName(CSharpUtility.GetEnumName(@enum), @enum.Position);
+				CheckTypeName(GetEnumName(@enum), @enum.Position);
 			}
 			else if (member is ServiceErrorSetInfo errorSet)
 			{
-				CheckTypeName(CSharpUtility.GetErrorSetName(errorSet), errorSet.Position);
+				CheckTypeName(GetErrorSetName(errorSet), errorSet.Position);
 			}
 			else
 			{
@@ -116,4 +159,5 @@ public sealed class CSharpServiceInfo
 
 	private readonly string? m_namespace;
 	private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
+	private readonly bool m_fixSnakeCase;
 }

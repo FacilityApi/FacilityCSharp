@@ -1,7 +1,3 @@
-using Faithlife.Build;
-using static Faithlife.Build.BuildUtility;
-using static Faithlife.Build.DotNetRunner;
-
 return BuildRunner.Execute(args, build =>
 {
 	var codegen = "fsdgencsharp";
@@ -28,10 +24,12 @@ return BuildRunner.Execute(args, build =>
 	build.AddDotNetTargets(dotNetBuildSettings);
 
 	build.Target("codegen")
+		.DependsOn("build")
 		.Describe("Generates code from the FSD")
 		.Does(() => CodeGen(verify: false));
 
 	build.Target("verify-codegen")
+		.DependsOn("build")
 		.Describe("Ensures the generated code is up-to-date")
 		.Does(() => CodeGen(verify: true));
 
@@ -43,15 +41,15 @@ return BuildRunner.Execute(args, build =>
 
 	void CodeGen(bool verify)
 	{
-		RunDotNet("build", "--framework", "net6.0", $"src/{codegen}");
-
+		var configuration = dotNetBuildSettings.GetConfiguration();
 		var verifyOption = verify ? "--verify" : null;
 
-		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/");
-		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--msgpack");
-		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--msgpack");
-		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/", "--msgpack");
+		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable");
+		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--msgpack", "--nullable", "--clean");
+		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--msgpack", "--nullable", "--fix-snake-case", "--clean");
+		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/", "--msgpack", "--nullable");
 
-		void RunCodeGen(params string?[] args) => RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "--framework", "net6.0", "--nullable", "--newline", "lf", "--clean", verifyOption }.Concat(args));
+		void RunCodeGen(params string?[] args) =>
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));
 	}
 });

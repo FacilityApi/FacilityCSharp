@@ -14,6 +14,7 @@ public sealed class GetApiInfoResponseDto : ServiceDto<GetApiInfoResponseDto>
 | [Service](GetApiInfoResponseDto/Service.md) { get; set; } | The name of the service. |
 | [Version](GetApiInfoResponseDto/Version.md) { get; set; } | The version of the service. |
 | override [IsEquivalentTo](GetApiInfoResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](GetApiInfoResponseDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

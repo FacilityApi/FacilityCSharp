@@ -1,6 +1,6 @@
 # HttpContentSerializer class
 
-Serializes and deserializes DTOs for HTTP requests and responses.
+Serializes and deserializes values for HTTP requests and responses.
 
 ```csharp
 public abstract class HttpContentSerializer
@@ -10,6 +10,7 @@ public abstract class HttpContentSerializer
 
 | name | description |
 | --- | --- |
+| static [Create](HttpContentSerializer/Create.md)(…) | Creates a standard HTTP content serializer. |
 | [DefaultMediaType](HttpContentSerializer/DefaultMediaType.md) { get; } | The default media type for the serializer. |
 | [CreateHttpContent](HttpContentSerializer/CreateHttpContent.md)(…) | Creates HTTP content for the specified DTO. |
 | [IsAcceptedMediaType](HttpContentSerializer/IsAcceptedMediaType.md)(…) | Determines if the specified media type is accepted when investigating the Accept header. |

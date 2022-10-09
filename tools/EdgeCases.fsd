@@ -53,4 +53,27 @@ service EdgeCases
 		[obsolete]
 		older,
 	}
+
+	data snake_data
+	{
+		snake_field: string;
+	}
+
+	enum snake_enum
+	{
+		snake_value,
+	}
+
+	enum snake_error
+	{
+		snake_value,
+	}
+
+	method snake_method
+	{
+		snake_field: string;
+	}:
+	{
+		snake_field: string;
+	}
 }

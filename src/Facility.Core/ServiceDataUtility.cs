@@ -323,7 +323,7 @@ public static class ServiceDataUtility
 			for (var index = 0; index < value.Count; index++)
 			{
 				var item = value[index];
-				if (itemValidator.GetErrorMessage(item, fieldName is null ? null : $"{fieldName}[{index}]") is string errorMessage)
+				if (itemValidator.GetErrorMessage(item, fieldName is null ? null : $"{fieldName}[{index}]") is { } errorMessage)
 					return errorMessage;
 			}
 
@@ -342,7 +342,7 @@ public static class ServiceDataUtility
 			var itemValidator = ValidatorCache<TValue>.Instance;
 			foreach (var keyValuePair in value)
 			{
-				if (itemValidator.GetErrorMessage(keyValuePair.Value, fieldName is null ? null : $"{fieldName}.{keyValuePair.Key}") is string errorMessage)
+				if (itemValidator.GetErrorMessage(keyValuePair.Value, fieldName is null ? null : $"{fieldName}.{keyValuePair.Key}") is { } errorMessage)
 					return errorMessage;
 			}
 

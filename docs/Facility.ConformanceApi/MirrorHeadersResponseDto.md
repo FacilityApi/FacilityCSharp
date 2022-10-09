@@ -19,6 +19,7 @@ public sealed class MirrorHeadersResponseDto : ServiceDto<MirrorHeadersResponseD
 | [Int64](MirrorHeadersResponseDto/Int64.md) { get; set; } |  |
 | [String](MirrorHeadersResponseDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](MirrorHeadersResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](MirrorHeadersResponseDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

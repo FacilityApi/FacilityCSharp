@@ -13,7 +13,7 @@ namespace EdgeCases
 	/// A delegating implementation of EdgeCases.
 	/// </summary>
 	[System.CodeDom.Compiler.GeneratedCode("fsdgencsharp", "")]
-	public class DelegatingEdgeCases : IEdgeCases
+	public partial class DelegatingEdgeCases : IEdgeCases
 	{
 		/// <summary>
 		/// Creates an instance with the specified delegator.
@@ -27,6 +27,9 @@ namespace EdgeCases
 		[Obsolete]
 		public virtual async Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(EdgeCasesMethods.OldMethod, request, cancellationToken).ConfigureAwait(false)).Cast<OldMethodResponseDto>();
+
+		public virtual async Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(EdgeCasesMethods.SnakeMethod, request, cancellationToken).ConfigureAwait(false)).Cast<SnakeMethodResponseDto>();
 
 		private readonly ServiceDelegator m_delegator;
 	}

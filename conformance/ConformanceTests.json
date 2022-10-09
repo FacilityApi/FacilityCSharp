@@ -6,10 +6,10 @@
       "request": {
         "string": "string",
         "boolean": true,
-        "double": 6.022E+23,
+        "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
-        "decimal": 3.14,
+        "decimal": 1.5,
         "enum": "yes"
       },
       "response": {}
@@ -20,10 +20,10 @@
       "request": {
         "string": "string",
         "boolean": true,
-        "double": 6.022E+23,
+        "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
-        "decimal": 3.14,
+        "decimal": 1.5,
         "enum": "yes"
       },
       "response": {}
@@ -201,10 +201,10 @@
           "array": {
             "string": ["string", "\n"],
             "boolean": [true, false],
-            "double": [6.022E23, -3.14159],
+            "double": [0.375, -1.5],
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
-            "decimal": [3.14, 6.875],
+            "decimal": [1.5, 6.875],
             "bytes": ["aGk=", ""],
             "object": [{ "": null, " ": [null] }, {}],
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
@@ -222,10 +222,10 @@
           "array": {
             "string": ["string", "\n"],
             "boolean": [true, false],
-            "double": [6.022E23, -3.14159],
+            "double": [0.375, -1.5],
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
-            "decimal": [3.14, 6.875],
+            "decimal": [1.5, 6.875],
             "bytes": ["aGk=", ""],
             "object": [{ "": null, " ": [null] }, {}],
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
@@ -246,10 +246,10 @@
         "field": {
           "string": "string",
           "boolean": true,
-          "double": 6.022E23,
+          "double": 0.375,
           "int32": 42,
           "int64": 12345678910,
-          "decimal": 3.14,
+          "decimal": 1.5,
           "bytes": "aGk=",
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -261,10 +261,10 @@
         "field": {
           "string": "string",
           "boolean": true,
-          "double": 6.022E23,
+          "double": 0.375,
           "int32": 42,
           "int64": 12345678910,
-          "decimal": 3.14,
+          "decimal": 1.5,
           "bytes": "aGk=",
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -279,19 +279,19 @@
       "request": {
         "string": "string",
         "boolean": true,
-        "double": 6.022E+23,
+        "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
-        "decimal": 3.14,
+        "decimal": 1.5,
         "enum": "yes"
       },
       "response": {
         "string": "string",
         "boolean": true,
-        "double": 6.022E+23,
+        "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
-        "decimal": 3.14,
+        "decimal": 1.5,
         "enum": "yes"
       }
     },
@@ -309,10 +309,10 @@
           "map": {
             "string": { "": "string", " ": "\n" },
             "boolean": { "": true, " ": false },
-            "double": { "": 6.022E23, " ": -3.14159 },
+            "double": { "": 0.375, " ": -1.5 },
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
-            "decimal": { "": 3.14, " ": 6.875 },
+            "decimal": { "": 1.5, " ": 6.875 },
             "bytes": { "": "aGk=", " ": "" },
             "object": { "": { "": null, " ": [null] }, " ": {} },
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
@@ -329,10 +329,10 @@
           "map": {
             "string": { "": "string", " ": "\n" },
             "boolean": { "": true, " ": false },
-            "double": { "": 6.022E23, " ": -3.14159 },
+            "double": { "": 0.375, " ": -1.5 },
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
-            "decimal": { "": 3.14, " ": 6.875 },
+            "decimal": { "": 1.5, " ": 6.875 },
             "bytes": { "": "aGk=", " ": "" },
             "object": { "": { "": null, " ": [null] }, " ": {} },
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
@@ -397,10 +397,10 @@
           "result": {
             "string": { "value": "string" },
             "boolean": { "value": true },
-            "double": { "value": 6.022E23 },
+            "double": { "value": 0.375 },
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
-            "decimal": { "value": 3.14 },
+            "decimal": { "value": 1.5 },
             "bytes": { "value": "aGk=" },
             "object": { "value": { "": null, " ": [null] } },
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -417,10 +417,10 @@
           "result": {
             "string": { "value": "string" },
             "boolean": { "value": true },
-            "double": { "value": 6.022E23 },
+            "double": { "value": 0.375 },
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
-            "decimal": { "value": 3.14 },
+            "decimal": { "value": 1.5 },
             "bytes": { "value": "aGk=" },
             "object": { "value": { "": null, " ": [null] } },
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -657,15 +657,15 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKPATH/pathCase/true/1.2/3/4/5.6/yes"
+        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes"
       },
       "request": {
         "string": "pathCase",
         "boolean": true,
-        "double": 1.2,
+        "double": 1.5,
         "int32": 3,
         "int64": 4,
-        "decimal": 5.6,
+        "decimal": 0.625,
         "enum": "yes"
       },
       "response": {}
@@ -675,15 +675,15 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkPath/booleanCase/TRUE/1.2/3/4/5.6/yes"
+        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes"
       },
       "request": {
         "string": "booleanCase",
         "boolean": true,
-        "double": 1.2,
+        "double": 1.5,
         "int32": 3,
         "int64": 4,
-        "decimal": 5.6,
+        "decimal": 0.625,
         "enum": "yes"
       },
       "response": {}
@@ -693,15 +693,15 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.2&int32=3&int64=4&decimal=5.6&enum=yes"
+        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
       },
       "request": {
         "string": "pathCase",
         "boolean": true,
-        "double": 1.2,
+        "double": 1.5,
         "int32": 3,
         "int64": 4,
-        "decimal": 5.6,
+        "decimal": 0.625,
         "enum": "yes"
       },
       "response": {}
@@ -711,15 +711,15 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.2&int32=3&int64=4&decimal=5.6&enum=yes"
+        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
       },
       "request": {
         "string": "queryCase",
         "boolean": true,
-        "double": 1.2,
+        "double": 1.5,
         "int32": 3,
         "int64": 4,
-        "decimal": 5.6,
+        "decimal": 0.625,
         "enum": "yes"
       },
       "response": {}

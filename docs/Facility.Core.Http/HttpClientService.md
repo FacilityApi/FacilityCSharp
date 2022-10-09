@@ -10,7 +10,7 @@ public abstract class HttpClientService
 
 | name | description |
 | --- | --- |
-| [HttpClientService](HttpClientService/HttpClientService.md)(…) | Creates an instance with the specified settings. |
+| [HttpClientService](HttpClientService/HttpClientService.md)(…) | Creates an instance with the specified settings and defaults. |
 | [BaseUri](HttpClientService/BaseUri.md) { get; } | The base URI. |
 | [BytesSerializer](HttpClientService/BytesSerializer.md) { get; } | The HTTP content serializer for bytes. |
 | [ContentSerializer](HttpClientService/ContentSerializer.md) { get; } | The HTTP content serializer. |

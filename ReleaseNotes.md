@@ -1,12 +1,44 @@
 # Release Notes
 
-## 2.15.0-beta.1
+## 2.16.0-beta.1
 
 * Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
   * Use `--msgpack` with `fsdgencsharp` to generate MessagePack-compatible DTOs.
   * Reference the `Facility.Core.MessagePack` NuGet package in your client and/or service.
   * For clients, set `HttpClientServiceSettings.ContentSerializer` to `MessagePackServiceSerializer.Instance` to send and receive MessagePack (rather than JSON) by specifying `application/msgpack` in the `Content-Type` and `Accept` headers.
   * For servers, set `ServiceHttpHandlerSettings.ContentSerializer` to `HttpContentSerializer.Combine(SystemTextJsonServiceSerializer.Instance, MessagePackServiceSerializer.Instance)` to support JSON by default but use MessagePack when `application/msgpack` is specified in the `Accept` header.
+
+## 2.15.2
+
+* Add .NET 6 targets.
+
+## 2.15.1
+
+* Catch `UriFormatException` on request.
+
+## 2.15.0
+
+* Support fixing snake case in definitions.
+
+## 2.14.6
+
+* Improve performance of `NewtonsoftJsonServiceSerializer.Clone`.
+
+## 2.14.5
+
+* Fix build that didn't work properly on .NET 5 or .NET Core 3.1.
+
+## 2.14.4
+
+* Generated delegating service class as a partial class.
+
+## 2.14.2–2.14.3
+
+* Support `Newtonsoft.Json.Linq` properties with `SystemTextJsonServiceSerializer`.
+
+## 2.14.1
+
+* Use conformance data that serializes precisely.
 
 ## 2.14.0
 

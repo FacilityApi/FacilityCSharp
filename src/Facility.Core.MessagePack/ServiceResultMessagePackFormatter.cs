@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 using MessagePack.Formatters;
 
@@ -48,6 +49,7 @@ internal sealed class ServiceResultMessagePackFormatter : IMessagePackFormatter<
 	}
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 public sealed class ServiceResultMessagePackFormatter<T> : IMessagePackFormatter<ServiceResult<T>>
 {
 	public void Serialize(ref MessagePackWriter writer, ServiceResult<T>? value, MessagePackSerializerOptions options)
@@ -89,6 +91,7 @@ public sealed class ServiceResultMessagePackFormatter<T> : IMessagePackFormatter
 	}
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Same name.")]
 internal sealed class ServiceResultFailureMessagePackFormatter : IMessagePackFormatter<ServiceResultFailure>
 {
 	public static readonly ServiceResultFailureMessagePackFormatter Instance = new();

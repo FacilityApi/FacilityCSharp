@@ -3,12 +3,14 @@
 Creates an instance.
 
 ```csharp
-protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings)
+protected ServiceHttpHandler(ServiceHttpHandlerSettings? settings, 
+    ServiceHttpHandlerDefaults defaults)
 ```
 
 ## See Also
 
 * class [ServiceHttpHandlerSettings](../ServiceHttpHandlerSettings.md)
+* class [ServiceHttpHandlerDefaults](../ServiceHttpHandlerDefaults.md)
 * class [ServiceHttpHandler](../ServiceHttpHandler.md)
 * namespace [Facility.Core.Http](../../Facility.Core.md)
 

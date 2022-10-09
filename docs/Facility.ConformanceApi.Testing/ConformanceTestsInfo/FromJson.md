@@ -3,7 +3,7 @@
 Load tests from JSON.
 
 ```csharp
-public static ConformanceTestsInfo FromJson(string json)
+public static ConformanceTestsInfo FromJson(string json, JsonServiceSerializer jsonSerializer)
 ```
 
 ## See Also

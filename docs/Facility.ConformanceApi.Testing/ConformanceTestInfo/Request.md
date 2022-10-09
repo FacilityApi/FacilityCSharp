@@ -3,7 +3,7 @@
 The API request being sent.
 
 ```csharp
-public JObject? Request { get; set; }
+public ServiceObject? Request { get; set; }
 ```
 
 ## See Also

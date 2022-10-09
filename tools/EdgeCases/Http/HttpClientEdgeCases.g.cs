@@ -28,6 +28,9 @@ namespace EdgeCases.Http
 		public Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.OldMethodMapping, request, cancellationToken);
 
+		public Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(EdgeCasesHttpMapping.SnakeMethodMapping, request, cancellationToken);
+
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{
 			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),

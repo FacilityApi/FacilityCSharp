@@ -184,8 +184,25 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	{
 	}
 
+	private sealed class NewtonsoftJsonLinqSystemTextJsonConverter<T> : JsonConverter<T>
+		where T : Newtonsoft.Json.Linq.JToken
+	{
+		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			(T) Newtonsoft.Json.Linq.JToken.Parse(JsonNode.Parse(ref reader)?.ToJsonString());
+
+		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) =>
+			writer.WriteRawValue(value.ToString(Newtonsoft.Json.Formatting.None));
+	}
+
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new(JsonSerializerDefaults.Web)
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+		Converters =
+		{
+			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JArray>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JValue>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JToken>(),
+		},
 	};
 }

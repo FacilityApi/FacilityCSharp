@@ -3,7 +3,7 @@
 The API error being received, if the method should fail.
 
 ```csharp
-public JObject? Error { get; set; }
+public ServiceObject? Error { get; set; }
 ```
 
 ## See Also

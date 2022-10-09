@@ -14,6 +14,7 @@ public sealed class WidgetDto : ServiceDto<WidgetDto>
 | [Id](WidgetDto/Id.md) { get; set; } | A unique identifier for the widget. |
 | [Name](WidgetDto/Name.md) { get; set; } | The name of the widget. |
 | override [IsEquivalentTo](WidgetDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](WidgetDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](WidgetDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also

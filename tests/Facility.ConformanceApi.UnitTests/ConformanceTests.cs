@@ -16,10 +16,9 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 		m_tests = CreateTestProvider(JsonSerializer);
 		m_contentSerializer = HttpContentSerializer.Create(Serializer);
 
-		var handler = new ConformanceApiHttpHandler(
-				service: new ConformanceApiService(new ConformanceApiServiceSettings { Tests = m_tests, JsonSerializer = JsonSerializer }),
-				settings: new ServiceHttpHandlerSettings { ContentSerializer = m_contentSerializer })
-			{ InnerHandler = new NotFoundHttpHandler() };
+		var service = new ConformanceApiService(new ConformanceApiServiceSettings { Tests = m_tests, JsonSerializer = JsonSerializer });
+		var settings = new ServiceHttpHandlerSettings { ContentSerializer = m_contentSerializer };
+		var handler = new ConformanceApiHttpHandler(service, settings) { InnerHandler = new NotFoundHttpHandler() };
 		m_httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 	}
 
@@ -57,5 +56,5 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly HttpClient m_httpClient;
-	private HttpContentSerializer m_contentSerializer;
+	private readonly HttpContentSerializer m_contentSerializer;
 }

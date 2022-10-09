@@ -13,6 +13,7 @@ public sealed class BodyTypesResponseDto : ServiceDto<BodyTypesResponseDto>
 | [BodyTypesResponseDto](BodyTypesResponseDto/BodyTypesResponseDto.md)() | Creates an instance. |
 | [Content](BodyTypesResponseDto/Content.md) { get; set; } |  |
 | override [IsEquivalentTo](BodyTypesResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](BodyTypesResponseDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

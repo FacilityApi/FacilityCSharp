@@ -15,10 +15,11 @@ public sealed class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 | [ServiceErrorDto](ServiceErrorDto/ServiceErrorDto.md)() | Creates an instance. |
 | [ServiceErrorDto](ServiceErrorDto/ServiceErrorDto.md)(…) | Creates a service error. (2 constructors) |
 | [Code](ServiceErrorDto/Code.md) { get; set; } | The error code. |
-| [Details](ServiceErrorDto/Details.md) { get; set; } | Advanced error details. |
+| [DetailsObject](ServiceErrorDto/DetailsObject.md) { get; set; } | Advanced error details. |
 | [InnerError](ServiceErrorDto/InnerError.md) { get; set; } | The inner error. |
 | [Message](ServiceErrorDto/Message.md) { get; set; } | The error message. |
 | override [IsEquivalentTo](ServiceErrorDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](ServiceErrorDto/ToString.md)() | Returns the DTO as JSON. |
 
 ## See Also
 

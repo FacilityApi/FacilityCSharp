@@ -20,6 +20,8 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"      The namespace used by the generated C#.",
 		"   --nullable",
 		"      Use nullable reference syntax in the generated C#.",
+		"   --fix-snake-case",
+		"      Replace snake_case with PascalCase.",
 		"   --msgpack",
 		"      Support MessagePack serialization.",
 	};
@@ -31,6 +33,7 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		{
 			NamespaceName = args.ReadOption("namespace"),
 			UseNullableReferences = args.ReadFlag("nullable"),
+			FixSnakeCase = args.ReadFlag("fix-snake-case"),
 			SupportMessagePack = args.ReadFlag("msgpack"),
 		};
 }

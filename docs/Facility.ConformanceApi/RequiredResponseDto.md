@@ -13,6 +13,7 @@ public sealed class RequiredResponseDto : ServiceDto<RequiredResponseDto>
 | [RequiredResponseDto](RequiredResponseDto/RequiredResponseDto.md)() | Creates an instance. |
 | [Normal](RequiredResponseDto/Normal.md) { get; set; } |  |
 | override [IsEquivalentTo](RequiredResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| override [ToString](RequiredResponseDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](RequiredResponseDto/Validate.md)(…) | Validates the DTO. |
 
 ## See Also

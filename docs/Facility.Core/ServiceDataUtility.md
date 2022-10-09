@@ -15,7 +15,7 @@ public static class ServiceDataUtility
 | static [AreEquivalentDtos](ServiceDataUtility/AreEquivalentDtos.md)(…) | True if the DTOs are equivalent. |
 | static [AreEquivalentFieldValues&lt;T&gt;](ServiceDataUtility/AreEquivalentFieldValues.md)(…) | True if the field values are equal. |
 | static [AreEquivalentMaps&lt;T&gt;](ServiceDataUtility/AreEquivalentMaps.md)(…) | True if the maps are equivalent. |
-| static [AreEquivalentObjects](ServiceDataUtility/AreEquivalentObjects.md)(…) | True if the objects are equivalent. |
+| static [AreEquivalentObjects](ServiceDataUtility/AreEquivalentObjects.md)(…) | True if the objects are equivalent. (2 methods) |
 | static [AreEquivalentResults](ServiceDataUtility/AreEquivalentResults.md)(…) | True if the results are equivalent. |
 | static [Clone&lt;T&gt;](ServiceDataUtility/Clone.md)(…) | Clones the data element. |
 | static [GetInvalidFieldErrorMessage](ServiceDataUtility/GetInvalidFieldErrorMessage.md)(…) | Returns the invalid field error message prefix. |

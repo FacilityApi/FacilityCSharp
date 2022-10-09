@@ -118,4 +118,29 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
 		Assert.IsTrue(so1.IsEquivalentTo(so2));
 	}
+
+	[Test]
+	public void RoundTripJObject()
+	{
+		var legacy1 = new LegacyObjectDto { Extra = new JObject { ["foo"] = "bar" } };
+		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
+		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+	}
+
+	[Test]
+	public void RoundTripNullJObject()
+	{
+		var legacy1 = new LegacyObjectDto();
+		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
+		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+	}
+
+	[Test]
+	public void RoundTripJToken()
+	{
+		Assert.AreEqual(0, JsonSerializer.FromJson<JObject>(JsonSerializer.ToJson(new JObject()))!.Count);
+		Assert.AreEqual(0, JsonSerializer.FromJson<JArray>(JsonSerializer.ToJson(new JArray()))!.Count);
+		Assert.AreEqual("hi", (string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson((JValue) "hi")));
+		Assert.IsTrue((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson((JToken) true)));
+	}
 }
