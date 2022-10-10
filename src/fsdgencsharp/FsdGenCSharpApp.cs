@@ -24,6 +24,8 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"      Replace snake_case with PascalCase.",
 		"   --msgpack",
 		"      Support MessagePack serialization.",
+		"   --json-source-gen",
+		"      Support JSON source generation.",
 	};
 
 	protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
@@ -35,5 +37,6 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 			UseNullableReferences = args.ReadFlag("nullable"),
 			FixSnakeCase = args.ReadFlag("fix-snake-case"),
 			SupportMessagePack = args.ReadFlag("msgpack"),
+			SupportJsonSourceGeneration = args.ReadFlag("json-source-gen"),
 		};
 }

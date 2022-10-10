@@ -51,7 +51,7 @@ namespace Facility.Benchmarks.Http
 
 		private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults
 		{
-			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
+			ContentSerializer = HttpContentSerializer.Create(BenchmarkServiceJsonServiceSerializer.Instance),
 		};
 
 		private readonly IBenchmarkService? m_service;

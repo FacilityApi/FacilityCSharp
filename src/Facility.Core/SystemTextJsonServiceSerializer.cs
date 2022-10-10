@@ -180,6 +180,22 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		return JsonSerializer.Deserialize<T>(memoryStream, s_jsonSerializerOptions)!;
 	}
 
+	/// <summary>
+	/// Creates the JSON serializer options used by the serializer.
+	/// </summary>
+	public static JsonSerializerOptions CreateJsonSerializerOptions() =>
+		new(JsonSerializerDefaults.Web)
+		{
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+			Converters =
+			{
+				new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
+				new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JArray>(),
+				new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JValue>(),
+				new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JToken>(),
+			},
+		};
+
 	private SystemTextJsonServiceSerializer()
 	{
 	}
@@ -194,15 +210,5 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			writer.WriteRawValue(value.ToString(Newtonsoft.Json.Formatting.None));
 	}
 
-	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new(JsonSerializerDefaults.Web)
-	{
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-		Converters =
-		{
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JArray>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JValue>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JToken>(),
-		},
-	};
+	private static readonly JsonSerializerOptions s_jsonSerializerOptions = CreateJsonSerializerOptions();
 }

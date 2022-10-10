@@ -17,7 +17,7 @@ public class HttpBenchmarks
 	[ParamsSource(nameof(Serializers))]
 	public SerializerInfo Serializer { get; set; } = default!;
 
-	[Params(1, 10, 100, 1000)]
+	[Params(1, 1000)]
 	public int UserCount { get; set; }
 
 	public IReadOnlyList<SerializerInfo> Serializers => new[]
@@ -25,6 +25,7 @@ public class HttpBenchmarks
 		new SerializerInfo(NewtonsoftJsonServiceSerializer.Instance),
 		new SerializerInfo(SystemTextJsonServiceSerializer.Instance),
 		new SerializerInfo(MessagePackServiceSerializer.Instance),
+		new SerializerInfo(BenchmarkServiceJsonServiceSerializer.Instance),
 	};
 
 	[GlobalSetup]

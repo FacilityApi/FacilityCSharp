@@ -13,7 +13,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 	public ConformanceTests(ServiceSerializer serializer)
 		: base(serializer)
 	{
-		m_tests = CreateTestProvider(JsonSerializer);
+		m_tests = CreateTestProvider(SystemTextJsonServiceSerializer.Instance);
 		m_contentSerializer = HttpContentSerializer.Create(Serializer);
 
 		var service = new ConformanceApiService(new ConformanceApiServiceSettings { Tests = m_tests, JsonSerializer = JsonSerializer });

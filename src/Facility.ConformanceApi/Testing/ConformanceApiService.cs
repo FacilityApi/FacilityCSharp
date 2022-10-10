@@ -119,7 +119,7 @@ public sealed class ConformanceApiService : IConformanceApi
 			var response = m_jsonSerializer.FromServiceObject<T>(testInfo.Response!);
 			var responseRoundTrip = m_jsonSerializer.ToServiceObject(response);
 			if (!ServiceObjectUtility.DeepEquals(testInfo.Response, responseRoundTrip))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={m_jsonSerializer.ToJson(testInfo.Response)} actual={m_jsonSerializer.ToJson(responseRoundTrip)}"));
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={SystemTextJsonServiceSerializer.Instance.ToJson(testInfo.Response)} actual={SystemTextJsonServiceSerializer.Instance.ToJson(responseRoundTrip)}"));
 			return ServiceResult.Success(response);
 		}
 	}
