@@ -17,7 +17,7 @@ internal sealed class ServiceObjectMessagePackFormatter : IMessagePackFormatter<
 		else
 		{
 			using var stream = new MemoryStream();
-			SystemTextJsonServiceSerializer.Instance.ToStream(value.AsJsonObject(), stream);
+			SystemTextJsonServiceSerializer.Instance.ToStream(value.AsJsonObject(ServiceObjectAccess.ReadOnly), stream);
 			writer.WriteString(stream.GetBuffer().AsSpan(0, (int) stream.Length));
 		}
 	}

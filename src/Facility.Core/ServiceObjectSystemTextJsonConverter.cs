@@ -25,5 +25,5 @@ public sealed class ServiceObjectSystemTextJsonConverter : JsonConverter<Service
 	/// Writes the JSON representation of the value.
 	/// </summary>
 	public override void Write(Utf8JsonWriter writer, ServiceObject value, JsonSerializerOptions options) =>
-		value.AsJsonObject().WriteTo(writer, options);
+		value.AsJsonObject(ServiceObjectAccess.ReadOnly).WriteTo(writer, options);
 }

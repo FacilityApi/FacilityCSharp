@@ -26,30 +26,70 @@ public sealed class ServiceObject
 	/// <summary>
 	/// Returns the JSON object as a <c>Newtonsoft.Json.Linq.JObject</c>.
 	/// </summary>
-	public JObject AsJObject() => m_jObject ?? NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
+	[Obsolete("Use overload with ServiceObjectAccess.")]
+	public JObject AsJObject() => AsJObject(ServiceObjectAccess.ReadOnly);
+
+	/// <summary>
+	/// Returns the JSON object as a <c>Newtonsoft.Json.Linq.JObject</c>.
+	/// </summary>
+	public JObject AsJObject(ServiceObjectAccess access)
+	{
+		if (access is not (ServiceObjectAccess.Clone or ServiceObjectAccess.ReadWrite or ServiceObjectAccess.ReadOnly))
+			throw new ArgumentOutOfRangeException(nameof(access), access, null);
+
+		if (access is ServiceObjectAccess.Clone || m_object is not JObject jObject)
+			jObject = NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
+
+		if (access is ServiceObjectAccess.ReadWrite)
+			m_object = jObject;
+
+		return jObject;
+	}
+
+	/// <summary>
+	/// Returns the JSON object as a new <c>System.Text.Json.Nodes.JsonObject</c>.
+	/// </summary>
+	[Obsolete("Use overload with ServiceObjectAccess.")]
+	public JsonObject AsJsonObject() => AsJsonObject(ServiceObjectAccess.ReadOnly);
 
 	/// <summary>
 	/// Returns the JSON object as a <c>System.Text.Json.Nodes.JsonObject</c>.
 	/// </summary>
-	public JsonObject AsJsonObject() => m_jsonObject ?? SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
+	public JsonObject AsJsonObject(ServiceObjectAccess access)
+	{
+		if (access is not (ServiceObjectAccess.Clone or ServiceObjectAccess.ReadWrite or ServiceObjectAccess.ReadOnly))
+			throw new ArgumentOutOfRangeException(nameof(access), access, null);
+
+		if (access is ServiceObjectAccess.Clone || m_object is not JsonObject jsonObject)
+			jsonObject = SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
+
+		if (access is ServiceObjectAccess.ReadWrite)
+			m_object = jsonObject;
+
+		return jsonObject;
+	}
 
 	/// <summary>
 	/// Returns true if the JSON objects are equivalent.
 	/// </summary>
 	public bool IsEquivalentTo(ServiceObject? other) => other is not null &&
-	(
-		m_jObject is { } jObject ? JToken.DeepEquals(jObject, other.AsJObject()) :
-		m_jsonObject is { } jsonObject ? SystemTextJsonUtility.DeepEquals(jsonObject, other.AsJsonObject()) :
-		throw new InvalidOperationException()
-	);
+		m_object switch
+		{
+			JObject jObject => JToken.DeepEquals(jObject, other.AsJObject(ServiceObjectAccess.ReadOnly)),
+			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, other.AsJsonObject(ServiceObjectAccess.ReadOnly)),
+			_ => throw new InvalidOperationException(),
+		};
 
 	/// <summary>
 	/// Returns a JSON string for the JSON object.
 	/// </summary>
 	public override string ToString() =>
-		m_jObject is { } jObject ? NewtonsoftJsonServiceSerializer.Instance.ToJson(jObject) :
-		m_jsonObject is { } jsonObject ? SystemTextJsonServiceSerializer.Instance.ToJson(jsonObject) :
-		"";
+		m_object switch
+		{
+			JObject jObject => NewtonsoftJsonServiceSerializer.Instance.ToJson(jObject),
+			JsonObject jsonObject => SystemTextJsonServiceSerializer.Instance.ToJson(jsonObject),
+			_ => "",
+		};
 
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
 	public static implicit operator ServiceObject?(JObject? jObject) => Create(jObject);
@@ -57,10 +97,9 @@ public sealed class ServiceObject
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
 	public static implicit operator ServiceObject?(JsonObject? jsonObject) => Create(jsonObject);
 
-	private ServiceObject(JObject jObject) => m_jObject = jObject;
+	private ServiceObject(JObject jObject) => m_object = jObject;
 
-	private ServiceObject(JsonObject jsonObject) => m_jsonObject = jsonObject;
+	private ServiceObject(JsonObject jsonObject) => m_object = jsonObject;
 
-	private readonly JObject? m_jObject;
-	private readonly JsonObject? m_jsonObject;
+	private object m_object;
 }

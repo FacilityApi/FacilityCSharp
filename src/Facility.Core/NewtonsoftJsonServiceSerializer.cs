@@ -48,7 +48,7 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	/// Deserializes a value from a <see cref="ServiceObject"/> representation of the serialization format.
 	/// </summary>
 	public override object? FromServiceObject(ServiceObject? serviceObject, Type type) =>
-		serviceObject?.AsJObject().ToObject(type, CreateJsonSerializer());
+		serviceObject?.AsJObject(ServiceObjectAccess.ReadOnly).ToObject(type, CreateJsonSerializer());
 
 	/// <summary>
 	/// Serializes a value to JSON.
