@@ -23,6 +23,7 @@ public struct Answer : IEquatable<Answer>
 | [operator ==](Answer/op_Equality.md) | Checks for equality. |
 | [operator !=](Answer/op_Inequality.md) | Checks for inequality. |
 | class [AnswerJsonConverter](Answer.AnswerJsonConverter.md) | Used for serialization. |
+| class [AnswerMessagePackFormatter](Answer.AnswerMessagePackFormatter.md) | Used for serialization. |
 | class [AnswerSystemTextJsonConverter](Answer.AnswerSystemTextJsonConverter.md) | Used for serialization. |
 | static class [Strings](Answer.Strings.md) | Provides string constants for defined values. |
 

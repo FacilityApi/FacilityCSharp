@@ -10,7 +10,9 @@ public abstract class HttpContentSerializer
 
 | name | description |
 | --- | --- |
+| static [Combine](HttpContentSerializer/Combine.md)(…) | Combines HTTP content serializers. |
 | static [Create](HttpContentSerializer/Create.md)(…) | Creates a standard HTTP content serializer. |
+| [AcceptMediaTypes](HttpContentSerializer/AcceptMediaTypes.md) { get; } | The accepted media types that clients should send in the `Accept` header. |
 | [DefaultMediaType](HttpContentSerializer/DefaultMediaType.md) { get; } | The default media type for the serializer. |
 | [CreateHttpContent](HttpContentSerializer/CreateHttpContent.md)(…) | Creates HTTP content for the specified DTO. |
 | [IsAcceptedMediaType](HttpContentSerializer/IsAcceptedMediaType.md)(…) | Determines if the specified media type is accepted when investigating the Accept header. |
@@ -23,6 +25,7 @@ public abstract class HttpContentSerializer
 | name | description |
 | --- | --- |
 | [HttpContentSerializer](HttpContentSerializer/HttpContentSerializer.md)() | The default constructor. |
+| virtual [AcceptMediaTypesCore](HttpContentSerializer/AcceptMediaTypesCore.md) { get; } | The accepted media types that clients should send in the `Accept` header. |
 | abstract [DefaultMediaTypeCore](HttpContentSerializer/DefaultMediaTypeCore.md) { get; } | The default media type for the serializer. |
 | abstract [CreateHttpContentCore](HttpContentSerializer/CreateHttpContentCore.md)(…) | Creates HTTP content for the specified DTO. |
 | virtual [IsAcceptedMediaTypeCore](HttpContentSerializer/IsAcceptedMediaTypeCore.md)(…) | Determines if the specified media type is accepted when investigating the Accept header. |

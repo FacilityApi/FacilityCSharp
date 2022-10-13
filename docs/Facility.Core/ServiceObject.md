@@ -11,9 +11,11 @@ public sealed class ServiceObject
 | name | description |
 | --- | --- |
 | static [Create](ServiceObject/Create.md)(…) | Creates an instance from a `Newtonsoft.Json.Linq.JObject`. (2 methods) |
-| [AsJObject](ServiceObject/AsJObject.md)() | Returns the JSON object as a `Newtonsoft.Json.Linq.JObject`. |
-| [AsJsonObject](ServiceObject/AsJsonObject.md)() | Returns the JSON object as a `System.Text.Json.Nodes.JsonObject`. |
+| [AsJObject](ServiceObject/AsJObject.md)() | Returns a `Newtonsoft.Json.Linq.JObject` that is temporarily associated with this `ServiceObject`. |
+| [AsJsonObject](ServiceObject/AsJsonObject.md)() | Returns a `System.Text.Json.Nodes.JsonObject` that is temporarily associated with this `ServiceObject`. |
 | [IsEquivalentTo](ServiceObject/IsEquivalentTo.md)(…) | Returns true if the JSON objects are equivalent. |
+| [ToJObject](ServiceObject/ToJObject.md)() | Returns a new `Newtonsoft.Json.Linq.JObject` equivalent to this `ServiceObject`. |
+| [ToJsonObject](ServiceObject/ToJsonObject.md)() | Returns a new `System.Text.Json.Nodes.JsonObject` equivalent to this `ServiceObject`. |
 | override [ToString](ServiceObject/ToString.md)() | Returns a JSON string for the JSON object. |
 | [implicit operator](ServiceObject/op_Implicit.md) |  (2 operators) |
 

@@ -16,9 +16,11 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 | override [FromJson&lt;T&gt;](SystemTextJsonServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |
 | override [FromServiceObject](SystemTextJsonServiceSerializer/FromServiceObject.md)(…) | Deserializes a value from a [`ServiceObject`](./ServiceObject.md) representation of JSON. |
 | override [FromServiceObject&lt;T&gt;](SystemTextJsonServiceSerializer/FromServiceObject.md)(…) | Deserializes a value from a [`ServiceObject`](./ServiceObject.md) representation of JSON. |
+| [FromStream](SystemTextJsonServiceSerializer/FromStream.md)(…) | Deserializes a value from JSON. |
 | override [FromStreamAsync](SystemTextJsonServiceSerializer/FromStreamAsync.md)(…) | Deserializes a value from JSON. |
 | override [ToJson](SystemTextJsonServiceSerializer/ToJson.md)(…) | Serializes a value to JSON. |
 | override [ToServiceObject](SystemTextJsonServiceSerializer/ToServiceObject.md)(…) | Serializes a value to a [`ServiceObject`](./ServiceObject.md) representation of JSON. |
+| [ToStream](SystemTextJsonServiceSerializer/ToStream.md)(…) | Serializes a value to JSON. |
 | override [ToStreamAsync](SystemTextJsonServiceSerializer/ToStreamAsync.md)(…) | Serializes a value to JSON. |
 
 ## See Also

@@ -14,6 +14,7 @@ public sealed class CSharpGenerator : CodeGenerator
 | [FixSnakeCase](CSharpGenerator/FixSnakeCase.md) { get; set; } | True if C# names should automatically use PascalCase instead of snake case. |
 | override [HasPatternsToClean](CSharpGenerator/HasPatternsToClean.md) { get; } | Patterns to clean are returned with the output. |
 | [NamespaceName](CSharpGenerator/NamespaceName.md) { get; set; } | The name of the namespace (optional). |
+| [SupportMessagePack](CSharpGenerator/SupportMessagePack.md) { get; set; } | True to support MessagePack serialization. |
 | [UseNullableReferences](CSharpGenerator/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
 | override [ApplySettings](CSharpGenerator/ApplySettings.md)(…) | Applies generator-specific settings. |
 | override [GenerateOutput](CSharpGenerator/GenerateOutput.md)(…) | Generates the C# output. |

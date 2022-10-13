@@ -1,10 +1,14 @@
 # ServiceObject.AsJsonObject method
 
-Returns the JSON object as a `System.Text.Json.Nodes.JsonObject`.
+Returns a `System.Text.Json.Nodes.JsonObject` that is temporarily associated with this `ServiceObject`.
 
 ```csharp
 public JsonObject AsJsonObject()
 ```
+
+## Remarks
+
+If the returned object is mutated, the `ServiceObject` is mutated. However, once the `ServiceObject` is accessed in any other way, including serialization, the object may or may not remain associated with the `ServiceObject` and thus should no longer be used.
 
 ## See Also
 
