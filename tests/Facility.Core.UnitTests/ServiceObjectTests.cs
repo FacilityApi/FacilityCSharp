@@ -22,7 +22,7 @@ public sealed class ServiceObjectTests
 	}
 
 	[Test]
-	public void DataAccess([Values] bool legacy1, [Values] bool legacy2, [Values] bool legacy3, [Values] bool legacy4)
+	public void AsData([Values] bool legacy1, [Values] bool legacy2, [Values] bool legacy3, [Values] bool legacy4)
 	{
 		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 
@@ -42,5 +42,23 @@ public sealed class ServiceObjectTests
 			so.AsJsonObject()["foo"] = "buz";
 
 		so.ToString().Should().Be(@"{""foo"":""buz""}");
+	}
+
+	[Test]
+	public void ToData([Values] bool legacy1, [Values] bool legacy2, [Values] bool legacy3)
+	{
+		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
+
+		if (legacy2)
+			so.ToJObject()["foo"].Value<string>().Should().Be("bar");
+		else
+			so.ToJsonObject()["foo"]!.GetValue<string>().Should().Be("bar");
+
+		if (legacy3)
+			so.ToJObject()["foo"] = "baz";
+		else
+			so.ToJsonObject()["foo"] = "baz";
+
+		so.ToString().Should().Be(@"{""foo"":""bar""}");
 	}
 }
