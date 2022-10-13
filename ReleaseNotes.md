@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.16.0-beta.2
+
+* Clarify behavior of accessing or mutating service objects.
+
 ## 2.16.0-beta.1
 
 * Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
