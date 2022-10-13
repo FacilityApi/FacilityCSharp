@@ -1,16 +1,15 @@
 # Release Notes
 
-## 2.16.0-beta.3
-
-* Clarify behavior of accessing or mutating service objects.
-
-## 2.16.0-beta.1
+## 2.16.0
 
 * Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
   * Use `--msgpack` with `fsdgencsharp` to generate MessagePack-compatible DTOs.
   * Reference the `Facility.Core.MessagePack` NuGet package in your client and/or service.
   * For clients, set `HttpClientServiceSettings.ContentSerializer` to `MessagePackServiceSerializer.Instance` to send and receive MessagePack (rather than JSON) by specifying `application/msgpack` in the `Content-Type` and `Accept` headers.
   * For servers, set `ServiceHttpHandlerSettings.ContentSerializer` to `HttpContentSerializer.Combine(SystemTextJsonServiceSerializer.Instance, MessagePackServiceSerializer.Instance)` to support JSON by default but use MessagePack when `application/msgpack` is specified in the `Accept` header.
+* Improve API for accessing or mutating service objects.
+  * Allow service objects to be mutated via `AsJObject` or `AsJsonObject`. Add clarifying comments.
+  * Add `ToJObject` and `ToJsonObject` for safer access.
 
 ## 2.15.2
 
