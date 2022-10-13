@@ -1,8 +1,10 @@
 using System.Net;
+using System.Net.Http.Headers;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
 using Facility.Core.Http;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
@@ -36,6 +38,25 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 		var result = await new ConformanceApiTester(settings).RunTestAsync(test).ConfigureAwait(false);
 		if (result.Status != ConformanceTestStatus.Pass)
 			Assert.Fail(result.Message);
+	}
+
+	[Test]
+	public async Task DefaultMediaType()
+	{
+		var httpRequest = new HttpRequestMessage(HttpMethod.Get, "/");
+		var httpResponse = await m_httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+		httpResponse.EnsureSuccessStatusCode();
+		(httpResponse.Content.Headers.ContentType?.MediaType).Should().Be(m_contentSerializer.DefaultMediaType);
+	}
+
+	[Test]
+	public async Task AcceptAnything()
+	{
+		var httpRequest = new HttpRequestMessage(HttpMethod.Get, "/");
+		httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+		var httpResponse = await m_httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+		httpResponse.EnsureSuccessStatusCode();
+		(httpResponse.Content.Headers.ContentType?.MediaType).Should().Be(m_contentSerializer.DefaultMediaType);
 	}
 
 	public void Dispose() => m_httpClient.Dispose();

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.16.1
+
+* Don't use wildcard media type from `Accept` header (e.g. `*/*` or `text/*`) directly as `Content-Type` of response.
+
 ## 2.16.0
 
 * Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
