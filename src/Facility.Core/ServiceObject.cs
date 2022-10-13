@@ -27,8 +27,8 @@ public sealed class ServiceObject
 	/// Returns a <c>Newtonsoft.Json.Linq.JObject</c> that is temporarily associated with this <c>ServiceObject</c>.
 	/// </summary>
 	/// <remarks>If the returned object is mutated, the <c>ServiceObject</c> is mutated. However, once the
-	/// <c>ServiceObject</c> is accessed in any other way, including comparison or serialization, the object may
-	/// or may not remain associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
+	/// <c>ServiceObject</c> is accessed in any other way, including serialization, the object may or may not remain
+	/// associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
 	public JObject AsJObject()
 	{
 		if (m_object is not JObject jObject)
@@ -40,8 +40,8 @@ public sealed class ServiceObject
 	/// Returns a <c>System.Text.Json.Nodes.JsonObject</c> that is temporarily associated with this <c>ServiceObject</c>.
 	/// </summary>
 	/// <remarks>If the returned object is mutated, the <c>ServiceObject</c> is mutated. However, once the
-	/// <c>ServiceObject</c> is accessed in any other way, including comparison or serialization, the object may
-	/// or may not remain associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
+	/// <c>ServiceObject</c> is accessed in any other way, including serialization, the object may or may not remain
+	/// associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
 	public JsonObject AsJsonObject()
 	{
 		if (m_object is not JsonObject jsonObject)
@@ -50,7 +50,7 @@ public sealed class ServiceObject
 	}
 
 	/// <summary>
-	/// Returns a new <c>System.Text.Json.Nodes.JsonObject</c> equivalent to this <c>ServiceObject</c>.
+	/// Returns a new <c>Newtonsoft.Json.Linq.JObject</c> equivalent to this <c>ServiceObject</c>.
 	/// </summary>
 	public JObject ToJObject() => NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
 
@@ -66,7 +66,7 @@ public sealed class ServiceObject
 		m_object switch
 		{
 			JObject jObject => JToken.DeepEquals(jObject, (other.m_object as JObject) ?? other.ToJObject()),
-			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.AsJsonObject()),
+			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.ToJsonObject()),
 			_ => throw new InvalidOperationException(),
 		};
 
