@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Facility.Core.Assertions;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
@@ -120,5 +121,15 @@ public sealed class ServiceJsonUtilityTests
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
 		token["errorMapValue"].Type.Should().Be(JTokenType.Object);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
+	}
+
+	[Test]
+	public void ServiceObjects([Values] bool legacy)
+	{
+		var so = legacy ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
+		var json = @"{""foo"":""bar""}";
+
+		ServiceJsonUtility.ToJson(so).Should().Be(json);
+		ServiceJsonUtility.FromJson<ServiceObject>(json).IsEquivalentTo(so).Should().BeTrue();
 	}
 }
