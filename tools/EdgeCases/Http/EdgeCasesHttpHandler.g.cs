@@ -64,7 +64,7 @@ namespace EdgeCases.Http
 
 		private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults
 		{
-			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
+			ContentSerializer = HttpContentSerializer.Create(EdgeCasesJsonServiceSerializer.Instance),
 		};
 
 		private readonly IEdgeCases? m_service;

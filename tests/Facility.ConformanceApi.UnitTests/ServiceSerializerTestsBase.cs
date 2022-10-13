@@ -10,6 +10,9 @@ public abstract class ServiceSerializerTestsBase
 		NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
 		MessagePackServiceSerializer.Instance,
+
+		// TODO: restore when fixed: https://github.com/dotnet/runtime/issues/76802
+		////ConformanceApiJsonServiceSerializer.Instance,
 	};
 
 	protected ServiceSerializerTestsBase(ServiceSerializer serializer)
