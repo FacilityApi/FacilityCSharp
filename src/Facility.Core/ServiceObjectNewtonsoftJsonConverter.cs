@@ -18,5 +18,5 @@ public sealed class ServiceObjectNewtonsoftJsonConverter : ServiceJsonConverterB
 	/// Writes the JSON representation of the value.
 	/// </summary>
 	protected override void WriteCore(JsonWriter writer, ServiceObject value, JsonSerializer serializer) =>
-		value.AsJObject(ServiceObjectAccess.ReadOnly).WriteTo(writer, serializer.Converters.ToArray());
+		value.AsJObject().WriteTo(writer, serializer.Converters.ToArray());
 }

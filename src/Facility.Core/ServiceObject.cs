@@ -24,50 +24,40 @@ public sealed class ServiceObject
 	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
 	/// <summary>
-	/// Returns the JSON object as a <c>Newtonsoft.Json.Linq.JObject</c>.
+	/// Returns a <c>Newtonsoft.Json.Linq.JObject</c> that is temporarily associated with this <c>ServiceObject</c>.
 	/// </summary>
-	[Obsolete("Use overload with ServiceObjectAccess.")]
-	public JObject AsJObject() => AsJObject(ServiceObjectAccess.ReadOnly);
-
-	/// <summary>
-	/// Returns the JSON object as a <c>Newtonsoft.Json.Linq.JObject</c>.
-	/// </summary>
-	public JObject AsJObject(ServiceObjectAccess access)
+	/// <remarks>If the returned object is mutated, the <c>ServiceObject</c> is mutated. However, once the
+	/// <c>ServiceObject</c> is accessed in any other way, including comparison or serialization, the object may
+	/// or may not remain associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
+	public JObject AsJObject()
 	{
-		if (access is not (ServiceObjectAccess.Clone or ServiceObjectAccess.ReadWrite or ServiceObjectAccess.ReadOnly))
-			throw new ArgumentOutOfRangeException(nameof(access), access, null);
-
-		if (access is ServiceObjectAccess.Clone || m_object is not JObject jObject)
-			jObject = NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
-
-		if (access is ServiceObjectAccess.ReadWrite)
-			m_object = jObject;
-
+		if (m_object is not JObject jObject)
+			m_object = jObject = ToJObject();
 		return jObject;
 	}
 
 	/// <summary>
-	/// Returns the JSON object as a new <c>System.Text.Json.Nodes.JsonObject</c>.
+	/// Returns a <c>System.Text.Json.Nodes.JsonObject</c> that is temporarily associated with this <c>ServiceObject</c>.
 	/// </summary>
-	[Obsolete("Use overload with ServiceObjectAccess.")]
-	public JsonObject AsJsonObject() => AsJsonObject(ServiceObjectAccess.ReadOnly);
-
-	/// <summary>
-	/// Returns the JSON object as a <c>System.Text.Json.Nodes.JsonObject</c>.
-	/// </summary>
-	public JsonObject AsJsonObject(ServiceObjectAccess access)
+	/// <remarks>If the returned object is mutated, the <c>ServiceObject</c> is mutated. However, once the
+	/// <c>ServiceObject</c> is accessed in any other way, including comparison or serialization, the object may
+	/// or may not remain associated with the <c>ServiceObject</c> and thus should no longer be used.</remarks>
+	public JsonObject AsJsonObject()
 	{
-		if (access is not (ServiceObjectAccess.Clone or ServiceObjectAccess.ReadWrite or ServiceObjectAccess.ReadOnly))
-			throw new ArgumentOutOfRangeException(nameof(access), access, null);
-
-		if (access is ServiceObjectAccess.Clone || m_object is not JsonObject jsonObject)
-			jsonObject = SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
-
-		if (access is ServiceObjectAccess.ReadWrite)
-			m_object = jsonObject;
-
+		if (m_object is not JsonObject jsonObject)
+			m_object = jsonObject = ToJsonObject();
 		return jsonObject;
 	}
+
+	/// <summary>
+	/// Returns a new <c>System.Text.Json.Nodes.JsonObject</c> equivalent to this <c>ServiceObject</c>.
+	/// </summary>
+	public JObject ToJObject() => NewtonsoftJsonServiceSerializer.Instance.FromJson<JObject>(ToString())!;
+
+	/// <summary>
+	/// Returns a new <c>System.Text.Json.Nodes.JsonObject</c> equivalent to this <c>ServiceObject</c>.
+	/// </summary>
+	public JsonObject ToJsonObject() => SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
 
 	/// <summary>
 	/// Returns true if the JSON objects are equivalent.
@@ -75,8 +65,8 @@ public sealed class ServiceObject
 	public bool IsEquivalentTo(ServiceObject? other) => other is not null &&
 		m_object switch
 		{
-			JObject jObject => JToken.DeepEquals(jObject, other.AsJObject(ServiceObjectAccess.ReadOnly)),
-			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, other.AsJsonObject(ServiceObjectAccess.ReadOnly)),
+			JObject jObject => JToken.DeepEquals(jObject, (other.m_object as JObject) ?? other.ToJObject()),
+			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.AsJsonObject()),
 			_ => throw new InvalidOperationException(),
 		};
 

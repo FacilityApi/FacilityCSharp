@@ -82,7 +82,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	{
 		try
 		{
-			return serviceObject?.AsJsonObject(ServiceObjectAccess.ReadOnly).Deserialize(type, s_jsonSerializerOptions);
+			return serviceObject?.AsJsonObject().Deserialize(type, s_jsonSerializerOptions);
 		}
 		catch (JsonException exception)
 		{
@@ -98,7 +98,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	{
 		try
 		{
-			return serviceObject is null ? default : serviceObject.AsJsonObject(ServiceObjectAccess.ReadOnly).Deserialize<T>(s_jsonSerializerOptions);
+			return serviceObject is null ? default : serviceObject.AsJsonObject().Deserialize<T>(s_jsonSerializerOptions);
 		}
 		catch (JsonException exception)
 		{

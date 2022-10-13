@@ -34,7 +34,7 @@ public sealed partial class ServiceErrorDto
 	[System.Text.Json.Serialization.JsonPropertyName("_details")] //// HACK: without this, details is serialized first
 	public JObject? Details
 	{
-		get => DetailsObject?.AsJObject(ServiceObjectAccess.ReadWrite);
+		get => DetailsObject?.AsJObject();
 		set => DetailsObject = ServiceObject.Create(value);
 	}
 }

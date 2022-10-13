@@ -22,43 +22,24 @@ public sealed class ServiceObjectTests
 	}
 
 	[Test]
-	public void Clone([Values] bool legacy1, [Values] bool legacy2)
+	public void DataAccess([Values] bool legacy1, [Values] bool legacy2, [Values] bool legacy3, [Values] bool legacy4)
 	{
 		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 
 		if (legacy2)
-			so.AsJObject(ServiceObjectAccess.Clone)["foo"] = "baz";
+			so.AsJObject()["foo"].Value<string>().Should().Be("bar");
 		else
-			so.AsJsonObject(ServiceObjectAccess.Clone)["foo"] = "baz";
-
-		so.ToString().Should().Be(@"{""foo"":""bar""}");
-	}
-
-	[Test]
-	public void ReadOnly([Values] bool legacy1, [Values] bool legacy2)
-	{
-		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
-
-		if (legacy2)
-			so.AsJObject(ServiceObjectAccess.ReadOnly)["foo"].Value<string>().Should().Be("bar");
-		else
-			so.AsJsonObject(ServiceObjectAccess.ReadOnly)["foo"]!.GetValue<string>().Should().Be("bar");
-	}
-
-	[Test]
-	public void ReadWrite([Values] bool legacy1, [Values] bool legacy2, [Values] bool legacy3)
-	{
-		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
-
-		if (legacy2)
-			so.AsJObject(ServiceObjectAccess.ReadWrite)["foo"] = "baz";
-		else
-			so.AsJsonObject(ServiceObjectAccess.ReadWrite)["foo"] = "baz";
+			so.AsJsonObject()["foo"]!.GetValue<string>().Should().Be("bar");
 
 		if (legacy3)
-			so.AsJObject(ServiceObjectAccess.ReadWrite)["foo"] = "buz";
+			so.AsJObject()["foo"] = "baz";
 		else
-			so.AsJsonObject(ServiceObjectAccess.ReadWrite)["foo"] = "buz";
+			so.AsJsonObject()["foo"] = "baz";
+
+		if (legacy4)
+			so.AsJObject()["foo"] = "buz";
+		else
+			so.AsJsonObject()["foo"] = "buz";
 
 		so.ToString().Should().Be(@"{""foo"":""buz""}");
 	}
