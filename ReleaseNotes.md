@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.16.0-beta.2
+## 2.16.0-beta.3
 
 * Clarify behavior of accessing or mutating service objects.
 
