@@ -277,14 +277,29 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.ToList());
 	}
 
-	private string? GetAcceptedMediaType(HttpRequestMessage httpRequest, HttpContentSerializer serializer) =>
-		httpRequest.Headers.Accept
+	private string? GetAcceptedMediaType(HttpRequestMessage httpRequest, HttpContentSerializer serializer)
+	{
+		var mediaType = httpRequest.Headers.Accept
 			.Where(x => x.MediaType is not null)
 			.OrderByDescending(x => x.Quality)
 			.ThenBy(x => !x.MediaType!.EndsWith("/*", StringComparison.Ordinal) ? 0 : x.MediaType != "*/*" ? 1 : 2)
 			.Select(x => x.MediaType)
 			.Select(x => x!)
 			.FirstOrDefault(x => x == "*/*" || serializer.IsAcceptedMediaType(x));
+
+		// use default media type for universal wildcard
+		if (mediaType is null or "*/*")
+			return null;
+
+		// use first matching media type for prefix wildcard
+		if (mediaType.EndsWith("/*", StringComparison.Ordinal))
+		{
+			var prefix = mediaType.Substring(0, mediaType.Length - 1);
+			return serializer.AcceptMediaTypes.FirstOrDefault(x => x.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+		}
+
+		return mediaType;
+	}
 
 	private async Task<HttpResponseMessage?> RequestReceivedAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 	{
