@@ -189,10 +189,10 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		where T : Newtonsoft.Json.Linq.JToken
 	{
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-			(T) Newtonsoft.Json.Linq.JToken.Parse(JsonNode.Parse(ref reader)?.ToJsonString());
+			ServiceJsonUtility.FromJson<T>(JsonNode.Parse(ref reader)!.ToJsonString());
 
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) =>
-			writer.WriteRawValue(value.ToString(Newtonsoft.Json.Formatting.None));
+			writer.WriteRawValue(ServiceJsonUtility.ToJson(value));
 	}
 
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
