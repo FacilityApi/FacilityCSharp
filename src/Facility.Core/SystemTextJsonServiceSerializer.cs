@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -194,9 +195,12 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			writer.WriteRawValue(value.ToString(Newtonsoft.Json.Formatting.None));
 	}
 
-	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new(JsonSerializerDefaults.Web)
+	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+		NumberHandling = JsonNumberHandling.AllowReadingFromString,
+		PropertyNameCaseInsensitive = true,
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =
 		{
 			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
