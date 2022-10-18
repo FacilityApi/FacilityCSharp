@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.16.2
+
+* Don't escape "unsafe" punctuation and non-ASCII when writing JSON.
+* Avoid broken default serialization when using JToken with System.Text.Json.
+
 ## 2.16.1
 
 * Don't use wildcard media type from `Accept` header (e.g. `*/*` or `text/*`) directly as `Content-Type` of response.
