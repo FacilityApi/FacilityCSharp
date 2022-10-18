@@ -189,7 +189,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		where T : Newtonsoft.Json.Linq.JToken
 	{
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-			ServiceJsonUtility.FromJson<T>(JsonNode.Parse(ref reader)!.ToJsonString());
+			ServiceJsonUtility.FromJson<T>(JsonNode.Parse(ref reader)!.ToJsonString(s_jsonSerializerOptions));
 
 		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) =>
 			writer.WriteRawValue(ServiceJsonUtility.ToJson(value));
