@@ -112,6 +112,14 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	}
 
 	[Test]
+	public void RoundTripFromJObjectWithDate()
+	{
+		var so1 = ServiceObject.Create(new JObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" });
+		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
+		Assert.IsTrue(so1.IsEquivalentTo(so2));
+	}
+
+	[Test]
 	public void RoundTripFromJsonObject()
 	{
 		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
@@ -120,9 +128,25 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	}
 
 	[Test]
+	public void RoundTripFromJsonObjectWithDate()
+	{
+		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" });
+		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
+		Assert.IsTrue(so1.IsEquivalentTo(so2));
+	}
+
+	[Test]
 	public void RoundTripJObject()
 	{
 		var legacy1 = new LegacyObjectDto { Extra = new JObject { ["foo"] = "bar" } };
+		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
+		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+	}
+
+	[Test]
+	public void RoundTripJObjectWithDate()
+	{
+		var legacy1 = new LegacyObjectDto { Extra = new JObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" } };
 		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
 		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
 	}
