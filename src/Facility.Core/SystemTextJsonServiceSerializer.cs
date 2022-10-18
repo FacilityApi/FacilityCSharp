@@ -198,6 +198,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		NumberHandling = JsonNumberHandling.AllowReadingFromString,
 		PropertyNameCaseInsensitive = true,
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
