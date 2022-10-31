@@ -99,6 +99,7 @@ public sealed class FacilityConformanceApp
 		if (command == "test")
 		{
 			var baseUri = new Uri(argsReader.ReadOption("url") ?? defaultUrl);
+			bool disableChunkedTransfer = argsReader.ReadFlag("disable-chunked-transfer");
 			var testNames = argsReader.ReadArguments();
 			argsReader.VerifyComplete();
 
@@ -107,6 +108,7 @@ public sealed class FacilityConformanceApp
 				{
 					BaseUri = baseUri,
 					ContentSerializer = contentSerializer,
+					DisableChunkedTransfer = disableChunkedTransfer,
 				});
 
 			var tester = new ConformanceApiTester(
