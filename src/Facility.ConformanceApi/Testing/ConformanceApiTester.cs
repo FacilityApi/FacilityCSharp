@@ -89,7 +89,7 @@ public sealed class ConformanceApiTester
 				if (test.HttpRequest.Path is null)
 					return Failure("HTTP request missing path.");
 
-				var httpRequest = new HttpRequestMessage(new HttpMethod(test.HttpRequest.Method), test.HttpRequest.Path);
+				var httpRequest = new HttpRequestMessage(new HttpMethod(test.HttpRequest.Method), test.HttpRequest.Path.TrimStart('/'));
 				var httpResponse = await m_httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 				if (!httpResponse.IsSuccessStatusCode)
 					return Failure($"Got {(int) httpResponse.StatusCode} {httpResponse.ReasonPhrase}: {await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false)}");
