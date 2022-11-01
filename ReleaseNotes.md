@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.17.0
+
+* Add `--disable-chunked-transfer` option to `FacilityConformance test`.
+* Trim beginning `/` for conformance tests with explicit request.
+
 ## 2.16.2
 
 * Don't escape "unsafe" punctuation and non-ASCII when writing JSON.
