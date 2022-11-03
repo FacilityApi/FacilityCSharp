@@ -269,6 +269,7 @@ service ConformanceApi
 		array: AnyArray;
 		map: AnyMap;
 		result: AnyResult;
+		nullable: AnyNullable;
 	}
 
 	data AnyArray
@@ -287,6 +288,7 @@ service ConformanceApi
 		array: int32[][];
 		map: map<int32>[];
 		result: result<int32>[];
+		nullable: nullable<int32>[];
 	}
 
 	data AnyMap
@@ -305,6 +307,7 @@ service ConformanceApi
 		array: map<int32[]>;
 		map: map<map<int32>>;
 		result: map<result<int32>>;
+		nullable: map<nullable<int32>>;
 	}
 
 	data AnyResult
@@ -323,6 +326,25 @@ service ConformanceApi
 		array: result<int32[]>;
 		map: result<map<int32>>;
 		result: result<result<int32>>;
+		nullable: result<nullable<int32>>;
+	}
+
+	data AnyNullable
+	{
+		string: nullable<string>;
+		boolean: nullable<boolean>;
+		double: nullable<double>;
+		int32: nullable<int32>;
+		int64: nullable<int64>;
+		decimal: nullable<decimal>;
+		bytes: nullable<bytes>;
+		object: nullable<object>;
+		error: nullable<error>;
+		data: nullable<Any>;
+		enum: nullable<Answer>;
+		array: nullable<int32[]>;
+		map: nullable<map<int32>>;
+		result: nullable<result<int32>>;
 	}
 
 	data HasWidget

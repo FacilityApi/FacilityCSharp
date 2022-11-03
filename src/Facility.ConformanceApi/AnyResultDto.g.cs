@@ -62,6 +62,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("result")]
 		public ServiceResult<ServiceResult<int>>? Result { get; set; }
 
+		[MessagePack.Key("nullable")]
+		public ServiceResult<int?>? Nullable { get; set; }
+
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
@@ -86,7 +89,8 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentResults(Enum, other.Enum) &&
 				ServiceDataUtility.AreEquivalentResults(Array, other.Array) &&
 				ServiceDataUtility.AreEquivalentResults(Map, other.Map) &&
-				ServiceDataUtility.AreEquivalentResults(Result, other.Result);
+				ServiceDataUtility.AreEquivalentResults(Result, other.Result) &&
+				ServiceDataUtility.AreEquivalentResults(Nullable, other.Nullable);
 		}
 	}
 }

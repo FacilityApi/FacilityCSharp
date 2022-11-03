@@ -23,10 +23,12 @@ namespace EdgeCases
 		{
 		}
 
-		[Newtonsoft.Json.JsonProperty("f")]
+		[Newtonsoft.Json.JsonProperty("f", DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
+		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<string?>))]
+		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[System.Text.Json.Serialization.JsonPropertyName("f")]
 		[MessagePack.Key("f")]
-		public string? Field { get; set; }
+		public ServiceField<string?> Field { get; set; }
 
 		/// <summary>
 		/// Returns the DTO as JSON.

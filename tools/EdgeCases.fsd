@@ -4,7 +4,7 @@ service EdgeCases
 	data Data
 	{
 		[csharp(name: Field)]
-		f: string;
+		f: nullable<string>;
 	}
 
 	/// An old method.
