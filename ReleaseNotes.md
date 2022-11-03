@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.16.3
+
+* Add `--disable-chunked-transfer` to conformance app.
+* Trim beginning slash from path in conformance tester.
+
 ## 2.16.2
 
 * Don't escape "unsafe" punctuation and non-ASCII when writing JSON.
