@@ -830,14 +830,13 @@ public sealed class CSharpGenerator : CodeGenerator
 								{
 									var requestBodyFieldName = context.GetFieldPropertyName(httpMethodInfo.RequestBodyField.ServiceField);
 									var requestBodyFieldInfo = context.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField);
-									var requestBodyFieldTypeName = RenderNullableFieldType(requestBodyFieldInfo, context);
-									var requestNullableBodyFieldTypeName = RenderNullableReferenceFieldType(requestBodyFieldInfo, context);
+									var requestBodyFieldTypeName = RenderFieldTypeForProperty(requestBodyFieldInfo, context);
 
-									code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName}),");
+									code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName.TrimEnd('?')}),");
 									if (httpMethodInfo.RequestBodyField.ContentType != null)
 										code.WriteLine($"RequestBodyContentType = {CSharpUtility.CreateString(httpMethodInfo.RequestBodyField.ContentType)},");
 									code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
-									code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestNullableBodyFieldTypeName}) body }},");
+									code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
 								}
 								else if (httpMethodInfo.RequestNormalFields.Any())
 								{
@@ -900,14 +899,13 @@ public sealed class CSharpGenerator : CodeGenerator
 												}
 												else
 												{
-													var responseBodyFieldTypeName = RenderNullableFieldType(bodyFieldType, context);
-													var responseNullableBodyFieldTypeName = RenderNullableReferenceFieldType(bodyFieldType, context);
-													code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName}),");
+													var responseBodyFieldTypeName = RenderFieldTypeForProperty(bodyFieldType, context);
+													code.WriteLine($"ResponseBodyType = typeof({responseBodyFieldTypeName.TrimEnd('?')}),");
 													if (bodyField.ContentType != null)
 														code.WriteLine($"ResponseBodyContentType = {CSharpUtility.CreateString(bodyField.ContentType)},");
 													code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
 													code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
-													code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseNullableBodyFieldTypeName}) body }},");
+													code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
 												}
 											}
 											else if (validResponse.NormalFields!.Count != 0)
@@ -1264,25 +1262,46 @@ public sealed class CSharpGenerator : CodeGenerator
 		{
 			var propertyName = context.GetFieldPropertyName(fieldInfo);
 			var normalPropertyName = CodeGenUtility.Capitalize(fieldInfo.Name);
-			var nullableFieldType = RenderNullableReferenceFieldType(context.GetFieldType(fieldInfo), context);
+			var fieldType = context.GetFieldType(fieldInfo);
+			var fieldTypeForProperty = RenderFieldTypeForProperty(fieldType, context);
 
 			code.WriteLine();
 			CSharpUtility.WriteSummary(code, fieldInfo.Summary);
 			CSharpUtility.WriteObsoleteAttribute(code, fieldInfo);
-			if (propertyName != normalPropertyName)
+
+			var isNullable = fieldType.Kind == ServiceTypeKind.Nullable;
+			var hasSpecialName = propertyName != normalPropertyName;
+			if (isNullable || hasSpecialName)
 			{
-				code.WriteLine($"[Newtonsoft.Json.JsonProperty({CSharpUtility.CreateString(fieldInfo.Name)})]");
-				code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName({CSharpUtility.CreateString(fieldInfo.Name)})]");
+				var jsonPropertyAttributeValues = new List<string>();
+				if (hasSpecialName)
+					jsonPropertyAttributeValues.Add(CSharpUtility.CreateString(fieldInfo.Name));
+				if (isNullable)
+				{
+					jsonPropertyAttributeValues.Add("DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore");
+					jsonPropertyAttributeValues.Add("NullValueHandling = Newtonsoft.Json.NullValueHandling.Include");
+				}
+				code.WriteLine("[Newtonsoft.Json.JsonProperty(" + string.Join(", ", jsonPropertyAttributeValues) + ")]");
+
+				if (isNullable)
+				{
+					code.WriteLine($"[ServiceFieldDefaultValueAttribute(typeof({fieldTypeForProperty}))]");
+					code.WriteLine("[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]");
+				}
+
+				if (hasSpecialName)
+					code.WriteLine($"[System.Text.Json.Serialization.JsonPropertyName({CSharpUtility.CreateString(fieldInfo.Name)})]");
 			}
+
 			if (SupportMessagePack)
 			{
 				var keyString = fieldInfo.Attributes.FirstOrDefault(x => x.Name == "msgpack")?.TryGetParameterValue("key");
 				var keyCSharp = int.TryParse(keyString, NumberStyles.None, CultureInfo.InvariantCulture, out var keyInteger)
 					? keyInteger.ToString(CultureInfo.InvariantCulture)
 					: CSharpUtility.CreateString(fieldInfo.Name);
-				code.WriteLine(FormattableString.Invariant($"[MessagePack.Key({keyCSharp})]"));
+				code.WriteLine($"[MessagePack.Key({keyCSharp})]");
 			}
-			code.WriteLine($"public {nullableFieldType} {propertyName} {{ get; set; }}");
+			code.WriteLine($"public {fieldTypeForProperty} {propertyName} {{ get; set; }}");
 		}
 	}
 
@@ -1422,31 +1441,45 @@ public sealed class CSharpGenerator : CodeGenerator
 		});
 	}
 
-	private string RenderNonNullableFieldType(ServiceTypeInfo fieldType, Context context) => RenderNullableFieldType(fieldType, context).TrimEnd('?');
+	private string RenderFieldTypeForCollection(ServiceTypeInfo fieldType, Context context) =>
+		fieldType.Kind == ServiceTypeKind.Nullable
+			? RenderFieldType(fieldType.ValueType!, context).Text + "?"
+			: RenderFieldType(fieldType, context).Text;
 
-	private string RenderNullableReferenceFieldType(ServiceTypeInfo fieldType, Context context) =>
-		UseNullableReferences ? (RenderNonNullableFieldType(fieldType, context) + "?") : RenderNullableFieldType(fieldType, context);
+	private string RenderFieldTypeForProperty(ServiceTypeInfo fieldType, Context context)
+	{
+		if (fieldType.Kind == ServiceTypeKind.Nullable)
+		{
+			var (text, isValueType) = RenderFieldType(fieldType.ValueType!, context);
+			return $"ServiceField<{text}{(isValueType || UseNullableReferences ? "?" : "")}>";
+		}
+		else
+		{
+			var (text, isValueType) = RenderFieldType(fieldType, context);
+			return $"{text}{(isValueType || UseNullableReferences ? "?" : "")}";
+		}
+	}
 
-	private string RenderNullableFieldType(ServiceTypeInfo fieldType, Context context)
+	private (string Text, bool IsValueType) RenderFieldType(ServiceTypeInfo fieldType, Context context)
 	{
 		var csharpInfo = context.CSharpServiceInfo;
 
 		return fieldType.Kind switch
 		{
-			ServiceTypeKind.String => "string",
-			ServiceTypeKind.Boolean => "bool?",
-			ServiceTypeKind.Double => "double?",
-			ServiceTypeKind.Int32 => "int?",
-			ServiceTypeKind.Int64 => "long?",
-			ServiceTypeKind.Decimal => "decimal?",
-			ServiceTypeKind.Bytes => "byte[]",
-			ServiceTypeKind.Object => "ServiceObject",
-			ServiceTypeKind.Error => "ServiceErrorDto",
-			ServiceTypeKind.Dto => csharpInfo.GetDtoName(fieldType.Dto!),
-			ServiceTypeKind.Enum => csharpInfo.GetEnumName(fieldType.Enum!) + "?",
-			ServiceTypeKind.Result => $"ServiceResult<{RenderNonNullableFieldType(fieldType.ValueType!, context)}>",
-			ServiceTypeKind.Array => $"IReadOnlyList<{RenderNonNullableFieldType(fieldType.ValueType!, context)}>",
-			ServiceTypeKind.Map => $"IReadOnlyDictionary<string, {RenderNonNullableFieldType(fieldType.ValueType!, context)}>",
+			ServiceTypeKind.String => ("string", false),
+			ServiceTypeKind.Boolean => ("bool", true),
+			ServiceTypeKind.Double => ("double", true),
+			ServiceTypeKind.Int32 => ("int", true),
+			ServiceTypeKind.Int64 => ("long", true),
+			ServiceTypeKind.Decimal => ("decimal", true),
+			ServiceTypeKind.Bytes => ("byte[]", false),
+			ServiceTypeKind.Object => ("ServiceObject", false),
+			ServiceTypeKind.Error => ("ServiceErrorDto", false),
+			ServiceTypeKind.Dto => (csharpInfo.GetDtoName(fieldType.Dto!), false),
+			ServiceTypeKind.Enum => (csharpInfo.GetEnumName(fieldType.Enum!), true),
+			ServiceTypeKind.Result => ($"ServiceResult<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
+			ServiceTypeKind.Array => ($"IReadOnlyList<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
+			ServiceTypeKind.Map => ($"IReadOnlyDictionary<string, {RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			_ => throw new NotSupportedException("Unknown field type " + fieldType.Kind),
 		};
 	}

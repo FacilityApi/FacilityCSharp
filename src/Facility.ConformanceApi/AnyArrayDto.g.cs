@@ -62,6 +62,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("result")]
 		public IReadOnlyList<ServiceResult<int>>? Result { get; set; }
 
+		[MessagePack.Key("nullable")]
+		public IReadOnlyList<int?>? Nullable { get; set; }
+
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
@@ -86,7 +89,8 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentFieldValues(Enum, other.Enum) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Array, other.Array) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Map, other.Map) &&
-				ServiceDataUtility.AreEquivalentFieldValues(Result, other.Result);
+				ServiceDataUtility.AreEquivalentFieldValues(Result, other.Result) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Nullable, other.Nullable);
 		}
 	}
 }

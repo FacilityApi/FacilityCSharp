@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.17.0-beta.1
+
+* Support nullable fields.
+
 ## 2.16.3
 
 * Add `--disable-chunked-transfer` to conformance app.

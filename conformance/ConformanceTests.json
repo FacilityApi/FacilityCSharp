@@ -212,7 +212,8 @@
             "enum": ["yes", "no"],
             "array": [[42, 24], [24, 42]],
             "map": [{ "": 42 }, { " ": 24 }],
-            "result": [{ "value": 42 }, { "error": { "code": "code" } }]
+            "result": [{ "value": 42 }, { "error": { "code": "code" } }],
+            "nullable": [42, null, 24]
           }
         },
         "matrix": [[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]]
@@ -233,7 +234,8 @@
             "enum": ["yes", "no"],
             "array": [[42, 24], [24, 42]],
             "map": [{ "": 42 }, { " ": 24 }],
-            "result": [{ "value": 42 }, { "error": { "code": "code" } }]
+            "result": [{ "value": 42 }, { "error": { "code": "code" } }],
+            "nullable": [42, null, 24]
           }
         },
         "matrix": [[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]]
@@ -320,7 +322,8 @@
             "enum": { "": "yes", " ": "no" },
             "array": { "": [42, 24], " ": [24, 42] },
             "map": { "": { "": 42 }, " ": { " ": 24 } },
-            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } }
+            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } },
+            "nullable": { "": 42, " ": null }
           }
         }
       },
@@ -340,7 +343,112 @@
             "enum": { "": "yes", " ": "no" },
             "array": { "": [42, 24], " ": [24, 42] },
             "map": { "": { "": 42 }, " ": { " ": 24 } },
-            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } }
+            "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } },
+            "nullable": { "": 42, " ": null }
+          }
+        }
+      }
+    },
+    {
+      "test": "mirrorNullableValueFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "nullable": {
+            "string": "string",
+            "boolean": true,
+            "double": 0.375,
+            "int32": 42,
+            "int64": 12345678910,
+            "decimal": 1.5,
+            "bytes": "aGk=",
+            "object": { "": null, " ": [null] },
+            "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+            "data": { "data": { "data": {} } },
+            "enum": "yes",
+            "array": [42],
+            "map": { "": 42 },
+            "result": { "value": 42 }
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "nullable": {
+            "string": "string",
+            "boolean": true,
+            "double": 0.375,
+            "int32": 42,
+            "int64": 12345678910,
+            "decimal": 1.5,
+            "bytes": "aGk=",
+            "object": { "": null, " ": [null] },
+            "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
+            "data": { "data": { "data": {} } },
+            "enum": "yes",
+            "array": [42],
+            "map": { "": 42 },
+            "result": { "value": 42 }
+          }
+        }
+      }
+    },
+    {
+      "test": "mirrorNullableMissingFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "nullable": {
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "nullable": {
+          }
+        }
+      }
+    },
+    {
+      "test": "mirrorNullableNullFields",
+      "method": "mirrorFields",
+      "request": {
+        "field": {
+          "nullable": {
+            "string": null,
+            "boolean": null,
+            "double": null,
+            "int32": null,
+            "int64": null,
+            "decimal": null,
+            "bytes": null,
+            "object": null,
+            "error": null,
+            "data": null,
+            "enum": null,
+            "array": null,
+            "map": null,
+            "result": null
+          }
+        }
+      },
+      "response": {
+        "field": {
+          "nullable": {
+            "string": null,
+            "boolean": null,
+            "double": null,
+            "int32": null,
+            "int64": null,
+            "decimal": null,
+            "bytes": null,
+            "object": null,
+            "error": null,
+            "data": null,
+            "enum": null,
+            "array": null,
+            "map": null,
+            "result": null
           }
         }
       }
@@ -408,7 +516,8 @@
             "enum": { "value": "yes" },
             "array": { "value": [42] },
             "map": { "value": { "": 42 } },
-            "result": { "value": { "value": 42 } }
+            "result": { "value": { "value": 42 } },
+            "nullable": { "value": null }
           }
         }
       },
@@ -428,7 +537,8 @@
             "enum": { "value": "yes" },
             "array": { "value": [42] },
             "map": { "value": { "": 42 } },
-            "result": { "value": { "value": 42 } }
+            "result": { "value": { "value": 42 } },
+            "nullable": { "value": null }
           }
         }
       }
