@@ -69,7 +69,7 @@ public class ValidationTests
 	[Test]
 	public void GeneratesCollectionCount()
 	{
-		var definition = @"[csharp] service TestApi { method do { [validate(count: ..100)] accountIds: int64[]; }: {} }";
+		var definition = "[csharp] service TestApi { method do { [validate(count: ..100)] accountIds: int64[]; }: {} }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
 		StringAssert.Contains("if (AccountIds != null && AccountIds.Count > 100", requestDtoFile.Text);
