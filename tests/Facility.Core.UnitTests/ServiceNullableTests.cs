@@ -9,7 +9,7 @@ public class ServiceNullableTests
 	public void StringField()
 	{
 		ServiceNullable<string?> field = default;
-		field.IsDefault.Should().BeTrue();
+		field.IsUnspecified.Should().BeTrue();
 		field.IsNull.Should().BeFalse();
 		field.Value.Should().BeNull();
 		field.Equals(default).Should().BeTrue();
@@ -20,7 +20,7 @@ public class ServiceNullableTests
 		Equals(field, default(ServiceNullable<string?>)).Should().BeTrue();
 
 		field = null;
-		field.IsDefault.Should().BeFalse();
+		field.IsUnspecified.Should().BeFalse();
 		field.IsNull.Should().BeTrue();
 		field.Value.Should().BeNull();
 		field.Equals(default).Should().BeFalse();
@@ -31,7 +31,7 @@ public class ServiceNullableTests
 		Equals(field, new ServiceNullable<string?>(null)).Should().BeTrue();
 
 		field = "";
-		field.IsDefault.Should().BeFalse();
+		field.IsUnspecified.Should().BeFalse();
 		field.IsNull.Should().BeFalse();
 		field.Value.Should().Be("");
 		field.Equals(default).Should().BeFalse();

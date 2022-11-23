@@ -2,6 +2,6 @@ namespace Facility.Core;
 
 internal interface IServiceNullable
 {
-	bool IsDefault { get; }
+	bool IsUnspecified { get; }
 	object? Value { get; }
 }

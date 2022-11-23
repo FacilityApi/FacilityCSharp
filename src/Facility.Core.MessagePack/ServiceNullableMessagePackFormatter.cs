@@ -7,7 +7,7 @@ public sealed class ServiceNullableMessagePackFormatter<T> : IMessagePackFormatt
 {
 	public void Serialize(ref MessagePackWriter writer, ServiceNullable<T> value, MessagePackSerializerOptions options)
 	{
-		if (value.IsDefault)
+		if (value.IsUnspecified)
 		{
 			writer.WriteNil();
 			return;

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Facility.Core;
 
 /// <summary>
-/// Used to distinguish default (i.e. unspecified/undefined/missing) from null.
+/// Used to distinguish unspecified from null.
 /// </summary>
 [Newtonsoft.Json.JsonConverter(typeof(ServiceNullableNewtonsoftJsonConverter))]
 [System.Text.Json.Serialization.JsonConverter(typeof(ServiceNullableSystemTextJsonConverter))]
@@ -15,7 +15,7 @@ public readonly struct ServiceNullable<T> : IEquatable<ServiceNullable<T>>, ISer
 	public ServiceNullable(T? value)
 	{
 		m_value = value;
-		m_hasValue = true;
+		m_isSpecified = true;
 	}
 
 	/// <summary>
@@ -25,27 +25,27 @@ public readonly struct ServiceNullable<T> : IEquatable<ServiceNullable<T>>, ISer
 	public static implicit operator ServiceNullable<T>(T? value) => new(value);
 
 	/// <summary>
-	/// True if this instance is default (i.e. unspecified/undefined/missing).
+	/// True if this instance is unspecified.
 	/// </summary>
-	public bool IsDefault => !m_hasValue;
+	public bool IsUnspecified => !m_isSpecified;
 
 	/// <summary>
 	/// True if this instance has a null value.
 	/// </summary>
-	public bool IsNull => m_hasValue && m_value is null;
+	public bool IsNull => m_isSpecified && m_value is null;
 
 	/// <summary>
-	/// The value of this instance, or null/default if the instance is default (i.e. unspecified/undefined/missing).
+	/// The value of this instance, or null/default if the instance is unspecified.
 	/// </summary>
-	/// <remarks>This property does not throw an exception when default or null.
-	/// Check <see cref="IsDefault" /> to distinguish default from null.</remarks>
+	/// <remarks>This property does not throw an exception when unspecified or null.
+	/// Check <see cref="IsUnspecified" /> to distinguish unspecified from null.</remarks>
 	public T? Value => m_value;
 
 	/// <summary>
 	/// Indicates whether the current object is equal to another object of the same type.
 	/// </summary>
 	public bool Equals(ServiceNullable<T> other) =>
-		(m_hasValue && other.m_hasValue) ? ServiceDataUtility.AreEquivalentFieldValues(m_value, other.m_value) : (m_hasValue == other.m_hasValue);
+		(m_isSpecified && other.m_isSpecified) ? ServiceDataUtility.AreEquivalentFieldValues(m_value, other.m_value) : (m_isSpecified == other.m_isSpecified);
 
 	/// <summary>
 	/// Indicates whether the current object is equal to another object of the same type.
@@ -55,7 +55,7 @@ public readonly struct ServiceNullable<T> : IEquatable<ServiceNullable<T>>, ISer
 	/// <summary>
 	/// Retrieves the hash code of the object.
 	/// </summary>
-	public override int GetHashCode() => m_hasValue ? (m_value?.GetHashCode() ?? 0) : -1;
+	public override int GetHashCode() => m_isSpecified ? (m_value?.GetHashCode() ?? 0) : -1;
 
 	/// <summary>
 	/// Returns the text representation of the object.
@@ -75,5 +75,5 @@ public readonly struct ServiceNullable<T> : IEquatable<ServiceNullable<T>>, ISer
 	object? IServiceNullable.Value => Value;
 
 	private readonly T? m_value;
-	private readonly bool m_hasValue;
+	private readonly bool m_isSpecified;
 }

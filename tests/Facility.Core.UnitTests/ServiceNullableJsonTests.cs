@@ -47,7 +47,7 @@ public class ServiceNullableJsonTests : JsonServiceSerializerTestsBase
 		json.Should().Be("{}");
 		var after = JsonSerializer.FromJson<TestDto>(json)!;
 		after.Should().BeDto(before);
-		after.Ternary.IsDefault.Should().BeTrue();
+		after.Ternary.IsUnspecified.Should().BeTrue();
 		after.Ternary.Value.Should().BeNull();
 	}
 
@@ -59,7 +59,7 @@ public class ServiceNullableJsonTests : JsonServiceSerializerTestsBase
 		json.Should().Be("{\"ternary\":null}");
 		var after = JsonSerializer.FromJson<TestDto>(json)!;
 		after.Should().BeDto(before);
-		after.Ternary.IsDefault.Should().BeFalse();
+		after.Ternary.IsUnspecified.Should().BeFalse();
 		after.Ternary.Value.Should().BeNull();
 	}
 
@@ -71,7 +71,7 @@ public class ServiceNullableJsonTests : JsonServiceSerializerTestsBase
 		json.Should().Be("{\"ternary\":false}");
 		var after = JsonSerializer.FromJson<TestDto>(json)!;
 		after.Should().BeDto(before);
-		after.Ternary.IsDefault.Should().BeFalse();
+		after.Ternary.IsUnspecified.Should().BeFalse();
 		after.Ternary.Value.Should().BeFalse();
 	}
 
@@ -83,7 +83,7 @@ public class ServiceNullableJsonTests : JsonServiceSerializerTestsBase
 		json.Should().Be("{\"ternary\":true}");
 		var after = JsonSerializer.FromJson<TestDto>(json)!;
 		after.Should().BeDto(before);
-		after.Ternary.IsDefault.Should().BeFalse();
+		after.Ternary.IsUnspecified.Should().BeFalse();
 		after.Ternary.Value.Should().BeTrue();
 	}
 }

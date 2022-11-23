@@ -45,7 +45,7 @@ public sealed class ServiceNullableSystemTextJsonConverter<T> : JsonConverter<Se
 	/// </summary>
 	public override void Write(Utf8JsonWriter writer, ServiceNullable<T> value, JsonSerializerOptions options)
 	{
-		if (value.IsDefault)
+		if (value.IsUnspecified)
 		{
 			throw new InvalidOperationException("Service field must not be default. " +
 				"Properties should include this attribute: " +

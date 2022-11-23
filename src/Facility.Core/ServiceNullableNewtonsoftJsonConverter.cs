@@ -28,8 +28,8 @@ public sealed class ServiceNullableNewtonsoftJsonConverter : JsonConverter
 	/// </summary>
 	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 	{
-		var optional = (IServiceNullable) value!;
-		if (optional.IsDefault)
+		var nullable = (IServiceNullable) value!;
+		if (nullable.IsUnspecified)
 		{
 			throw new InvalidOperationException("ServiceNullable must not be default. " +
 				"Properties should include these attributes: " +
@@ -38,6 +38,6 @@ public sealed class ServiceNullableNewtonsoftJsonConverter : JsonConverter
 				"ServiceNullableDefaultValue(typeof(ServiceNullable<...>))]");
 		}
 
-		serializer.Serialize(writer, optional.Value);
+		serializer.Serialize(writer, nullable.Value);
 	}
 }
