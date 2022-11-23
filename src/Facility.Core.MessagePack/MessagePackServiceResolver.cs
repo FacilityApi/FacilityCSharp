@@ -37,8 +37,8 @@ internal sealed class MessagePackServiceResolver : IFormatterResolver
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ServiceResult<>))
 				return (IMessagePackFormatter<T>) Activator.CreateInstance(typeof(ServiceResultMessagePackFormatter<>).MakeGenericType(typeof(T).GetGenericArguments()[0]))!;
 
-			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ServiceField<>))
-				return (IMessagePackFormatter<T>) Activator.CreateInstance(typeof(ServiceFieldMessagePackFormatter<>).MakeGenericType(typeof(T).GetGenericArguments()[0]))!;
+			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ServiceNullable<>))
+				return (IMessagePackFormatter<T>) Activator.CreateInstance(typeof(ServiceNullableMessagePackFormatter<>).MakeGenericType(typeof(T).GetGenericArguments()[0]))!;
 
 			return StandardResolver.Instance.GetFormatter<T>();
 		}

@@ -3,12 +3,12 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public class ServiceFieldTests
+public class ServiceNullableTests
 {
 	[Test]
 	public void StringField()
 	{
-		ServiceField<string?> field = default;
+		ServiceNullable<string?> field = default;
 		field.IsDefault.Should().BeTrue();
 		field.IsNull.Should().BeFalse();
 		field.Value.Should().BeNull();
@@ -17,7 +17,7 @@ public class ServiceFieldTests
 		field.Equals("").Should().BeFalse();
 		(field == default).Should().BeTrue();
 		(field != default).Should().BeFalse();
-		Equals(field, default(ServiceField<string?>)).Should().BeTrue();
+		Equals(field, default(ServiceNullable<string?>)).Should().BeTrue();
 
 		field = null;
 		field.IsDefault.Should().BeFalse();
@@ -28,7 +28,7 @@ public class ServiceFieldTests
 		field.Equals("").Should().BeFalse();
 		(field == default).Should().BeFalse();
 		(field != default).Should().BeTrue();
-		Equals(field, new ServiceField<string?>(null)).Should().BeTrue();
+		Equals(field, new ServiceNullable<string?>(null)).Should().BeTrue();
 
 		field = "";
 		field.IsDefault.Should().BeFalse();
@@ -39,6 +39,6 @@ public class ServiceFieldTests
 		field.Equals("").Should().BeTrue();
 		(field == default).Should().BeFalse();
 		(field != default).Should().BeTrue();
-		Equals(field, new ServiceField<string?>("")).Should().BeTrue();
+		Equals(field, new ServiceNullable<string?>("")).Should().BeTrue();
 	}
 }

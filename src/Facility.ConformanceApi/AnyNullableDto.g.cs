@@ -21,88 +21,88 @@ namespace Facility.ConformanceApi
 		}
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<string?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<string?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("string")]
-		public ServiceField<string?> String { get; set; }
+		public ServiceNullable<string?> String { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<bool?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<bool?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("boolean")]
-		public ServiceField<bool?> Boolean { get; set; }
+		public ServiceNullable<bool?> Boolean { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<double?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<double?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("double")]
-		public ServiceField<double?> Double { get; set; }
+		public ServiceNullable<double?> Double { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<int?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<int?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("int32")]
-		public ServiceField<int?> Int32 { get; set; }
+		public ServiceNullable<int?> Int32 { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<long?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<long?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("int64")]
-		public ServiceField<long?> Int64 { get; set; }
+		public ServiceNullable<long?> Int64 { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<decimal?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<decimal?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("decimal")]
-		public ServiceField<decimal?> Decimal { get; set; }
+		public ServiceNullable<decimal?> Decimal { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<byte[]?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<byte[]?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("bytes")]
-		public ServiceField<byte[]?> Bytes { get; set; }
+		public ServiceNullable<byte[]?> Bytes { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<ServiceObject?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<ServiceObject?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("object")]
-		public ServiceField<ServiceObject?> Object { get; set; }
+		public ServiceNullable<ServiceObject?> Object { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<ServiceErrorDto?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<ServiceErrorDto?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("error")]
-		public ServiceField<ServiceErrorDto?> Error { get; set; }
+		public ServiceNullable<ServiceErrorDto?> Error { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<AnyDto?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<AnyDto?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("data")]
-		public ServiceField<AnyDto?> Data { get; set; }
+		public ServiceNullable<AnyDto?> Data { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<Answer?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<Answer?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("enum")]
-		public ServiceField<Answer?> Enum { get; set; }
+		public ServiceNullable<Answer?> Enum { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<IReadOnlyList<int>?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<IReadOnlyList<int>?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("array")]
-		public ServiceField<IReadOnlyList<int>?> Array { get; set; }
+		public ServiceNullable<IReadOnlyList<int>?> Array { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<IReadOnlyDictionary<string, int>?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<IReadOnlyDictionary<string, int>?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("map")]
-		public ServiceField<IReadOnlyDictionary<string, int>?> Map { get; set; }
+		public ServiceNullable<IReadOnlyDictionary<string, int>?> Map { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceFieldDefaultValueAttribute(typeof(ServiceField<ServiceResult<int>?>))]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<ServiceResult<int>?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("result")]
-		public ServiceField<ServiceResult<int>?> Result { get; set; }
+		public ServiceNullable<ServiceResult<int>?> Result { get; set; }
 
 		/// <summary>
 		/// Returns the DTO as JSON.

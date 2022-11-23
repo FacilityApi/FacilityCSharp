@@ -5,9 +5,9 @@ using NUnit.Framework;
 namespace Facility.Core.UnitTests;
 
 [TestFixtureSource(nameof(JsonServiceSerializers))]
-public class ServiceFieldJsonTests : JsonServiceSerializerTestsBase
+public class ServiceNullableJsonTests : JsonServiceSerializerTestsBase
 {
-	public ServiceFieldJsonTests(JsonServiceSerializer jsonSerializer)
+	public ServiceNullableJsonTests(JsonServiceSerializer jsonSerializer)
 		: base(jsonSerializer)
 	{
 	}
@@ -15,27 +15,27 @@ public class ServiceFieldJsonTests : JsonServiceSerializerTestsBase
 	[Test]
 	public void DefaultJson()
 	{
-		var before = default(ServiceField<string?>);
+		var before = default(ServiceNullable<string?>);
 		Assert.Throws<InvalidOperationException>(() => JsonSerializer.ToJson(before));
 	}
 
 	[Test]
 	public void NullJson()
 	{
-		var before = new ServiceField<string?>(null);
+		var before = new ServiceNullable<string?>(null);
 		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("null");
-		var after = JsonSerializer.FromJson<ServiceField<string?>>(json);
+		var after = JsonSerializer.FromJson<ServiceNullable<string?>>(json);
 		after.Should().Be(before);
 	}
 
 	[Test]
 	public void NotNullJson()
 	{
-		var before = new ServiceField<string?>("42");
+		var before = new ServiceNullable<string?>("42");
 		var json = JsonSerializer.ToJson(before);
 		json.Should().Be("\"42\"");
-		var after = JsonSerializer.FromJson<ServiceField<string?>>(json);
+		var after = JsonSerializer.FromJson<ServiceNullable<string?>>(json);
 		after.Should().Be(before);
 	}
 

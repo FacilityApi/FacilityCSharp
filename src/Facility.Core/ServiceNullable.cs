@@ -3,16 +3,16 @@ using System.Diagnostics.CodeAnalysis;
 namespace Facility.Core;
 
 /// <summary>
-/// Wraps a service field to distinguish default (i.e. unspecified/undefined/missing) from null.
+/// Used to distinguish default (i.e. unspecified/undefined/missing) from null.
 /// </summary>
-[Newtonsoft.Json.JsonConverter(typeof(ServiceFieldNewtonsoftJsonConverter))]
-[System.Text.Json.Serialization.JsonConverter(typeof(ServiceFieldSystemTextJsonConverter))]
-public readonly struct ServiceField<T> : IEquatable<ServiceField<T>>, IServiceField
+[Newtonsoft.Json.JsonConverter(typeof(ServiceNullableNewtonsoftJsonConverter))]
+[System.Text.Json.Serialization.JsonConverter(typeof(ServiceNullableSystemTextJsonConverter))]
+public readonly struct ServiceNullable<T> : IEquatable<ServiceNullable<T>>, IServiceNullable
 {
 	/// <summary>
 	/// Creates a non-default instance.
 	/// </summary>
-	public ServiceField(T? value)
+	public ServiceNullable(T? value)
 	{
 		m_value = value;
 		m_hasValue = true;
@@ -22,7 +22,7 @@ public readonly struct ServiceField<T> : IEquatable<ServiceField<T>>, IServiceFi
 	/// Implicitly creates a non-default instance from a (possibly null) value.
 	/// </summary>
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Use constructor.")]
-	public static implicit operator ServiceField<T>(T? value) => new(value);
+	public static implicit operator ServiceNullable<T>(T? value) => new(value);
 
 	/// <summary>
 	/// True if this instance is default (i.e. unspecified/undefined/missing).
@@ -44,13 +44,13 @@ public readonly struct ServiceField<T> : IEquatable<ServiceField<T>>, IServiceFi
 	/// <summary>
 	/// Indicates whether the current object is equal to another object of the same type.
 	/// </summary>
-	public bool Equals(ServiceField<T> other) =>
+	public bool Equals(ServiceNullable<T> other) =>
 		(m_hasValue && other.m_hasValue) ? ServiceDataUtility.AreEquivalentFieldValues(m_value, other.m_value) : (m_hasValue == other.m_hasValue);
 
 	/// <summary>
 	/// Indicates whether the current object is equal to another object of the same type.
 	/// </summary>
-	public override bool Equals(object? obj) => obj is ServiceField<T> other && Equals(other);
+	public override bool Equals(object? obj) => obj is ServiceNullable<T> other && Equals(other);
 
 	/// <summary>
 	/// Retrieves the hash code of the object.
@@ -65,14 +65,14 @@ public readonly struct ServiceField<T> : IEquatable<ServiceField<T>>, IServiceFi
 	/// <summary>
 	/// Compares two instances for equality.
 	/// </summary>
-	public static bool operator ==(ServiceField<T> left, ServiceField<T> right) => left.Equals(right);
+	public static bool operator ==(ServiceNullable<T> left, ServiceNullable<T> right) => left.Equals(right);
 
 	/// <summary>
 	/// Compares two instances for inequality.
 	/// </summary>
-	public static bool operator !=(ServiceField<T> left, ServiceField<T> right) => !left.Equals(right);
+	public static bool operator !=(ServiceNullable<T> left, ServiceNullable<T> right) => !left.Equals(right);
 
-	object? IServiceField.Value => Value;
+	object? IServiceNullable.Value => Value;
 
 	private readonly T? m_value;
 	private readonly bool m_hasValue;

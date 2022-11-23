@@ -5,13 +5,13 @@ namespace Facility.Core;
 /// <summary>
 /// Sets the <c>DefaultValue</c> to <c>new T()</c> for the specified type.
 /// </summary>
-public sealed class ServiceFieldDefaultValueAttribute : DefaultValueAttribute
+public sealed class ServiceNullableDefaultValueAttribute : DefaultValueAttribute
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ServiceFieldDefaultValueAttribute"/> class.
+	/// Initializes a new instance of the <see cref="ServiceNullableDefaultValueAttribute"/> class.
 	/// </summary>
 	/// <param name="type">The type.</param>
-	public ServiceFieldDefaultValueAttribute(Type type)
+	public ServiceNullableDefaultValueAttribute(Type type)
 		: base(Activator.CreateInstance(type))
 	{
 		Type = type;

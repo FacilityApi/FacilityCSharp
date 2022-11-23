@@ -15,9 +15,9 @@ public class TestDto : ServiceDto<TestDto>
 	public IReadOnlyList<TestDto>? Children { get; set; }
 
 	[Key(3)]
-	[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include), ServiceFieldDefaultValue(typeof(ServiceField<bool?>))]
+	[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include), ServiceNullableDefaultValue(typeof(ServiceNullable<bool?>))]
 	[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-	public ServiceField<bool?> Ternary { get; set; }
+	public ServiceNullable<bool?> Ternary { get; set; }
 
 	public override bool IsEquivalentTo(TestDto? other)
 	{

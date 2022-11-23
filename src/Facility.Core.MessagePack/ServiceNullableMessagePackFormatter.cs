@@ -3,9 +3,9 @@ using MessagePack.Formatters;
 
 namespace Facility.Core.MessagePack;
 
-public sealed class ServiceFieldMessagePackFormatter<T> : IMessagePackFormatter<ServiceField<T>>
+public sealed class ServiceNullableMessagePackFormatter<T> : IMessagePackFormatter<ServiceNullable<T>>
 {
-	public void Serialize(ref MessagePackWriter writer, ServiceField<T> value, MessagePackSerializerOptions options)
+	public void Serialize(ref MessagePackWriter writer, ServiceNullable<T> value, MessagePackSerializerOptions options)
 	{
 		if (value.IsDefault)
 		{
@@ -18,7 +18,7 @@ public sealed class ServiceFieldMessagePackFormatter<T> : IMessagePackFormatter<
 		options.Resolver.GetFormatterWithVerify<T?>().Serialize(ref writer, value.Value, options);
 	}
 
-	public ServiceField<T> Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+	public ServiceNullable<T> Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 	{
 		if (reader.TryReadNil())
 			return default;

@@ -1285,7 +1285,7 @@ public sealed class CSharpGenerator : CodeGenerator
 
 				if (isNullable)
 				{
-					code.WriteLine($"[ServiceFieldDefaultValueAttribute(typeof({fieldTypeForProperty}))]");
+					code.WriteLine($"[ServiceNullableDefaultValueAttribute(typeof({fieldTypeForProperty}))]");
 					code.WriteLine("[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]");
 				}
 
@@ -1451,7 +1451,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		if (fieldType.Kind == ServiceTypeKind.Nullable)
 		{
 			var (text, isValueType) = RenderFieldType(fieldType.ValueType!, context);
-			return $"ServiceField<{text}{(isValueType || UseNullableReferences ? "?" : "")}>";
+			return $"ServiceNullable<{text}{(isValueType || UseNullableReferences ? "?" : "")}>";
 		}
 		else
 		{

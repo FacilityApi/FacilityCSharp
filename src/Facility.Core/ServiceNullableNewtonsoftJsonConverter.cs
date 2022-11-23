@@ -3,15 +3,15 @@ using Newtonsoft.Json;
 namespace Facility.Core;
 
 /// <summary>
-/// Used by Json.NET to convert <see cref="ServiceObject" />.
+/// Used by Json.NET to convert <see cref="ServiceNullable{T}" />.
 /// </summary>
-public sealed class ServiceFieldNewtonsoftJsonConverter : JsonConverter
+public sealed class ServiceNullableNewtonsoftJsonConverter : JsonConverter
 {
 	/// <summary>
 	/// Implements CanConvert.
 	/// </summary>
 	public override bool CanConvert(Type objectType) =>
-		objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(ServiceField<>);
+		objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(ServiceNullable<>);
 
 	/// <summary>
 	/// Implements ReadJson.
@@ -28,14 +28,14 @@ public sealed class ServiceFieldNewtonsoftJsonConverter : JsonConverter
 	/// </summary>
 	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 	{
-		var optional = (IServiceField) value!;
+		var optional = (IServiceNullable) value!;
 		if (optional.IsDefault)
 		{
-			throw new InvalidOperationException("Service field must not be default. " +
+			throw new InvalidOperationException("ServiceNullable must not be default. " +
 				"Properties should include these attributes: " +
 				"[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, " +
 				"NullValueHandling = NullValueHandling.Include), " +
-				"ServiceFieldDefaultValue(typeof(ServiceField<...>))]");
+				"ServiceNullableDefaultValue(typeof(ServiceNullable<...>))]");
 		}
 
 		serializer.Serialize(writer, optional.Value);
