@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.17.0-beta.2
+## 2.17.0
 
 * Support nullable fields.
 
