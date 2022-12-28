@@ -20,6 +20,7 @@ public sealed class AnyDto : ServiceDto<AnyDto>
 | [Int32](AnyDto/Int32.md) { get; set; } |  |
 | [Int64](AnyDto/Int64.md) { get; set; } |  |
 | [Map](AnyDto/Map.md) { get; set; } |  |
+| [Nullable](AnyDto/Nullable.md) { get; set; } |  |
 | [Object](AnyDto/Object.md) { get; set; } |  |
 | [Result](AnyDto/Result.md) { get; set; } |  |
 | [String](AnyDto/String.md) { get; set; } |  |

@@ -21,6 +21,11 @@
 | abstract class [ServiceJsonConverterBase&lt;T&gt;](./Facility.Core/ServiceJsonConverterBase-1.md) | Base class for simple JSON converters. |
 | static class [ServiceJsonUtility](./Facility.Core/ServiceJsonUtility.md) | Helper methods for working with Json.NET. |
 | static class [ServiceMethodInfo](./Facility.Core/ServiceMethodInfo.md) | Helpers for service method information. |
+| struct [ServiceNullable&lt;T&gt;](./Facility.Core/ServiceNullable-1.md) | Used to distinguish unspecified from null. |
+| class [ServiceNullableDefaultValueAttribute](./Facility.Core/ServiceNullableDefaultValueAttribute.md) | Sets the `DefaultValue` to `new T()` for the specified type. |
+| class [ServiceNullableNewtonsoftJsonConverter](./Facility.Core/ServiceNullableNewtonsoftJsonConverter.md) | Used by Json.NET to convert [`ServiceNullable`](./Facility.Core/ServiceNullable-1.md). |
+| class [ServiceNullableSystemTextJsonConverter&lt;T&gt;](./Facility.Core/ServiceNullableSystemTextJsonConverter-1.md) | Used by `System.Text.Json` to convert [`ServiceNullable`](./Facility.Core/ServiceNullable-1.md). |
+| class [ServiceNullableSystemTextJsonConverter](./Facility.Core/ServiceNullableSystemTextJsonConverter.md) | Used by `System.Text.Json` to convert [`ServiceNullable`](./Facility.Core/ServiceNullable-1.md). |
 | class [ServiceObject](./Facility.Core/ServiceObject.md) | Encapsulates a JSON object. |
 | class [ServiceObjectNewtonsoftJsonConverter](./Facility.Core/ServiceObjectNewtonsoftJsonConverter.md) | Used by Json.NET to convert [`ServiceObject`](./Facility.Core/ServiceObject.md). |
 | class [ServiceObjectSystemTextJsonConverter](./Facility.Core/ServiceObjectSystemTextJsonConverter.md) | Used by `System.Text.Json` to convert [`ServiceObject`](./Facility.Core/ServiceObject.md). |

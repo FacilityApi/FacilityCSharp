@@ -8,6 +8,7 @@
 | class [AnyArrayDto](./Facility.ConformanceApi/AnyArrayDto.md) |  |
 | class [AnyDto](./Facility.ConformanceApi/AnyDto.md) |  |
 | class [AnyMapDto](./Facility.ConformanceApi/AnyMapDto.md) |  |
+| class [AnyNullableDto](./Facility.ConformanceApi/AnyNullableDto.md) |  |
 | class [AnyResultDto](./Facility.ConformanceApi/AnyResultDto.md) |  |
 | static class [ApiErrors](./Facility.ConformanceApi/ApiErrors.md) | Custom errors. |
 | class [BodyTypesRequestDto](./Facility.ConformanceApi/BodyTypesRequestDto.md) | Request for BodyTypes. |
