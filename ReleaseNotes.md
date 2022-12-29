@@ -21,6 +21,7 @@
 ## 2.16.0
 
 * Support [MessagePack](https://github.com/neuecc/MessagePack-CSharp) for serialization.
+  * To use faster/smaller indexed keys, add `[msgpack(key: 0)]`, `[msgpack(key: 1)]`, etc. to the data fields in your FSD.
   * Use `--msgpack` with `fsdgencsharp` to generate MessagePack-compatible DTOs.
   * Reference the `Facility.Core.MessagePack` NuGet package in your client and/or service.
   * For clients, set `HttpClientServiceSettings.ContentSerializer` to `MessagePackServiceSerializer.Instance` to send and receive MessagePack (rather than JSON) by specifying `application/msgpack` in the `Content-Type` and `Accept` headers.
