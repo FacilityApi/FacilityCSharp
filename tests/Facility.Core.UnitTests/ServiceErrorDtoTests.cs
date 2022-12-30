@@ -9,7 +9,7 @@ public class ServiceErrorDtoTests
 	[Test]
 	public void ToStringUsesJson()
 	{
-		s_error.ToString().Should().Be(@"{""code"":""Test"",""message"":""Message."",""details"":{""Some"":""details.""},""innerError"":{""code"":""Inner""}}");
+		s_error.ToString().Should().Be("""{"code":"Test","message":"Message.","details":{"Some":"details."},"innerError":{"code":"Inner"}}""");
 	}
 
 	[Test]

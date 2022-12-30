@@ -15,7 +15,7 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 	public void ToStringUsesJson()
 	{
 		var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } }, Ternary = null };
-		var json = @"{""id"":3,""name"":""Three"",""children"":[{""name"":""child""}],""ternary"":null}";
+		var json = """{"id":3,"name":"Three","children":[{"name":"child"}],"ternary":null}""";
 		dto.ToString().Should().Be(json);
 
 		if (Serializer is JsonServiceSerializer jsonSerializer)

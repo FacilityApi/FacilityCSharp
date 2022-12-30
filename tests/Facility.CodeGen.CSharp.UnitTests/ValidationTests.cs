@@ -58,7 +58,7 @@ public class ValidationTests
 	[Test]
 	public void GeneratesStringPattern()
 	{
-		var definition = @"[csharp] service TestApi { method do { [validate(regex: ""^[0-9]{4}$"")] pin: string; }: {} }";
+		var definition = """[csharp] service TestApi { method do { [validate(regex: "^[0-9]{4}$")] pin: string; }: {} }""";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
 		StringAssert.Contains("using System.Text.RegularExpressions;", requestDtoFile.Text);

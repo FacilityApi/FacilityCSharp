@@ -127,7 +127,7 @@ public sealed class ServiceJsonUtilityTests
 	public void ServiceObjects([Values] bool legacy)
 	{
 		var so = legacy ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
-		var json = @"{""foo"":""bar""}";
+		var json = """{"foo":"bar"}""";
 
 		ServiceJsonUtility.ToJson(so).Should().Be(json);
 		ServiceJsonUtility.FromJson<ServiceObject>(json).IsEquivalentTo(so).Should().BeTrue();

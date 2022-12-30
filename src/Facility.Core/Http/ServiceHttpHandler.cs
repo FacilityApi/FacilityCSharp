@@ -331,7 +331,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		m_contentSerializer;
 
 	private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
-	private static readonly Regex s_regexPathParameterRegex = new(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
+	private static readonly Regex s_regexPathParameterRegex = new("""\{([a-zA-Z][a-zA-Z0-9]*)\}""", RegexOptions.CultureInvariant);
 
 	private readonly string m_rootPath;
 	private readonly bool m_synchronous;

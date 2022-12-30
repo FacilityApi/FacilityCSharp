@@ -41,7 +41,7 @@ public sealed class ServiceObjectTests
 		else
 			so.AsJsonObject()["foo"] = "buz";
 
-		so.ToString().Should().Be(@"{""foo"":""buz""}");
+		so.ToString().Should().Be("""{"foo":"buz"}""");
 	}
 
 	[Test]
@@ -59,6 +59,6 @@ public sealed class ServiceObjectTests
 		else
 			so.ToJsonObject()["foo"] = "baz";
 
-		so.ToString().Should().Be(@"{""foo"":""bar""}");
+		so.ToString().Should().Be("""{"foo":"bar"}""");
 	}
 }
