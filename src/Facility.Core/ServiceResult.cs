@@ -125,7 +125,7 @@ public class ServiceResult
 		/// <summary>
 		/// Reads the JSON representation of the object.
 		/// </summary>
-		public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.Null)
 				return null;
@@ -139,7 +139,7 @@ public class ServiceResult
 
 			while (reader.TokenType == JsonToken.PropertyName)
 			{
-				var propertyName = (string) reader.Value;
+				var propertyName = (string) reader.Value!;
 				ReadOrThrow(reader);
 
 				if (string.Equals(propertyName, c_valuePropertyName, StringComparison.OrdinalIgnoreCase))
@@ -181,9 +181,9 @@ public class ServiceResult
 		/// <summary>
 		/// Writes the JSON representation of the object.
 		/// </summary>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		{
-			var serviceResult = (ServiceResult) value;
+			var serviceResult = (ServiceResult) value!;
 			var valueType = serviceResult.InternalValueType;
 
 			writer.WriteStartObject();

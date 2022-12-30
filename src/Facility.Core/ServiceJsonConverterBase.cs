@@ -21,7 +21,7 @@ public abstract class ServiceJsonConverterBase<T> : JsonConverter
 	/// <summary>
 	/// Implements ReadJson.
 	/// </summary>
-	public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+	public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 	{
 		if (reader.TokenType == JsonToken.Null)
 		{
@@ -36,7 +36,7 @@ public abstract class ServiceJsonConverterBase<T> : JsonConverter
 	/// <summary>
 	/// Implements WriteJson.
 	/// </summary>
-	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => WriteCore(writer, (T) value, serializer);
+	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) => WriteCore(writer, (T) value!, serializer);
 
 	/// <summary>
 	/// Reads the JSON representation of the value.

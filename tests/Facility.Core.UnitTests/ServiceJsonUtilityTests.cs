@@ -20,7 +20,7 @@ public sealed class ServiceJsonUtilityTests
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
-		token["booleanValue"].Type.Should().Be(JTokenType.Boolean);
+		token["booleanValue"]!.Type.Should().Be(JTokenType.Boolean);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
 	}
 
@@ -34,7 +34,7 @@ public sealed class ServiceJsonUtilityTests
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
-		token["booleanMapValue"].Type.Should().Be(JTokenType.Object);
+		token["booleanMapValue"]!.Type.Should().Be(JTokenType.Object);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
 	}
 
@@ -48,7 +48,7 @@ public sealed class ServiceJsonUtilityTests
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
-		token["stringValue"].Type.Should().Be(JTokenType.String);
+		token["stringValue"]!.Type.Should().Be(JTokenType.String);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
 	}
 
@@ -98,7 +98,7 @@ public sealed class ServiceJsonUtilityTests
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
-		token["errorArrayValue"].Type.Should().Be(JTokenType.Array);
+		token["errorArrayValue"]!.Type.Should().Be(JTokenType.Array);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
 	}
 
@@ -119,7 +119,7 @@ public sealed class ServiceJsonUtilityTests
 		ServiceJsonUtility.FromJson<ValueDto>(json).Should().BeDto(dto);
 
 		var token = ServiceJsonUtility.FromJson<JToken>(json);
-		token["errorMapValue"].Type.Should().Be(JTokenType.Object);
+		token["errorMapValue"]!.Type.Should().Be(JTokenType.Object);
 		ServiceJsonUtility.ToJson(token).Should().Be(json);
 	}
 

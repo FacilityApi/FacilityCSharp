@@ -20,7 +20,7 @@ public abstract class ServiceEnumJsonConverter<T> : ServiceJsonConverterBase<T>
 		if (reader.TokenType != JsonToken.String)
 			throw new JsonSerializationException($"Expected string for {typeof(T).Name}; got {reader.TokenType}.");
 
-		return CreateCore((string) reader.Value);
+		return CreateCore((string) reader.Value!);
 	}
 
 	/// <summary>

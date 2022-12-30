@@ -27,7 +27,7 @@ public sealed class ServiceObjectTests
 		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 
 		if (legacy2)
-			so.AsJObject()["foo"].Value<string>().Should().Be("bar");
+			so.AsJObject()["foo"]!.Value<string>().Should().Be("bar");
 		else
 			so.AsJsonObject()["foo"]!.GetValue<string>().Should().Be("bar");
 
@@ -50,7 +50,7 @@ public sealed class ServiceObjectTests
 		var so = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 
 		if (legacy2)
-			so.ToJObject()["foo"].Value<string>().Should().Be("bar");
+			so.ToJObject()["foo"]!.Value<string>().Should().Be("bar");
 		else
 			so.ToJsonObject()["foo"]!.GetValue<string>().Should().Be("bar");
 
