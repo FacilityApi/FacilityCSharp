@@ -124,6 +124,51 @@ public sealed class CSharpGeneratorTests
 		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
 	}
 
+	[Test]
+	public void GenerateExternalEnumPropertyWithNamespace()
+	{
+		const string definition = "[csharp] service TestApi { [csharp(type: \"ExternSomeEnum\", namespace: \"Some.Name.Space\")] externenum SomeEnum; data Test { thing: SomeEnum; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public Some.Name.Space.ExternSomeEnum? Thing { get; set; }", file.Text);
+		StringAssert.Contains("Thing == other.Thing", file.Text);
+	}
+
+	[Test]
+	public void GenerateExternalEnumPropertyWithoutNamespace()
+	{
+		const string definition = "[csharp] service TestApi { [csharp(type: \"ExternSomeEnum\")] externenum SomeEnum; data Test { thing: SomeEnum; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public ExternSomeEnum? Thing { get; set; }", file.Text);
+		StringAssert.Contains("Thing == other.Thing", file.Text);
+	}
+
+	[Test]
+	public void GenerateExternalEnumPropertyWithoutTypeName()
+	{
+		const string definition = "[csharp] service TestApi { externenum SomeEnum; data Test { thing: SomeEnum; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public SomeEnum? Thing { get; set; }", file.Text);
+		StringAssert.Contains("Thing == other.Thing", file.Text);
+	}
+
 	private void ThrowsServiceDefinitionException(string definition, string message)
 	{
 		var parser = new FsdParser();

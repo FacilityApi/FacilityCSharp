@@ -92,6 +92,17 @@ public sealed class CSharpServiceInfo
 		return $"{typeNamespace}{typeName}";
 	}
 
+	internal string GetExternalEnumName(ServiceExternalEnumInfo info)
+	{
+		var attribute = info.TryGetAttribute("csharp");
+		var typeName = attribute?.TryGetParameterValue("type") ?? FixName(info.Name);
+		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
+		if (!string.IsNullOrEmpty(typeNamespace))
+			typeNamespace += ".";
+
+		return $"{typeNamespace}{typeName}";
+	}
+
 	private string FixName(string name) =>
 		m_fixSnakeCase && name.ContainsOrdinal('_') ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
 
@@ -121,7 +132,7 @@ public sealed class CSharpServiceInfo
 							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 					}
 				}
-				else if (descendant is ServiceExternalDtoInfo)
+				else if (descendant is ServiceExternalDtoInfo or ServiceExternalEnumInfo)
 				{
 					var allowed = new HashSet<string> { "namespace", "type" };
 					foreach (var parameter in csharpAttribute.Parameters)
@@ -171,6 +182,10 @@ public sealed class CSharpServiceInfo
 			else if (member is ServiceExternalDtoInfo externalDto)
 			{
 				CheckTypeName(GetExternalDtoName(externalDto), externalDto.Position);
+			}
+			else if (member is ServiceExternalEnumInfo externalEnum)
+			{
+				CheckTypeName(GetExternalEnumName(externalEnum), externalEnum.Position);
 			}
 			else
 			{

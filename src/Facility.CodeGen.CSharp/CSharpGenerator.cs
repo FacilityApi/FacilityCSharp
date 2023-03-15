@@ -1479,6 +1479,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			ServiceTypeKind.Dto => (csharpInfo.GetDtoName(fieldType.Dto!), false),
 			ServiceTypeKind.Enum => (csharpInfo.GetEnumName(fieldType.Enum!), true),
 			ServiceTypeKind.ExternalDto => (csharpInfo.GetExternalDtoName(fieldType.ExternalDto!), false),
+			ServiceTypeKind.ExternalEnum => (csharpInfo.GetExternalEnumName(fieldType.ExternalEnum!), true),
 			ServiceTypeKind.Result => ($"ServiceResult<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Array => ($"IReadOnlyList<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Map => ($"IReadOnlyDictionary<string, {RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
