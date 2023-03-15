@@ -79,6 +79,51 @@ public sealed class CSharpGeneratorTests
 		StringAssert.Contains("public const string Maybe = \"maybe\";", file.Text);
 	}
 
+	[Test]
+	public void GenerateExternalDtoPropertyWithNamespace()
+	{
+		const string definition = "[csharp] service TestApi { [csharp(type: \"ExternThingDto\", namespace: \"Some.Name.Space\")] externdata Thing; data Test { thing: Thing; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public Some.Name.Space.ExternThingDto Thing { get; set; }", file.Text);
+		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+	}
+
+	[Test]
+	public void GenerateExternalDtoPropertyWithoutNamespace()
+	{
+		const string definition = "[csharp] service TestApi { [csharp(type: \"ExternThingDto\")] externdata Thing; data Test { thing: Thing; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public ExternThingDto Thing { get; set; }", file.Text);
+		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+	}
+
+	[Test]
+	public void GenerateExternalDtoPropertyWithoutTypeName()
+	{
+		const string definition = "[csharp] service TestApi { externdata Thing; data Test { thing: Thing; } }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+
+		var output = generator.GenerateOutput(service);
+
+		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
+		StringAssert.Contains("public ThingDto Thing { get; set; }", file.Text);
+		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+	}
+
 	private void ThrowsServiceDefinitionException(string definition, string message)
 	{
 		var parser = new FsdParser();

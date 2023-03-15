@@ -1230,6 +1230,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				return "AreEquivalentObjects";
 			case ServiceTypeKind.Error:
 			case ServiceTypeKind.Dto:
+			case ServiceTypeKind.ExternalDto:
 				return "AreEquivalentDtos";
 			case ServiceTypeKind.Result:
 				return "AreEquivalentResults";
@@ -1477,6 +1478,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			ServiceTypeKind.Error => ("ServiceErrorDto", false),
 			ServiceTypeKind.Dto => (csharpInfo.GetDtoName(fieldType.Dto!), false),
 			ServiceTypeKind.Enum => (csharpInfo.GetEnumName(fieldType.Enum!), true),
+			ServiceTypeKind.ExternalDto => (csharpInfo.GetExternalDtoName(fieldType.ExternalDto!), false),
 			ServiceTypeKind.Result => ($"ServiceResult<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Array => ($"IReadOnlyList<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Map => ($"IReadOnlyDictionary<string, {RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),

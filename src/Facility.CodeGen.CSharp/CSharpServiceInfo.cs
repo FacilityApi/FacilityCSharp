@@ -81,6 +81,17 @@ public sealed class CSharpServiceInfo
 
 	internal string GetErrorName(ServiceErrorInfo errorInfo) => FixName(errorInfo.Name);
 
+	internal string GetExternalDtoName(ServiceExternalDtoInfo info)
+	{
+		var attribute = info.TryGetAttribute("csharp");
+		var typeName = attribute?.TryGetParameterValue("type") ?? $"{FixName(info.Name)}Dto";
+		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
+		if (!string.IsNullOrEmpty(typeNamespace))
+			typeNamespace += ".";
+
+		return $"{typeNamespace}{typeName}";
+	}
+
 	private string FixName(string name) =>
 		m_fixSnakeCase && name.ContainsOrdinal('_') ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
 
@@ -107,6 +118,15 @@ public sealed class CSharpServiceInfo
 						else if (parameter.Name == "name" && descendant is ServiceFieldInfo field)
 							m_fieldPropertyNames[field] = parameter.Value;
 						else
+							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
+					}
+				}
+				else if (descendant is ServiceExternalDtoInfo)
+				{
+					var allowed = new HashSet<string> { "namespace", "type" };
+					foreach (var parameter in csharpAttribute.Parameters)
+					{
+						if (!allowed.Contains(parameter.Name))
 							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 					}
 				}
@@ -147,6 +167,10 @@ public sealed class CSharpServiceInfo
 			else if (member is ServiceErrorSetInfo errorSet)
 			{
 				CheckTypeName(GetErrorSetName(errorSet), errorSet.Position);
+			}
+			else if (member is ServiceExternalDtoInfo externalDto)
+			{
+				CheckTypeName(GetExternalDtoName(externalDto), externalDto.Position);
 			}
 			else
 			{
