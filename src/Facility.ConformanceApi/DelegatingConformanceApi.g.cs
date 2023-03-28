@@ -57,6 +57,36 @@ namespace Facility.ConformanceApi
 		public virtual async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(ConformanceApiMethods.GetWidgetBatch, request, cancellationToken).ConfigureAwait(false)).Cast<GetWidgetBatchResponseDto>();
 
+		/// <summary>
+		/// Gets external widgets.
+		/// </summary>
+		public virtual async Task<ServiceResult<GetExternalWidgetsResponseDto>> GetExternalWidgetsAsync(GetExternalWidgetsRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.GetExternalWidgets, request, cancellationToken).ConfigureAwait(false)).Cast<GetExternalWidgetsResponseDto>();
+
+		/// <summary>
+		/// Creates a new external widget.
+		/// </summary>
+		public virtual async Task<ServiceResult<CreateExternalWidgetResponseDto>> CreateExternalWidgetAsync(CreateExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.CreateExternalWidget, request, cancellationToken).ConfigureAwait(false)).Cast<CreateExternalWidgetResponseDto>();
+
+		/// <summary>
+		/// Gets the specified external widget.
+		/// </summary>
+		public virtual async Task<ServiceResult<GetExternalWidgetResponseDto>> GetExternalWidgetAsync(GetExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.GetExternalWidget, request, cancellationToken).ConfigureAwait(false)).Cast<GetExternalWidgetResponseDto>();
+
+		/// <summary>
+		/// Deletes the specified external widget.
+		/// </summary>
+		public virtual async Task<ServiceResult<DeleteExternalWidgetResponseDto>> DeleteExternalWidgetAsync(DeleteExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.DeleteExternalWidget, request, cancellationToken).ConfigureAwait(false)).Cast<DeleteExternalWidgetResponseDto>();
+
+		/// <summary>
+		/// Gets the specified external widgets.
+		/// </summary>
+		public virtual async Task<ServiceResult<GetExternalWidgetBatchResponseDto>> GetExternalWidgetBatchAsync(GetExternalWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_delegator(ConformanceApiMethods.GetExternalWidgetBatch, request, cancellationToken).ConfigureAwait(false)).Cast<GetExternalWidgetBatchResponseDto>();
+
 		public virtual async Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_delegator(ConformanceApiMethods.MirrorFields, request, cancellationToken).ConfigureAwait(false)).Cast<MirrorFieldsResponseDto>();
 

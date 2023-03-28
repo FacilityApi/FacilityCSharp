@@ -53,6 +53,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("enum")]
 		public ServiceResult<Answer>? Enum { get; set; }
 
+		[MessagePack.Key("externEnum")]
+		public ServiceResult<Facility.ConformanceApi.External.TestExternalEnum>? ExternEnum { get; set; }
+
 		[MessagePack.Key("array")]
 		public ServiceResult<IReadOnlyList<int>>? Array { get; set; }
 
@@ -87,6 +90,7 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentResults(Error, other.Error) &&
 				ServiceDataUtility.AreEquivalentResults(Data, other.Data) &&
 				ServiceDataUtility.AreEquivalentResults(Enum, other.Enum) &&
+				ServiceDataUtility.AreEquivalentResults(ExternEnum, other.ExternEnum) &&
 				ServiceDataUtility.AreEquivalentResults(Array, other.Array) &&
 				ServiceDataUtility.AreEquivalentResults(Map, other.Map) &&
 				ServiceDataUtility.AreEquivalentResults(Result, other.Result) &&

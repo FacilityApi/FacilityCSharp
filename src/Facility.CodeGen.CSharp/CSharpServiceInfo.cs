@@ -84,7 +84,7 @@ public sealed class CSharpServiceInfo
 	internal string GetExternalDtoName(ServiceExternalDtoInfo info)
 	{
 		var attribute = info.TryGetAttribute("csharp");
-		var typeName = attribute?.TryGetParameterValue("type") ?? $"{FixName(info.Name)}Dto";
+		var typeName = attribute?.TryGetParameterValue("name") ?? $"{FixName(info.Name)}Dto";
 		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
 		if (!string.IsNullOrEmpty(typeNamespace))
 			typeNamespace += ".";
@@ -95,7 +95,7 @@ public sealed class CSharpServiceInfo
 	internal string GetExternalEnumName(ServiceExternalEnumInfo info)
 	{
 		var attribute = info.TryGetAttribute("csharp");
-		var typeName = attribute?.TryGetParameterValue("type") ?? FixName(info.Name);
+		var typeName = attribute?.TryGetParameterValue("name") ?? FixName(info.Name);
 		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
 		if (!string.IsNullOrEmpty(typeNamespace))
 			typeNamespace += ".";
@@ -134,7 +134,7 @@ public sealed class CSharpServiceInfo
 				}
 				else if (descendant is ServiceExternalDtoInfo or ServiceExternalEnumInfo)
 				{
-					var allowed = new HashSet<string> { "namespace", "type" };
+					var allowed = new HashSet<string> { "namespace", "name" };
 					foreach (var parameter in csharpAttribute.Parameters)
 					{
 						if (!allowed.Contains(parameter.Name))

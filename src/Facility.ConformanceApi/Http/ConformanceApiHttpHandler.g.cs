@@ -45,6 +45,11 @@ namespace Facility.ConformanceApi.Http
 				await AdaptTask(TryHandleBodyTypesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckPathAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckQueryAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetExternalWidgetsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleCreateExternalWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetExternalWidgetBatchAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleGetExternalWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleDeleteExternalWidgetAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorBytesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -93,6 +98,36 @@ namespace Facility.ConformanceApi.Http
 		/// </summary>
 		public Task<HttpResponseMessage?> TryHandleGetWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, httpRequest, GetService(httpRequest).GetWidgetBatchAsync, cancellationToken);
+
+		/// <summary>
+		/// Gets external widgets.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleGetExternalWidgetsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetExternalWidgetsMapping, httpRequest, GetService(httpRequest).GetExternalWidgetsAsync, cancellationToken);
+
+		/// <summary>
+		/// Creates a new external widget.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleCreateExternalWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.CreateExternalWidgetMapping, httpRequest, GetService(httpRequest).CreateExternalWidgetAsync, cancellationToken);
+
+		/// <summary>
+		/// Gets the specified external widget.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleGetExternalWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetExternalWidgetMapping, httpRequest, GetService(httpRequest).GetExternalWidgetAsync, cancellationToken);
+
+		/// <summary>
+		/// Deletes the specified external widget.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleDeleteExternalWidgetAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.DeleteExternalWidgetMapping, httpRequest, GetService(httpRequest).DeleteExternalWidgetAsync, cancellationToken);
+
+		/// <summary>
+		/// Gets the specified external widgets.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleGetExternalWidgetBatchAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.GetExternalWidgetBatchMapping, httpRequest, GetService(httpRequest).GetExternalWidgetBatchAsync, cancellationToken);
 
 		public Task<HttpResponseMessage?> TryHandleMirrorFieldsAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, httpRequest, GetService(httpRequest).MirrorFieldsAsync, cancellationToken);

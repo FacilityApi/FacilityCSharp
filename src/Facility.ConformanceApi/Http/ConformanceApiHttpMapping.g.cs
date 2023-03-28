@@ -264,6 +264,232 @@ namespace Facility.ConformanceApi.Http
 				},
 			}.Build();
 
+		/// <summary>
+		/// Gets external widgets.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetExternalWidgetsRequestDto, GetExternalWidgetsResponseDto> GetExternalWidgetsMapping =
+			new HttpMethodMapping<GetExternalWidgetsRequestDto, GetExternalWidgetsResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/externalWidgets",
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "q", request.Query },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("q", out var queryParameterQuery);
+					request.Query = queryParameterQuery;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetExternalWidgetsResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(GetExternalWidgetsResponseDto),
+					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
+		/// Creates a new external widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<CreateExternalWidgetRequestDto, CreateExternalWidgetResponseDto> CreateExternalWidgetMapping =
+			new HttpMethodMapping<CreateExternalWidgetRequestDto, CreateExternalWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/externalWidgets",
+				ValidateRequest = request =>
+				{
+					if (request.ExternalWidget == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("externalWidget"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(Facility.ConformanceApi.External.TestExternalDto),
+				GetRequestBody = request => request.ExternalWidget,
+				CreateRequest = body => new CreateExternalWidgetRequestDto { ExternalWidget = (Facility.ConformanceApi.External.TestExternalDto?) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<CreateExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 201,
+						ResponseBodyType = typeof(Facility.ConformanceApi.External.TestExternalDto),
+						MatchesResponse = response => response.ExternalWidget != null,
+						GetResponseBody = response => response.ExternalWidget,
+						CreateResponse = body => new CreateExternalWidgetResponseDto { ExternalWidget = (Facility.ConformanceApi.External.TestExternalDto?) body },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string?>
+					{
+						["Location"] = response.Url,
+						["eTag"] = response.ETag,
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					headers.TryGetValue("Location", out var headerUrl);
+					response.Url = headerUrl;
+					headers.TryGetValue("eTag", out var headerETag);
+					response.ETag = headerETag;
+					return response;
+				},
+			}.Build();
+
+		/// <summary>
+		/// Gets the specified external widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetExternalWidgetRequestDto, GetExternalWidgetResponseDto> GetExternalWidgetMapping =
+			new HttpMethodMapping<GetExternalWidgetRequestDto, GetExternalWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/externalWidgets/{id}",
+				ValidateRequest = request =>
+				{
+					if (request.Id == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("id"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("id", out var queryParameterId);
+					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
+					return request;
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string?>
+					{
+						["If-None-Match"] = request.IfNotETag,
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					headers.TryGetValue("If-None-Match", out var headerIfNotETag);
+					request.IfNotETag = headerIfNotETag;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(Facility.ConformanceApi.External.TestExternalDto),
+						MatchesResponse = response => response.ExternalWidget != null,
+						GetResponseBody = response => response.ExternalWidget,
+						CreateResponse = body => new GetExternalWidgetResponseDto { ExternalWidget = (Facility.ConformanceApi.External.TestExternalDto?) body },
+					}.Build(),
+					new HttpResponseMapping<GetExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 304,
+						MatchesResponse = response => response.NotModified.GetValueOrDefault(),
+						CreateResponse = body => new GetExternalWidgetResponseDto { NotModified = true },
+					}.Build(),
+				},
+				GetResponseHeaders = response =>
+					new Dictionary<string, string?>
+					{
+						["eTag"] = response.ETag,
+					},
+				SetResponseHeaders = (response, headers) =>
+				{
+					headers.TryGetValue("eTag", out var headerETag);
+					response.ETag = headerETag;
+					return response;
+				},
+			}.Build();
+
+		/// <summary>
+		/// Deletes the specified external widget.
+		/// </summary>
+		public static readonly HttpMethodMapping<DeleteExternalWidgetRequestDto, DeleteExternalWidgetResponseDto> DeleteExternalWidgetMapping =
+			new HttpMethodMapping<DeleteExternalWidgetRequestDto, DeleteExternalWidgetResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Delete,
+				Path = "/externalWidgets/{id}",
+				ValidateRequest = request =>
+				{
+					if (request.Id == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("id"));
+					return ServiceResult.Success();
+				},
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "id", request.Id == null ? null : request.Id.Value.ToString(CultureInfo.InvariantCulture) },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("id", out var queryParameterId);
+					request.Id = ServiceDataUtility.TryParseInt32(queryParameterId);
+					return request;
+				},
+				GetRequestHeaders = request =>
+					new Dictionary<string, string?>
+					{
+						["If-Match"] = request.IfETag,
+					},
+				SetRequestHeaders = (request, headers) =>
+				{
+					headers.TryGetValue("If-Match", out var headerIfETag);
+					request.IfETag = headerIfETag;
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<DeleteExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 204,
+					}.Build(),
+					new HttpResponseMapping<DeleteExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 404,
+						MatchesResponse = response => response.NotFound.GetValueOrDefault(),
+						CreateResponse = body => new DeleteExternalWidgetResponseDto { NotFound = true },
+					}.Build(),
+					new HttpResponseMapping<DeleteExternalWidgetResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 409,
+						MatchesResponse = response => response.Conflict.GetValueOrDefault(),
+						CreateResponse = body => new DeleteExternalWidgetResponseDto { Conflict = true },
+					}.Build(),
+				},
+			}.Build();
+
+		/// <summary>
+		/// Gets the specified external widgets.
+		/// </summary>
+		public static readonly HttpMethodMapping<GetExternalWidgetBatchRequestDto, GetExternalWidgetBatchResponseDto> GetExternalWidgetBatchMapping =
+			new HttpMethodMapping<GetExternalWidgetBatchRequestDto, GetExternalWidgetBatchResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/externalWidgets/get",
+				ValidateRequest = request =>
+				{
+					if (request.Ids == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("ids"));
+					return ServiceResult.Success();
+				},
+				RequestBodyType = typeof(IReadOnlyList<int>),
+				GetRequestBody = request => request.Ids,
+				CreateRequest = body => new GetExternalWidgetBatchRequestDto { Ids = (IReadOnlyList<int>?) body },
+				ResponseMappings =
+				{
+					new HttpResponseMapping<GetExternalWidgetBatchResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(IReadOnlyList<ServiceResult<Facility.ConformanceApi.External.TestExternalDto>>),
+						MatchesResponse = response => response.Results != null,
+						GetResponseBody = response => response.Results,
+						CreateResponse = body => new GetExternalWidgetBatchResponseDto { Results = (IReadOnlyList<ServiceResult<Facility.ConformanceApi.External.TestExternalDto>>?) body },
+					}.Build(),
+				},
+			}.Build();
+
 		public static readonly HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto> MirrorFieldsMapping =
 			new HttpMethodMapping<MirrorFieldsRequestDto, MirrorFieldsResponseDto>.Builder
 			{
@@ -295,6 +521,7 @@ namespace Facility.ConformanceApi.Http
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						{ "externEnum", request.ExternEnum == null ? null : request.ExternEnum.Value.ToString() },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
@@ -312,6 +539,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
 					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					parameters.TryGetValue("externEnum", out var queryParameterExternEnum);
+					request.ExternEnum = queryParameterExternEnum == null ? default(Facility.ConformanceApi.External.TestExternalEnum?) : new Facility.ConformanceApi.External.TestExternalEnum(queryParameterExternEnum);
 					return request;
 				},
 				ResponseMappings =
@@ -327,7 +556,7 @@ namespace Facility.ConformanceApi.Http
 			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Get,
-				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
+				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}/{externEnum}",
 				ValidateRequest = request =>
 				{
 					if (string.IsNullOrEmpty(request.String))
@@ -344,6 +573,8 @@ namespace Facility.ConformanceApi.Http
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("decimal"));
 					if (request.Enum == null)
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("enum"));
+					if (request.ExternEnum == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("externEnum"));
 					return ServiceResult.Success();
 				},
 				GetUriParameters = request =>
@@ -356,6 +587,7 @@ namespace Facility.ConformanceApi.Http
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						{ "externEnum", request.ExternEnum == null ? null : request.ExternEnum.Value.ToString() },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
@@ -373,6 +605,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
 					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					parameters.TryGetValue("externEnum", out var queryParameterExternEnum);
+					request.ExternEnum = queryParameterExternEnum == null ? default(Facility.ConformanceApi.External.TestExternalEnum?) : new Facility.ConformanceApi.External.TestExternalEnum(queryParameterExternEnum);
 					return request;
 				},
 				ResponseMappings =
@@ -399,6 +633,7 @@ namespace Facility.ConformanceApi.Http
 						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
 						["decimal"] = request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture),
 						["enum"] = request.Enum == null ? null : request.Enum.Value.ToString(),
+						["externEnum"] = request.ExternEnum == null ? null : request.ExternEnum.Value.ToString(),
 					},
 				SetRequestHeaders = (request, headers) =>
 				{
@@ -416,6 +651,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
 					headers.TryGetValue("enum", out var headerEnum);
 					request.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					headers.TryGetValue("externEnum", out var headerExternEnum);
+					request.ExternEnum = headerExternEnum == null ? default(Facility.ConformanceApi.External.TestExternalEnum?) : new Facility.ConformanceApi.External.TestExternalEnum(headerExternEnum);
 					return request;
 				},
 				ResponseMappings =
@@ -435,6 +672,7 @@ namespace Facility.ConformanceApi.Http
 						["int64"] = response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture),
 						["decimal"] = response.Decimal == null ? null : response.Decimal.Value.ToString(CultureInfo.InvariantCulture),
 						["enum"] = response.Enum == null ? null : response.Enum.Value.ToString(),
+						["externEnum"] = response.ExternEnum == null ? null : response.ExternEnum.Value.ToString(),
 					},
 				SetResponseHeaders = (response, headers) =>
 				{
@@ -452,6 +690,8 @@ namespace Facility.ConformanceApi.Http
 					response.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
 					headers.TryGetValue("enum", out var headerEnum);
 					response.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					headers.TryGetValue("externEnum", out var headerExternEnum);
+					response.ExternEnum = headerExternEnum == null ? default(Facility.ConformanceApi.External.TestExternalEnum?) : new Facility.ConformanceApi.External.TestExternalEnum(headerExternEnum);
 					return response;
 				},
 			}.Build();

@@ -10,7 +10,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "yes"
       },
       "response": {}
     },
@@ -24,7 +25,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "yes"
       },
       "response": {}
     },
@@ -66,6 +68,43 @@
       }
     },
     {
+      "test": "createExternalWidget",
+      "method": "createExternalWidget",
+      "request": {
+        "externalWidget": {
+          "name": "shiny"
+        }
+      },
+      "response": {
+        "externalWidget": {
+          "id": 1337,
+          "name": "shiny"
+        },
+        "url": "/externalWidgets/1337",
+        "eTag": "\"initial\""
+      }
+    },
+    {
+      "test": "createExternalWidgetNoName",
+      "method": "createExternalWidget",
+      "request": {
+        "externalWidget": {}
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'externalWidget' is invalid: 'name' is required."
+      }
+    },
+    {
+      "test": "createExternalWidgetNoExternalWidget",
+      "method": "createExternalWidget",
+      "request": {},
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'externalWidget' is required."
+      }
+    },
+    {
       "test": "deleteWidget",
       "method": "deleteWidget",
       "request": {
@@ -87,6 +126,35 @@
     {
       "test": "deleteWidgetNotFound",
       "method": "deleteWidget",
+      "request": {
+        "id": 1338
+      },
+      "response": {
+        "notFound": true
+      }
+    },
+    {
+      "test": "deleteExternalWidget",
+      "method": "deleteExternalWidget",
+      "request": {
+        "id": 1337
+      },
+      "response": {}
+    },
+    {
+      "test": "deleteExternalWidgetConflict",
+      "method": "deleteExternalWidget",
+      "request": {
+        "id": 1337,
+        "ifETag": "\"not-initial\""
+      },
+      "response": {
+        "conflict": true
+      }
+    },
+    {
+      "test": "deleteExternalWidgetNotFound",
+      "method": "deleteExternalWidget",
       "request": {
         "id": 1338
       },
@@ -194,6 +262,96 @@
       }
     },
     {
+      "test": "getExternalWidget",
+      "method": "getExternalWidget",
+      "request": {
+        "id": 1337
+      },
+      "response": {
+        "externalwidget": {
+          "id": 1337,
+          "name": "shiny"
+        },
+        "eTag": "\"initial\""
+      }
+    },
+    {
+      "test": "getExternalWidgetBatch",
+      "method": "getExternalWidgetBatch",
+      "request": {
+        "ids": [
+          1337,
+          42
+        ]
+      },
+      "response": {
+        "results": [
+          {
+            "value": {
+              "id": 1337,
+              "name": "shiny"
+            }
+          },
+          {
+            "error": {
+              "code": "NotFound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "test": "getExternalWidgetNotFound",
+      "method": "getExternalWidget",
+      "request": {
+        "id": 1338
+      },
+      "error": {
+        "code": "NotFound",
+        "message": "The specified externalWidget was not found."
+      }
+    },
+    {
+      "test": "getExternalWidgetNotModified",
+      "method": "getExternalWidget",
+      "request": {
+        "id": 1337,
+        "ifNotETag": "\"initial\""
+      },
+      "response": {
+        "notModified": true
+      }
+    },
+    {
+      "test": "getExternalWidgets",
+      "method": "getExternalWidgets",
+      "request": {
+        "query": "shiny"
+      },
+      "response": {
+        "externalWidgets": [
+          {
+            "id": 1337,
+            "name": "shiny"
+          },
+          {
+            "id": 7331,
+            "name": "shinier"
+          }
+        ]
+      }
+    },
+    {
+      "test": "getExternalWidgetsNone",
+      "method": "getExternalWidgets",
+      "request": {
+        "query": "none"
+      },
+      "response": {
+        "externalWidgets": []
+      }
+    },
+    {
       "test": "mirrorArrayFields",
       "method": "mirrorFields",
       "request": {
@@ -210,6 +368,7 @@
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
             "data": [{ "data": { "data": {} } }, {}],
             "enum": ["yes", "no"],
+            "externEnum": ["yes", "no"],
             "array": [[42, 24], [24, 42]],
             "map": [{ "": 42 }, { " ": 24 }],
             "result": [{ "value": 42 }, { "error": { "code": "code" } }],
@@ -232,6 +391,7 @@
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
             "data": [{ "data": { "data": {} } }, {}],
             "enum": ["yes", "no"],
+            "externEnum": ["yes", "no"],
             "array": [[42, 24], [24, 42]],
             "map": [{ "": 42 }, { " ": 24 }],
             "result": [{ "value": 42 }, { "error": { "code": "code" } }],
@@ -256,7 +416,8 @@
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
           "data": { "data": { "data": {} } },
-          "enum": "yes"
+          "enum": "yes",
+          "externEnum": "yes"
         }
       },
       "response": {
@@ -271,7 +432,8 @@
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
           "data": { "data": { "data": {} } },
-          "enum": "yes"
+          "enum": "yes",
+          "externEnum": "yes"
         }
       }
     },
@@ -285,7 +447,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "yes"
       },
       "response": {
         "string": "string",
@@ -294,7 +457,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "yes"
       }
     },
     {
@@ -320,6 +484,7 @@
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
             "data": { "": { "data": { "data": {} } }, " ": {} },
             "enum": { "": "yes", " ": "no" },
+            "externEnum": { "": "yes", " ": "no" },
             "array": { "": [42, 24], " ": [24, 42] },
             "map": { "": { "": 42 }, " ": { " ": 24 } },
             "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } },
@@ -341,6 +506,7 @@
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
             "data": { "": { "data": { "data": {} } }, " ": {} },
             "enum": { "": "yes", " ": "no" },
+            "externEnum": { "": "yes", " ": "no" },
             "array": { "": [42, 24], " ": [24, 42] },
             "map": { "": { "": 42 }, " ": { " ": 24 } },
             "result": { "": { "value": 42 }, " ": { "error": { "code": "24" } } },
@@ -366,6 +532,7 @@
             "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
             "data": { "data": { "data": {} } },
             "enum": "yes",
+            "externEnum": "yes",
             "array": [42],
             "map": { "": 42 },
             "result": { "value": 42 }
@@ -386,6 +553,7 @@
             "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
             "data": { "data": { "data": {} } },
             "enum": "yes",
+            "externEnum": "yes",
             "array": [42],
             "map": { "": 42 },
             "result": { "value": 42 }
@@ -426,6 +594,7 @@
             "error": null,
             "data": null,
             "enum": null,
+            "externEnum": null,
             "array": null,
             "map": null,
             "result": null
@@ -446,6 +615,7 @@
             "error": null,
             "data": null,
             "enum": null,
+            "externEnum": null,
             "array": null,
             "map": null,
             "result": null
@@ -470,6 +640,7 @@
             "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "externEnum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
@@ -490,6 +661,7 @@
             "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "data": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "enum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "externEnum": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "array": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "map": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "result": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } }
@@ -514,6 +686,7 @@
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "data": { "value": { "data": { "data": {} } } },
             "enum": { "value": "yes" },
+            "externEnum": { "value": "yes" },
             "array": { "value": [42] },
             "map": { "value": { "": 42 } },
             "result": { "value": { "value": 42 } },
@@ -535,6 +708,7 @@
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "data": { "value": { "data": { "data": {} } } },
             "enum": { "value": "yes" },
+            "externEnum": { "value": "yes" },
             "array": { "value": [42] },
             "map": { "value": { "": 42 } },
             "result": { "value": { "value": 42 } },
@@ -767,7 +941,7 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes"
+        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes/no"
       },
       "request": {
         "string": "pathCase",
@@ -776,7 +950,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "no"
       },
       "response": {}
     },
@@ -785,7 +960,7 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes"
+        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes/no"
       },
       "request": {
         "string": "booleanCase",
@@ -794,7 +969,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "no"
       },
       "response": {}
     },
@@ -803,7 +979,7 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
+        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&externEnum=no"
       },
       "request": {
         "string": "pathCase",
@@ -812,7 +988,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "no"
       },
       "response": {}
     },
@@ -821,7 +998,7 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
+        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&externEnum=no"
       },
       "request": {
         "string": "queryCase",
@@ -830,7 +1007,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "externEnum": "no"
       },
       "response": {}
     },
@@ -886,11 +1064,24 @@
       "test": "checkQueryInvalidAnswer",
       "method": "checkQuery",
       "request": {
-        "enum": "negative"
+        "enum": "negative",
+        "externEnum": "yes"
       },
       "error": {
         "code": "InvalidRequest",
         "message": "'enum' is invalid: Must be an expected enum value."
+      }
+    },
+    {
+      "test": "checkQueryInvalidExternalAnswer",
+      "method": "checkQuery",
+      "request": {
+        "enum": "yes",
+        "externEnum": "negative"
+      },
+      "error": {
+        "code": "InvalidRequest",
+        "message": "'externEnum' is invalid: Must be an expected enum value."
       }
     }
   ]

@@ -60,6 +60,36 @@ namespace Facility.ConformanceApi.Http
 		public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.GetWidgetBatchMapping, request, cancellationToken);
 
+		/// <summary>
+		/// Gets external widgets.
+		/// </summary>
+		public Task<ServiceResult<GetExternalWidgetsResponseDto>> GetExternalWidgetsAsync(GetExternalWidgetsRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.GetExternalWidgetsMapping, request, cancellationToken);
+
+		/// <summary>
+		/// Creates a new external widget.
+		/// </summary>
+		public Task<ServiceResult<CreateExternalWidgetResponseDto>> CreateExternalWidgetAsync(CreateExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.CreateExternalWidgetMapping, request, cancellationToken);
+
+		/// <summary>
+		/// Gets the specified external widget.
+		/// </summary>
+		public Task<ServiceResult<GetExternalWidgetResponseDto>> GetExternalWidgetAsync(GetExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.GetExternalWidgetMapping, request, cancellationToken);
+
+		/// <summary>
+		/// Deletes the specified external widget.
+		/// </summary>
+		public Task<ServiceResult<DeleteExternalWidgetResponseDto>> DeleteExternalWidgetAsync(DeleteExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.DeleteExternalWidgetMapping, request, cancellationToken);
+
+		/// <summary>
+		/// Gets the specified external widgets.
+		/// </summary>
+		public Task<ServiceResult<GetExternalWidgetBatchResponseDto>> GetExternalWidgetBatchAsync(GetExternalWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(ConformanceApiHttpMapping.GetExternalWidgetBatchMapping, request, cancellationToken);
+
 		public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.MirrorFieldsMapping, request, cancellationToken);
 

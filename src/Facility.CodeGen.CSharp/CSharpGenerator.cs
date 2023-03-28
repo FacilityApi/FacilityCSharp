@@ -992,6 +992,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		switch (serviceType.Kind)
 		{
 			case ServiceTypeKind.Enum:
+			case ServiceTypeKind.ExternalEnum:
 			case ServiceTypeKind.Boolean:
 				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
 			case ServiceTypeKind.Double:
@@ -1013,6 +1014,9 @@ public sealed class CSharpGenerator : CodeGenerator
 			case ServiceTypeKind.Enum:
 				var enumName = context.CSharpServiceInfo.GetEnumName(serviceType.Enum!);
 				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
+			case ServiceTypeKind.ExternalEnum:
+				var externalEnumName = context.CSharpServiceInfo.GetExternalEnumName(serviceType.ExternalEnum!);
+				return $"{fieldCode} == null ? default({externalEnumName}?) : new {externalEnumName}({fieldCode})";
 			case ServiceTypeKind.Boolean:
 				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
 			case ServiceTypeKind.Double:

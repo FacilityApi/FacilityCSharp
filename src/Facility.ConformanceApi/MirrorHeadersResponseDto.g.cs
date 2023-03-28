@@ -44,6 +44,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("enum")]
 		public Answer? Enum { get; set; }
 
+		[MessagePack.Key("externEnum")]
+		public Facility.ConformanceApi.External.TestExternalEnum? ExternEnum { get; set; }
+
 		/// <summary>
 		/// Returns the DTO as JSON.
 		/// </summary>
@@ -61,7 +64,8 @@ namespace Facility.ConformanceApi
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&
 				Decimal == other.Decimal &&
-				Enum == other.Enum;
+				Enum == other.Enum &&
+				ExternEnum == other.ExternEnum;
 		}
 	}
 }
