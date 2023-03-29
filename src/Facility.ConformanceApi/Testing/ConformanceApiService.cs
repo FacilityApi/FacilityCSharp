@@ -50,21 +50,6 @@ public sealed class ConformanceApiService : IConformanceApi
 	public Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
 		Task.FromResult(Execute<GetWidgetBatchResponseDto>(request));
 
-	public Task<ServiceResult<GetExternalWidgetsResponseDto>> GetExternalWidgetsAsync(GetExternalWidgetsRequestDto request, CancellationToken cancellationToken = default) =>
-		Task.FromResult(Execute<GetExternalWidgetsResponseDto>(request));
-
-	public Task<ServiceResult<CreateExternalWidgetResponseDto>> CreateExternalWidgetAsync(CreateExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
-		Task.FromResult(Execute<CreateExternalWidgetResponseDto>(request));
-
-	public Task<ServiceResult<GetExternalWidgetResponseDto>> GetExternalWidgetAsync(GetExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
-		Task.FromResult(Execute<GetExternalWidgetResponseDto>(request));
-
-	public Task<ServiceResult<DeleteExternalWidgetResponseDto>> DeleteExternalWidgetAsync(DeleteExternalWidgetRequestDto request, CancellationToken cancellationToken = default) =>
-		Task.FromResult(Execute<DeleteExternalWidgetResponseDto>(request));
-
-	public Task<ServiceResult<GetExternalWidgetBatchResponseDto>> GetExternalWidgetBatchAsync(GetExternalWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
-		Task.FromResult(Execute<GetExternalWidgetBatchResponseDto>(request));
-
 	/// <inheritdoc />
 	public Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken = default) =>
 		Task.FromResult(Execute<MirrorFieldsResponseDto>(request));

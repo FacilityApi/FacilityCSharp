@@ -45,31 +45,6 @@ namespace Facility.ConformanceApi
 		/// </summary>
 		Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default);
 
-		/// <summary>
-		/// Gets external widgets.
-		/// </summary>
-		Task<ServiceResult<GetExternalWidgetsResponseDto>> GetExternalWidgetsAsync(GetExternalWidgetsRequestDto request, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Creates a new external widget.
-		/// </summary>
-		Task<ServiceResult<CreateExternalWidgetResponseDto>> CreateExternalWidgetAsync(CreateExternalWidgetRequestDto request, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Gets the specified external widget.
-		/// </summary>
-		Task<ServiceResult<GetExternalWidgetResponseDto>> GetExternalWidgetAsync(GetExternalWidgetRequestDto request, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Deletes the specified external widget.
-		/// </summary>
-		Task<ServiceResult<DeleteExternalWidgetResponseDto>> DeleteExternalWidgetAsync(DeleteExternalWidgetRequestDto request, CancellationToken cancellationToken = default);
-
-		/// <summary>
-		/// Gets the specified external widgets.
-		/// </summary>
-		Task<ServiceResult<GetExternalWidgetBatchResponseDto>> GetExternalWidgetBatchAsync(GetExternalWidgetBatchRequestDto request, CancellationToken cancellationToken = default);
-
 		Task<ServiceResult<MirrorFieldsResponseDto>> MirrorFieldsAsync(MirrorFieldsRequestDto request, CancellationToken cancellationToken = default);
 
 		Task<ServiceResult<CheckQueryResponseDto>> CheckQueryAsync(CheckQueryRequestDto request, CancellationToken cancellationToken = default);

@@ -130,111 +130,6 @@ service ConformanceApi
 		name: string;
 	}
 
-	/// Gets external widgets.
-	[http(method: GET, path: "/externalWidgets")]
-	[tag(name: externalWidgets)]
-	method getExternalWidgets
-	{
-		/// The query.
-		[http(name: "q")]
-		query: string;
-	}:
-	{
-		/// The external widgets.
-		externalWidgets: ExternalWidget[];
-	}
-
-	/// Creates a new external widget.
-	[http(method: POST, path: "/externalWidgets")]
-	[tag(name: externalWidgets)]
-	method createExternalWidget
-	{
-		/// The external widget to create.
-		[http(from: body)]
-		externalWidget: ExternalWidget;
-	}:
-	{
-		/// The created external widget.
-		[http(from: body, code: 201)]
-		externalWidget: ExternalWidget;
-
-		/// The URL of the created external widget.
-		[http(from: header, name: Location)]
-		url: string;
-
-		/// The ETag of the created external widget.
-		[http(from: header)]
-		eTag: string;
-	}
-
-	/// Gets the specified external widget.
-	[http(method: GET, path: "/externalWidgets/{id}")]
-	[tag(name: externalWidgets)]
-	method getExternalWidget
-	{
-		/// The external widget ID.
-		[required, validate(value: 0..)]
-		id: int32;
-
-		/// Don't get the external widget if it has this ETag.
-		[http(from: header, name: If-None-Match)]
-		ifNotETag: string;
-	}:
-	{
-		/// The requested external widget.
-		[http(from: body)]
-		externalWidget: ExternalWidget;
-
-		/// The ETag of the external widget.
-		[http(from: header)]
-		eTag: string;
-
-		/// The external widget still has the specified ETag.
-		[http(from: body, code: 304)]
-		notModified: boolean;
-	}
-
-	/// Deletes the specified external widget.
-	[http(method: DELETE, path: "/externalWidgets/{id}", code: 204)]
-	[tag(name: externalWidgets)]
-	method deleteExternalWidget
-	{
-		/// The external widget ID.
-		[validate(value: 0..)]
-		id: int32;
-
-		/// Don't delete the external widget unless it has this ETag.
-		[http(from: header, name: If-Match)]
-		ifETag: string;
-	}:
-	{
-		/// The external widget was not found.
-		[http(from: body, code: 404)]
-		notFound: boolean;
-
-		/// The external widget no longer has the specified ETag.
-		[http(from: body, code: 409)]
-		conflict: boolean;
-	}
-
-	/// Gets the specified external widgets.
-	[http(method: POST, path: "/externalWidgets/get")]
-	[tag(name: externalWidgets)]
-	method getExternalWidgetBatch
-	{
-		/// The IDs of the external widgets to return.
-		[http(from: body), required, validate(count: ..10)]
-		ids: int32[];
-	}:
-	{
-		/// The external widget results.
-		[http(from: body)]
-		results: result<ExternalWidget>[];
-	}
-
-	[csharp(name: "TestExternalDto", namespace: "Facility.ConformanceApi.External")]
-	extern data ExternalWidget;
-
 	method mirrorFields
 	{
 		field: Any;
@@ -257,14 +152,11 @@ service ConformanceApi
 
 		[validate]
 		enum: Answer;
-
-		[validate]
-		externEnum: ExternalAnswer;
 	}:
 	{
 	}
 
-	[http(method: GET, path: "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}/{externEnum}")]
+	[http(method: GET, path: "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}")]
 	method checkPath
 	{
 		string: string;
@@ -276,9 +168,6 @@ service ConformanceApi
 
 		[validate]
 		enum: Answer;
-
-		[validate]
-		externEnum: ExternalAnswer;
 	}:
 	{
 	}
@@ -293,7 +182,6 @@ service ConformanceApi
 		[http(from: header)] int64: int64;
 		[http(from: header)] decimal: decimal;
 		[http(from: header)] enum: Answer;
-		[http(from: header)] externEnum: ExternalAnswer;
 	}:
 	{
 		[http(from: header)] string: string;
@@ -303,7 +191,6 @@ service ConformanceApi
 		[http(from: header)] int64: int64;
 		[http(from: header)] decimal: decimal;
 		[http(from: header)] enum: Answer;
-		[http(from: header)] externEnum: ExternalAnswer;
 	}
 
 	[http(path: "/mixed/{path}")]
@@ -379,7 +266,6 @@ service ConformanceApi
 		error: error;
 		data: Any;
 		enum: Answer;
-		externEnum: ExternalAnswer;
 		array: AnyArray;
 		map: AnyMap;
 		result: AnyResult;
@@ -399,7 +285,6 @@ service ConformanceApi
 		error: error[];
 		data: Any[];
 		enum: Answer[];
-		externEnum: ExternalAnswer[];
 		array: int32[][];
 		map: map<int32>[];
 		result: result<int32>[];
@@ -419,7 +304,6 @@ service ConformanceApi
 		error: map<error>;
 		data: map<Any>;
 		enum: map<Answer>;
-		externEnum: map<ExternalAnswer>;
 		array: map<int32[]>;
 		map: map<map<int32>>;
 		result: map<result<int32>>;
@@ -439,7 +323,6 @@ service ConformanceApi
 		error: result<error>;
 		data: result<Any>;
 		enum: result<Answer>;
-		externEnum: result<ExternalAnswer>;
 		array: result<int32[]>;
 		map: result<map<int32>>;
 		result: result<result<int32>>;
@@ -459,7 +342,6 @@ service ConformanceApi
 		error: nullable<error>;
 		data: nullable<Any>;
 		enum: nullable<Answer>;
-		externEnum: nullable<ExternalAnswer>;
 		array: nullable<int32[]>;
 		map: nullable<map<int32>>;
 		result: nullable<result<int32>>;
@@ -482,9 +364,6 @@ service ConformanceApi
 		/// Unknown.
 		maybe,
 	}
-
-	[csharp(name: "TestExternalEnum", namespace: "Facility.ConformanceApi.External")]
-	extern enum ExternalAnswer;
 
 	/// Custom errors.
 	errors ApiErrors

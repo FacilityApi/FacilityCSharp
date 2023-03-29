@@ -34,26 +34,6 @@ namespace Facility.ConformanceApi
 			ServiceMethodInfo.Create<IConformanceApi, GetWidgetBatchRequestDto, GetWidgetBatchResponseDto>(
 				"getWidgetBatch", "ConformanceApi", x => x.GetWidgetBatchAsync);
 
-		public static readonly IServiceMethodInfo GetExternalWidgets =
-			ServiceMethodInfo.Create<IConformanceApi, GetExternalWidgetsRequestDto, GetExternalWidgetsResponseDto>(
-				"getExternalWidgets", "ConformanceApi", x => x.GetExternalWidgetsAsync);
-
-		public static readonly IServiceMethodInfo CreateExternalWidget =
-			ServiceMethodInfo.Create<IConformanceApi, CreateExternalWidgetRequestDto, CreateExternalWidgetResponseDto>(
-				"createExternalWidget", "ConformanceApi", x => x.CreateExternalWidgetAsync);
-
-		public static readonly IServiceMethodInfo GetExternalWidget =
-			ServiceMethodInfo.Create<IConformanceApi, GetExternalWidgetRequestDto, GetExternalWidgetResponseDto>(
-				"getExternalWidget", "ConformanceApi", x => x.GetExternalWidgetAsync);
-
-		public static readonly IServiceMethodInfo DeleteExternalWidget =
-			ServiceMethodInfo.Create<IConformanceApi, DeleteExternalWidgetRequestDto, DeleteExternalWidgetResponseDto>(
-				"deleteExternalWidget", "ConformanceApi", x => x.DeleteExternalWidgetAsync);
-
-		public static readonly IServiceMethodInfo GetExternalWidgetBatch =
-			ServiceMethodInfo.Create<IConformanceApi, GetExternalWidgetBatchRequestDto, GetExternalWidgetBatchResponseDto>(
-				"getExternalWidgetBatch", "ConformanceApi", x => x.GetExternalWidgetBatchAsync);
-
 		public static readonly IServiceMethodInfo MirrorFields =
 			ServiceMethodInfo.Create<IConformanceApi, MirrorFieldsRequestDto, MirrorFieldsResponseDto>(
 				"mirrorFields", "ConformanceApi", x => x.MirrorFieldsAsync);

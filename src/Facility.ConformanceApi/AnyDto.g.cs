@@ -53,9 +53,6 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("enum")]
 		public Answer? Enum { get; set; }
 
-		[MessagePack.Key("externEnum")]
-		public Facility.ConformanceApi.External.TestExternalEnum? ExternEnum { get; set; }
-
 		[MessagePack.Key("array")]
 		public AnyArrayDto? Array { get; set; }
 
@@ -90,7 +87,6 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentDtos(Error, other.Error) &&
 				ServiceDataUtility.AreEquivalentDtos(Data, other.Data) &&
 				Enum == other.Enum &&
-				ExternEnum == other.ExternEnum &&
 				ServiceDataUtility.AreEquivalentDtos(Array, other.Array) &&
 				ServiceDataUtility.AreEquivalentDtos(Map, other.Map) &&
 				ServiceDataUtility.AreEquivalentDtos(Result, other.Result) &&

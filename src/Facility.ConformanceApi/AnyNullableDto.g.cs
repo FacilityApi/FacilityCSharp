@@ -87,12 +87,6 @@ namespace Facility.ConformanceApi
 		public ServiceNullable<Answer?> Enum { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
-		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<Facility.ConformanceApi.External.TestExternalEnum?>))]
-		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-		[MessagePack.Key("externEnum")]
-		public ServiceNullable<Facility.ConformanceApi.External.TestExternalEnum?> ExternEnum { get; set; }
-
-		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
 		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<IReadOnlyList<int>?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("array")]
@@ -132,7 +126,6 @@ namespace Facility.ConformanceApi
 				Error == other.Error &&
 				Data == other.Data &&
 				Enum == other.Enum &&
-				ExternEnum == other.ExternEnum &&
 				Array == other.Array &&
 				Map == other.Map &&
 				Result == other.Result;
