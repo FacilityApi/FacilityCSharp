@@ -83,9 +83,8 @@ public sealed class CSharpServiceInfo
 
 	internal string GetExternalDtoName(ServiceExternalDtoInfo info)
 	{
-		var attribute = info.TryGetAttribute("csharp");
-		var typeName = attribute?.TryGetParameterValue("name") ?? $"{FixName(info.Name)}Dto";
-		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
+		var typeName = m_externalDtoNames.TryGetValue(info, out var name) ? name : $"{FixName(info.Name)}Dto";
+		var typeNamespace = m_externalDtoNamespaces.TryGetValue(info, out var ns) ? ns : "";
 		if (!string.IsNullOrEmpty(typeNamespace))
 			typeNamespace += ".";
 
@@ -94,9 +93,8 @@ public sealed class CSharpServiceInfo
 
 	internal string GetExternalEnumName(ServiceExternalEnumInfo info)
 	{
-		var attribute = info.TryGetAttribute("csharp");
-		var typeName = attribute?.TryGetParameterValue("name") ?? FixName(info.Name);
-		var typeNamespace = attribute?.TryGetParameterValue("namespace") ?? "";
+		var typeName = m_externalEnumNames.TryGetValue(info, out var name) ? name : FixName(info.Name);
+		var typeNamespace = m_externalEnumNamespaces.TryGetValue(info, out var ns) ? ns : "";
 		if (!string.IsNullOrEmpty(typeNamespace))
 			typeNamespace += ".";
 
@@ -109,6 +107,10 @@ public sealed class CSharpServiceInfo
 	private CSharpServiceInfo(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
 		Service = serviceInfo;
+		m_externalDtoNames = new Dictionary<ServiceExternalDtoInfo, string>();
+		m_externalDtoNamespaces = new Dictionary<ServiceExternalDtoInfo, string>();
+		m_externalEnumNames = new Dictionary<ServiceExternalEnumInfo, string>();
+		m_externalEnumNamespaces = new Dictionary<ServiceExternalEnumInfo, string>();
 		m_fieldPropertyNames = new Dictionary<ServiceFieldInfo, string>();
 		m_fixSnakeCase = settings?.FixSnakeCase ?? false;
 
@@ -132,12 +134,27 @@ public sealed class CSharpServiceInfo
 							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 					}
 				}
-				else if (descendant is ServiceExternalDtoInfo or ServiceExternalEnumInfo)
+				else if (descendant is ServiceExternalDtoInfo externalDtoInfo)
 				{
-					var allowed = new HashSet<string> { "namespace", "name" };
 					foreach (var parameter in csharpAttribute.Parameters)
 					{
-						if (!allowed.Contains(parameter.Name))
+						if (parameter.Name == "namespace")
+							m_externalDtoNamespaces[externalDtoInfo] = parameter.Value;
+						else if (parameter.Name == "name")
+							m_externalDtoNames[externalDtoInfo] = parameter.Value;
+						else
+							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
+					}
+				}
+				else if (descendant is ServiceExternalEnumInfo externalEnumInfo)
+				{
+					foreach (var parameter in csharpAttribute.Parameters)
+					{
+						if (parameter.Name == "namespace")
+							m_externalEnumNamespaces[externalEnumInfo] = parameter.Value;
+						else if (parameter.Name == "name")
+							m_externalEnumNames[externalEnumInfo] = parameter.Value;
+						else
 							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 					}
 				}
@@ -197,6 +214,10 @@ public sealed class CSharpServiceInfo
 	}
 
 	private readonly string? m_namespace;
+	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNames;
+	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNamespaces;
+	private readonly Dictionary<ServiceExternalEnumInfo, string> m_externalEnumNames;
+	private readonly Dictionary<ServiceExternalEnumInfo, string> m_externalEnumNamespaces;
 	private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
 	private readonly bool m_fixSnakeCase;
 }
