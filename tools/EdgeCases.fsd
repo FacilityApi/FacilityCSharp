@@ -76,4 +76,19 @@ service EdgeCases
 	{
 		snake_field: string;
 	}
+
+	/// An external DTO
+	[csharp(namespace: "EdgeCases.ExternTypes")]
+	extern data ExternalData;
+
+	/// An external enum
+	[csharp(namespace: "EdgeCases.ExternTypes")]
+	extern enum ExternalEnum;
+
+	/// A DTO that uses external types
+	data DataWithExternalTypes
+	{
+		foo: ExternalData;
+		bar: ExternalEnum;
+	}
 }
