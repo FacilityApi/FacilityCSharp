@@ -85,20 +85,14 @@ public sealed class CSharpServiceInfo
 	{
 		var typeName = m_externalDtoNames.TryGetValue(info, out var name) ? name : $"{FixName(info.Name)}Dto";
 		var typeNamespace = m_externalDtoNamespaces.TryGetValue(info, out var ns) ? ns : "";
-		if (!string.IsNullOrEmpty(typeNamespace))
-			typeNamespace += ".";
-
-		return $"{typeNamespace}{typeName}";
+		return typeNamespace.Length != 0 ? $"{typeNamespace}.{typeName}" : typeName;
 	}
 
 	internal string GetExternalEnumName(ServiceExternalEnumInfo info)
 	{
 		var typeName = m_externalEnumNames.TryGetValue(info, out var name) ? name : FixName(info.Name);
 		var typeNamespace = m_externalEnumNamespaces.TryGetValue(info, out var ns) ? ns : "";
-		if (!string.IsNullOrEmpty(typeNamespace))
-			typeNamespace += ".";
-
-		return $"{typeNamespace}{typeName}";
+		return typeNamespace.Length != 0 ? $"{typeNamespace}.{typeName}" : typeName;
 	}
 
 	private string FixName(string name) =>
