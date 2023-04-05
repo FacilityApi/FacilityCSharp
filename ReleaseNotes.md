@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.19.0-beta.1
+
+* Support `extern` data and enum types.
+
 ## 2.18.0
 
 * Update dependencies, including Newtonsoft.Json.
