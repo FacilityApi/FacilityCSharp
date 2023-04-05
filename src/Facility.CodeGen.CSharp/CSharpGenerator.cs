@@ -992,6 +992,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		switch (serviceType.Kind)
 		{
 			case ServiceTypeKind.Enum:
+			case ServiceTypeKind.ExternalEnum:
 			case ServiceTypeKind.Boolean:
 				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
 			case ServiceTypeKind.Double:
@@ -1013,6 +1014,9 @@ public sealed class CSharpGenerator : CodeGenerator
 			case ServiceTypeKind.Enum:
 				var enumName = context.CSharpServiceInfo.GetEnumName(serviceType.Enum!);
 				return $"{fieldCode} == null ? default({enumName}?) : new {enumName}({fieldCode})";
+			case ServiceTypeKind.ExternalEnum:
+				var externalEnumName = context.CSharpServiceInfo.GetExternalEnumName(serviceType.ExternalEnum!);
+				return $"{fieldCode} == null ? default({externalEnumName}?) : new {externalEnumName}({fieldCode})";
 			case ServiceTypeKind.Boolean:
 				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
 			case ServiceTypeKind.Double:
@@ -1230,6 +1234,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				return "AreEquivalentObjects";
 			case ServiceTypeKind.Error:
 			case ServiceTypeKind.Dto:
+			case ServiceTypeKind.ExternalDto:
 				return "AreEquivalentDtos";
 			case ServiceTypeKind.Result:
 				return "AreEquivalentResults";
@@ -1477,6 +1482,8 @@ public sealed class CSharpGenerator : CodeGenerator
 			ServiceTypeKind.Error => ("ServiceErrorDto", false),
 			ServiceTypeKind.Dto => (csharpInfo.GetDtoName(fieldType.Dto!), false),
 			ServiceTypeKind.Enum => (csharpInfo.GetEnumName(fieldType.Enum!), true),
+			ServiceTypeKind.ExternalDto => (csharpInfo.GetExternalDtoName(fieldType.ExternalDto!), false),
+			ServiceTypeKind.ExternalEnum => (csharpInfo.GetExternalEnumName(fieldType.ExternalEnum!), true),
 			ServiceTypeKind.Result => ($"ServiceResult<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Array => ($"IReadOnlyList<{RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),
 			ServiceTypeKind.Map => ($"IReadOnlyDictionary<string, {RenderFieldTypeForCollection(fieldType.ValueType!, context)}>", false),

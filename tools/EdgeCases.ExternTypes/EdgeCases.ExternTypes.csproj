@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdgeCases.ExternTypes\EdgeCases.ExternTypes.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
   </ItemGroup>
 

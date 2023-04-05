@@ -48,6 +48,7 @@ return BuildRunner.Execute(args, build =>
 		RunCodeGen("fsd/FacilityCore.fsd", "src/Facility.Core/", "--nullable");
 		RunCodeGen("conformance/ConformanceApi.fsd", "src/Facility.ConformanceApi/", "--msgpack", "--nullable", "--clean");
 		RunCodeGen("tools/EdgeCases.fsd", "tools/EdgeCases/", "--msgpack", "--nullable", "--fix-snake-case", "--clean");
+		RunCodeGen("tools/EdgeCases.ExternTypes.fsd", "tools/EdgeCases.ExternTypes/", "--msgpack", "--nullable", "--fix-snake-case", "--clean");
 		RunCodeGen("tests/Facility.Benchmarks/BenchmarkService.fsd", "tests/Facility.Benchmarks/", "--msgpack", "--nullable");
 
 		void RunCodeGen(params string?[] args) =>

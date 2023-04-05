@@ -1,0 +1,17 @@
+[csharp(namespace: "EdgeCases.ExternTypes")]
+service EdgeCasesExternTypes
+{
+	/// A DTO used by the EdgeCases FSD as an external data type.
+	data ExternalData
+	{
+		name: string;
+	}
+
+	/// An enumeration used by the EdgeCases FSD as an external enum type.
+	enum ExternalEnum
+	{
+		A,
+		B,
+		C,
+	}
+}

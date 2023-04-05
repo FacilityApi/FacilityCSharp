@@ -81,12 +81,30 @@ public sealed class CSharpServiceInfo
 
 	internal string GetErrorName(ServiceErrorInfo errorInfo) => FixName(errorInfo.Name);
 
+	internal string GetExternalDtoName(ServiceExternalDtoInfo info)
+	{
+		var typeName = m_externalDtoNames.TryGetValue(info, out var name) ? name : $"{FixName(info.Name)}Dto";
+		var typeNamespace = m_externalDtoNamespaces.TryGetValue(info, out var ns) ? ns : "";
+		return typeNamespace.Length != 0 ? $"{typeNamespace}.{typeName}" : typeName;
+	}
+
+	internal string GetExternalEnumName(ServiceExternalEnumInfo info)
+	{
+		var typeName = m_externalEnumNames.TryGetValue(info, out var name) ? name : FixName(info.Name);
+		var typeNamespace = m_externalEnumNamespaces.TryGetValue(info, out var ns) ? ns : "";
+		return typeNamespace.Length != 0 ? $"{typeNamespace}.{typeName}" : typeName;
+	}
+
 	private string FixName(string name) =>
 		m_fixSnakeCase && name.ContainsOrdinal('_') ? CodeGenUtility.ToPascalCase(name) : CodeGenUtility.Capitalize(name);
 
 	private CSharpServiceInfo(ServiceInfo serviceInfo, CSharpServiceInfoSettings? settings, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
 		Service = serviceInfo;
+		m_externalDtoNames = new Dictionary<ServiceExternalDtoInfo, string>();
+		m_externalDtoNamespaces = new Dictionary<ServiceExternalDtoInfo, string>();
+		m_externalEnumNames = new Dictionary<ServiceExternalEnumInfo, string>();
+		m_externalEnumNamespaces = new Dictionary<ServiceExternalEnumInfo, string>();
 		m_fieldPropertyNames = new Dictionary<ServiceFieldInfo, string>();
 		m_fixSnakeCase = settings?.FixSnakeCase ?? false;
 
@@ -106,6 +124,30 @@ public sealed class CSharpServiceInfo
 							m_namespace = parameter.Value;
 						else if (parameter.Name == "name" && descendant is ServiceFieldInfo field)
 							m_fieldPropertyNames[field] = parameter.Value;
+						else
+							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
+					}
+				}
+				else if (descendant is ServiceExternalDtoInfo externalDtoInfo)
+				{
+					foreach (var parameter in csharpAttribute.Parameters)
+					{
+						if (parameter.Name == "namespace")
+							m_externalDtoNamespaces[externalDtoInfo] = parameter.Value;
+						else if (parameter.Name == "name")
+							m_externalDtoNames[externalDtoInfo] = parameter.Value;
+						else
+							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
+					}
+				}
+				else if (descendant is ServiceExternalEnumInfo externalEnumInfo)
+				{
+					foreach (var parameter in csharpAttribute.Parameters)
+					{
+						if (parameter.Name == "namespace")
+							m_externalEnumNamespaces[externalEnumInfo] = parameter.Value;
+						else if (parameter.Name == "name")
+							m_externalEnumNames[externalEnumInfo] = parameter.Value;
 						else
 							validationErrors.Add(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(csharpAttribute.Name, parameter));
 					}
@@ -148,6 +190,14 @@ public sealed class CSharpServiceInfo
 			{
 				CheckTypeName(GetErrorSetName(errorSet), errorSet.Position);
 			}
+			else if (member is ServiceExternalDtoInfo externalDto)
+			{
+				CheckTypeName(GetExternalDtoName(externalDto), externalDto.Position);
+			}
+			else if (member is ServiceExternalEnumInfo externalEnum)
+			{
+				CheckTypeName(GetExternalEnumName(externalEnum), externalEnum.Position);
+			}
 			else
 			{
 				throw new InvalidOperationException($"Unknown member type {member.GetType().FullName}");
@@ -158,6 +208,10 @@ public sealed class CSharpServiceInfo
 	}
 
 	private readonly string? m_namespace;
+	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNames;
+	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNamespaces;
+	private readonly Dictionary<ServiceExternalEnumInfo, string> m_externalEnumNames;
+	private readonly Dictionary<ServiceExternalEnumInfo, string> m_externalEnumNamespaces;
 	private readonly Dictionary<ServiceFieldInfo, string> m_fieldPropertyNames;
 	private readonly bool m_fixSnakeCase;
 }
