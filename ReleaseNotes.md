@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.12.1
+
+* Add .NET 6 support to `fsdgencsharp`.
+
 ## 2.12.0
 
 * Create standard validating delegator.
