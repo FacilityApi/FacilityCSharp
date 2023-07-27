@@ -177,9 +177,9 @@ public class ServiceResultTests
 	public void SuccessToFailure()
 	{
 		var successResult = ServiceResult.Success();
-		Invoking(() => successResult.ToFailure()).Should().Throw<InvalidOperationException>();
+		Invoking(successResult.ToFailure).Should().Throw<InvalidOperationException>();
 		var successValue = ServiceResult.Success(1);
-		Invoking(() => successValue.ToFailure()).Should().Throw<InvalidOperationException>();
+		Invoking(successValue.ToFailure).Should().Throw<InvalidOperationException>();
 	}
 
 	[Test]

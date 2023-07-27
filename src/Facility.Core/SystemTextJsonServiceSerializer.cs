@@ -2,6 +2,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace Facility.Core;
 
@@ -186,7 +187,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	private sealed class NewtonsoftJsonLinqSystemTextJsonConverter<T> : JsonConverter<T>
-		where T : Newtonsoft.Json.Linq.JToken
+		where T : JToken
 	{
 		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
 			ServiceJsonUtility.FromJson<T>(JsonNode.Parse(ref reader)!.ToJsonString(s_jsonSerializerOptions));
@@ -204,10 +205,10 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =
 		{
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JObject>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JArray>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JValue>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<Newtonsoft.Json.Linq.JToken>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<JArray>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<JValue>(),
+			new NewtonsoftJsonLinqSystemTextJsonConverter<JToken>(),
 		},
 	};
 }

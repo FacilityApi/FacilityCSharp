@@ -109,7 +109,7 @@ public static class ServiceDataUtility
 	/// <summary>
 	/// Clones the data element.
 	/// </summary>
-	[return: NotNullIfNotNull("value")]
+	[return: NotNullIfNotNull(nameof(value))]
 	public static T Clone<T>(T value) => JsonServiceSerializer.Legacy.Clone(value);
 
 	/// <summary>

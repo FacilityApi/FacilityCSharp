@@ -99,7 +99,7 @@ public sealed class FacilityConformanceApp
 		if (command == "test")
 		{
 			var baseUri = new Uri(argsReader.ReadOption("url") ?? defaultUrl);
-			bool disableChunkedTransfer = argsReader.ReadFlag("disable-chunked-transfer");
+			var disableChunkedTransfer = argsReader.ReadFlag("disable-chunked-transfer");
 			var testNames = argsReader.ReadArguments();
 			argsReader.VerifyComplete();
 
@@ -273,21 +273,17 @@ public sealed class FacilityConformanceApp
 				foreach (var header in responseHeaders)
 					response.Headers.Append(header.Key, header.Value.ToArray());
 
-				// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-				if (responseMessage.Content != null)
-				{
-					var contentHeaders = responseMessage.Content.Headers;
+				var contentHeaders = responseMessage.Content.Headers;
 
-					// Copy the response content headers only after ensuring they are complete.
-					// We ask for Content-Length first because HttpContent lazily computes this
-					// and only afterwards writes the value into the content headers.
-					_ = contentHeaders.ContentLength;
+				// Copy the response content headers only after ensuring they are complete.
+				// We ask for Content-Length first because HttpContent lazily computes this
+				// and only afterwards writes the value into the content headers.
+				_ = contentHeaders.ContentLength;
 
-					foreach (var header in contentHeaders)
-						response.Headers.Append(header.Key, header.Value.ToArray());
+				foreach (var header in contentHeaders)
+					response.Headers.Append(header.Key, header.Value.ToArray());
 
-					await responseMessage.Content.CopyToAsync(response.Body).ConfigureAwait(false);
-				}
+				await responseMessage.Content.CopyToAsync(response.Body).ConfigureAwait(false);
 			}
 		}
 	}

@@ -14,13 +14,13 @@ public sealed class ServiceObject
 	/// <summary>
 	/// Creates an instance from a <c>Newtonsoft.Json.Linq.JObject</c>.
 	/// </summary>
-	[return: NotNullIfNotNull("jObject")]
+	[return: NotNullIfNotNull(nameof(jObject))]
 	public static ServiceObject? Create(JObject? jObject) => jObject is null ? null : new(jObject);
 
 	/// <summary>
 	/// Creates an instance from a <c>System.Text.Json.Nodes.JsonObject</c>.
 	/// </summary>
-	[return: NotNullIfNotNull("jsonObject")]
+	[return: NotNullIfNotNull(nameof(jsonObject))]
 	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
 	/// <summary>

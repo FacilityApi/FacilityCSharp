@@ -25,6 +25,6 @@ public abstract class ServiceSerializer
 	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
-	[return: NotNullIfNotNull("value")]
+	[return: NotNullIfNotNull(nameof(value))]
 	public abstract T Clone<T>(T value);
 }

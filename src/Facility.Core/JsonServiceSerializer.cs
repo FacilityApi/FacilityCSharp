@@ -31,19 +31,19 @@ public abstract class JsonServiceSerializer : ServiceSerializer
 	/// <summary>
 	/// Serializes a value to a <see cref="ServiceObject"/> representation of JSON.
 	/// </summary>
-	[return: NotNullIfNotNull("value")]
+	[return: NotNullIfNotNull(nameof(value))]
 	public abstract ServiceObject? ToServiceObject(object? value);
 
 	/// <summary>
 	/// Deserializes a value from a <see cref="ServiceObject"/> representation of JSON.
 	/// </summary>
-	[return: NotNullIfNotNull("serviceObject")]
+	[return: NotNullIfNotNull(nameof(serviceObject))]
 	public abstract object? FromServiceObject(ServiceObject? serviceObject, Type type);
 
 	/// <summary>
 	/// Deserializes a value from a <see cref="ServiceObject"/> representation of JSON.
 	/// </summary>
-	[return: NotNullIfNotNull("serviceObject")]
+	[return: NotNullIfNotNull(nameof(serviceObject))]
 	public virtual T? FromServiceObject<T>(ServiceObject? serviceObject) => (T?) FromServiceObject(serviceObject, typeof(T));
 
 	/// <summary>

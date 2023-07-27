@@ -5,7 +5,6 @@
     <Description>A library that generates C# for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD C# CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

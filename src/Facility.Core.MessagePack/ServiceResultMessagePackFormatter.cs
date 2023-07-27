@@ -127,10 +127,8 @@ internal sealed class ServiceResultFailureMessagePackFormatter : IMessagePackFor
 			if (!reader.TryReadNil())
 				throw new MessagePackSerializationException("ServiceResult does not support 'value'; use ServiceResult<T>.");
 
-			var error = resolver.GetFormatterWithVerify<ServiceErrorDto>().Deserialize(ref reader, options);
-			if (error is null)
+			var error = resolver.GetFormatterWithVerify<ServiceErrorDto>().Deserialize(ref reader, options) ??
 				throw new MessagePackSerializationException("ServiceResultFailure does not support success.");
-
 			return ServiceResult.Failure(error);
 		}
 		finally
