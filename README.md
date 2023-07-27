@@ -30,4 +30,4 @@ Then run the conformance tool against the running service.
 dotnet run --project .\src\FacilityConformance --framework net6.0 -- test
 ```
 
-The <c>System.Text.Json</c> serializer is used by default. To use Json.NET or MessagePack, run with `--serializer newtonsoftjson` or  `--serializer messagepack`.
+The `System.Text.Json` serializer is used by default. To use Json.NET or MessagePack, run with `--serializer newtonsoftjson` or  `--serializer messagepack`.
