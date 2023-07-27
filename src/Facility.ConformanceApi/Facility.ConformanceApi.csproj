@@ -5,6 +5,7 @@
     <Description>A .NET client for the standard Facility test server.</Description>
     <PackageTags>Facility server testing</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

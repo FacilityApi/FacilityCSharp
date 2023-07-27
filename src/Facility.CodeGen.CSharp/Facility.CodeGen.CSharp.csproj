@@ -5,10 +5,15 @@
     <Description>A library that generates C# for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD C# CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Facility.Definition" Version="$(FacilityVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

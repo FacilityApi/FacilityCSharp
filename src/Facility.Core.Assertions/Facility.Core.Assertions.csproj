@@ -5,6 +5,7 @@
     <Description>FluentAssertions extensions for Facility unit tests.</Description>
     <PackageTags>Facility FluentAssertions test testing</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Facility.Core\Facility.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@
     <Description>A library for consuming/implementing Facility APIs.</Description>
     <PackageTags>Facility FSD Core</PackageTags>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="System.Text.Json" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
