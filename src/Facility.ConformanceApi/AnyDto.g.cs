@@ -78,7 +78,7 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				String == other.String &&
 				Boolean == other.Boolean &&
-				Double == other.Double &&
+				Double.Equals(other.Double) &&
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&
 				Decimal == other.Decimal &&

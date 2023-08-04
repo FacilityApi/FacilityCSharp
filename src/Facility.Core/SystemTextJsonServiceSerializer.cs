@@ -237,7 +237,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		NumberHandling = JsonNumberHandling.AllowReadingFromString,
+		NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
 		PropertyNameCaseInsensitive = true,
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =

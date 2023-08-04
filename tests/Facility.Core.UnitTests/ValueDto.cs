@@ -17,6 +17,8 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 
 	public static ValueDto Create(int? value) => new ValueDto { IntegerValue = value };
 
+	public static ValueDto Create(double? value) => new ValueDto { DoubleValue = value };
+
 	[Key(0)]
 	public bool? BooleanValue { get; set; }
 
@@ -35,6 +37,9 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 	[Key(5)]
 	public int? IntegerValue { get; set; }
 
+	[Key(6)]
+	public double? DoubleValue { get; set; }
+
 	public override bool IsEquivalentTo(ValueDto? other) =>
 		other != null &&
 		BooleanValue == other.BooleanValue &&
@@ -42,5 +47,6 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 		ServiceDataUtility.AreEquivalentFieldValues(ErrorArrayValue, other.ErrorArrayValue) &&
 		ServiceDataUtility.AreEquivalentFieldValues(BooleanMapValue, other.BooleanMapValue) &&
 		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue) &&
-		IntegerValue == other.IntegerValue;
+		IntegerValue == other.IntegerValue &&
+		DoubleValue.Equals(other.DoubleValue);
 }

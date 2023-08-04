@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.20.2
+
+* Allow named floating point literals.
+
 ## 2.20.1
 
 * Support reading string from Boolean or number.
