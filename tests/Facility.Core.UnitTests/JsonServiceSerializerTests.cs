@@ -169,9 +169,19 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	}
 
 	[Test]
-	public void AllowReadingNumberFromString()
+	public void AllowReadingIntegerFromString()
 	{
 		JsonSerializer.FromJson<ValueDto>("""{"integerValue":"42"}""").Should().BeDto(ValueDto.Create(42));
+	}
+
+	[Test]
+	public void AllowReadingDoubleFromString()
+	{
+		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"42"}""").Should().BeDto(ValueDto.Create(42.0));
+		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"6.825"}""").Should().BeDto(ValueDto.Create(6.825));
+		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"Infinity"}""").Should().BeDto(ValueDto.Create(double.PositiveInfinity));
+		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"-Infinity"}""").Should().BeDto(ValueDto.Create(double.NegativeInfinity));
+		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"NaN"}""").Should().BeDto(ValueDto.Create(double.NaN));
 	}
 
 	[Test]

@@ -409,7 +409,9 @@ public sealed class CSharpGenerator : CodeGenerator
 									var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
 									code.Write(areEquivalentMethodName != null ?
 										$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
-										$"{propertyName} == other.{propertyName}");
+										fieldType.Kind == ServiceTypeKind.Double ?
+											$"{propertyName}.Equals(other.{propertyName})" : // for NaN
+											$"{propertyName} == other.{propertyName}");
 									code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
 								}
 							}
