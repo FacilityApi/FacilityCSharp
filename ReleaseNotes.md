@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.20.0
+
+* Support reading Boolean from string.
+
 ## 2.19.0
 
 * Support `extern` data and enum types.

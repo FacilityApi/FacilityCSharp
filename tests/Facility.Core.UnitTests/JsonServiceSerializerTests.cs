@@ -18,7 +18,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void CamelCase()
 	{
 		var dto = ValueDto.Create(true);
-		var json = "{\"booleanValue\":true}";
+		const string json = """{"booleanValue":true}""";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -28,7 +28,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void CamelCaseExceptDictionaryKeys()
 	{
 		var dto = ValueDto.Create(new Dictionary<string, bool> { ["Key"] = true });
-		var json = "{\"booleanMapValue\":{\"Key\":true}}";
+		const string json = """{"booleanMapValue":{"Key":true}}""";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -38,7 +38,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void DateParseHandlingNone()
 	{
 		var dto = ValueDto.Create("2016-10-21T15:31:00Z");
-		var json = $"{{\"stringValue\":\"{dto.StringValue}\"}}";
+		var json = $$"""{"stringValue":"{{dto.StringValue}}"}""";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -48,7 +48,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void NullValueHandlingIgnore()
 	{
 		var dto = ValueDto.Create(default(bool?));
-		var json = "{}";
+		const string json = "{}";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -58,7 +58,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void MissingMemberHandlingIgnore()
 	{
 		var dto = ValueDto.Create(true);
-		var json = "{\"booleanValue\":true,\"missing\":false}";
+		const string json = """{"booleanValue":true,"missing":false}""";
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
 	}
 
@@ -66,7 +66,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	public void MetadataPropertyHandlingIgnore()
 	{
 		var dto = ValueDto.Create(true);
-		var json = "{\"$ref\":\"xyzzy\",\"booleanValue\":true}";
+		const string json = """{"$ref":"xyzzy","booleanValue":true}""";
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
 	}
 
@@ -80,7 +80,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 			invalidRequest,
 			invalidResponse,
 		});
-		var json = "{\"errorArrayValue\":[{\"code\":\"InvalidRequest\"},{\"code\":\"InvalidResponse\"}]}";
+		const string json = """{"errorArrayValue":[{"code":"InvalidRequest"},{"code":"InvalidResponse"}]}""";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -97,7 +97,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 			["response"] = invalidResponse,
 		});
 
-		var json = "{\"errorMapValue\":{\"request\":{\"code\":\"InvalidRequest\"},\"response\":{\"code\":\"InvalidResponse\"}}}";
+		const string json = """{"errorMapValue":{"request":{"code":"InvalidRequest"},"response":{"code":"InvalidResponse"}}}""";
 
 		JsonSerializer.ToJson(dto).Should().Be(json);
 		JsonSerializer.FromJson<ValueDto>(json).Should().BeDto(dto);
@@ -166,5 +166,19 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 		Assert.AreEqual(0, JsonSerializer.FromJson<JArray>(JsonSerializer.ToJson(new JArray()))!.Count);
 		Assert.AreEqual("hi", (string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson((JValue) "hi"))!);
 		Assert.IsTrue((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson((JToken) true))!);
+	}
+
+	[Test]
+	public void AllowReadingNumberFromString()
+	{
+		JsonSerializer.FromJson<ValueDto>("""{"integerValue":"42"}""").Should().BeDto(ValueDto.Create(42));
+	}
+
+	[Test]
+	public void AllowReadingBooleanFromString()
+	{
+		JsonSerializer.FromJson<ValueDto>("""{"booleanValue":"true"}""").Should().BeDto(ValueDto.Create(true));
+		JsonSerializer.FromJson<ValueDto>("""{"booleanValue":"false"}""").Should().BeDto(ValueDto.Create(false));
+		JsonSerializer.FromJson<ValueDto>("""{"booleanValue":null}""").Should().BeDto(new ValueDto());
 	}
 }

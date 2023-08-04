@@ -15,6 +15,8 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 
 	public static ValueDto Create(IReadOnlyDictionary<string, ServiceErrorDto> value) => new ValueDto { ErrorMapValue = value };
 
+	public static ValueDto Create(int? value) => new ValueDto { IntegerValue = value };
+
 	[Key(0)]
 	public bool? BooleanValue { get; set; }
 
@@ -30,11 +32,15 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 	[Key(4)]
 	public IReadOnlyDictionary<string, ServiceErrorDto>? ErrorMapValue { get; set; }
 
+	[Key(5)]
+	public int? IntegerValue { get; set; }
+
 	public override bool IsEquivalentTo(ValueDto? other) =>
 		other != null &&
 		BooleanValue == other.BooleanValue &&
 		StringValue == other.StringValue &&
 		ServiceDataUtility.AreEquivalentFieldValues(ErrorArrayValue, other.ErrorArrayValue) &&
 		ServiceDataUtility.AreEquivalentFieldValues(BooleanMapValue, other.BooleanMapValue) &&
-		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue);
+		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue) &&
+		IntegerValue == other.IntegerValue;
 }
