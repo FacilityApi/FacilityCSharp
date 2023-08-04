@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.20.1
+
+* Support reading string from Boolean or number.
+
 ## 2.20.0
 
 * Support reading Boolean from string.

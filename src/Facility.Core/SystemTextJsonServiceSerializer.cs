@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -212,6 +213,26 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			writer.WriteBooleanValue(value);
 	}
 
+	private sealed class AllowReadingStringFromNonStringConverter : JsonConverter<string>
+	{
+		public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			reader.TokenType switch
+			{
+				JsonTokenType.String => reader.GetString()!,
+				JsonTokenType.True => "true",
+				JsonTokenType.False => "false",
+#if !NETSTANDARD2_0
+				JsonTokenType.Number => Encoding.UTF8.GetString(reader.ValueSpan),
+#else
+				JsonTokenType.Number => Encoding.UTF8.GetString(reader.ValueSpan.ToArray()),
+#endif
+				_ => throw new JsonException(),
+			};
+
+		public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) =>
+			writer.WriteStringValue(value);
+	}
+
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -221,6 +242,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =
 		{
+			new AllowReadingStringFromNonStringConverter(),
 			new AllowReadingBooleanFromStringConverter(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JArray>(),

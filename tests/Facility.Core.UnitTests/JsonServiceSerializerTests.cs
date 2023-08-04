@@ -181,4 +181,14 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 		JsonSerializer.FromJson<ValueDto>("""{"booleanValue":"false"}""").Should().BeDto(ValueDto.Create(false));
 		JsonSerializer.FromJson<ValueDto>("""{"booleanValue":null}""").Should().BeDto(new ValueDto());
 	}
+
+	[Test]
+	public void AllowReadingStringFromNonString()
+	{
+		JsonSerializer.FromJson<ValueDto>("""{"stringValue":true}""").Should().BeDto(ValueDto.Create("true"));
+		JsonSerializer.FromJson<ValueDto>("""{"stringValue":false}""").Should().BeDto(ValueDto.Create("false"));
+		JsonSerializer.FromJson<ValueDto>("""{"stringValue":42}""").Should().BeDto(ValueDto.Create("42"));
+		JsonSerializer.FromJson<ValueDto>("""{"stringValue":6.825}""").Should().BeDto(ValueDto.Create("6.825"));
+		JsonSerializer.FromJson<ValueDto>("""{"stringValue":null}""").Should().BeDto(new ValueDto());
+	}
 }
