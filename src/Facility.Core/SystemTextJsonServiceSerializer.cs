@@ -196,6 +196,22 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			writer.WriteRawValue(ServiceJsonUtility.ToJson(value));
 	}
 
+	private sealed class AllowReadingBooleanFromStringConverter : JsonConverter<bool>
+	{
+		public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			reader.TokenType switch
+			{
+				JsonTokenType.True => true,
+				JsonTokenType.False => false,
+				JsonTokenType.String when reader.ValueTextEquals("true"u8) => true,
+				JsonTokenType.String when reader.ValueTextEquals("false"u8) => false,
+				_ => throw new JsonException(),
+			};
+
+		public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) =>
+			writer.WriteBooleanValue(value);
+	}
+
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -205,6 +221,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =
 		{
+			new AllowReadingBooleanFromStringConverter(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JArray>(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JValue>(),
