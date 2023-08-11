@@ -50,6 +50,17 @@ public static class ServiceDataUtility
 	}
 
 	/// <summary>
+	/// True if the date/times are equivalent (same second).
+	/// </summary>
+	public static bool AreEquivalentDateTimes(DateTime? first, DateTime? second)
+	{
+		const long ticksPerSecond = 10000000L;
+		return first is { } firstValue
+			? second is { } secondValue && firstValue.Ticks / ticksPerSecond == secondValue.Ticks / ticksPerSecond
+			: second is null;
+	}
+
+	/// <summary>
 	/// True if the arrays are equivalent.
 	/// </summary>
 	public static bool AreEquivalentArrays<T>(IReadOnlyList<T>? first, IReadOnlyList<T>? second, Func<T, T, bool> areEquivalent)
@@ -138,6 +149,45 @@ public static class ServiceDataUtility
 	public static decimal? TryParseDecimal(string? text) => decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(decimal?);
 
 	/// <summary>
+	/// Attempts to parse a Boolean.
+	/// </summary>
+	public static DateTime? TryParseDateTime(string? text) =>
+		DateTime.TryParseExact(text, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var value) ? value : default(DateTime?);
+
+	/// <summary>
+	/// Renders a date/time.
+	/// </summary>
+	public static string RenderDateTime(DateTime dateTime)
+	{
+		if (dateTime.Kind != DateTimeKind.Utc)
+			throw new ArgumentException("DateTime must use DateTimeKind.Utc.", nameof(dateTime));
+
+		Span<char> text = stackalloc char[20];
+		var century = Math.DivRem(dateTime.Year, 100, out var year);
+		WriteTwoDigitNumber(century, text);
+		WriteTwoDigitNumber(year, text.Slice(2));
+		text[4] = '-';
+		WriteTwoDigitNumber(dateTime.Month, text.Slice(5));
+		text[7] = '-';
+		WriteTwoDigitNumber(dateTime.Day, text.Slice(8));
+		text[10] = 'T';
+		WriteTwoDigitNumber(dateTime.Hour, text.Slice(11));
+		text[13] = ':';
+		WriteTwoDigitNumber(dateTime.Minute, text.Slice(14));
+		text[16] = ':';
+		WriteTwoDigitNumber(dateTime.Second, text.Slice(17));
+		text[19] = 'Z';
+		return text.ToString();
+
+		static void WriteTwoDigitNumber(int value, Span<char> output)
+		{
+			var firstDigit = Math.DivRem(value, 10, out var secondDigit);
+			output[0] = (char) ('0' + firstDigit);
+			output[1] = (char) ('0' + secondDigit);
+		}
+	}
+
+	/// <summary>
 	/// Returns the required field error message.
 	/// </summary>
 	public static string GetRequiredFieldErrorMessage(string fieldName) => $"'{fieldName}' is required.";
@@ -156,7 +206,13 @@ public static class ServiceDataUtility
 			var type = typeof(T);
 			var typeInfo = type.GetTypeInfo();
 
-			if (Nullable.GetUnderlyingType(type) != null || typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
+			if (type == typeof(DateTime))
+				return (IEqualityComparer<T>) Activator.CreateInstance(typeof(DateTimeEquivalenceComparer))!;
+			if (type == typeof(DateTime?))
+				return (IEqualityComparer<T>) Activator.CreateInstance(typeof(NullableDateTimeEquivalenceComparer))!;
+
+			var underlyingType = Nullable.GetUnderlyingType(type);
+			if (underlyingType != null || typeof(IEquatable<T>).GetTypeInfo().IsAssignableFrom(typeInfo))
 				return EqualityComparer<T>.Default;
 
 			if (typeof(ServiceDto).GetTypeInfo().IsAssignableFrom(typeInfo))
@@ -219,6 +275,16 @@ public static class ServiceDataUtility
 	private sealed class JObjectEquivalenceComparer : NoHashCodeEqualityComparer<JObject>
 	{
 		public override bool Equals(JObject? x, JObject? y) => AreEquivalentObjects(x, y);
+	}
+
+	private sealed class DateTimeEquivalenceComparer : NoHashCodeEqualityComparer<DateTime>
+	{
+		public override bool Equals(DateTime x, DateTime y) => AreEquivalentDateTimes(x, y);
+	}
+
+	private sealed class NullableDateTimeEquivalenceComparer : NoHashCodeEqualityComparer<DateTime?>
+	{
+		public override bool Equals(DateTime? x, DateTime? y) => AreEquivalentDateTimes(x, y);
 	}
 
 	private sealed class ArrayEquivalenceComparer<T, TItem> : NoHashCodeEqualityComparer<T>

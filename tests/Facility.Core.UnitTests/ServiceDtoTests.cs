@@ -50,4 +50,40 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 		second.Id += 1;
 		first.IsEquivalentTo(second).Should().Be(false);
 	}
+
+	[Test]
+	public async Task DateTimeRoundTrip()
+	{
+		var before = new DateTime(2001, 2, 3, 4, 5, 6, DateTimeKind.Utc);
+		var after = await DateTimeRoundTripAsync(before);
+		after.Should().Be(before);
+	}
+
+	[Test]
+	public async Task DateTimeRoundTripWithMilliseconds()
+	{
+		var before = new DateTime(2001, 2, 3, 4, 5, 6, 7, DateTimeKind.Utc);
+		var after = await DateTimeRoundTripAsync(before);
+		after.Should().Be(new DateTime(2001, 2, 3, 4, 5, 6, DateTimeKind.Utc));
+	}
+
+	[TestCase(DateTimeKind.Local)]
+	[TestCase(DateTimeKind.Unspecified)]
+	public async Task DateTimeNotUtc(DateTimeKind kind)
+	{
+		var input = ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, kind));
+		using var stream = new MemoryStream();
+		Assert.ThrowsAsync<ServiceSerializationException>(
+			async () => await Serializer.ToStreamAsync(input, stream, CancellationToken.None));
+	}
+
+	private async Task<DateTime?> DateTimeRoundTripAsync(DateTime value)
+	{
+		var input = ValueDto.Create(value);
+		using var stream = new MemoryStream();
+		await Serializer.ToStreamAsync(input, stream, CancellationToken.None);
+		stream.Position = 0;
+		var output = (ValueDto) (await Serializer.FromStreamAsync(stream, typeof(ValueDto), CancellationToken.None))!;
+		return output.DateTimeValue;
+	}
 }

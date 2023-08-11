@@ -233,6 +233,24 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 			writer.WriteStringValue(value);
 	}
 
+	private sealed class DateTimeConverter : JsonConverter<DateTime>
+	{
+		public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			ServiceDataUtility.TryParseDateTime(reader.GetString()) ?? throw new JsonException();
+
+		public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+		{
+			try
+			{
+				writer.WriteStringValue(ServiceDataUtility.RenderDateTime(value));
+			}
+			catch (ArgumentException exception)
+			{
+				throw new JsonException(null, exception);
+			}
+		}
+	}
+
 	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
 	{
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -242,6 +260,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		Converters =
 		{
+			new DateTimeConverter(),
 			new AllowReadingStringFromNonStringConverter(),
 			new AllowReadingBooleanFromStringConverter(),
 			new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>(),

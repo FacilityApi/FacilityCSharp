@@ -295,6 +295,7 @@ namespace Facility.ConformanceApi.Http
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						{ "datetime", request.Datetime == null ? null : ServiceDataUtility.RenderDateTime(request.Datetime.Value) },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
@@ -312,6 +313,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
 					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					parameters.TryGetValue("datetime", out var queryParameterDatetime);
+					request.Datetime = ServiceDataUtility.TryParseDateTime(queryParameterDatetime);
 					return request;
 				},
 				ResponseMappings =
@@ -327,7 +330,7 @@ namespace Facility.ConformanceApi.Http
 			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Get,
-				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}",
+				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}/{datetime}",
 				ValidateRequest = request =>
 				{
 					if (string.IsNullOrEmpty(request.String))
@@ -344,6 +347,8 @@ namespace Facility.ConformanceApi.Http
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("decimal"));
 					if (request.Enum == null)
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("enum"));
+					if (request.Datetime == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("datetime"));
 					return ServiceResult.Success();
 				},
 				GetUriParameters = request =>
@@ -356,6 +361,7 @@ namespace Facility.ConformanceApi.Http
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "decimal", request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "enum", request.Enum == null ? null : request.Enum.Value.ToString() },
+						{ "datetime", request.Datetime == null ? null : ServiceDataUtility.RenderDateTime(request.Datetime.Value) },
 					},
 				SetUriParameters = (request, parameters) =>
 				{
@@ -373,6 +379,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(queryParameterDecimal);
 					parameters.TryGetValue("enum", out var queryParameterEnum);
 					request.Enum = queryParameterEnum == null ? default(Answer?) : new Answer(queryParameterEnum);
+					parameters.TryGetValue("datetime", out var queryParameterDatetime);
+					request.Datetime = ServiceDataUtility.TryParseDateTime(queryParameterDatetime);
 					return request;
 				},
 				ResponseMappings =
@@ -399,6 +407,7 @@ namespace Facility.ConformanceApi.Http
 						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
 						["decimal"] = request.Decimal == null ? null : request.Decimal.Value.ToString(CultureInfo.InvariantCulture),
 						["enum"] = request.Enum == null ? null : request.Enum.Value.ToString(),
+						["datetime"] = request.Datetime == null ? null : ServiceDataUtility.RenderDateTime(request.Datetime.Value),
 					},
 				SetRequestHeaders = (request, headers) =>
 				{
@@ -416,6 +425,8 @@ namespace Facility.ConformanceApi.Http
 					request.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
 					headers.TryGetValue("enum", out var headerEnum);
 					request.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					headers.TryGetValue("datetime", out var headerDatetime);
+					request.Datetime = ServiceDataUtility.TryParseDateTime(headerDatetime);
 					return request;
 				},
 				ResponseMappings =
@@ -435,6 +446,7 @@ namespace Facility.ConformanceApi.Http
 						["int64"] = response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture),
 						["decimal"] = response.Decimal == null ? null : response.Decimal.Value.ToString(CultureInfo.InvariantCulture),
 						["enum"] = response.Enum == null ? null : response.Enum.Value.ToString(),
+						["datetime"] = response.Datetime == null ? null : ServiceDataUtility.RenderDateTime(response.Datetime.Value),
 					},
 				SetResponseHeaders = (response, headers) =>
 				{
@@ -452,6 +464,8 @@ namespace Facility.ConformanceApi.Http
 					response.Decimal = ServiceDataUtility.TryParseDecimal(headerDecimal);
 					headers.TryGetValue("enum", out var headerEnum);
 					response.Enum = headerEnum == null ? default(Answer?) : new Answer(headerEnum);
+					headers.TryGetValue("datetime", out var headerDatetime);
+					response.Datetime = ServiceDataUtility.TryParseDateTime(headerDatetime);
 					return response;
 				},
 			}.Build();

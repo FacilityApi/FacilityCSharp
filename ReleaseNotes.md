@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.21.0
+
+* Support `datetime`.
+
 ## 2.20.2
 
 * Allow named floating point literals.

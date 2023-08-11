@@ -153,8 +153,32 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 		protected override string ResolveDictionaryKey(string dictionaryKey) => dictionaryKey;
 	}
 
+	private sealed class DateTimeConverter : ServiceJsonConverterBase<DateTime>
+	{
+		protected override DateTime ReadCore(JsonReader reader, JsonSerializer serializer)
+		{
+			if (reader.TokenType != JsonToken.String)
+				throw new JsonSerializationException($"Expected string for DateTime; got {reader.TokenType}.");
+
+			return ServiceDataUtility.TryParseDateTime((string) reader.Value!) ?? throw new JsonException();
+		}
+
+		protected override void WriteCore(JsonWriter writer, DateTime value, JsonSerializer serializer)
+		{
+			try
+			{
+				writer.WriteValue(ServiceDataUtility.RenderDateTime(value));
+			}
+			catch (ArgumentException exception)
+			{
+				throw new JsonSerializationException(exception.Message, exception);
+			}
+		}
+	}
+
 	private static readonly JsonSerializerSettings s_jsonSerializerSettings = new()
 	{
+		Converters = new JsonConverter[] { new DateTimeConverter() },
 		ContractResolver = new CamelCaseExceptDictionaryKeysContractResolver(),
 		DateParseHandling = DateParseHandling.None,
 		NullValueHandling = NullValueHandling.Ignore,

@@ -38,6 +38,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("decimal")]
 		public IReadOnlyDictionary<string, decimal>? Decimal { get; set; }
 
+		[MessagePack.Key("datetime")]
+		public IReadOnlyDictionary<string, DateTime>? Datetime { get; set; }
+
 		[MessagePack.Key("bytes")]
 		public IReadOnlyDictionary<string, byte[]>? Bytes { get; set; }
 
@@ -82,6 +85,7 @@ namespace Facility.ConformanceApi
 				ServiceDataUtility.AreEquivalentFieldValues(Int32, other.Int32) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Int64, other.Int64) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Decimal, other.Decimal) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Datetime, other.Datetime) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Bytes, other.Bytes) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Object, other.Object) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Error, other.Error) &&

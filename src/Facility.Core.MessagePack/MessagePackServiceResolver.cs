@@ -22,6 +22,11 @@ internal sealed class MessagePackServiceResolver : IFormatterResolver
 		{
 			var type = typeof(T);
 
+			if (type == typeof(DateTime))
+				return (IMessagePackFormatter<T>) (object) DateTimeMessagePackFormatter.Instance;
+			if (type == typeof(DateTime?))
+				return (IMessagePackFormatter<T>) (object) NullableDateTimeMessagePackFormatter.Instance;
+
 			if (type == typeof(ServiceObject))
 				return (IMessagePackFormatter<T>) (object) ServiceObjectMessagePackFormatter.Instance;
 
@@ -42,5 +47,43 @@ internal sealed class MessagePackServiceResolver : IFormatterResolver
 
 			return StandardResolver.Instance.GetFormatter<T>();
 		}
+	}
+
+	private static DateTime TruncateDateTime(DateTime value) =>
+		new(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Kind);
+
+	private sealed class DateTimeMessagePackFormatter : IMessagePackFormatter<DateTime>
+	{
+		public static readonly DateTimeMessagePackFormatter Instance = new();
+
+		public void Serialize(ref MessagePackWriter writer, DateTime value, MessagePackSerializerOptions options) =>
+			writer.Write(TruncateDateTime(value));
+
+		public DateTime Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) =>
+			reader.ReadDateTime();
+	}
+
+	private sealed class NullableDateTimeMessagePackFormatter : IMessagePackFormatter<DateTime?>
+	{
+		public static readonly NullableDateTimeMessagePackFormatter Instance = new();
+
+		public void Serialize(ref MessagePackWriter writer, DateTime? value, MessagePackSerializerOptions options)
+		{
+			if (value is null)
+			{
+				writer.WriteNil();
+				return;
+			}
+
+			var dateTimeValue = value.Value;
+
+			if (dateTimeValue.Kind != DateTimeKind.Utc)
+				throw new MessagePackSerializationException("DateTime must use DateTimeKind.Utc.");
+
+			writer.Write(TruncateDateTime(dateTimeValue));
+		}
+
+		public DateTime? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) =>
+			reader.TryReadNil() ? null : reader.ReadDateTime();
 	}
 }

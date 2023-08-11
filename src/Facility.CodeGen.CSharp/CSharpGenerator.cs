@@ -1002,6 +1002,8 @@ public sealed class CSharpGenerator : CodeGenerator
 			case ServiceTypeKind.Int64:
 			case ServiceTypeKind.Decimal:
 				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString(CultureInfo.InvariantCulture)";
+			case ServiceTypeKind.DateTime:
+				return $"{fieldCode} == null ? null : ServiceDataUtility.RenderDateTime({fieldCode}.Value)";
 			case ServiceTypeKind.String:
 				return fieldCode;
 			default:
@@ -1029,6 +1031,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				return $"ServiceDataUtility.TryParseInt64({fieldCode})";
 			case ServiceTypeKind.Decimal:
 				return $"ServiceDataUtility.TryParseDecimal({fieldCode})";
+			case ServiceTypeKind.DateTime:
+				return $"ServiceDataUtility.TryParseDateTime({fieldCode})";
 			case ServiceTypeKind.String:
 				return fieldCode;
 			default:
@@ -1234,6 +1238,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				return "AreEquivalentBytes";
 			case ServiceTypeKind.Object:
 				return "AreEquivalentObjects";
+			case ServiceTypeKind.DateTime:
+				return "AreEquivalentDateTimes";
 			case ServiceTypeKind.Error:
 			case ServiceTypeKind.Dto:
 			case ServiceTypeKind.ExternalDto:
@@ -1479,6 +1485,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			ServiceTypeKind.Int32 => ("int", true),
 			ServiceTypeKind.Int64 => ("long", true),
 			ServiceTypeKind.Decimal => ("decimal", true),
+			ServiceTypeKind.DateTime => ("DateTime", true),
 			ServiceTypeKind.Bytes => ("byte[]", false),
 			ServiceTypeKind.Object => ("ServiceObject", false),
 			ServiceTypeKind.Error => ("ServiceErrorDto", false),
