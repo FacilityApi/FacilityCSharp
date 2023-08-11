@@ -57,6 +57,12 @@ namespace Facility.ConformanceApi
 		public ServiceNullable<decimal?> Decimal { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<DateTime?>))]
+		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+		[MessagePack.Key("datetime")]
+		public ServiceNullable<DateTime?> Datetime { get; set; }
+
+		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
 		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<byte[]?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("bytes")]
@@ -121,6 +127,7 @@ namespace Facility.ConformanceApi
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&
 				Decimal == other.Decimal &&
+				Datetime == other.Datetime &&
 				Bytes == other.Bytes &&
 				Object == other.Object &&
 				Error == other.Error &&

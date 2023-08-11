@@ -201,4 +201,49 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 		JsonSerializer.FromJson<ValueDto>("""{"stringValue":6.825}""").Should().BeDto(ValueDto.Create("6.825"));
 		JsonSerializer.FromJson<ValueDto>("""{"stringValue":null}""").Should().BeDto(new ValueDto());
 	}
+
+	[Test]
+	public void DateTimeToJson()
+	{
+		var input = ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, DateTimeKind.Utc));
+		JsonSerializer.ToJson(input).Should().Be("""{"dateTimeValue":"2001-02-03T04:05:06Z"}""");
+	}
+
+	[Test]
+	public void DateTimeFromJson()
+	{
+		var output = JsonSerializer.FromJson<ValueDto>("""{"dateTimeValue":"2001-02-03T04:05:06Z"}""");
+		output.Should().BeDto(ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, DateTimeKind.Utc)));
+		output!.DateTimeValue!.Value.Kind.Should().Be(DateTimeKind.Utc);
+	}
+
+	[Test]
+	public void DateTimeToJsonWithMilliseconds()
+	{
+		var input = ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, 7, DateTimeKind.Utc));
+		JsonSerializer.ToJson(input).Should().Be("""{"dateTimeValue":"2001-02-03T04:05:06Z"}""");
+	}
+
+	[Test]
+	public void DateTimeFromJsonWithMilliseconds()
+	{
+		Assert.Throws<ServiceSerializationException>(
+			() => JsonSerializer.FromJson<ValueDto>("""{"dateTimeValue":"2001-02-03T04:05:06.007Z"}"""));
+	}
+
+	[Test]
+	public void DateTimeEquivalenceWithMilliseconds()
+	{
+		ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, 1, DateTimeKind.Utc))
+			.IsEquivalentTo(ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, 999, DateTimeKind.Utc)))
+			.Should().BeTrue();
+	}
+
+	[TestCase(DateTimeKind.Local)]
+	[TestCase(DateTimeKind.Unspecified)]
+	public void DateTimeNotUtc(DateTimeKind kind)
+	{
+		Assert.Throws<ServiceSerializationException>(
+			() => JsonSerializer.ToJson(ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, kind))));
+	}
 }

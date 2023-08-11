@@ -10,7 +10,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },
@@ -24,7 +25,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },
@@ -205,6 +207,7 @@
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
             "decimal": [1.5, 6.875],
+            "datetime": ["2001-02-03T04:05:06Z", "2023-08-10T19:41:21Z"],
             "bytes": ["aGk=", ""],
             "object": [{ "": null, " ": [null] }, {}],
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
@@ -227,6 +230,7 @@
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
             "decimal": [1.5, 6.875],
+            "datetime": ["2001-02-03T04:05:06Z", "2023-08-10T19:41:21Z"],
             "bytes": ["aGk=", ""],
             "object": [{ "": null, " ": [null] }, {}],
             "error": [{ "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }],
@@ -252,6 +256,7 @@
           "int32": 42,
           "int64": 12345678910,
           "decimal": 1.5,
+          "datetime": "2001-02-03T04:05:06Z",
           "bytes": "aGk=",
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -267,6 +272,7 @@
           "int32": 42,
           "int64": 12345678910,
           "decimal": 1.5,
+          "datetime": "2001-02-03T04:05:06Z",
           "bytes": "aGk=",
           "object": { "": null, " ": [null] },
           "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -285,7 +291,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {
         "string": "string",
@@ -294,7 +301,8 @@
         "int32": 42,
         "int64": 12345678910,
         "decimal": 1.5,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       }
     },
     {
@@ -315,6 +323,7 @@
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
             "decimal": { "": 1.5, " ": 6.875 },
+            "datetime": { "": "2001-02-03T04:05:06Z", " ": "2023-08-10T19:41:21Z" },
             "bytes": { "": "aGk=", " ": "" },
             "object": { "": { "": null, " ": [null] }, " ": {} },
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
@@ -336,6 +345,7 @@
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
             "decimal": { "": 1.5, " ": 6.875 },
+            "datetime": { "": "2001-02-03T04:05:06Z", " ": "2023-08-10T19:41:21Z" },
             "bytes": { "": "aGk=", " ": "" },
             "object": { "": { "": null, " ": [null] }, " ": {} },
             "error": { "": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } }, " ": {} },
@@ -361,6 +371,7 @@
             "int32": 42,
             "int64": 12345678910,
             "decimal": 1.5,
+            "datetime": "2001-02-03T04:05:06Z",
             "bytes": "aGk=",
             "object": { "": null, " ": [null] },
             "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -381,6 +392,7 @@
             "int32": 42,
             "int64": 12345678910,
             "decimal": 1.5,
+            "datetime": "2001-02-03T04:05:06Z",
             "bytes": "aGk=",
             "object": { "": null, " ": [null] },
             "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } },
@@ -421,6 +433,7 @@
             "int32": null,
             "int64": null,
             "decimal": null,
+            "datetime": null,
             "bytes": null,
             "object": null,
             "error": null,
@@ -441,6 +454,7 @@
             "int32": null,
             "int64": null,
             "decimal": null,
+            "datetime": null,
             "bytes": null,
             "object": null,
             "error": null,
@@ -465,6 +479,7 @@
             "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "datetime": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -485,6 +500,7 @@
             "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "decimal": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "datetime": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "bytes": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "object": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "error": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -509,6 +525,7 @@
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
             "decimal": { "value": 1.5 },
+            "datetime": { "value": "2001-02-03T04:05:06Z" },
             "bytes": { "value": "aGk=" },
             "object": { "value": { "": null, " ": [null] } },
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -530,6 +547,7 @@
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
             "decimal": { "value": 1.5 },
+            "datetime": { "value": "2001-02-03T04:05:06Z" },
             "bytes": { "value": "aGk=" },
             "object": { "value": { "": null, " ": [null] } },
             "error": { "value": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -767,7 +785,7 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes"
+        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "pathCase",
@@ -776,7 +794,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },
@@ -785,7 +804,7 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes"
+        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "booleanCase",
@@ -794,7 +813,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },
@@ -803,7 +823,7 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
+        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "pathCase",
@@ -812,7 +832,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },
@@ -821,7 +842,7 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes"
+        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "queryCase",
@@ -830,7 +851,8 @@
         "int32": 3,
         "int64": 4,
         "decimal": 0.625,
-        "enum": "yes"
+        "enum": "yes",
+        "datetime": "2001-02-03T04:05:06Z"
       },
       "response": {}
     },

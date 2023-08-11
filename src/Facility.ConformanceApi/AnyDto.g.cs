@@ -38,6 +38,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("decimal")]
 		public decimal? Decimal { get; set; }
 
+		[MessagePack.Key("datetime")]
+		public DateTime? Datetime { get; set; }
+
 		[MessagePack.Key("bytes")]
 		public byte[]? Bytes { get; set; }
 
@@ -82,6 +85,7 @@ namespace Facility.ConformanceApi
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&
 				Decimal == other.Decimal &&
+				ServiceDataUtility.AreEquivalentDateTimes(Datetime, other.Datetime) &&
 				ServiceDataUtility.AreEquivalentBytes(Bytes, other.Bytes) &&
 				ServiceDataUtility.AreEquivalentObjects(Object, other.Object) &&
 				ServiceDataUtility.AreEquivalentDtos(Error, other.Error) &&
