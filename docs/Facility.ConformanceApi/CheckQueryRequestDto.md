@@ -12,6 +12,7 @@ public sealed class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 | --- | --- |
 | [CheckQueryRequestDto](CheckQueryRequestDto/CheckQueryRequestDto.md)() | Creates an instance. |
 | [Boolean](CheckQueryRequestDto/Boolean.md) { get; set; } |  |
+| [Datetime](CheckQueryRequestDto/Datetime.md) { get; set; } |  |
 | [Decimal](CheckQueryRequestDto/Decimal.md) { get; set; } |  |
 | [Double](CheckQueryRequestDto/Double.md) { get; set; } |  |
 | [Enum](CheckQueryRequestDto/Enum.md) { get; set; } |  |

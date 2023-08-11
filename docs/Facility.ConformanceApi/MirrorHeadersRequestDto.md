@@ -12,6 +12,7 @@ public sealed class MirrorHeadersRequestDto : ServiceDto<MirrorHeadersRequestDto
 | --- | --- |
 | [MirrorHeadersRequestDto](MirrorHeadersRequestDto/MirrorHeadersRequestDto.md)() | Creates an instance. |
 | [Boolean](MirrorHeadersRequestDto/Boolean.md) { get; set; } |  |
+| [Datetime](MirrorHeadersRequestDto/Datetime.md) { get; set; } |  |
 | [Decimal](MirrorHeadersRequestDto/Decimal.md) { get; set; } |  |
 | [Double](MirrorHeadersRequestDto/Double.md) { get; set; } |  |
 | [Enum](MirrorHeadersRequestDto/Enum.md) { get; set; } |  |

@@ -12,6 +12,7 @@ public static class ServiceDataUtility
 | --- | --- |
 | static [AreEquivalentArrays&lt;T&gt;](ServiceDataUtility/AreEquivalentArrays.md)(…) | True if the arrays are equivalent. |
 | static [AreEquivalentBytes](ServiceDataUtility/AreEquivalentBytes.md)(…) | True if the bytes are equivalent. |
+| static [AreEquivalentDateTimes](ServiceDataUtility/AreEquivalentDateTimes.md)(…) | True if the date/times are equivalent (same second). |
 | static [AreEquivalentDtos](ServiceDataUtility/AreEquivalentDtos.md)(…) | True if the DTOs are equivalent. |
 | static [AreEquivalentFieldValues&lt;T&gt;](ServiceDataUtility/AreEquivalentFieldValues.md)(…) | True if the field values are equal. |
 | static [AreEquivalentMaps&lt;T&gt;](ServiceDataUtility/AreEquivalentMaps.md)(…) | True if the maps are equivalent. |
@@ -20,7 +21,9 @@ public static class ServiceDataUtility
 | static [Clone&lt;T&gt;](ServiceDataUtility/Clone.md)(…) | Clones the data element. |
 | static [GetInvalidFieldErrorMessage](ServiceDataUtility/GetInvalidFieldErrorMessage.md)(…) | Returns the invalid field error message prefix. |
 | static [GetRequiredFieldErrorMessage](ServiceDataUtility/GetRequiredFieldErrorMessage.md)(…) | Returns the required field error message. |
+| static [RenderDateTime](ServiceDataUtility/RenderDateTime.md)(…) | Renders a date/time. |
 | static [TryParseBoolean](ServiceDataUtility/TryParseBoolean.md)(…) | Attempts to parse a Boolean. |
+| static [TryParseDateTime](ServiceDataUtility/TryParseDateTime.md)(…) | Attempts to parse a Boolean. |
 | static [TryParseDecimal](ServiceDataUtility/TryParseDecimal.md)(…) | Attempts to parse a Decimal. |
 | static [TryParseDouble](ServiceDataUtility/TryParseDouble.md)(…) | Attempts to parse a Double. |
 | static [TryParseInt32](ServiceDataUtility/TryParseInt32.md)(…) | Attempts to parse an Int32. |

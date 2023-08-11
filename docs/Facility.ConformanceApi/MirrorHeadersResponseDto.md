@@ -12,6 +12,7 @@ public sealed class MirrorHeadersResponseDto : ServiceDto<MirrorHeadersResponseD
 | --- | --- |
 | [MirrorHeadersResponseDto](MirrorHeadersResponseDto/MirrorHeadersResponseDto.md)() | Creates an instance. |
 | [Boolean](MirrorHeadersResponseDto/Boolean.md) { get; set; } |  |
+| [Datetime](MirrorHeadersResponseDto/Datetime.md) { get; set; } |  |
 | [Decimal](MirrorHeadersResponseDto/Decimal.md) { get; set; } |  |
 | [Double](MirrorHeadersResponseDto/Double.md) { get; set; } |  |
 | [Enum](MirrorHeadersResponseDto/Enum.md) { get; set; } |  |

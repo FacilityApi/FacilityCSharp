@@ -13,6 +13,7 @@ public sealed class AnyMapDto : ServiceDto<AnyMapDto>
 | [Boolean](AnyMapDto/Boolean.md) { get; set; } |  |
 | [Bytes](AnyMapDto/Bytes.md) { get; set; } |  |
 | [Data](AnyMapDto/Data.md) { get; set; } |  |
+| [Datetime](AnyMapDto/Datetime.md) { get; set; } |  |
 | [Decimal](AnyMapDto/Decimal.md) { get; set; } |  |
 | [Double](AnyMapDto/Double.md) { get; set; } |  |
 | [Enum](AnyMapDto/Enum.md) { get; set; } |  |

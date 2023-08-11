@@ -12,6 +12,7 @@ public sealed class CheckPathRequestDto : ServiceDto<CheckPathRequestDto>
 | --- | --- |
 | [CheckPathRequestDto](CheckPathRequestDto/CheckPathRequestDto.md)() | Creates an instance. |
 | [Boolean](CheckPathRequestDto/Boolean.md) { get; set; } |  |
+| [Datetime](CheckPathRequestDto/Datetime.md) { get; set; } |  |
 | [Decimal](CheckPathRequestDto/Decimal.md) { get; set; } |  |
 | [Double](CheckPathRequestDto/Double.md) { get; set; } |  |
 | [Enum](CheckPathRequestDto/Enum.md) { get; set; } |  |

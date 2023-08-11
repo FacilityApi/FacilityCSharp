@@ -13,6 +13,7 @@ public sealed class AnyNullableDto : ServiceDto<AnyNullableDto>
 | [Boolean](AnyNullableDto/Boolean.md) { get; set; } |  |
 | [Bytes](AnyNullableDto/Bytes.md) { get; set; } |  |
 | [Data](AnyNullableDto/Data.md) { get; set; } |  |
+| [Datetime](AnyNullableDto/Datetime.md) { get; set; } |  |
 | [Decimal](AnyNullableDto/Decimal.md) { get; set; } |  |
 | [Double](AnyNullableDto/Double.md) { get; set; } |  |
 | [Enum](AnyNullableDto/Enum.md) { get; set; } |  |
