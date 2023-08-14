@@ -61,4 +61,11 @@ public sealed class ServiceObjectTests
 
 		so.ToString().Should().Be("""{"foo":"bar"}""");
 	}
+
+	[Test]
+	public void ToFromDto()
+	{
+		var so = ServiceObject.Create(ValueDto.Create("hi"));
+		so.ToDto<ValueDto>().StringValue.Should().Be("hi");
+	}
 }

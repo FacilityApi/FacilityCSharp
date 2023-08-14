@@ -37,4 +37,10 @@ public sealed partial class ServiceErrorDto
 		get => DetailsObject?.AsJObject();
 		set => DetailsObject = ServiceObject.Create(value);
 	}
+
+	/// <summary>
+	/// Returns the error details as an instance of the specified DTO.
+	/// </summary>
+	public T? GetDetails<T>()
+		where T : ServiceDto => DetailsObject?.ToDto<T>();
 }

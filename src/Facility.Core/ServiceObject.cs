@@ -24,6 +24,12 @@ public sealed class ServiceObject
 	public static ServiceObject? Create(JsonObject? jsonObject) => jsonObject is null ? null : new(jsonObject);
 
 	/// <summary>
+	/// Creates an instance from a DTO.
+	/// </summary>
+	[return: NotNullIfNotNull(nameof(dto))]
+	public static ServiceObject? Create(ServiceDto? dto) => dto?.ToServiceObject();
+
+	/// <summary>
 	/// Returns a <c>Newtonsoft.Json.Linq.JObject</c> that is temporarily associated with this <c>ServiceObject</c>.
 	/// </summary>
 	/// <remarks>If the returned object is mutated, the <c>ServiceObject</c> is mutated. However, once the
@@ -60,6 +66,18 @@ public sealed class ServiceObject
 	public JsonObject ToJsonObject() => SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
 
 	/// <summary>
+	/// Returns a new DTO instance whose properties are read from this <c>ServiceObject</c>.
+	/// </summary>
+	public T ToDto<T>()
+		where T : ServiceDto =>
+		m_object switch
+		{
+			JObject => NewtonsoftJsonServiceSerializer.Instance.FromServiceObject<T>(this)!,
+			JsonObject => SystemTextJsonServiceSerializer.Instance.FromServiceObject<T>(this)!,
+			_ => throw new InvalidOperationException(),
+		};
+
+	/// <summary>
 	/// Returns true if the JSON objects are equivalent.
 	/// </summary>
 	public bool IsEquivalentTo(ServiceObject? other) => other is not null &&
@@ -86,6 +104,9 @@ public sealed class ServiceObject
 
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
 	public static implicit operator ServiceObject?(JsonObject? jsonObject) => Create(jsonObject);
+
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Create is the named alternative.")]
+	public static implicit operator ServiceObject?(ServiceDto? dto) => Create(dto);
 
 	private ServiceObject(JObject jObject) => m_object = jObject;
 

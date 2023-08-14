@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -31,5 +32,25 @@ public class ServiceErrorDtoTests
 		full.IsEquivalentTo(new ServiceErrorDto(s_error.Code)).Should().BeFalse();
 	}
 
-	private static readonly ServiceErrorDto s_error = new("Test", "Message.") { DetailsObject = ServiceObject.Create(new JObject { ["Some"] = "details." }), InnerError = new ServiceErrorDto("Inner") };
+	[Test]
+	public void GetDetailsDto()
+	{
+		var error = new ServiceErrorDto { DetailsObject = new JsonObject { { "booleanValue", true } } };
+		error.GetDetails<ValueDto>()!.IsEquivalentTo(ValueDto.Create(true));
+	}
+
+	[Test]
+	public void GetNullDetailsDto()
+	{
+		new ServiceErrorDto().GetDetails<ValueDto>().Should().BeNull();
+	}
+
+	[Test]
+	public void SetDetailsDto()
+	{
+		var error = new ServiceErrorDto { DetailsObject = ValueDto.Create(true) };
+		((bool) error.DetailsObject!.ToJObject()["booleanValue"]!).Should().BeTrue();
+	}
+
+	private static readonly ServiceErrorDto s_error = new("Test", "Message.") { DetailsObject = new JObject { ["Some"] = "details." }, InnerError = new ServiceErrorDto("Inner") };
 }

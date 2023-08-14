@@ -30,9 +30,9 @@ namespace Facility.ConformanceApi
 		public IReadOnlyList<IReadOnlyList<IReadOnlyList<double>>>? Matrix { get; set; }
 
 		/// <summary>
-		/// Returns the DTO as JSON.
+		/// The JSON serializer.
 		/// </summary>
-		public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToJson(this);
+		protected override JsonServiceSerializer JsonSerializer => SystemTextJsonServiceSerializer.Instance;
 
 		/// <summary>
 		/// Determines if two DTOs are equivalent.

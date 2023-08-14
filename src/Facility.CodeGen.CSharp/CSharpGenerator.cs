@@ -384,8 +384,8 @@ public sealed class CSharpGenerator : CodeGenerator
 					}
 
 					code.WriteLine();
-					CSharpUtility.WriteSummary(code, "Returns the DTO as JSON.");
-					code.WriteLine("public override string ToString() => SystemTextJsonServiceSerializer.Instance.ToJson(this);");
+					CSharpUtility.WriteSummary(code, "The JSON serializer.");
+					code.WriteLine("protected override JsonServiceSerializer JsonSerializer => SystemTextJsonServiceSerializer.Instance;");
 
 					code.WriteLine();
 					CSharpUtility.WriteSummary(code, "Determines if two DTOs are equivalent.");
