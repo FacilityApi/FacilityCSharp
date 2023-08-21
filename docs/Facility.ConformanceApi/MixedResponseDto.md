@@ -16,7 +16,12 @@ public sealed class MixedResponseDto : ServiceDto<MixedResponseDto>
 | [Header](MixedResponseDto/Header.md) { get; set; } |  |
 | [Normal](MixedResponseDto/Normal.md) { get; set; } |  |
 | override [IsEquivalentTo](MixedResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](MixedResponseDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](MixedResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

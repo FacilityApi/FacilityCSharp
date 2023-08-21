@@ -26,7 +26,12 @@ public sealed class AnyMapDto : ServiceDto<AnyMapDto>
 | [Result](AnyMapDto/Result.md) { get; set; } |  |
 | [String](AnyMapDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](AnyMapDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](AnyMapDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](AnyMapDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

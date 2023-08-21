@@ -1,4 +1,4 @@
-# ServiceObject Implicit operator (1 of 2)
+# ServiceObject Implicit operator (1 of 3)
 
 ```csharp
 public static implicit operator ServiceObject?(JObject? jObject)
@@ -11,7 +11,7 @@ public static implicit operator ServiceObject?(JObject? jObject)
 
 ---
 
-# ServiceObject Implicit operator (2 of 2)
+# ServiceObject Implicit operator (2 of 3)
 
 ```csharp
 public static implicit operator ServiceObject?(JsonObject? jsonObject)
@@ -19,6 +19,20 @@ public static implicit operator ServiceObject?(JsonObject? jsonObject)
 
 ## See Also
 
+* class [ServiceObject](../ServiceObject.md)
+* namespace [Facility.Core](../../Facility.Core.md)
+
+---
+
+# ServiceObject Implicit operator (3 of 3)
+
+```csharp
+public static implicit operator ServiceObject?(ServiceDto? dto)
+```
+
+## See Also
+
+* class [ServiceDto](../ServiceDto.md)
 * class [ServiceObject](../ServiceObject.md)
 * namespace [Facility.Core](../../Facility.Core.md)
 

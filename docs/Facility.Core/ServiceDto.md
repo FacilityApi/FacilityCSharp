@@ -19,6 +19,7 @@ public abstract class ServiceDto
 | name | description |
 | --- | --- |
 | [ServiceDto](ServiceDto/ServiceDto.md)() | The default constructor. |
+| virtual [JsonSerializer](ServiceDto/JsonSerializer.md) { get; } | The JSON serializer used by `ToString` and when creating a [`ServiceObject`](./ServiceObject.md). |
 
 ## See Also
 

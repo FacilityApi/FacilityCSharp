@@ -20,8 +20,13 @@ public sealed class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 | [Int64](CheckQueryRequestDto/Int64.md) { get; set; } |  |
 | [String](CheckQueryRequestDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](CheckQueryRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](CheckQueryRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](CheckQueryRequestDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](CheckQueryRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

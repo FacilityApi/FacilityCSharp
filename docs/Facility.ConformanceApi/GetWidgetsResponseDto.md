@@ -13,8 +13,13 @@ public sealed class GetWidgetsResponseDto : ServiceDto<GetWidgetsResponseDto>
 | [GetWidgetsResponseDto](GetWidgetsResponseDto/GetWidgetsResponseDto.md)() | Creates an instance. |
 | [Widgets](GetWidgetsResponseDto/Widgets.md) { get; set; } | The widgets. |
 | override [IsEquivalentTo](GetWidgetsResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](GetWidgetsResponseDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](GetWidgetsResponseDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](GetWidgetsResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

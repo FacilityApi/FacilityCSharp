@@ -12,7 +12,12 @@ public sealed class CheckPathResponseDto : ServiceDto<CheckPathResponseDto>
 | --- | --- |
 | [CheckPathResponseDto](CheckPathResponseDto/CheckPathResponseDto.md)() | Creates an instance. |
 | override [IsEquivalentTo](CheckPathResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](CheckPathResponseDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](CheckPathResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

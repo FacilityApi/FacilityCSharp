@@ -14,8 +14,13 @@ public sealed class DeleteWidgetRequestDto : ServiceDto<DeleteWidgetRequestDto>
 | [Id](DeleteWidgetRequestDto/Id.md) { get; set; } | The widget ID. |
 | [IfETag](DeleteWidgetRequestDto/IfETag.md) { get; set; } | Don't delete the widget unless it has this ETag. |
 | override [IsEquivalentTo](DeleteWidgetRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](DeleteWidgetRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](DeleteWidgetRequestDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](DeleteWidgetRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

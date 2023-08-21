@@ -14,7 +14,12 @@ public sealed class MirrorTextRequestDto : ServiceDto<MirrorTextRequestDto>
 | [Content](MirrorTextRequestDto/Content.md) { get; set; } |  |
 | [Type](MirrorTextRequestDto/Type.md) { get; set; } |  |
 | override [IsEquivalentTo](MirrorTextRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](MirrorTextRequestDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](MirrorTextRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

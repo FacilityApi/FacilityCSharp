@@ -13,7 +13,12 @@ public sealed class GetWidgetsRequestDto : ServiceDto<GetWidgetsRequestDto>
 | [GetWidgetsRequestDto](GetWidgetsRequestDto/GetWidgetsRequestDto.md)() | Creates an instance. |
 | [Query](GetWidgetsRequestDto/Query.md) { get; set; } | The query. |
 | override [IsEquivalentTo](GetWidgetsRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](GetWidgetsRequestDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](GetWidgetsRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

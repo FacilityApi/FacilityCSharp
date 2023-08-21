@@ -1,4 +1,4 @@
-# ServiceObject.Create method (1 of 2)
+# ServiceObject.Create method (1 of 3)
 
 Creates an instance from a `Newtonsoft.Json.Linq.JObject`.
 
@@ -13,7 +13,7 @@ public static ServiceObject? Create(JObject? jObject)
 
 ---
 
-# ServiceObject.Create method (2 of 2)
+# ServiceObject.Create method (2 of 3)
 
 Creates an instance from a `System.Text.Json.Nodes.JsonObject`.
 
@@ -23,6 +23,22 @@ public static ServiceObject? Create(JsonObject? jsonObject)
 
 ## See Also
 
+* class [ServiceObject](../ServiceObject.md)
+* namespace [Facility.Core](../../Facility.Core.md)
+
+---
+
+# ServiceObject.Create method (3 of 3)
+
+Creates an instance from a DTO.
+
+```csharp
+public static ServiceObject? Create(ServiceDto? dto)
+```
+
+## See Also
+
+* class [ServiceDto](../ServiceDto.md)
 * class [ServiceObject](../ServiceObject.md)
 * namespace [Facility.Core](../../Facility.Core.md)
 

@@ -14,7 +14,12 @@ public sealed class MirrorBytesResponseDto : ServiceDto<MirrorBytesResponseDto>
 | [Content](MirrorBytesResponseDto/Content.md) { get; set; } |  |
 | [Type](MirrorBytesResponseDto/Type.md) { get; set; } |  |
 | override [IsEquivalentTo](MirrorBytesResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](MirrorBytesResponseDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](MirrorBytesResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

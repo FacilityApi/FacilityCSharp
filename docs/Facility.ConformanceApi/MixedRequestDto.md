@@ -16,7 +16,12 @@ public sealed class MixedRequestDto : ServiceDto<MixedRequestDto>
 | [Path](MixedRequestDto/Path.md) { get; set; } |  |
 | [Query](MixedRequestDto/Query.md) { get; set; } |  |
 | override [IsEquivalentTo](MixedRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](MixedRequestDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](MixedRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

@@ -11,8 +11,13 @@ public sealed class HasWidgetDto : ServiceDto<HasWidgetDto>
 | [HasWidgetDto](HasWidgetDto/HasWidgetDto.md)() | Creates an instance. |
 | [Widget](HasWidgetDto/Widget.md) { get; set; } |  |
 | override [IsEquivalentTo](HasWidgetDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](HasWidgetDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](HasWidgetDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](HasWidgetDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

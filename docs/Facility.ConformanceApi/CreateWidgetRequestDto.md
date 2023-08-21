@@ -13,8 +13,13 @@ public sealed class CreateWidgetRequestDto : ServiceDto<CreateWidgetRequestDto>
 | [CreateWidgetRequestDto](CreateWidgetRequestDto/CreateWidgetRequestDto.md)() | Creates an instance. |
 | [Widget](CreateWidgetRequestDto/Widget.md) { get; set; } | The widget to create. |
 | override [IsEquivalentTo](CreateWidgetRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](CreateWidgetRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](CreateWidgetRequestDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](CreateWidgetRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

@@ -18,8 +18,14 @@ public sealed class ServiceErrorDto : ServiceDto<ServiceErrorDto>
 | [DetailsObject](ServiceErrorDto/DetailsObject.md) { get; set; } | Advanced error details. |
 | [InnerError](ServiceErrorDto/InnerError.md) { get; set; } | The inner error. |
 | [Message](ServiceErrorDto/Message.md) { get; set; } | The error message. |
+| [GetDetails&lt;T&gt;](ServiceErrorDto/GetDetails.md)() | Returns the error details as an instance of the specified DTO. |
 | override [IsEquivalentTo](ServiceErrorDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](ServiceErrorDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](ServiceErrorDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

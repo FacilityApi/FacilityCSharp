@@ -15,8 +15,13 @@ public sealed class GetWidgetResponseDto : ServiceDto<GetWidgetResponseDto>
 | [NotModified](GetWidgetResponseDto/NotModified.md) { get; set; } | The widget still has the specified ETag. |
 | [Widget](GetWidgetResponseDto/Widget.md) { get; set; } | The requested widget. |
 | override [IsEquivalentTo](GetWidgetResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](GetWidgetResponseDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](GetWidgetResponseDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](GetWidgetResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

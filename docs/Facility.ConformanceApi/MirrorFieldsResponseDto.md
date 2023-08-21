@@ -14,7 +14,12 @@ public sealed class MirrorFieldsResponseDto : ServiceDto<MirrorFieldsResponseDto
 | [Field](MirrorFieldsResponseDto/Field.md) { get; set; } |  |
 | [Matrix](MirrorFieldsResponseDto/Matrix.md) { get; set; } |  |
 | override [IsEquivalentTo](MirrorFieldsResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](MirrorFieldsResponseDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](MirrorFieldsResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

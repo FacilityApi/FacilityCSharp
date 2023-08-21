@@ -13,8 +13,13 @@ public sealed class GetWidgetBatchRequestDto : ServiceDto<GetWidgetBatchRequestD
 | [GetWidgetBatchRequestDto](GetWidgetBatchRequestDto/GetWidgetBatchRequestDto.md)() | Creates an instance. |
 | [Ids](GetWidgetBatchRequestDto/Ids.md) { get; set; } | The IDs of the widgets to return. |
 | override [IsEquivalentTo](GetWidgetBatchRequestDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](GetWidgetBatchRequestDto/ToString.md)() | Returns the DTO as JSON. |
 | override [Validate](GetWidgetBatchRequestDto/Validate.md)(…) | Validates the DTO. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](GetWidgetBatchRequestDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

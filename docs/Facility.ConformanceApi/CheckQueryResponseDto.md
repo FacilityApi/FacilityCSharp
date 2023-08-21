@@ -12,7 +12,12 @@ public sealed class CheckQueryResponseDto : ServiceDto<CheckQueryResponseDto>
 | --- | --- |
 | [CheckQueryResponseDto](CheckQueryResponseDto/CheckQueryResponseDto.md)() | Creates an instance. |
 | override [IsEquivalentTo](CheckQueryResponseDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](CheckQueryResponseDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](CheckQueryResponseDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 

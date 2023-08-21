@@ -25,7 +25,12 @@ public sealed class AnyNullableDto : ServiceDto<AnyNullableDto>
 | [Result](AnyNullableDto/Result.md) { get; set; } |  |
 | [String](AnyNullableDto/String.md) { get; set; } |  |
 | override [IsEquivalentTo](AnyNullableDto/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| override [ToString](AnyNullableDto/ToString.md)() | Returns the DTO as JSON. |
+
+## Protected Members
+
+| name | description |
+| --- | --- |
+| override [JsonSerializer](AnyNullableDto/JsonSerializer.md) { get; } | The JSON serializer. |
 
 ## See Also
 
