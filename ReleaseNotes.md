@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.22.0
+
+* Make it easier to switch between `ServiceObject` and a DTO.
+
 ## 2.21.0
 
 * Support `datetime`.
