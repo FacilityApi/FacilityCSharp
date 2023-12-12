@@ -266,13 +266,13 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		return null;
 	}
 
-	private static IReadOnlyDictionary<string, IReadOnlyList<string>> ParseQueryString(string query)
+	private static Dictionary<string, IReadOnlyList<string>> ParseQueryString(string query)
 	{
 		if (query.Length != 0 && query[0] == '?')
 			query = query.Substring(1);
 
 		return query.Split('&')
-			.Select(x => x.Split(new[] { '=' }, 2))
+			.Select(x => x.Split(s_equalSign, 2))
 			.GroupBy(x => Uri.UnescapeDataString(x[0]), x => Uri.UnescapeDataString(x.Length == 1 ? "" : x[1]), StringComparer.OrdinalIgnoreCase)
 			.ToDictionary(x => x.Key, x => (IReadOnlyList<string>) x.ToList());
 	}
@@ -332,6 +332,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 	private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
 	private static readonly Regex s_regexPathParameterRegex = new("""\{([a-zA-Z][a-zA-Z0-9]*)\}""", RegexOptions.CultureInvariant);
+	private static readonly char[] s_equalSign = { '=' };
 
 	private readonly string m_rootPath;
 	private readonly bool m_synchronous;
