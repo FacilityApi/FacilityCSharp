@@ -19,9 +19,14 @@ public sealed class CSharpGenerator : CodeGenerator
 		FileGenerator.GenerateFiles(new CSharpGenerator { GeneratorName = nameof(CSharpGenerator) }, settings);
 
 	/// <summary>
-	/// The name of the namespace (optional).
+	/// The name of the namespace (optional). Overrides the csharp FSD attribute.
 	/// </summary>
 	public string? NamespaceName { get; set; }
+
+	/// <summary>
+	/// The default name of the namespace (optional). Does not override the csharp FSD attribute.
+	/// </summary>
+	public string? DefaultNamespaceName { get; set; }
 
 	/// <summary>
 	/// True if the code should use nullable reference syntax.
@@ -45,7 +50,7 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var outputFiles = new List<CodeGenFile>();
 
-		var context = new Context(GeneratorName ?? "", CSharpServiceInfo.Create(service, new CSharpServiceInfoSettings { FixSnakeCase = FixSnakeCase }), NamespaceName);
+		var context = new Context(GeneratorName ?? "", CSharpServiceInfo.Create(service, new CSharpServiceInfoSettings { FixSnakeCase = FixSnakeCase }), NamespaceName, DefaultNamespaceName);
 
 		foreach (var errorSetInfo in service.ErrorSets.Where(x => x.Errors.Count != 0))
 			outputFiles.Add(GenerateErrorSet(errorSetInfo, context));
@@ -95,6 +100,7 @@ public sealed class CSharpGenerator : CodeGenerator
 	{
 		var csharpSettings = (CSharpGeneratorSettings) settings;
 		NamespaceName = csharpSettings.NamespaceName;
+		DefaultNamespaceName = csharpSettings.DefaultNamespaceName;
 		UseNullableReferences = csharpSettings.UseNullableReferences;
 		FixSnakeCase = csharpSettings.FixSnakeCase;
 		SupportMessagePack = csharpSettings.SupportMessagePack;
@@ -1516,11 +1522,11 @@ public sealed class CSharpGenerator : CodeGenerator
 
 	private sealed class Context
 	{
-		public Context(string generatorName, CSharpServiceInfo csharpServiceInfo, string? namespaceName)
+		public Context(string generatorName, CSharpServiceInfo csharpServiceInfo, string? namespaceName, string? defaultNamespaceName)
 		{
 			CSharpServiceInfo = csharpServiceInfo;
 			GeneratorName = generatorName;
-			NamespaceName = namespaceName ?? csharpServiceInfo.Namespace;
+			NamespaceName = namespaceName ?? csharpServiceInfo.Namespace ?? defaultNamespaceName ?? CodeGenUtility.Capitalize(csharpServiceInfo.Service.Name);
 			m_dtosNeedingValidation = FindDtosNeedingValidation(csharpServiceInfo.Service);
 		}
 

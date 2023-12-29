@@ -17,7 +17,9 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 	protected override IReadOnlyList<string> ExtraUsage => new[]
 	{
 		"   --namespace <name>",
-		"      The namespace used by the generated C#.",
+		"      The namespace used by the generated C#. (Overrides FSD.)",
+		"   --default-namespace <name>",
+		"      The namespace used by the generated C# if not specified by FSD.",
 		"   --nullable",
 		"      Use nullable reference syntax in the generated C#.",
 		"   --fix-snake-case",
@@ -32,6 +34,7 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		new CSharpGeneratorSettings
 		{
 			NamespaceName = args.ReadOption("namespace"),
+			DefaultNamespaceName = args.ReadOption("default-namespace"),
 			UseNullableReferences = args.ReadFlag("nullable"),
 			FixSnakeCase = args.ReadFlag("fix-snake-case"),
 			SupportMessagePack = args.ReadFlag("msgpack"),

@@ -8,9 +8,14 @@ namespace Facility.CodeGen.CSharp;
 public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 {
 	/// <summary>
-	/// The name of the namespace (optional).
+	/// The name of the namespace (optional). Overrides the csharp FSD attribute.
 	/// </summary>
 	public string? NamespaceName { get; set; }
+
+	/// <summary>
+	/// The default name of the namespace (optional). Does not override the csharp FSD attribute.
+	/// </summary>
+	public string? DefaultNamespaceName { get; set; }
 
 	/// <summary>
 	/// True if the code should use nullable reference syntax.

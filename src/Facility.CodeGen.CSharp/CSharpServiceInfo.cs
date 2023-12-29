@@ -47,9 +47,9 @@ public sealed class CSharpServiceInfo
 	public ServiceInfo Service { get; }
 
 	/// <summary>
-	/// The namespace.
+	/// The namespace, if specified.
 	/// </summary>
-	public string Namespace => m_namespace ?? CodeGenUtility.Capitalize(Service.Name);
+	public string? Namespace { get; }
 
 	/// <summary>
 	/// Gets the property name for the specified field.
@@ -121,7 +121,7 @@ public sealed class CSharpServiceInfo
 					foreach (var parameter in csharpAttribute.Parameters)
 					{
 						if (parameter.Name == "namespace" && descendant is ServiceInfo)
-							m_namespace = parameter.Value;
+							Namespace = parameter.Value;
 						else if (parameter.Name == "name" && descendant is ServiceFieldInfo field)
 							m_fieldPropertyNames[field] = parameter.Value;
 						else
@@ -207,7 +207,6 @@ public sealed class CSharpServiceInfo
 		errors = validationErrors;
 	}
 
-	private readonly string? m_namespace;
 	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNames;
 	private readonly Dictionary<ServiceExternalDtoInfo, string> m_externalDtoNamespaces;
 	private readonly Dictionary<ServiceExternalEnumInfo, string> m_externalEnumNames;
