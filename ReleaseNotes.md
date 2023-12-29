@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.23.0
+
+* Add option for default namespace, used when not specified in the FSD.
+
 ## 2.22.0
 
 * Make it easier to switch between `ServiceObject` and a DTO.
