@@ -1,9 +1,9 @@
-# CSharpGeneratorSettings.NamespaceName property
+# CSharpGeneratorSettings.DefaultNamespaceName property
 
-The name of the namespace (optional). Overrides the csharp FSD attribute.
+The default name of the namespace (optional). Does not override the csharp FSD attribute.
 
 ```csharp
-public string? NamespaceName { get; set; }
+public string? DefaultNamespaceName { get; set; }
 ```
 
 ## See Also

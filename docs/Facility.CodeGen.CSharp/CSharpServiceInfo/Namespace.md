@@ -1,9 +1,9 @@
 # CSharpServiceInfo.Namespace property
 
-The namespace.
+The namespace, if specified.
 
 ```csharp
-public string Namespace { get; }
+public string? Namespace { get; }
 ```
 
 ## See Also

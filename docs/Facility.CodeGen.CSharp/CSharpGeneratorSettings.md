@@ -11,8 +11,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 | name | description |
 | --- | --- |
 | [CSharpGeneratorSettings](CSharpGeneratorSettings/CSharpGeneratorSettings.md)() | The default constructor. |
+| [DefaultNamespaceName](CSharpGeneratorSettings/DefaultNamespaceName.md) { get; set; } | The default name of the namespace (optional). Does not override the csharp FSD attribute. |
 | [FixSnakeCase](CSharpGeneratorSettings/FixSnakeCase.md) { get; set; } | True if C# names should automatically use PascalCase instead of snake case. |
-| [NamespaceName](CSharpGeneratorSettings/NamespaceName.md) { get; set; } | The name of the namespace (optional). |
+| [NamespaceName](CSharpGeneratorSettings/NamespaceName.md) { get; set; } | The name of the namespace (optional). Overrides the csharp FSD attribute. |
 | [SupportMessagePack](CSharpGeneratorSettings/SupportMessagePack.md) { get; set; } | True to support MessagePack serialization. |
 | [UseNullableReferences](CSharpGeneratorSettings/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
 
