@@ -48,7 +48,50 @@ public sealed class CSharpGeneratorTests
 	}
 
 	[Test]
-	public void OverrideNamespace()
+	public void UnspecifiedServiceNamespace()
+	{
+		var definition = "service TestApi { method do {}: {} }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
+		var output = generator.GenerateOutput(service);
+		foreach (var file in output.Files)
+		{
+			StringAssert.Contains("namespace TestApi", file.Text);
+		}
+	}
+
+	[Test]
+	public void DefaultServiceNamespace()
+	{
+		var definition = "service TestApi { method do {}: {} }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), DefaultNamespaceName = "DefaultNamespace" };
+		var output = generator.GenerateOutput(service);
+		foreach (var file in output.Files)
+		{
+			StringAssert.Contains("namespace DefaultNamespace", file.Text);
+		}
+	}
+
+	[Test]
+	public void NoOverrideDefaultServiceNamespace()
+	{
+		var definition = "[csharp(namespace: DefinitionNamespace)] service TestApi { method do {}: {} }";
+		var parser = new FsdParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), DefaultNamespaceName = "OverrideNamespace" };
+		var output = generator.GenerateOutput(service);
+		foreach (var file in output.Files)
+		{
+			StringAssert.Contains("namespace DefinitionNamespace", file.Text);
+			StringAssert.DoesNotContain("OverrideNamespace", file.Text);
+		}
+	}
+
+	[Test]
+	public void OverrideServiceNamespace()
 	{
 		var definition = "[csharp(namespace: DefinitionNamespace)] service TestApi { method do {}: {} }";
 		var parser = new FsdParser();
