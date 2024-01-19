@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.23.1
+
+* Throw `ArgumentNullException` instead of `NullReferenceException` when using `ServiceDelegators.Validate` with a null request.
+
 ## 2.23.0
 
 * Add option for default namespace, used when not specified in the FSD.
