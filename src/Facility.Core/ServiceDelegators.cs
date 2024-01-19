@@ -31,6 +31,9 @@ public static class ServiceDelegators
 
 		return async (method, request, cancellationToken) =>
 		{
+			if (request is null)
+				throw new ArgumentNullException(nameof(request));
+
 			if (!request.Validate(out var requestErrorMessage))
 				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest(requestErrorMessage));
 
