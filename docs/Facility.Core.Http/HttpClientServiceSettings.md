@@ -21,6 +21,7 @@ public sealed class HttpClientServiceSettings
 | [SkipResponseValidation](HttpClientServiceSettings/SkipResponseValidation.md) { get; set; } | True to prevent the validation of response DTOs after receiving. |
 | [Synchronous](HttpClientServiceSettings/Synchronous.md) { get; set; } | True to call services synchronously, allowing tasks to be safely blocked. |
 | [TextSerializer](HttpClientServiceSettings/TextSerializer.md) { get; set; } | The content serializer used by requests and responses for text (optional). |
+| [Clone](HttpClientServiceSettings/Clone.md)() | Creates a deep clone of the instance. |
 
 ## See Also
 
