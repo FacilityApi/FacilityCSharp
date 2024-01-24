@@ -20,7 +20,7 @@ public sealed class ServiceNullableNewtonsoftJsonConverter : JsonConverter
 	{
 		var valueType = objectType.GetGenericArguments().Single();
 		var value = serializer.Deserialize(reader, valueType);
-		return objectType.GetConstructor(new[] { valueType })!.Invoke(new[] { value });
+		return objectType.GetConstructor([valueType])!.Invoke([value]);
 	}
 
 	/// <summary>

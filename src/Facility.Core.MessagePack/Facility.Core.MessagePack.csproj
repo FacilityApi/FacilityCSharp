@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MessagePack" Version="2.4.59" />
+    <PackageReference Include="MessagePack" />
   </ItemGroup>
 
   <ItemGroup>

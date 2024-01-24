@@ -24,7 +24,7 @@ public static class HttpServiceUtility
 	public const string JsonMediaType = "application/json";
 
 	internal static IReadOnlyDictionary<string, string> CreateDictionaryFromHeaders(HttpHeaders headers, HttpHeaders? moreHeaders) =>
-		new DictionaryFromHeaders(moreHeaders is null ? new[] { headers } : new[] { headers, moreHeaders });
+		new DictionaryFromHeaders(moreHeaders is null ? [headers] : new[] { headers, moreHeaders });
 
 	internal static ServiceResult TryAddNonContentHeaders(HttpHeaders httpHeaders, IEnumerable<KeyValuePair<string, string?>>? headers)
 	{

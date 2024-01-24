@@ -45,7 +45,14 @@ internal sealed class MessagePackServiceResolver : IFormatterResolver
 			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ServiceNullable<>))
 				return (IMessagePackFormatter<T>) Activator.CreateInstance(typeof(ServiceNullableMessagePackFormatter<>).MakeGenericType(typeof(T).GetGenericArguments()[0]))!;
 
-			return StandardResolver.Instance.GetFormatter<T>();
+			if (StandardResolver.Instance.GetFormatter<T>() is { } standardFormatter)
+				return standardFormatter;
+
+			var supportedInterface = type.GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IReadOnlyList<>));
+			if (supportedInterface is not null)
+				return (IMessagePackFormatter<T>) Activator.CreateInstance(typeof(CastToSerializeMessagePackFormatter<,>).MakeGenericType(typeof(T), supportedInterface))!;
+
+			throw new InvalidOperationException($"Facility.Core.MessagePack cannot serialize {typeof(T).Name}.");
 		}
 	}
 
@@ -85,5 +92,14 @@ internal sealed class MessagePackServiceResolver : IFormatterResolver
 
 		public DateTime? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) =>
 			reader.TryReadNil() ? null : reader.ReadDateTime();
+	}
+
+	private sealed class CastToSerializeMessagePackFormatter<T, TCast> : IMessagePackFormatter<T>
+	{
+		public void Serialize(ref MessagePackWriter writer, T value, MessagePackSerializerOptions options) =>
+			Cache<TCast>.Formatter.Serialize(ref writer, (TCast) (object) value!, options);
+
+		public T Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) =>
+			throw new InvalidOperationException($"Facility.Core.MessagePack cannot deserialize {typeof(T).Name}.");
 	}
 }

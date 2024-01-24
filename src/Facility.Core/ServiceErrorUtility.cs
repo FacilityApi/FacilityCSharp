@@ -13,7 +13,7 @@ public static class ServiceErrorUtility
 	public static ServiceErrorDto CreateInternalErrorForException(Exception exception)
 	{
 		var error = ServiceErrors.CreateInternalError(exception.Message);
-		var jException = new JObject { ["details"] = new JArray(exception.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable()) };
+		var jException = new JObject { ["details"] = new JArray(exception.ToString().Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries).AsEnumerable()) };
 		error.DetailsObject = ServiceObject.Create(new JObject { ["exception"] = jException });
 		return error;
 	}

@@ -168,13 +168,13 @@ public class ServiceResult
 			}
 			else if (error != null)
 			{
-				return (ServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(Failure(error), Array.Empty<object>())!;
+				return (ServiceResult) s_genericCastMethod.MakeGenericMethod(valueType).Invoke(Failure(error), [])!;
 			}
 			else
 			{
 				if (value == null && valueType.GetTypeInfo().IsValueType)
 					value = Activator.CreateInstance(valueType);
-				return (ServiceResult) s_genericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
+				return (ServiceResult) s_genericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, [value])!;
 			}
 		}
 

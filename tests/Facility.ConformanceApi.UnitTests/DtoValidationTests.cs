@@ -166,7 +166,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public async Task HttpRequiredBodyFieldSpecified()
 	{
 		var api = CreateHttpApi();
-		var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto { Ids = new[] { 3 } });
+		var result = await api.GetWidgetBatchAsync(new GetWidgetBatchRequestDto { Ids = [3] });
 		result.Should().BeSuccess();
 	}
 

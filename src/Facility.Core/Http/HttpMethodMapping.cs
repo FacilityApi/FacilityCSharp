@@ -152,7 +152,7 @@ public sealed class HttpMethodMapping<TRequest, TResponse>
 		/// The response mappings.
 		/// </summary>
 		// ReSharper disable once CollectionNeverUpdated.Global (used in generated code)
-		public Collection<HttpResponseMapping<TResponse>> ResponseMappings { get; } = new();
+		public Collection<HttpResponseMapping<TResponse>> ResponseMappings { get; } = [];
 
 		/// <summary>
 		/// Extracts the headers from the response.

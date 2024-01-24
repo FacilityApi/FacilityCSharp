@@ -85,13 +85,13 @@ public sealed class ServiceResultSystemTextJsonConverter<TServiceResult> : JsonC
 		}
 		if (error != null)
 		{
-			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), Array.Empty<object>())!;
+			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericCastMethod.MakeGenericMethod(valueType).Invoke(ServiceResult.Failure(error), [])!;
 		}
 		else
 		{
 			if (value == null && valueType.GetTypeInfo().IsValueType)
 				value = Activator.CreateInstance(valueType);
-			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, new[] { value })!;
+			return (TServiceResult) ServiceResultSystemTextJsonConverter.GenericSuccessMethod.MakeGenericMethod(valueType).Invoke(null, [value])!;
 		}
 	}
 

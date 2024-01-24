@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.3" />
-    <PackageReference Include="Facility.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="Facility.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Description>A tool that generates C# for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD C# CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Facility.CodeGen.Console" Version="$(FacilityVersion)" />
+    <PackageReference Include="Facility.CodeGen.Console" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Facility.Definition" Version="$(FacilityVersion)" />
+    <PackageReference Include="Facility.Definition" />
   </ItemGroup>
 
   <ItemGroup>

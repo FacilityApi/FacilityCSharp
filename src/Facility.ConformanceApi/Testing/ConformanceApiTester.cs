@@ -110,7 +110,7 @@ public sealed class ConformanceApiTester
 			if (!ServiceObjectUtility.DeepEquals(requestServiceObject, requestRoundTripServiceObject))
 				return Failure($"Request round trip failed. expected={m_jsonSerializer.ToJson(requestServiceObject)} actual={m_jsonSerializer.ToJson(requestRoundTripServiceObject)}");
 
-			var task = (Task) methodInfo.Invoke(m_api, new[] { requestDto, cancellationToken });
+			var task = (Task) methodInfo.Invoke(m_api, [requestDto, cancellationToken]);
 			await task.ConfigureAwait(false);
 
 			var result = ((dynamic) task).Result;
