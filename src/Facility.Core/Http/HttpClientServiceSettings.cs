@@ -55,4 +55,21 @@ public sealed class HttpClientServiceSettings
 	/// True to prevent the validation of response DTOs after receiving.
 	/// </summary>
 	public bool SkipResponseValidation { get; set; }
+
+	/// <summary>
+	/// Creates a deep clone of the instance.
+	/// </summary>
+	public HttpClientServiceSettings Clone() => new()
+	{
+		BaseUri = BaseUri,
+		HttpClient = HttpClient,
+		ContentSerializer = ContentSerializer,
+		BytesSerializer = BytesSerializer,
+		TextSerializer = TextSerializer,
+		DisableChunkedTransfer = DisableChunkedTransfer,
+		Aspects = Aspects?.ToList(),
+		Synchronous = Synchronous,
+		SkipRequestValidation = SkipRequestValidation,
+		SkipResponseValidation = SkipResponseValidation,
+	};
 }
