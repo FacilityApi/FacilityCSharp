@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.24.0
+
+* Add `HttpClientServiceSettings.Clone`.
+* Support collection syntax with MessagePack properties.
+
 ## 2.23.1
 
 * Throw `ArgumentNullException` instead of `NullReferenceException` when using `ServiceDelegators.Validate` with a null request.
