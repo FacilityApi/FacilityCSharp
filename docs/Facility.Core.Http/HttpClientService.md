@@ -17,6 +17,7 @@ public abstract class HttpClientService
 | [TextSerializer](HttpClientService/TextSerializer.md) { get; } | The HTTP content serializer for text. |
 | virtual [CreateErrorFromException](HttpClientService/CreateErrorFromException.md)(…) | Called to create an error object from an unexpected exception. |
 | virtual [CreateErrorFromHttpResponseAsync](HttpClientService/CreateErrorFromHttpResponseAsync.md)(…) | Called to create an error object from an unhandled HTTP response. |
+| virtual [RequestReadyAsync](HttpClientService/RequestReadyAsync.md)(…) | Called right before the request is sent, before aspects are applied. |
 | virtual [ShouldCreateErrorFromException](HttpClientService/ShouldCreateErrorFromException.md)(…) | Called to determine if an error object should be created from an unexpected exception. |
 | [TrySendRequestAsync&lt;TRequest,TResponse&gt;](HttpClientService/TrySendRequestAsync.md)(…) | Sends an HTTP request and processes the response. |
 
