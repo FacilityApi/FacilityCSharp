@@ -40,7 +40,8 @@ namespace EdgeCases.Http
 		/// </summary>
 		public override async Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)
 		{
-			return await AdaptTask(TryHandleOldMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+			return await AdaptTask(TryHandleCustomHttpAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleOldMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleSnakeMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
 
@@ -50,6 +51,12 @@ namespace EdgeCases.Http
 		[Obsolete]
 		public Task<HttpResponseMessage?> TryHandleOldMethodAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.OldMethodMapping, httpRequest, GetService(httpRequest).OldMethodAsync, cancellationToken);
+
+		/// <summary>
+		/// Custom HTTP method.
+		/// </summary>
+		public Task<HttpResponseMessage?> TryHandleCustomHttpAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.CustomHttpMapping, httpRequest, GetService(httpRequest).CustomHttpAsync, cancellationToken);
 
 		public Task<HttpResponseMessage?> TryHandleSnakeMethodAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.SnakeMethodMapping, httpRequest, GetService(httpRequest).SnakeMethodAsync, cancellationToken);

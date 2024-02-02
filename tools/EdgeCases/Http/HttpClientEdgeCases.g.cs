@@ -28,6 +28,12 @@ namespace EdgeCases.Http
 		public Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.OldMethodMapping, request, cancellationToken);
 
+		/// <summary>
+		/// Custom HTTP method.
+		/// </summary>
+		public Task<ServiceResult<CustomHttpResponseDto>> CustomHttpAsync(CustomHttpRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(EdgeCasesHttpMapping.CustomHttpMapping, request, cancellationToken);
+
 		public Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.SnakeMethodMapping, request, cancellationToken);
 

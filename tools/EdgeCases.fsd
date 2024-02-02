@@ -15,6 +15,21 @@ service EdgeCases
 	{
 	}
 
+	/// Custom HTTP method.
+	method customHttp
+	{
+		value: string;
+
+		[http(from: "custom")]
+		extras: map<string>;
+	}:
+	{
+		value: string;
+
+		[http(from: "custom")]
+		extras: map<string>;
+	}
+
 	/// An old DTO.
 	[obsolete]
 	data OldEmptyData

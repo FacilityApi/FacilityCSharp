@@ -35,6 +35,45 @@ namespace EdgeCases.Http
 				},
 			}.Build();
 
+		/// <summary>
+		/// Custom HTTP method.
+		/// </summary>
+		public static readonly HttpMethodMapping<CustomHttpRequestDto, CustomHttpResponseDto> CustomHttpMapping =
+			new HttpMethodMapping<CustomHttpRequestDto, CustomHttpResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/customHttp",
+				RequestBodyType = typeof(CustomHttpRequestDto),
+				GetRequestBody = request =>
+					new CustomHttpRequestDto
+					{
+						Value = request.Value,
+					},
+				CreateRequest = body =>
+					new CustomHttpRequestDto
+					{
+						Value = ((CustomHttpRequestDto) body!).Value,
+					},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<CustomHttpResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(CustomHttpResponseDto),
+						GetResponseBody = response =>
+							new CustomHttpResponseDto
+							{
+								Value = response.Value,
+							},
+						CreateResponse = body =>
+							new CustomHttpResponseDto
+							{
+								Value = ((CustomHttpResponseDto) body!).Value,
+							},
+					}.Build(),
+				},
+			}.Build();
+
 		public static readonly HttpMethodMapping<SnakeMethodRequestDto, SnakeMethodResponseDto> SnakeMethodMapping =
 			new HttpMethodMapping<SnakeMethodRequestDto, SnakeMethodResponseDto>.Builder
 			{

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.25.0
+
+* Add `RequestReadyAsync` override to `HttpClientService`.
+
 ## 2.24.0
 
 * Add `HttpClientServiceSettings.Clone`.
