@@ -18,6 +18,11 @@ namespace EdgeCases
 		[Obsolete]
 		Task<ServiceResult<OldMethodResponseDto>> OldMethodAsync(OldMethodRequestDto request, CancellationToken cancellationToken = default);
 
+		/// <summary>
+		/// Custom HTTP method.
+		/// </summary>
+		Task<ServiceResult<CustomHttpResponseDto>> CustomHttpAsync(CustomHttpRequestDto request, CancellationToken cancellationToken = default);
+
 		Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default);
 	}
 }

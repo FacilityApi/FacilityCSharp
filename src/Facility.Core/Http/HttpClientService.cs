@@ -193,8 +193,15 @@ public abstract class HttpClientService
 	/// </summary>
 	protected virtual ServiceErrorDto CreateErrorFromException(Exception exception) => ServiceErrorUtility.CreateInternalErrorForException(exception);
 
+	/// <summary>
+	/// Called right before the request is sent, before aspects are applied.
+	/// </summary>
+	protected virtual Task RequestReadyAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => Task.CompletedTask;
+
 	private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 	{
+		await AdaptTask(RequestReadyAsync(httpRequest, requestDto, cancellationToken)).ConfigureAwait(true);
+
 		if (m_aspects != null)
 		{
 			foreach (var aspect in m_aspects)
