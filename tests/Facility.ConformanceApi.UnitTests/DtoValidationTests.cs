@@ -149,7 +149,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	[Test]
 	public void RequiredBodyFieldSpecified()
 	{
-		var dto = new GetWidgetBatchRequestDto { Ids = new[] { 3 } };
+		var dto = new GetWidgetBatchRequestDto { Ids = [3] };
 		dto.Validate(out var errorMessage).Should().BeTrue();
 		errorMessage.Should().BeNull();
 	}
@@ -183,7 +183,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public void RequiredWidgetsNameMissing()
 	{
 		var dto = CreateRequiredRequest();
-		dto.Widgets = new[] { CreateWidget(), new WidgetDto() };
+		dto.Widgets = [CreateWidget(), new WidgetDto()];
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgets[1]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 	}
@@ -210,7 +210,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public void RequiredWidgetResultsNameMissing()
 	{
 		var dto = CreateRequiredRequest();
-		dto.WidgetResults = new[] { ServiceResult.Success(new WidgetDto()) };
+		dto.WidgetResults = [ServiceResult.Success(new WidgetDto())];
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetResults[0]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 	}
@@ -254,7 +254,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	{
 		var dto = new GetWidgetBatchRequestDto
 		{
-			Ids = new[] { 1, 2, 3, 4, 50, 200, 300, 500, 700, 1000, 1001 },
+			Ids = [1, 2, 3, 4, 50, 200, 300, 500, 700, 1000, 1001],
 		};
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("ids", "Count must be at most 10."));
@@ -264,7 +264,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public void ValidateFailsLessThanCount()
 	{
 		var dto = CreateRequiredRequest();
-		dto.Point = new[] { 0.0 };
+		dto.Point = [0.0];
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at least 2."));
 	}
@@ -273,7 +273,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public void ValidateFailsMoreThanCount()
 	{
 		var dto = CreateRequiredRequest();
-		dto.Point = new[] { 0.0, 1.0, 2.0 };
+		dto.Point = [0.0, 1.0, 2.0];
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("point", "Count must be at most 2."));
 	}
@@ -344,7 +344,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 			ServiceResult.Success(new GetWidgetResponseDto { Widget = m_serializer.Clone(m_widgetResponse) });
 
 		public override async Task<ServiceResult<GetWidgetBatchResponseDto>> GetWidgetBatchAsync(GetWidgetBatchRequestDto request, CancellationToken cancellationToken = default) =>
-			ServiceResult.Success(new GetWidgetBatchResponseDto { Results = Array.Empty<ServiceResult<WidgetDto>>() });
+			ServiceResult.Success(new GetWidgetBatchResponseDto { Results = [] });
 
 		public override async Task<ServiceResult<RequiredResponseDto>> RequiredAsync(RequiredRequestDto request, CancellationToken cancellationToken = default) =>
 			ServiceResult.Success(m_serializer.Clone(m_requiredResponse));

@@ -5,12 +5,12 @@ namespace Facility.ConformanceApi.UnitTests;
 
 public abstract class ServiceSerializerTestsBase
 {
-	public static IReadOnlyList<ServiceSerializer> ServiceSerializers => new ServiceSerializer[]
-	{
+	public static IReadOnlyList<ServiceSerializer> ServiceSerializers =>
+	[
 		NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
 		MessagePackServiceSerializer.Instance,
-	};
+	];
 
 	protected ServiceSerializerTestsBase(ServiceSerializer serializer)
 	{

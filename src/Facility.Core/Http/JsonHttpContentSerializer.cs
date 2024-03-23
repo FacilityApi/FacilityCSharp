@@ -31,7 +31,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 		m_forceAsyncIO = settings?.ForceAsyncIO ?? false;
 		m_memoryStreamCreator = settings?.MemoryStreamCreator;
 
-		SupportedMediaTypes = new[] { HttpServiceUtility.JsonMediaType };
+		SupportedMediaTypes = [HttpServiceUtility.JsonMediaType];
 	}
 
 	/// <summary>

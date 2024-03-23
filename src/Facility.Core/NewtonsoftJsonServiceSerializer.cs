@@ -178,7 +178,7 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 
 	private static readonly JsonSerializerSettings s_jsonSerializerSettings = new()
 	{
-		Converters = new JsonConverter[] { new DateTimeConverter() },
+		Converters = [new DateTimeConverter()],
 		ContractResolver = new CamelCaseExceptDictionaryKeysContractResolver(),
 		DateParseHandling = DateParseHandling.None,
 		NullValueHandling = NullValueHandling.Ignore,

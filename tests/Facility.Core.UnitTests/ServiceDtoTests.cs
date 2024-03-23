@@ -14,7 +14,7 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 	[Test]
 	public void ToStringUsesJson()
 	{
-		var dto = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } }, Ternary = null };
+		var dto = new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null };
 		var json = """{"id":3,"name":"Three","children":[{"name":"child"}],"ternary":null}""";
 		dto.ToString().Should().Be(json);
 
@@ -26,7 +26,7 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 	public void BasicEquivalence()
 	{
 		var empty = new TestDto();
-		var full = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } }, Ternary = null };
+		var full = new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null };
 
 		empty.IsEquivalentTo(null).Should().BeFalse();
 		empty.IsEquivalentTo(empty).Should().BeTrue();
@@ -36,7 +36,7 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 
 		full.IsEquivalentTo(null).Should().BeFalse();
 		full.IsEquivalentTo(empty).Should().BeFalse();
-		full.IsEquivalentTo(new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } }, Ternary = null }).Should().BeTrue();
+		full.IsEquivalentTo(new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null }).Should().BeTrue();
 		full.IsEquivalentTo(full).Should().BeTrue();
 		full.IsEquivalentTo(new TestDto { Id = 3 }).Should().BeFalse();
 	}
@@ -44,7 +44,7 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 	[Test]
 	public void BasicCloning()
 	{
-		var first = new TestDto { Id = 3, Name = "Three", Children = new[] { new TestDto { Name = "child" } }, Ternary = null };
+		var first = new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null };
 		var second = Serializer.Clone(first);
 		first.IsEquivalentTo(second).Should().Be(true);
 		second.Id += 1;

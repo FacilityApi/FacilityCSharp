@@ -20,12 +20,12 @@ public class HttpBenchmarks
 	[Params(1, 10, 100, 1000)]
 	public int UserCount { get; set; }
 
-	public IReadOnlyList<SerializerInfo> Serializers => new[]
-	{
+	public IReadOnlyList<SerializerInfo> Serializers =>
+	[
 		new SerializerInfo(NewtonsoftJsonServiceSerializer.Instance),
 		new SerializerInfo(SystemTextJsonServiceSerializer.Instance),
 		new SerializerInfo(MessagePackServiceSerializer.Instance),
-	};
+	];
 
 	[GlobalSetup]
 	public async Task Setup()

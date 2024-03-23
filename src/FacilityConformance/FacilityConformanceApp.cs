@@ -288,11 +288,11 @@ public sealed class FacilityConformanceApp
 		}
 	}
 
-	private static readonly IReadOnlyList<ServiceSerializer> s_defaultSerializers = new ServiceSerializer[]
-	{
+	private static readonly IReadOnlyList<ServiceSerializer> s_defaultSerializers =
+	[
 		SystemTextJsonServiceSerializer.Instance,
 		MessagePackServiceSerializer.Instance,
-	};
+	];
 
 	private readonly string m_fsdText;
 	private readonly string m_testsJson;

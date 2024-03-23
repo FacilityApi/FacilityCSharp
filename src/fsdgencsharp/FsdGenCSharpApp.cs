@@ -9,13 +9,13 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 {
 	public static int Main(string[] args) => new FsdGenCSharpApp().Run(args);
 
-	protected override IReadOnlyList<string> Description => new[]
-	{
+	protected override IReadOnlyList<string> Description =>
+	[
 		"Generates C# for a Facility Service Definition.",
-	};
+	];
 
-	protected override IReadOnlyList<string> ExtraUsage => new[]
-	{
+	protected override IReadOnlyList<string> ExtraUsage =>
+	[
 		"   --namespace <name>",
 		"      The namespace used by the generated C#. (Overrides FSD.)",
 		"   --default-namespace <name>",
@@ -26,7 +26,7 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"      Replace snake_case with PascalCase.",
 		"   --msgpack",
 		"      Support MessagePack serialization.",
-	};
+	];
 
 	protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
 

@@ -81,7 +81,7 @@ public abstract class HttpContentSerializer
 	/// <summary>
 	/// The accepted media types that clients should send in the <c>Accept</c> header.
 	/// </summary>
-	protected virtual IReadOnlyList<string> AcceptMediaTypesCore => new[] { DefaultMediaType };
+	protected virtual IReadOnlyList<string> AcceptMediaTypesCore => [DefaultMediaType];
 
 	/// <summary>
 	/// Determines if the specified media type can be read by this serializer.

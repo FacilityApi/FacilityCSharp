@@ -185,7 +185,7 @@ public sealed class HttpMethodMapping<TRequest, TResponse>
 		m_createRequest = builder.CreateRequest;
 		m_getResponseHeaders = builder.GetResponseHeaders;
 		m_setResponseHeaders = builder.SetResponseHeaders;
-		ResponseMappings = builder.ResponseMappings.ToList();
+		ResponseMappings = [.. builder.ResponseMappings];
 	}
 
 	private readonly Func<TRequest, ServiceResult>? m_validateRequest;

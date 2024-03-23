@@ -18,7 +18,7 @@ public class HttpClientServiceSettingsTests
 			BytesSerializer = BytesHttpContentSerializer.Instance,
 			TextSerializer = TextHttpContentSerializer.Instance,
 			DisableChunkedTransfer = true,
-			Aspects = Array.Empty<HttpClientServiceAspect>(),
+			Aspects = [],
 			Synchronous = true,
 			SkipRequestValidation = true,
 			SkipResponseValidation = true,
