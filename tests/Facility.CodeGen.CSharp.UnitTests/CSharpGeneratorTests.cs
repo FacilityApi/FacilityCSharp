@@ -57,7 +57,7 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 		foreach (var file in output.Files)
 		{
-			StringAssert.Contains("namespace TestApi", file.Text);
+			Assert.That(file.Text, Does.Contain("namespace TestApi"));
 		}
 	}
 
@@ -71,7 +71,7 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 		foreach (var file in output.Files)
 		{
-			StringAssert.Contains("namespace DefaultNamespace", file.Text);
+			Assert.That(file.Text, Does.Contain("namespace DefaultNamespace"));
 		}
 	}
 
@@ -85,8 +85,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 		foreach (var file in output.Files)
 		{
-			StringAssert.Contains("namespace DefinitionNamespace", file.Text);
-			StringAssert.DoesNotContain("OverrideNamespace", file.Text);
+			Assert.That(file.Text, Does.Contain("namespace DefinitionNamespace"));
+			Assert.That(file.Text, Does.Not.Contain("OverrideNamespace"));
 		}
 	}
 
@@ -100,8 +100,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 		foreach (var file in output.Files)
 		{
-			StringAssert.Contains("namespace OverrideNamespace", file.Text);
-			StringAssert.DoesNotContain("DefinitionNamespace", file.Text);
+			Assert.That(file.Text, Does.Contain("namespace OverrideNamespace"));
+			Assert.That(file.Text, Does.Not.Contain("DefinitionNamespace"));
 		}
 	}
 
@@ -116,10 +116,10 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "Answer.g.cs");
-		StringAssert.Contains("public static class Strings", file.Text);
-		StringAssert.Contains("public const string Yes = \"yes\";", file.Text);
-		StringAssert.Contains("public const string No = \"no\";", file.Text);
-		StringAssert.Contains("public const string Maybe = \"maybe\";", file.Text);
+		Assert.That(file.Text, Does.Contain("public static class Strings"));
+		Assert.That(file.Text, Does.Contain("public const string Yes = \"yes\";"));
+		Assert.That(file.Text, Does.Contain("public const string No = \"no\";"));
+		Assert.That(file.Text, Does.Contain("public const string Maybe = \"maybe\";"));
 	}
 
 	[Test]
@@ -133,8 +133,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public Some.Name.Space.ExternThingDto Thing { get; set; }", file.Text);
-		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+		Assert.That(file.Text, Does.Contain("public Some.Name.Space.ExternThingDto Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)"));
 	}
 
 	[Test]
@@ -148,8 +148,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public ExternThingDto Thing { get; set; }", file.Text);
-		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+		Assert.That(file.Text, Does.Contain("public ExternThingDto Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)"));
 	}
 
 	[Test]
@@ -163,8 +163,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public ThingDto Thing { get; set; }", file.Text);
-		StringAssert.Contains("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)", file.Text);
+		Assert.That(file.Text, Does.Contain("public ThingDto Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("ServiceDataUtility.AreEquivalentDtos(Thing, other.Thing)"));
 	}
 
 	[Test]
@@ -178,8 +178,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public Some.Name.Space.ExternSomeEnum? Thing { get; set; }", file.Text);
-		StringAssert.Contains("Thing == other.Thing", file.Text);
+		Assert.That(file.Text, Does.Contain("public Some.Name.Space.ExternSomeEnum? Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("Thing == other.Thing"));
 	}
 
 	[Test]
@@ -193,8 +193,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public ExternSomeEnum? Thing { get; set; }", file.Text);
-		StringAssert.Contains("Thing == other.Thing", file.Text);
+		Assert.That(file.Text, Does.Contain("public ExternSomeEnum? Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("Thing == other.Thing"));
 	}
 
 	[Test]
@@ -208,8 +208,8 @@ public sealed class CSharpGeneratorTests
 		var output = generator.GenerateOutput(service);
 
 		var file = output.Files.First(x => x.Name == "TestDto.g.cs");
-		StringAssert.Contains("public SomeEnum? Thing { get; set; }", file.Text);
-		StringAssert.Contains("Thing == other.Thing", file.Text);
+		Assert.That(file.Text, Does.Contain("public SomeEnum? Thing { get; set; }"));
+		Assert.That(file.Text, Does.Contain("Thing == other.Thing"));
 	}
 
 	private void ThrowsServiceDefinitionException(string definition, string message)

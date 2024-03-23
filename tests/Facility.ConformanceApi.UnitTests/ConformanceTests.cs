@@ -37,7 +37,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 		var test = m_tests.Single(x => x.Test == testName);
 		var result = await new ConformanceApiTester(settings).RunTestAsync(test).ConfigureAwait(false);
 		if (result.Status != ConformanceTestStatus.Pass)
-			Assert.Fail(result.Message);
+			Assert.Fail(result.Message!);
 	}
 
 	[Test]

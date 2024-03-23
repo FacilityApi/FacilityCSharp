@@ -12,7 +12,7 @@ public sealed class ServiceObjectTests
 	{
 		var so1 = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 		var so2 = legacy1 ? ServiceObject.Create(new JObject { ["foo"] = "bar" }) : ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
-		Assert.IsTrue(so1.IsEquivalentTo(so2));
+		Assert.That(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]

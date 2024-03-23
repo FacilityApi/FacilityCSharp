@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <NoWarn>$(NoWarn);CA1859;NUnit2003;NUnit2005</NoWarn>
+    <NoWarn>$(NoWarn);CA1859;JSON002</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -108,7 +108,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var so1 = ServiceObject.Create(new JObject { ["foo"] = "bar" });
 		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
-		Assert.IsTrue(so1.IsEquivalentTo(so2));
+		Assert.That(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]
@@ -116,7 +116,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var so1 = ServiceObject.Create(new JObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" });
 		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
-		Assert.IsTrue(so1.IsEquivalentTo(so2));
+		Assert.That(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]
@@ -124,7 +124,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "bar" });
 		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
-		Assert.IsTrue(so1.IsEquivalentTo(so2));
+		Assert.That(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]
@@ -132,7 +132,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var so1 = ServiceObject.Create(new JsonObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" });
 		var so2 = JsonSerializer.FromJson<ServiceObject>(JsonSerializer.ToJson(so1));
-		Assert.IsTrue(so1.IsEquivalentTo(so2));
+		Assert.That(so1.IsEquivalentTo(so2));
 	}
 
 	[Test]
@@ -140,7 +140,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var legacy1 = new LegacyObjectDto { Extra = new JObject { ["foo"] = "bar" } };
 		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
-		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+		Assert.That(legacy1.IsEquivalentTo(legacy2));
 	}
 
 	[Test]
@@ -148,7 +148,7 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var legacy1 = new LegacyObjectDto { Extra = new JObject { ["foo"] = "2022-10-18T09:15:08.3426473-07:00" } };
 		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
-		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+		Assert.That(legacy1.IsEquivalentTo(legacy2));
 	}
 
 	[Test]
@@ -156,16 +156,16 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	{
 		var legacy1 = new LegacyObjectDto();
 		var legacy2 = JsonSerializer.FromJson<LegacyObjectDto>(JsonSerializer.ToJson(legacy1));
-		Assert.IsTrue(legacy1.IsEquivalentTo(legacy2));
+		Assert.That(legacy1.IsEquivalentTo(legacy2));
 	}
 
 	[Test]
 	public void RoundTripJToken()
 	{
-		Assert.AreEqual(0, JsonSerializer.FromJson<JObject>(JsonSerializer.ToJson(new JObject()))!.Count);
-		Assert.AreEqual(0, JsonSerializer.FromJson<JArray>(JsonSerializer.ToJson(new JArray()))!.Count);
-		Assert.AreEqual("hi", (string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson((JValue) "hi"))!);
-		Assert.IsTrue((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson((JToken) true))!);
+		Assert.That(JsonSerializer.FromJson<JObject>(JsonSerializer.ToJson(new JObject()))!, Has.Count.EqualTo(0));
+		Assert.That(JsonSerializer.FromJson<JArray>(JsonSerializer.ToJson(new JArray()))!, Has.Count.EqualTo(0));
+		Assert.That((string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson((JValue) "hi"))!, Is.EqualTo("hi"));
+		Assert.That((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson((JToken) true))!);
 	}
 
 	[Test]

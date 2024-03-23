@@ -13,7 +13,7 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { [validate(value: 0..1)] normalized: double; }: {} }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.Contains("public override bool Validate", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("public override bool Validate"));
 	}
 
 	[Test]
@@ -22,7 +22,7 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { data: Data; }: {} data Data { [validate(value: 0..1)] normalized: double; } }";
 		var requestDtoFile = GetGeneratedFile(definition, "DataDto.g.cs");
 
-		StringAssert.Contains("public override bool Validate", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("public override bool Validate"));
 	}
 
 	[Test]
@@ -31,8 +31,8 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { [validate(value: 0..1)] normalized: double; }: {} }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.Contains("if (Normalized != null && Normalized < 0D)", requestDtoFile.Text);
-		StringAssert.Contains("if (Normalized != null && Normalized > 1D)", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("if (Normalized != null && Normalized < 0D)"));
+		Assert.That(requestDtoFile.Text, Does.Contain("if (Normalized != null && Normalized > 1D)"));
 	}
 
 	[Test]
@@ -41,8 +41,8 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { [validate] data: Data; }: {} enum Data { nothing, something } }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.Contains("public override bool Validate", requestDtoFile.Text);
-		StringAssert.Contains("if (Data != null && !Data.Value.IsDefined())", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("public override bool Validate"));
+		Assert.That(requestDtoFile.Text, Does.Contain("if (Data != null && !Data.Value.IsDefined())"));
 	}
 
 	[Test]
@@ -51,8 +51,8 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { [validate(length: 10..)] password: string; }: {} }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.DoesNotContain("using System.Text.RegularExpressions;", requestDtoFile.Text);
-		StringAssert.Contains("if (Password != null && Password.Length < 10)", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Not.Contain("using System.Text.RegularExpressions;"));
+		Assert.That(requestDtoFile.Text, Does.Contain("if (Password != null && Password.Length < 10)"));
 	}
 
 	[Test]
@@ -61,9 +61,9 @@ public class ValidationTests
 		var definition = """[csharp] service TestApi { method do { [validate(regex: "^[0-9]{4}$")] pin: string; }: {} }""";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.Contains("using System.Text.RegularExpressions;", requestDtoFile.Text);
-		StringAssert.Contains("static readonly Regex s_validPinRegex = new Regex(\"^[0-9]{4}$\", RegexOptions.CultureInvariant);", requestDtoFile.Text);
-		StringAssert.Contains("if (Pin != null && !s_validPinRegex.IsMatch(Pin))", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("using System.Text.RegularExpressions;"));
+		Assert.That(requestDtoFile.Text, Does.Contain("static readonly Regex s_validPinRegex = new Regex(\"^[0-9]{4}$\", RegexOptions.CultureInvariant);"));
+		Assert.That(requestDtoFile.Text, Does.Contain("if (Pin != null && !s_validPinRegex.IsMatch(Pin))"));
 	}
 
 	[Test]
@@ -72,7 +72,7 @@ public class ValidationTests
 		var definition = "[csharp] service TestApi { method do { [validate(count: ..100)] accountIds: int64[]; }: {} }";
 		var requestDtoFile = GetGeneratedFile(definition, "DoRequestDto.g.cs");
 
-		StringAssert.Contains("if (AccountIds != null && AccountIds.Count > 100", requestDtoFile.Text);
+		Assert.That(requestDtoFile.Text, Does.Contain("if (AccountIds != null && AccountIds.Count > 100"));
 	}
 
 	private CodeGenFile GetGeneratedFile(string definition, string fileName)
