@@ -183,8 +183,34 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		return JsonSerializer.Deserialize<T>(memoryStream, s_jsonSerializerOptions)!;
 	}
 
+	/// <summary>
+	/// Configures the JSON serializer options to match what Facility uses.
+	/// </summary>
+	public static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
+	{
+		options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+		options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+		options.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals;
+		options.PropertyNameCaseInsensitive = true;
+		options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+		options.Converters.Add(new DateTimeConverter());
+		options.Converters.Add(new AllowReadingStringFromNonStringConverter());
+		options.Converters.Add(new AllowReadingBooleanFromStringConverter());
+		options.Converters.Add(new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>());
+		options.Converters.Add(new NewtonsoftJsonLinqSystemTextJsonConverter<JArray>());
+		options.Converters.Add(new NewtonsoftJsonLinqSystemTextJsonConverter<JValue>());
+		options.Converters.Add(new NewtonsoftJsonLinqSystemTextJsonConverter<JToken>());
+	}
+
 	private SystemTextJsonServiceSerializer()
 	{
+	}
+
+	private static JsonSerializerOptions CreateJsonSerializerOptions()
+	{
+		var options = new JsonSerializerOptions();
+		ConfigureJsonSerializerOptions(options);
+		return options;
 	}
 
 	private sealed class NewtonsoftJsonLinqSystemTextJsonConverter<T> : JsonConverter<T>
@@ -251,22 +277,5 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 		}
 	}
 
-	private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()
-	{
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
-		PropertyNameCaseInsensitive = true,
-		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-		Converters =
-		{
-			new DateTimeConverter(),
-			new AllowReadingStringFromNonStringConverter(),
-			new AllowReadingBooleanFromStringConverter(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<JObject>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<JArray>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<JValue>(),
-			new NewtonsoftJsonLinqSystemTextJsonConverter<JToken>(),
-		},
-	};
+	private static readonly JsonSerializerOptions s_jsonSerializerOptions = CreateJsonSerializerOptions();
 }
