@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.27.0
+
+* Add `SystemTextJsonServiceSerializer.ConfigureJsonSerializerOptions`.
+
 ## 2.26.0
 
 * Add `ServiceResultUtility.TryGetValue`.
