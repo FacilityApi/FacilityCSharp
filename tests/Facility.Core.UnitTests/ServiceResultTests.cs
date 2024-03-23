@@ -16,6 +16,7 @@ public class ServiceResultTests
 		result.IsFailure.Should().BeFalse();
 		result.Error!.Should().BeNull();
 		result.Verify();
+		ServiceResultUtility.TryGetValue(result, out _).Should().BeFalse();
 	}
 
 	[Test]
@@ -28,6 +29,8 @@ public class ServiceResultTests
 		result.Verify();
 		result.Value.Should().Be(1);
 		result.GetValueOrDefault().Should().Be(1);
+		ServiceResultUtility.TryGetValue(result, out var value).Should().BeTrue();
+		value.Should().Be(1);
 	}
 
 	[Test]
@@ -40,6 +43,8 @@ public class ServiceResultTests
 		result.Verify();
 		result.Value.Should().BeNull();
 		result.GetValueOrDefault().Should().BeNull();
+		ServiceResultUtility.TryGetValue(result, out var value).Should().BeTrue();
+		value.Should().BeNull();
 	}
 
 	[Test]
@@ -64,6 +69,7 @@ public class ServiceResultTests
 		{
 			exception.Error.Should().BeDto(new ServiceErrorDto());
 		}
+		ServiceResultUtility.TryGetValue(result, out _).Should().BeFalse();
 	}
 
 	[Test]
@@ -91,6 +97,7 @@ public class ServiceResultTests
 		{
 			exception.Error.Should().BeDto(new ServiceErrorDto("Int32Failure"));
 		}
+		ServiceResultUtility.TryGetValue(result, out _).Should().BeFalse();
 	}
 
 	[Test]
