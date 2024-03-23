@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.26.0
+
+* Add `ServiceResultUtility.TryGetValue`.
+* Add .NET 8 targets.
+
 ## 2.25.0
 
 * Add `RequestReadyAsync` override to `HttpClientService`.
