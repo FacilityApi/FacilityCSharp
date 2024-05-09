@@ -205,11 +205,11 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 	/// <summary>
 	/// Called to determine if an error object should be created from an unexpected exception.
 	/// </summary>
-	protected virtual bool ShouldCreateErrorFromException(Exception exception)
-	{
-		var exceptionTypeName = exception.GetType().FullName;
-		return exceptionTypeName != null && exceptionTypeName.StartsWith("System.Web.", StringComparison.Ordinal);
-	}
+	protected virtual bool ShouldCreateErrorFromException(Exception exception) =>
+		exception.GetType().FullName is { } exceptionTypeName && (
+			exceptionTypeName.StartsWith("Microsoft.AspNetCore.Http.", StringComparison.Ordinal) ||
+			exceptionTypeName.StartsWith("Microsoft.AspNetCore.Server.", StringComparison.Ordinal) ||
+			exceptionTypeName.StartsWith("System.Web.", StringComparison.Ordinal));
 
 	/// <summary>
 	/// Called to create an error object from an unexpected exception.
