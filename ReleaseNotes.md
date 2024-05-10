@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.27.1
+
+* Convert `Microsoft.AspNetCore.*` exceptions to errors.
+
 ## 2.27.0
 
 * Add `SystemTextJsonServiceSerializer.ConfigureJsonSerializerOptions`.
