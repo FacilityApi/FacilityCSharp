@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Facility.Core;
 
 namespace Facility.ConformanceApi.Testing;
@@ -97,7 +103,7 @@ public sealed class ConformanceApiTester
 				return new ConformanceTestResult(testName, ConformanceTestStatus.Pass);
 			}
 
-			static string Capitalize(string value) => value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
+			static string Capitalize(string value) => string.Concat(value.Substring(0, 1).ToUpperInvariant(), value.Substring(1));
 			var methodInfo = typeof(IConformanceApi).GetMethod(Capitalize(test.Method!) + "Async", BindingFlags.Public | BindingFlags.Instance);
 			if (methodInfo == null)
 				return Failure($"Missing API method for {test.Method}");
@@ -110,7 +116,7 @@ public sealed class ConformanceApiTester
 			if (!ServiceObjectUtility.DeepEquals(requestServiceObject, requestRoundTripServiceObject))
 				return Failure($"Request round trip failed. expected={m_jsonSerializer.ToJson(requestServiceObject)} actual={m_jsonSerializer.ToJson(requestRoundTripServiceObject)}");
 
-			var task = (Task) methodInfo.Invoke(m_api, [requestDto, cancellationToken]);
+			var task = (Task) methodInfo.Invoke(m_api, [requestDto, cancellationToken])!;
 			await task.ConfigureAwait(false);
 
 			var result = ((dynamic) task).Result;

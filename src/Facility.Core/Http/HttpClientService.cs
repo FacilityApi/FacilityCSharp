@@ -137,7 +137,7 @@ public abstract class HttpClientService
 
 			// create the response DTO
 			var response = responseMapping.CreateResponse(responseBody);
-			response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers, httpResponse.Content.Headers)!);
+			response = mapping.SetResponseHeaders(response, HttpServiceUtility.CreateDictionaryFromHeaders(httpResponse.Headers, httpResponse.Content?.Headers)!);
 
 			// validate the response DTO
 			if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))

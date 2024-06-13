@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Facility.Core;
 
 namespace Facility.ConformanceApi.Testing;
@@ -88,7 +93,7 @@ public sealed class ConformanceApiService : IConformanceApi
 
 	private ServiceResult<T> Execute<T>(ServiceDto request)
 	{
-		if (request == null)
+		if (request is null)
 			throw new ArgumentNullException(nameof(request));
 
 		var methodName = Uncapitalize(request.GetType().Name.Substring(0, request.GetType().Name.Length - "RequestDto".Length));
@@ -119,12 +124,12 @@ public sealed class ConformanceApiService : IConformanceApi
 			var response = m_jsonSerializer.FromServiceObject<T>(testInfo.Response!);
 			var responseRoundTrip = m_jsonSerializer.ToServiceObject(response);
 			if (!ServiceObjectUtility.DeepEquals(testInfo.Response, responseRoundTrip))
-				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={m_jsonSerializer.ToJson(testInfo.Response)} actual={m_jsonSerializer.ToJson(responseRoundTrip)}"));
+				return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest($"Response round trip failed for test {testInfo.Test}. expected={SystemTextJsonServiceSerializer.Instance.ToJson(testInfo.Response)} actual={SystemTextJsonServiceSerializer.Instance.ToJson(responseRoundTrip)}"));
 			return ServiceResult.Success(response);
 		}
 	}
 
-	private static string Uncapitalize(string value) => value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
+	private static string Uncapitalize(string value) => string.Concat(value.Substring(0, 1).ToLowerInvariant(), value.Substring(1));
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly JsonServiceSerializer m_jsonSerializer;

@@ -1,5 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
 using Facility.ConformanceApi.Http;
 using Facility.ConformanceApi.Testing;
 using Facility.Core;
@@ -15,7 +22,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 	public ConformanceTests(ServiceSerializer serializer)
 		: base(serializer)
 	{
-		m_tests = CreateTestProvider(JsonSerializer);
+		m_tests = CreateTestProvider();
 		m_contentSerializer = HttpContentSerializer.Create(Serializer);
 
 		var service = new ConformanceApiService(new ConformanceApiServiceSettings { Tests = m_tests, JsonSerializer = JsonSerializer });
@@ -61,10 +68,10 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 
 	public void Dispose() => m_httpClient.Dispose();
 
-	private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider(JsonServiceSerializer jsonSerializer)
+	private static IReadOnlyList<ConformanceTestInfo> CreateTestProvider()
 	{
 		using var testsJsonReader = new StreamReader(typeof(ConformanceTests).Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceTests.json")!);
-		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd(), jsonSerializer).Tests!;
+		return ConformanceTestsInfo.FromJson(testsJsonReader.ReadToEnd()).Tests!;
 	}
 
 	private sealed class NotFoundHttpHandler : HttpMessageHandler
@@ -73,7 +80,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 			Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 	}
 
-	private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider(NewtonsoftJsonServiceSerializer.Instance).Select(x => x.Test!).ToList();
+	private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider().Select(x => x.Test!).ToList();
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly HttpClient m_httpClient;

@@ -184,6 +184,16 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Creates and configures JSON serializer options.
+	/// </summary>
+	public static JsonSerializerOptions CreateJsonSerializerOptions()
+	{
+		var options = new JsonSerializerOptions();
+		ConfigureJsonSerializerOptions(options);
+		return options;
+	}
+
+	/// <summary>
 	/// Configures the JSON serializer options to match what Facility uses.
 	/// </summary>
 	public static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
@@ -204,13 +214,6 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 
 	private SystemTextJsonServiceSerializer()
 	{
-	}
-
-	private static JsonSerializerOptions CreateJsonSerializerOptions()
-	{
-		var options = new JsonSerializerOptions();
-		ConfigureJsonSerializerOptions(options);
-		return options;
 	}
 
 	private sealed class NewtonsoftJsonLinqSystemTextJsonConverter<T> : JsonConverter<T>
@@ -257,6 +260,12 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 
 		public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) =>
 			writer.WriteStringValue(value);
+
+		public override string ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+			reader.GetString()!;
+
+		public override void WriteAsPropertyName(Utf8JsonWriter writer, string value, JsonSerializerOptions options) =>
+			writer.WritePropertyName(value);
 	}
 
 	private sealed class DateTimeConverter : JsonConverter<DateTime>

@@ -1,8 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net472;net8.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CA1861</NoWarn>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- disable implicit usings to ensure that generated code has all needed usings -->
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- set to false to confirm that ConformanceApiJsonServiceSerializer tests don't fail (others will) -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +33,10 @@
     <ProjectReference Include="..\..\src\Facility.Core\Facility.Core.csproj" />
     <ProjectReference Include="..\..\src\Facility.Core.Assertions\Facility.Core.Assertions.csproj" />
     <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
 </Project>

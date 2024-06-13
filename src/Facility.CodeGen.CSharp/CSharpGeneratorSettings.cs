@@ -31,4 +31,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	/// True to support MessagePack serialization.
 	/// </summary>
 	public bool SupportMessagePack { get; set; }
+
+	/// <summary>
+	/// True to support System.Text.Json source generation.
+	/// </summary>
+	public bool SupportJsonSourceGeneration { get; set; }
 }

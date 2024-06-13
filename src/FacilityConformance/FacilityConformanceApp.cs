@@ -70,7 +70,7 @@ public sealed class FacilityConformanceApp
 #pragma warning restore CS0618 // Type or member is obsolete
 
 		var jsonSerializer = serializers.OfType<JsonServiceSerializer>().FirstOrDefault() ?? NewtonsoftJsonServiceSerializer.Instance;
-		var tests = ConformanceTestsInfo.FromJson(m_testsJson, jsonSerializer).Tests!;
+		var tests = ConformanceTestsInfo.FromJson(m_testsJson).Tests!;
 
 		var command = argsReader.ReadArgument();
 

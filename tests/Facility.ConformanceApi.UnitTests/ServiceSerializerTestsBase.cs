@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Facility.Core;
 using Facility.Core.MessagePack;
 
@@ -10,6 +11,9 @@ public abstract class ServiceSerializerTestsBase
 		NewtonsoftJsonServiceSerializer.Instance,
 		SystemTextJsonServiceSerializer.Instance,
 		MessagePackServiceSerializer.Instance,
+#if NET8_0_OR_GREATER
+		ConformanceApiJsonServiceSerializer.Instance,
+#endif
 	];
 
 	protected ServiceSerializerTestsBase(ServiceSerializer serializer)
