@@ -192,7 +192,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	public void RequiredWidgetMatrixNameMissing()
 	{
 		var dto = CreateRequiredRequest();
-		dto.WidgetMatrix = new[] { new[] { new WidgetDto() } };
+		dto.WidgetMatrix = [[new WidgetDto()]];
 		dto.Validate(out var errorMessage).Should().BeFalse();
 		errorMessage.Should().Be(ServiceDataUtility.GetInvalidFieldErrorMessage("widgetMatrix[0][0]", ServiceDataUtility.GetRequiredFieldErrorMessage("name")));
 	}
