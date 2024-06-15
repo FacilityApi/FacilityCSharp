@@ -44,9 +44,17 @@ public sealed class CSharpGenerator : CodeGenerator
 	public bool SupportMessagePack { get; set; }
 
 	/// <summary>
-	/// True to support System.Text.Json source generation.
+	/// True to support <c>System.Text.Json</c> source generation.
 	/// </summary>
+	/// <remarks>Unless <see cref="JsonSourceGenerationCondition"/> is set, the
+	/// corresponding code is surrounded by <c>#if NET8_0_OR_GREATER</c>.</remarks>
 	public bool SupportJsonSourceGeneration { get; set; }
+
+	/// <summary>
+	/// The <c>#if</c> condition used around the source generated for <c>System.Text.Json</c>.
+	/// </summary>
+	/// <remarks>Use <c>true</c> to omit the <c>#if</c>.</remarks>
+	public string? JsonSourceGenerationCondition { get; set; }
 
 	/// <summary>
 	/// Generates the C# output.
@@ -88,7 +96,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			outputFiles.Add(GenerateHttpClient(httpServiceInfo, context));
 			outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
 
-			if (SupportJsonSourceGeneration)
+			if (ShouldGenerateJsonSource)
 			{
 				outputFiles.Add(GenerateJsonSerializerContext(service, httpServiceInfo, context));
 				outputFiles.Add(GenerateJsonSerializer(service, context));
@@ -116,6 +124,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		FixSnakeCase = csharpSettings.FixSnakeCase;
 		SupportMessagePack = csharpSettings.SupportMessagePack;
 		SupportJsonSourceGeneration = csharpSettings.SupportJsonSourceGeneration;
+		JsonSourceGenerationCondition = csharpSettings.JsonSourceGenerationCondition;
 	}
 
 	/// <summary>
@@ -1249,18 +1258,27 @@ public sealed class CSharpGenerator : CodeGenerator
 		});
 	}
 
+	private bool ShouldGenerateJsonSource => (SupportJsonSourceGeneration || JsonSourceGenerationCondition is not null) && JsonSourceGenerationCondition?.Trim() is not "false";
+
 	private void WriteContentSerializerPropertyInitializer(CodeWriter code, string fullServiceName)
 	{
-		if (SupportJsonSourceGeneration)
-		{
-			code.WriteLineNoIndent("#if NET8_0_OR_GREATER");
+		var condition = !ShouldGenerateJsonSource
+			? null
+			: JsonSourceGenerationCondition is null
+				? "NET8_0_OR_GREATER"
+				: JsonSourceGenerationCondition.Trim() is "" or "true"
+					? null
+					: JsonSourceGenerationCondition;
+
+		if (condition is not null)
+			code.WriteLineNoIndent($"#if {condition}");
+		if (condition is not null || ShouldGenerateJsonSource)
 			code.WriteLine($"ContentSerializer = HttpContentSerializer.Create({fullServiceName}JsonServiceSerializer.Instance),");
+		if (condition is not null)
 			code.WriteLineNoIndent("#else");
-		}
-
-		code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
-
-		if (SupportJsonSourceGeneration)
+		if (condition is not null || !ShouldGenerateJsonSource)
+			code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
+		if (condition is not null)
 			code.WriteLineNoIndent("#endif");
 	}
 

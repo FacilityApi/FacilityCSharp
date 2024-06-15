@@ -33,7 +33,15 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	public bool SupportMessagePack { get; set; }
 
 	/// <summary>
-	/// True to support System.Text.Json source generation.
+	/// True to support <c>System.Text.Json</c> source generation.
 	/// </summary>
+	/// <remarks>Unless <see cref="JsonSourceGenerationCondition"/> is set, the
+	/// corresponding code is surrounded by <c>#if NET8_0_OR_GREATER</c>.</remarks>
 	public bool SupportJsonSourceGeneration { get; set; }
+
+	/// <summary>
+	/// The <c>#if</c> condition used around the source generated for <c>System.Text.Json</c>.
+	/// </summary>
+	/// <remarks>Use <c>true</c> to omit the <c>#if</c>.</remarks>
+	public string? JsonSourceGenerationCondition { get; set; }
 }
