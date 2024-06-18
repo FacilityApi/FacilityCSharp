@@ -694,12 +694,13 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System",
 				"System.Collections.Generic",
 				"System.Globalization",
-				"System.Linq",
 				"System.Net",
 				"System.Net.Http",
 				"Facility.Core",
 				"Facility.Core.Http",
 			};
+			if (ShouldGenerateJsonSource)
+				usings.Add("System.Linq");
 			CSharpUtility.WriteUsings(code, usings, namespaceName);
 
 			CSharpUtility.WriteObsoletePragma(code);

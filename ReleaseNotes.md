@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.28.1
+## 2.28.2
 
 * Don't use `ToArray` unless needed for JSON source generation.
 
