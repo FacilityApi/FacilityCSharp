@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Facility.Core;
@@ -249,7 +250,7 @@ namespace Facility.ConformanceApi.Http
 					return ServiceResult.Success();
 				},
 				RequestBodyType = typeof(IReadOnlyList<int>),
-				GetRequestBody = request => request.Ids,
+				GetRequestBody = request => request.Ids?.ToArray(),
 				CreateRequest = body => new GetWidgetBatchRequestDto { Ids = (IReadOnlyList<int>?) body },
 				ResponseMappings =
 				{
@@ -258,7 +259,7 @@ namespace Facility.ConformanceApi.Http
 						StatusCode = (HttpStatusCode) 200,
 						ResponseBodyType = typeof(IReadOnlyList<ServiceResult<WidgetDto>>),
 						MatchesResponse = response => response.Results != null,
-						GetResponseBody = response => response.Results,
+						GetResponseBody = response => response.Results?.ToArray(),
 						CreateResponse = body => new GetWidgetBatchResponseDto { Results = (IReadOnlyList<ServiceResult<WidgetDto>>?) body },
 					}.Build(),
 				},

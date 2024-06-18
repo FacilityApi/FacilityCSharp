@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+#if !NET8_0_OR_GREATER
 using Facility.Core;
+#endif
 
 namespace Facility.ConformanceApi.Testing;
 
@@ -10,13 +13,11 @@ public sealed class ConformanceTestsInfo
 	/// <summary>
 	/// Load tests from JSON.
 	/// </summary>
-	[Obsolete("Use the overload with the serializer.")]
-	public static ConformanceTestsInfo FromJson(string json) => FromJson(json, NewtonsoftJsonServiceSerializer.Instance);
-
-	/// <summary>
-	/// Load tests from JSON.
-	/// </summary>
-	public static ConformanceTestsInfo FromJson(string json, JsonServiceSerializer jsonSerializer) => jsonSerializer.FromJson<ConformanceTestsInfo>(json)!;
+#if NET8_0_OR_GREATER
+	public static ConformanceTestsInfo FromJson(string json) => ConformanceTestsJsonServiceSerializer.Instance.FromJson<ConformanceTestsInfo>(json)!;
+#else
+	public static ConformanceTestsInfo FromJson(string json) => SystemTextJsonServiceSerializer.Instance.FromJson<ConformanceTestsInfo>(json)!;
+#endif
 
 	/// <summary>
 	/// The name of the test.

@@ -44,6 +44,19 @@ public sealed class CSharpGenerator : CodeGenerator
 	public bool SupportMessagePack { get; set; }
 
 	/// <summary>
+	/// True to support <c>System.Text.Json</c> source generation.
+	/// </summary>
+	/// <remarks>Unless <see cref="JsonSourceGenerationCondition"/> is set, the
+	/// corresponding code is surrounded by <c>#if NET8_0_OR_GREATER</c>.</remarks>
+	public bool SupportJsonSourceGeneration { get; set; }
+
+	/// <summary>
+	/// The <c>#if</c> condition used around the source generated for <c>System.Text.Json</c>.
+	/// </summary>
+	/// <remarks>Use <c>true</c> to omit the <c>#if</c>.</remarks>
+	public string? JsonSourceGenerationCondition { get; set; }
+
+	/// <summary>
 	/// Generates the C# output.
 	/// </summary>
 	public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -82,6 +95,12 @@ public sealed class CSharpGenerator : CodeGenerator
 			outputFiles.Add(GenerateHttpMapping(httpServiceInfo, context));
 			outputFiles.Add(GenerateHttpClient(httpServiceInfo, context));
 			outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
+
+			if (ShouldGenerateJsonSource)
+			{
+				outputFiles.Add(GenerateJsonSerializerContext(service, httpServiceInfo, context));
+				outputFiles.Add(GenerateJsonSerializer(service, context));
+			}
 		}
 
 		var codeGenComment = CodeGenUtility.GetCodeGenComment(context.GeneratorName);
@@ -104,6 +123,8 @@ public sealed class CSharpGenerator : CodeGenerator
 		UseNullableReferences = csharpSettings.UseNullableReferences;
 		FixSnakeCase = csharpSettings.FixSnakeCase;
 		SupportMessagePack = csharpSettings.SupportMessagePack;
+		SupportJsonSourceGeneration = csharpSettings.SupportJsonSourceGeneration;
+		JsonSourceGenerationCondition = csharpSettings.JsonSourceGenerationCondition;
 	}
 
 	/// <summary>
@@ -673,6 +694,7 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System",
 				"System.Collections.Generic",
 				"System.Globalization",
+				"System.Linq",
 				"System.Net",
 				"System.Net.Http",
 				"Facility.Core",
@@ -843,7 +865,7 @@ public sealed class CSharpGenerator : CodeGenerator
 									code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName.TrimEnd('?')}),");
 									if (httpMethodInfo.RequestBodyField.ContentType != null)
 										code.WriteLine($"RequestBodyContentType = {CSharpUtility.CreateString(httpMethodInfo.RequestBodyField.ContentType)},");
-									code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName},");
+									code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName}{(requestBodyFieldInfo.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
 									code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
 								}
 								else if (httpMethodInfo.RequestNormalFields.Any())
@@ -912,7 +934,7 @@ public sealed class CSharpGenerator : CodeGenerator
 													if (bodyField.ContentType != null)
 														code.WriteLine($"ResponseBodyContentType = {CSharpUtility.CreateString(bodyField.ContentType)},");
 													code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
-													code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName},");
+													code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName}{(bodyFieldType.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
 													code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
 												}
 											}
@@ -1110,7 +1132,7 @@ public sealed class CSharpGenerator : CodeGenerator
 						if (url != null)
 							code.WriteLine($"BaseUri = new Uri({CSharpUtility.CreateString(url)}),");
 
-						code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
+						WriteContentSerializerPropertyInitializer(code, fullServiceName);
 					}
 				}
 			}
@@ -1226,7 +1248,7 @@ public sealed class CSharpGenerator : CodeGenerator
 					code.WriteLine();
 					code.WriteLine("private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults");
 					using (code.Block("{", "};"))
-						code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
+						WriteContentSerializerPropertyInitializer(code, fullServiceName);
 
 					code.WriteLine();
 					code.WriteLine($"private readonly {fullInterfaceName}{NullableReferenceSuffix} m_service;");
@@ -1234,6 +1256,30 @@ public sealed class CSharpGenerator : CodeGenerator
 				}
 			}
 		});
+	}
+
+	private bool ShouldGenerateJsonSource => (SupportJsonSourceGeneration || JsonSourceGenerationCondition is not null) && JsonSourceGenerationCondition?.Trim() is not "false";
+
+	private void WriteContentSerializerPropertyInitializer(CodeWriter code, string fullServiceName)
+	{
+		var condition = !ShouldGenerateJsonSource
+			? null
+			: JsonSourceGenerationCondition is null
+				? "NET8_0_OR_GREATER"
+				: JsonSourceGenerationCondition.Trim() is "" or "true"
+					? null
+					: JsonSourceGenerationCondition;
+
+		if (condition is not null)
+			code.WriteLineNoIndent($"#if {condition}");
+		if (condition is not null || ShouldGenerateJsonSource)
+			code.WriteLine($"ContentSerializer = HttpContentSerializer.Create({fullServiceName}JsonServiceSerializer.Instance),");
+		if (condition is not null)
+			code.WriteLineNoIndent("#else");
+		if (condition is not null || !ShouldGenerateJsonSource)
+			code.WriteLine("ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),");
+		if (condition is not null)
+			code.WriteLineNoIndent("#endif");
 	}
 
 	private static string? TryGetAreEquivalentMethodName(ServiceTypeKind kind)
@@ -1457,6 +1503,113 @@ public sealed class CSharpGenerator : CodeGenerator
 					code.WriteLine("private readonly ServiceDelegator m_delegator;");
 				}
 			}
+		});
+	}
+
+	private CodeGenFile GenerateJsonSerializerContext(ServiceInfo serviceInfo, HttpServiceInfo httpServiceInfo, Context context)
+	{
+		var csharpInfo = context.CSharpServiceInfo;
+		var className = $"{csharpInfo.GetServiceName(serviceInfo)}JsonSerializerContext";
+
+		return CreateFile(className + CSharpUtility.FileExtension, code =>
+		{
+			WriteFileHeader(code, context);
+			code.WriteLine("#if NET8_0_OR_GREATER");
+
+			var usings = new List<string>
+			{
+				"System.Text.Json.Serialization",
+				"Facility.Core",
+			};
+			CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
+
+			CSharpUtility.WriteObsoletePragma(code);
+
+			code.WriteLine($"namespace {context.NamespaceName}");
+			using (code.Block())
+			{
+				CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+				code.WriteLine("[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata)]");
+
+				var serializables = new HashSet<string>
+				{
+					"ServiceErrorDto",
+					"ServiceObject",
+				};
+
+				foreach (var methodInfo in serviceInfo.Methods)
+				{
+					serializables.Add(csharpInfo.GetRequestDtoName(methodInfo));
+					serializables.Add(csharpInfo.GetResponseDtoName(methodInfo));
+				}
+
+				foreach (var dtoInfo in serviceInfo.Dtos)
+					serializables.Add(csharpInfo.GetDtoName(dtoInfo));
+
+				foreach (var bodyFieldType in httpServiceInfo.Methods.Select(x => x.RequestBodyField)
+					.Concat(httpServiceInfo.Methods.SelectMany(x => x.ValidResponses).Select(x => x.BodyField))
+					.Where(x => x != null)
+					.Select(x => context.GetFieldType(x!.ServiceField))
+					.Where(x => x.Kind == ServiceTypeKind.Array))
+				{
+					serializables.Add(RenderFieldTypeForCollection(bodyFieldType.ValueType!, context) + "[]");
+				}
+
+				foreach (var serializable in serializables.OrderBy(x => x, StringComparer.InvariantCulture))
+					code.WriteLine($"[JsonSerializable(typeof({serializable}))]");
+
+				code.WriteLine($"internal sealed partial class {className} : JsonSerializerContext");
+				using (code.Block())
+				{
+				}
+			}
+
+			code.WriteLine("#endif");
+		});
+	}
+
+	private CodeGenFile GenerateJsonSerializer(ServiceInfo serviceInfo, Context context)
+	{
+		var csharpInfo = context.CSharpServiceInfo;
+		var className = $"{csharpInfo.GetServiceName(serviceInfo)}JsonServiceSerializer";
+
+		return CreateFile(className + CSharpUtility.FileExtension, code =>
+		{
+			WriteFileHeader(code, context);
+			code.WriteLine("#if NET8_0_OR_GREATER");
+
+			var usings = new List<string>
+			{
+				"Facility.Core",
+			};
+			CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
+
+			CSharpUtility.WriteObsoletePragma(code);
+
+			code.WriteLine($"namespace {context.NamespaceName}");
+			using (code.Block())
+			{
+				CSharpUtility.WriteObsoleteAttribute(code, serviceInfo);
+
+				CSharpUtility.WriteSummary(code, "The JSON service serializer.");
+				code.WriteLine($"public sealed class {className} : SystemTextJsonContextServiceSerializer");
+				using (code.Block())
+				{
+					CSharpUtility.WriteSummary(code, "The instance of the JSON service serializer.");
+					code.WriteLine($"public static readonly {className} Instance = new {className}();");
+
+					code.WriteLine();
+					code.WriteLine($"private {className}()");
+					using (code.Indent())
+						code.WriteLine($": base(new {csharpInfo.GetServiceName(serviceInfo)}JsonSerializerContext(SystemTextJsonServiceSerializer.CreateJsonSerializerOptions()))");
+					using (code.Block())
+					{
+					}
+				}
+			}
+
+			code.WriteLine("#endif");
 		});
 	}
 

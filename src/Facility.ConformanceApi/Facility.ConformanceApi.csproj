@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Description>A .NET client for the standard Facility test server.</Description>
     <PackageTags>Facility server testing</PackageTags>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>$(NoWarn);CA1510;CA2016</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- disable implicit usings to ensure that generated code has all needed usings -->
+    <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>

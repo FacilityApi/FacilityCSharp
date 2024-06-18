@@ -131,7 +131,11 @@ namespace Facility.ConformanceApi.Http
 
 		private static readonly ServiceHttpHandlerDefaults s_defaults = new ServiceHttpHandlerDefaults
 		{
+#if NET8_0_OR_GREATER
+			ContentSerializer = HttpContentSerializer.Create(ConformanceApiJsonServiceSerializer.Instance),
+#else
 			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
+#endif
 		};
 
 		private readonly IConformanceApi? m_service;

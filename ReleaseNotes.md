@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.28.0
+
+* Support metadata-based source generation for `System.Text.Json` via `--json-source-gen` and `--json-source-gen-if`. It is optional because it significantly increases assembly size and slightly decreases performance. It may be worth considering for its [other benefits](https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/reflection-vs-source-generation).
+
 ## 2.27.1
 
 * Convert `Microsoft.AspNetCore.*` exceptions to errors.

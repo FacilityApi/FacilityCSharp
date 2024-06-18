@@ -39,7 +39,11 @@ namespace EdgeCases.Http
 
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{
+#if NET8_0_OR_GREATER
+			ContentSerializer = HttpContentSerializer.Create(EdgeCasesJsonServiceSerializer.Instance),
+#else
 			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
+#endif
 		};
 	}
 }

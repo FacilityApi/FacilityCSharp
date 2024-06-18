@@ -25,6 +25,7 @@ public class HttpBenchmarks
 		new SerializerInfo(NewtonsoftJsonServiceSerializer.Instance),
 		new SerializerInfo(SystemTextJsonServiceSerializer.Instance),
 		new SerializerInfo(MessagePackServiceSerializer.Instance),
+		new SerializerInfo(BenchmarkServiceJsonServiceSerializer.Instance),
 	];
 
 	[GlobalSetup]

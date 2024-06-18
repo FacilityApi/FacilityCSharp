@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Net.Http;
 using Facility.Core;
 
 namespace Facility.ConformanceApi.Testing;

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Facility.ConformanceApi.Testing;
 
 /// <summary>
