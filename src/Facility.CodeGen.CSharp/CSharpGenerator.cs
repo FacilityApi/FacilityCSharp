@@ -865,7 +865,7 @@ public sealed class CSharpGenerator : CodeGenerator
 									code.WriteLine($"RequestBodyType = typeof({requestBodyFieldTypeName.TrimEnd('?')}),");
 									if (httpMethodInfo.RequestBodyField.ContentType != null)
 										code.WriteLine($"RequestBodyContentType = {CSharpUtility.CreateString(httpMethodInfo.RequestBodyField.ContentType)},");
-									code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName}{(requestBodyFieldInfo.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
+									code.WriteLine($"GetRequestBody = request => request.{requestBodyFieldName}{(ShouldGenerateJsonSource && requestBodyFieldInfo.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
 									code.WriteLine($"CreateRequest = body => new {requestTypeName} {{ {requestBodyFieldName} = ({requestBodyFieldTypeName}) body }},");
 								}
 								else if (httpMethodInfo.RequestNormalFields.Any())
@@ -934,7 +934,7 @@ public sealed class CSharpGenerator : CodeGenerator
 													if (bodyField.ContentType != null)
 														code.WriteLine($"ResponseBodyContentType = {CSharpUtility.CreateString(bodyField.ContentType)},");
 													code.WriteLine($"MatchesResponse = response => response.{responseBodyFieldName} != null,");
-													code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName}{(bodyFieldType.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
+													code.WriteLine($"GetResponseBody = response => response.{responseBodyFieldName}{(ShouldGenerateJsonSource && bodyFieldType.Kind == ServiceTypeKind.Array ? "?.ToArray()" : "")},");
 													code.WriteLine($"CreateResponse = body => new {responseTypeName} {{ {responseBodyFieldName} = ({responseBodyFieldTypeName}) body }},");
 												}
 											}
