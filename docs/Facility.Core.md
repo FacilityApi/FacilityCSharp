@@ -37,6 +37,7 @@
 | static class [ServiceResultUtility](./Facility.Core/ServiceResultUtility.md) | Helper methods for working with `ServiceResult`. |
 | class [ServiceSerializationException](./Facility.Core/ServiceSerializationException.md) | Thrown when JSON deserialization fails. |
 | abstract class [ServiceSerializer](./Facility.Core/ServiceSerializer.md) | Serializes and deserializes values. |
+| class [SystemTextJsonContextServiceSerializer](./Facility.Core/SystemTextJsonContextServiceSerializer.md) | Serializes and deserializes values to and from JSON using a `System.Text.Json` serializer context. |
 | class [SystemTextJsonServiceSerializer](./Facility.Core/SystemTextJsonServiceSerializer.md) | Serializes and deserializes values to and from JSON using `System.Text.Json`. |
 
 ## Facility.Core.Http namespace

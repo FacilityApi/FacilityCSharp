@@ -17,6 +17,7 @@
 | class [CheckPathResponseDto](./Facility.ConformanceApi/CheckPathResponseDto.md) | Response for CheckPath. |
 | class [CheckQueryRequestDto](./Facility.ConformanceApi/CheckQueryRequestDto.md) | Request for CheckQuery. |
 | class [CheckQueryResponseDto](./Facility.ConformanceApi/CheckQueryResponseDto.md) | Response for CheckQuery. |
+| class [ConformanceApiJsonServiceSerializer](./Facility.ConformanceApi/ConformanceApiJsonServiceSerializer.md) | The JSON service serializer. |
 | class [CreateWidgetRequestDto](./Facility.ConformanceApi/CreateWidgetRequestDto.md) | Request for CreateWidget. |
 | class [CreateWidgetResponseDto](./Facility.ConformanceApi/CreateWidgetResponseDto.md) | Response for CreateWidget. |
 | class [DelegatingConformanceApi](./Facility.ConformanceApi/DelegatingConformanceApi.md) | A delegating implementation of ConformanceApi. |

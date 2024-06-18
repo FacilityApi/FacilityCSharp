@@ -23,6 +23,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 | [ToStream](SystemTextJsonServiceSerializer/ToStream.md)(…) | Serializes a value to JSON. |
 | override [ToStreamAsync](SystemTextJsonServiceSerializer/ToStreamAsync.md)(…) | Serializes a value to JSON. |
 | static [ConfigureJsonSerializerOptions](SystemTextJsonServiceSerializer/ConfigureJsonSerializerOptions.md)(…) | Configures the JSON serializer options to match what Facility uses. |
+| static [CreateJsonSerializerOptions](SystemTextJsonServiceSerializer/CreateJsonSerializerOptions.md)() | Creates and configures JSON serializer options. |
 
 ## See Also
 

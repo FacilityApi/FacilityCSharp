@@ -14,7 +14,9 @@ public sealed class CSharpGenerator : CodeGenerator
 | [DefaultNamespaceName](CSharpGenerator/DefaultNamespaceName.md) { get; set; } | The default name of the namespace (optional). Does not override the csharp FSD attribute. |
 | [FixSnakeCase](CSharpGenerator/FixSnakeCase.md) { get; set; } | True if C# names should automatically use PascalCase instead of snake case. |
 | override [HasPatternsToClean](CSharpGenerator/HasPatternsToClean.md) { get; } | Patterns to clean are returned with the output. |
+| [JsonSourceGenerationCondition](CSharpGenerator/JsonSourceGenerationCondition.md) { get; set; } | The `#if` condition used around the source generated for `System.Text.Json`. |
 | [NamespaceName](CSharpGenerator/NamespaceName.md) { get; set; } | The name of the namespace (optional). Overrides the csharp FSD attribute. |
+| [SupportJsonSourceGeneration](CSharpGenerator/SupportJsonSourceGeneration.md) { get; set; } | True to support `System.Text.Json` source generation. |
 | [SupportMessagePack](CSharpGenerator/SupportMessagePack.md) { get; set; } | True to support MessagePack serialization. |
 | [UseNullableReferences](CSharpGenerator/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
 | override [ApplySettings](CSharpGenerator/ApplySettings.md)(…) | Applies generator-specific settings. |
