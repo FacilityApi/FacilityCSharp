@@ -2,6 +2,7 @@ using ArgsReading;
 using Facility.CodeGen.Console;
 using Facility.CodeGen.CSharp;
 using Facility.Definition.CodeGen;
+using Facility.Definition.Fsd;
 
 namespace fsdgencsharp;
 
@@ -31,6 +32,8 @@ public sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"   --json-source-gen-if <condition>",
 		"      The #if condition to use around generated JSON source.",
 	];
+
+	protected override ServiceParser CreateParser() => new FsdParser(new FsdParserSettings { SupportsEvents = true });
 
 	protected override CodeGenerator CreateGenerator() => new CSharpGenerator();
 

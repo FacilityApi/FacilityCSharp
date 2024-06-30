@@ -1,5 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Facility.Core.Http;
 
@@ -60,18 +63,12 @@ public abstract class HttpClientService
 	/// </summary>
 	protected Uri? BaseUri { get; }
 
-	/// <summary>
-	/// Sends an HTTP request and processes the response.
-	/// </summary>
-	protected async Task<ServiceResult<TResponse>> TrySendRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
+	private async Task<ServiceResult<(HttpRequestMessage HttpRequest, HttpResponseMessage HttpResponse, HttpResponseMapping<TResponse> ResponseMapping)>> TryStartRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
 		where TRequest : ServiceDto, new()
 		where TResponse : ServiceDto, new()
 	{
-		if (mapping == null)
-			throw new ArgumentNullException(nameof(mapping));
-		if (request == null)
-			throw new ArgumentNullException(nameof(request));
-
+		HttpRequestMessage? httpRequest = null;
+		HttpResponseMessage? httpResponse = null;
 		try
 		{
 			// validate the request DTO
@@ -90,7 +87,7 @@ public abstract class HttpClientService
 				return httpRequestResult.ToFailure();
 
 			// add Accept header if not JSON
-			using var httpRequest = httpRequestResult.Value;
+			httpRequest = httpRequestResult.Value;
 			var contentMediaType = ContentSerializer.DefaultMediaType;
 			if (contentMediaType != HttpServiceUtility.JsonMediaType)
 			{
@@ -109,7 +106,7 @@ public abstract class HttpClientService
 			}
 
 			// send the HTTP request and get the HTTP response
-			using var httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
+			httpResponse = await SendRequestAsync(httpRequest, request, cancellationToken).ConfigureAwait(false);
 
 			// find the response mapping for the status code
 			var statusCode = httpResponse.StatusCode;
@@ -118,6 +115,39 @@ public abstract class HttpClientService
 			// fail if no response mapping can be found for the status code
 			if (responseMapping == null)
 				return ServiceResult.Failure(await CreateErrorFromHttpResponseAsync(httpResponse, cancellationToken).ConfigureAwait(false));
+
+			var returnValue = (httpRequest, httpResponse, responseMapping);
+			httpRequest = null;
+			httpResponse = null;
+			return ServiceResult.Success(returnValue);
+		}
+		finally
+		{
+			httpResponse?.Dispose();
+			httpRequest?.Dispose();
+		}
+	}
+
+	/// <summary>
+	/// Sends an HTTP request and processes the response.
+	/// </summary>
+	protected async Task<ServiceResult<TResponse>> TrySendRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
+		where TRequest : ServiceDto, new()
+		where TResponse : ServiceDto, new()
+	{
+		if (mapping == null)
+			throw new ArgumentNullException(nameof(mapping));
+		if (request == null)
+			throw new ArgumentNullException(nameof(request));
+
+		HttpRequestMessage? httpRequest = null;
+		HttpResponseMessage? httpResponse = null;
+		try
+		{
+			var startRequestResult = await TryStartRequestAsync(mapping, request, cancellationToken).ConfigureAwait(false);
+			if (startRequestResult.IsFailure)
+				return startRequestResult.ToFailure();
+			(httpRequest, httpResponse, var responseMapping) = startRequestResult.Value;
 
 			// read the response body if necessary
 			object? responseBody = null;
@@ -157,6 +187,148 @@ public abstract class HttpClientService
 
 			// error contacting service
 			return ServiceResult.Failure(CreateErrorFromException(exception));
+		}
+		finally
+		{
+			httpResponse?.Dispose();
+			httpRequest?.Dispose();
+		}
+	}
+
+	/// <summary>
+	/// Sends an HTTP request for an event and processes the response.
+	/// </summary>
+	protected async Task<ServiceResult<IAsyncEnumerable<ServiceResult<TResponse>>>> TrySendEventRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
+		where TRequest : ServiceDto, new()
+		where TResponse : ServiceDto, new()
+	{
+		if (mapping == null)
+			throw new ArgumentNullException(nameof(mapping));
+		if (request == null)
+			throw new ArgumentNullException(nameof(request));
+
+		HttpRequestMessage? httpRequest = null;
+		HttpResponseMessage? httpResponse = null;
+		try
+		{
+			var startRequestResult = await TryStartRequestAsync(mapping, request, cancellationToken).ConfigureAwait(false);
+			if (startRequestResult.IsFailure)
+				return startRequestResult.ToFailure();
+			(httpRequest, httpResponse, var responseMapping) = startRequestResult.Value;
+
+			var enumerable = CreateAsyncEnumerable(httpRequest, httpResponse, responseMapping, ContentSerializer, m_skipResponseValidation, cancellationToken);
+			httpResponse = null;
+			httpRequest = null;
+
+			return ServiceResult.Success(enumerable);
+		}
+		catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+		{
+			// HttpClient timeout
+			return ServiceResult.Failure(ServiceErrors.CreateTimeout());
+		}
+		catch (Exception exception) when (ShouldCreateErrorFromException(exception))
+		{
+			// cancellation can cause the wrong exception
+			cancellationToken.ThrowIfCancellationRequested();
+
+			// error contacting service
+			return ServiceResult.Failure(CreateErrorFromException(exception));
+		}
+		finally
+		{
+			httpResponse?.Dispose();
+			httpRequest?.Dispose();
+		}
+	}
+
+	private async IAsyncEnumerable<ServiceResult<TResponse>> CreateAsyncEnumerable<TResponse>(HttpRequestMessage httpRequest, HttpResponseMessage httpResponse, HttpResponseMapping<TResponse> responseMapping, HttpContentSerializer contentSerializer, bool skipResponseValidation, [EnumeratorCancellation] CancellationToken cancellationToken)
+		where TResponse : ServiceDto, new()
+	{
+		Stream? stream = null;
+		try
+		{
+#if NET6_0_OR_GREATER
+			stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+#else
+			stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+#endif
+
+			var sseParser = SseParser.Create(stream);
+			var enumerator = sseParser.EnumerateAsync(cancellationToken).GetAsyncEnumerator(cancellationToken);
+			await using var enumeratorScope = enumerator.ConfigureAwait(false);
+			while (true)
+			{
+				ServiceResult<TResponse> nextResult;
+				var stopStream = false;
+
+				try
+				{
+					if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
+						break;
+
+					var sseEvent = enumerator.Current;
+					var isError = sseEvent.EventType == "error";
+					var type = isError ? typeof(ServiceErrorDto) : responseMapping.ResponseBodyType!;
+					using var content = new StringContent(sseEvent.Data, Encoding.UTF8, HttpServiceUtility.JsonMediaType);
+					var responseResult = await contentSerializer.ReadHttpContentAsync(type, content, cancellationToken).ConfigureAwait(false);
+					if (responseResult.IsFailure)
+					{
+						var error = responseResult.Error!;
+						error.Code = ServiceErrors.InvalidResponse;
+						nextResult = ServiceResult.Failure(error);
+						stopStream = true;
+					}
+					else if (isError)
+					{
+						nextResult = ServiceResult.Failure((ServiceErrorDto) responseResult.Value);
+					}
+					else
+					{
+						var response = responseMapping.CreateResponse(responseResult.Value);
+						if (!skipResponseValidation && !response.Validate(out var responseErrorMessage))
+						{
+							nextResult = ServiceResult.Failure(ServiceErrors.CreateInvalidResponse(responseErrorMessage));
+							stopStream = true;
+						}
+						else
+						{
+							nextResult = ServiceResult.Success((TResponse) responseResult.Value);
+						}
+					}
+				}
+				catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+				{
+					// HttpClient timeout
+					nextResult = ServiceResult.Failure(ServiceErrors.CreateTimeout());
+					stopStream = true;
+				}
+				catch (Exception exception) when (ShouldCreateErrorFromException(exception))
+				{
+					// cancellation can cause the wrong exception
+					cancellationToken.ThrowIfCancellationRequested();
+
+					// error contacting service
+					nextResult = ServiceResult.Failure(CreateErrorFromException(exception));
+					stopStream = true;
+				}
+
+				yield return nextResult;
+
+				if (stopStream)
+					break;
+			}
+		}
+		finally
+		{
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+			if (stream is not null)
+				await stream.DisposeAsync().ConfigureAwait(false);
+#else
+			stream?.Dispose();
+#endif
+			httpResponse.Dispose();
+			httpRequest.Dispose();
 		}
 	}
 

@@ -338,7 +338,7 @@ public sealed class DtoValidationTests : ServiceSerializerTestsBase
 	private sealed class FakeConformanceApiService : DelegatingConformanceApi
 	{
 		public FakeConformanceApiService(ServiceSerializer serializer, RequiredResponseDto? requiredResponse = null, WidgetDto? widgetResponse = null)
-			: base(ServiceDelegators.NotImplemented)
+			: base(ServiceDelegates.NotImplemented)
 		{
 			m_serializer = serializer;
 			m_requiredResponse = requiredResponse ?? CreateRequiredResponse();

@@ -69,5 +69,9 @@ namespace Facility.ConformanceApi
 		public static readonly IServiceMethodInfo BodyTypes =
 			ServiceMethodInfo.Create<IConformanceApi, BodyTypesRequestDto, BodyTypesResponseDto>(
 				"bodyTypes", "ConformanceApi", x => x.BodyTypesAsync);
+
+		public static readonly IServiceEventInfo Fibonacci =
+			ServiceEventInfo.Create<IConformanceApi, FibonacciRequestDto, FibonacciResponseDto>(
+				"fibonacci", "ConformanceApi", x => x.FibonacciAsync);
 	}
 }

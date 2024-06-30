@@ -17,7 +17,7 @@ public sealed class CodeGenTests
 		using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.ConformanceApi.UnitTests.ConformanceApi.fsd")!))
 			fsdText = fsdTextReader.ReadToEnd();
 
-		var parser = new FsdParser();
+		var parser = new FsdParser(new FsdParserSettings { SupportsEvents = true });
 		var service = parser.ParseDefinition(
 			new ServiceDefinitionText("ConformanceApi.fsd", fsdText));
 

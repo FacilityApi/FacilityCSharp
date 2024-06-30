@@ -13,7 +13,7 @@ public sealed class EdgeCaseTests
 		using (var fsdTextReader = new StreamReader(GetType().Assembly.GetManifestResourceStream("Facility.CodeGen.CSharp.UnitTests.EdgeCases.fsd")!))
 			fsdText = fsdTextReader.ReadToEnd();
 
-		var parser = new FsdParser();
+		var parser = new FsdParser(new FsdParserSettings { SupportsEvents = true });
 		var service = parser.ParseDefinition(new ServiceDefinitionText("EdgeCases.fsd", fsdText));
 
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };

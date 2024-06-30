@@ -16,14 +16,21 @@ namespace Facility.Benchmarks
 	public partial class DelegatingBenchmarkService : IBenchmarkService
 	{
 		/// <summary>
+		/// Creates an instance with the specified service delegate.
+		/// </summary>
+		public DelegatingBenchmarkService(ServiceDelegate serviceDelegate) =>
+			m_serviceDelegate = serviceDelegate ?? throw new ArgumentNullException(nameof(serviceDelegate));
+
+		/// <summary>
 		/// Creates an instance with the specified delegator.
 		/// </summary>
+		[Obsolete("Use the constructor that accepts a ServiceDelegate.")]
 		public DelegatingBenchmarkService(ServiceDelegator delegator) =>
-			m_delegator = delegator ?? throw new ArgumentNullException(nameof(delegator));
+			m_serviceDelegate = ServiceDelegate.FromDelegator(delegator);
 
 		public virtual async Task<ServiceResult<GetUsersResponseDto>> GetUsersAsync(GetUsersRequestDto request, CancellationToken cancellationToken = default) =>
-			(await m_delegator(BenchmarkServiceMethods.GetUsers, request, cancellationToken).ConfigureAwait(false)).Cast<GetUsersResponseDto>();
+			(await m_serviceDelegate.InvokeMethodAsync(BenchmarkServiceMethods.GetUsers, request, cancellationToken).ConfigureAwait(false)).Cast<GetUsersResponseDto>();
 
-		private readonly ServiceDelegator m_delegator;
+		private readonly ServiceDelegate m_serviceDelegate;
 	}
 }

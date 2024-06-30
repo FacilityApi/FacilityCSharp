@@ -1,6 +1,7 @@
 using System.Globalization;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
+using Facility.Definition.Fsd;
 using Facility.Definition.Http;
 
 namespace Facility.CodeGen.CSharp;
@@ -13,8 +14,18 @@ public sealed class CSharpGenerator : CodeGenerator
 	/// <summary>
 	/// Generates C#.
 	/// </summary>
+	/// <param name="parser">The parser.</param>
 	/// <param name="settings">The settings.</param>
 	/// <returns>The number of updated files.</returns>
+	public static int GenerateCSharp(ServiceParser parser, CSharpGeneratorSettings settings) =>
+		FileGenerator.GenerateFiles(parser, new CSharpGenerator { GeneratorName = nameof(CSharpGenerator) }, settings);
+
+	/// <summary>
+	/// Generates C#.
+	/// </summary>
+	/// <param name="settings">The settings.</param>
+	/// <returns>The number of updated files.</returns>
+	[Obsolete("Use the overload that takes a parser.")]
 	public static int GenerateCSharp(CSharpGeneratorSettings settings) =>
 		FileGenerator.GenerateFiles(new CSharpGenerator { GeneratorName = nameof(CSharpGenerator) }, settings);
 
@@ -1092,6 +1103,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				"Facility.Core",
 				"Facility.Core.Http",
 			};
+			if (serviceInfo.Methods.Any(x => x.Kind == ServiceMethodKind.Event))
+				usings.Add("System.Collections.Generic");
 			CSharpUtility.WriteUsings(code, usings, namespaceName);
 
 			code.WriteLine($"namespace {namespaceName}");
@@ -1116,13 +1129,16 @@ public sealed class CSharpGenerator : CodeGenerator
 						var methodName = csharpInfo.GetMethodName(methodInfo);
 						var requestTypeName = csharpInfo.GetRequestDtoName(methodInfo);
 						var responseTypeName = csharpInfo.GetResponseDtoName(methodInfo);
+						var isEvent = methodInfo.Kind == ServiceMethodKind.Event;
+						if (isEvent)
+							responseTypeName = $"IAsyncEnumerable<ServiceResult<{responseTypeName}>>";
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
 						CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
 						code.WriteLine($"public Task<ServiceResult<{responseTypeName}>> {methodName}Async({requestTypeName} request, CancellationToken cancellationToken = default) =>");
 						using (code.Indent())
-							code.WriteLine($"TrySendRequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
+							code.WriteLine($"TrySend{(isEvent ? "Event" : "")}RequestAsync({httpMappingName}.{methodName}Mapping, request, cancellationToken);");
 					}
 
 					code.WriteLine();
@@ -1222,13 +1238,14 @@ public sealed class CSharpGenerator : CodeGenerator
 					{
 						var methodInfo = httpMethodInfo.ServiceMethod;
 						var methodName = csharpInfo.GetMethodName(methodInfo);
+						var isEvent = methodInfo.Kind == ServiceMethodKind.Event;
 
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
 						CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
 						code.WriteLine($"public Task<HttpResponseMessage{NullableReferenceSuffix}> TryHandle{methodName}Async(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>");
 						using (code.Indent())
-							code.WriteLine($"TryHandleServiceMethodAsync({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
+							code.WriteLine($"TryHandleService{(isEvent ? "Event" : "Method")}Async({httpMappingName}.{methodName}Mapping, httpRequest, GetService(httpRequest).{methodName}Async, cancellationToken);");
 					}
 
 					if (httpServiceInfo.ErrorSets.Count != 0)
@@ -1387,6 +1404,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Threading.Tasks",
 				"Facility.Core",
 			};
+			if (serviceInfo.Methods.Any(x => x.Kind == ServiceMethodKind.Event))
+				usings.Add("System.Collections.Generic");
 			CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 			code.WriteLine($"namespace {context.NamespaceName}");
@@ -1401,10 +1420,15 @@ public sealed class CSharpGenerator : CodeGenerator
 				{
 					foreach (var methodInfo in serviceInfo.Methods)
 					{
+						var responseTypeName = csharpInfo.GetResponseDtoName(methodInfo);
+						var isEvent = methodInfo.Kind == ServiceMethodKind.Event;
+						if (isEvent)
+							responseTypeName = $"IAsyncEnumerable<ServiceResult<{responseTypeName}>>";
+
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
 						CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-						code.WriteLine($"Task<ServiceResult<{csharpInfo.GetResponseDtoName(methodInfo)}>> {csharpInfo.GetMethodName(methodInfo)}Async(" +
+						code.WriteLine($"Task<ServiceResult<{responseTypeName}>> {csharpInfo.GetMethodName(methodInfo)}Async(" +
 							$"{csharpInfo.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default);");
 					}
 				}
@@ -1440,12 +1464,13 @@ public sealed class CSharpGenerator : CodeGenerator
 				{
 					foreach (var methodInfo in serviceInfo.Methods)
 					{
+						var isEvent = methodInfo.Kind == ServiceMethodKind.Event;
 						code.WriteLineSkipOnce();
 						CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-						code.WriteLine($"public static readonly IServiceMethodInfo {csharpInfo.GetMethodName(methodInfo)} =");
+						code.WriteLine($"public static readonly IService{(isEvent ? "Event" : "Method")}Info {csharpInfo.GetMethodName(methodInfo)} =");
 						using (code.Indent())
 						{
-							code.WriteLine($"ServiceMethodInfo.Create<{interfaceName}, {csharpInfo.GetRequestDtoName(methodInfo)}, {csharpInfo.GetResponseDtoName(methodInfo)}>(");
+							code.WriteLine($"Service{(isEvent ? "Event" : "Method")}Info.Create<{interfaceName}, {csharpInfo.GetRequestDtoName(methodInfo)}, {csharpInfo.GetResponseDtoName(methodInfo)}>(");
 							using (code.Indent())
 								code.WriteLine($"{CSharpUtility.CreateString(methodInfo.Name)}, {CSharpUtility.CreateString(serviceInfo.Name)}, x => x.{csharpInfo.GetMethodName(methodInfo)}Async);");
 						}
@@ -1473,6 +1498,11 @@ public sealed class CSharpGenerator : CodeGenerator
 				"System.Threading.Tasks",
 				"Facility.Core",
 			};
+			if (serviceInfo.Methods.Any(x => x.Kind == ServiceMethodKind.Event))
+			{
+				usings.Add("System.Collections.Generic");
+				usings.Add("System.Runtime.CompilerServices");
+			}
 			CSharpUtility.WriteUsings(code, usings, context.NamespaceName);
 
 			code.WriteLine($"namespace {context.NamespaceName}");
@@ -1485,23 +1515,52 @@ public sealed class CSharpGenerator : CodeGenerator
 				code.WriteLine($"public partial class {className} : {interfaceName}");
 				using (code.Block())
 				{
+					CSharpUtility.WriteSummary(code, "Creates an instance with the specified service delegate.");
+					code.WriteLine($"public {className}(ServiceDelegate serviceDelegate) =>");
+					using (code.Indent())
+						code.WriteLine("m_serviceDelegate = serviceDelegate ?? throw new ArgumentNullException(nameof(serviceDelegate));");
+
+					code.WriteLine();
 					CSharpUtility.WriteSummary(code, "Creates an instance with the specified delegator.");
+					code.WriteLine("""[Obsolete("Use the constructor that accepts a ServiceDelegate.")]""");
 					code.WriteLine($"public {className}(ServiceDelegator delegator) =>");
 					using (code.Indent())
-						code.WriteLine("m_delegator = delegator ?? throw new ArgumentNullException(nameof(delegator));");
+						code.WriteLine("m_serviceDelegate = ServiceDelegate.FromDelegator(delegator);");
 
 					foreach (var methodInfo in serviceInfo.Methods)
 					{
 						code.WriteLine();
 						CSharpUtility.WriteSummary(code, methodInfo.Summary);
 						CSharpUtility.WriteObsoleteAttribute(code, methodInfo);
-						code.WriteLine($"public virtual async Task<ServiceResult<{csharpInfo.GetResponseDtoName(methodInfo)}>> {csharpInfo.GetMethodName(methodInfo)}Async({csharpInfo.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default) =>");
-						using (code.Indent())
-							code.WriteLine($"(await m_delegator({methodsClassName}.{csharpInfo.GetMethodName(methodInfo)}, request, cancellationToken).ConfigureAwait(false)).Cast<{csharpInfo.GetResponseDtoName(methodInfo)}>();");
+
+						if (methodInfo.Kind == ServiceMethodKind.Event)
+						{
+							code.WriteLine($"public virtual async Task<ServiceResult<IAsyncEnumerable<ServiceResult<{csharpInfo.GetResponseDtoName(methodInfo)}>>>> {csharpInfo.GetMethodName(methodInfo)}Async({csharpInfo.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default)");
+							using (code.Block())
+							{
+								code.WriteLine($"var result = await m_serviceDelegate.InvokeEventAsync({methodsClassName}.{csharpInfo.GetMethodName(methodInfo)}, request, cancellationToken).ConfigureAwait(false);");
+								code.WriteLine("return result.IsFailure ? result.ToFailure() : ServiceResult.Success(Enumerate(result.Value, cancellationToken));");
+
+								code.WriteLine();
+								code.WriteLine($"static async IAsyncEnumerable<ServiceResult<{csharpInfo.GetResponseDtoName(methodInfo)}>> Enumerate(IAsyncEnumerable<ServiceResult<ServiceDto>> enumerable, [EnumeratorCancellation] CancellationToken cancellationToken)");
+								using (code.Block())
+								{
+									code.WriteLine("await foreach (var result in enumerable.WithCancellation(cancellationToken))");
+									using (code.Indent())
+										code.WriteLine($"yield return result.Cast<{csharpInfo.GetResponseDtoName(methodInfo)}>();");
+								}
+							}
+						}
+						else
+						{
+							code.WriteLine($"public virtual async Task<ServiceResult<{csharpInfo.GetResponseDtoName(methodInfo)}>> {csharpInfo.GetMethodName(methodInfo)}Async({csharpInfo.GetRequestDtoName(methodInfo)} request, CancellationToken cancellationToken = default) =>");
+							using (code.Indent())
+								code.WriteLine($"(await m_serviceDelegate.InvokeMethodAsync({methodsClassName}.{csharpInfo.GetMethodName(methodInfo)}, request, cancellationToken).ConfigureAwait(false)).Cast<{csharpInfo.GetResponseDtoName(methodInfo)}>();");
+						}
 					}
 
 					code.WriteLine();
-					code.WriteLine("private readonly ServiceDelegator m_delegator;");
+					code.WriteLine("private readonly ServiceDelegate m_serviceDelegate;");
 				}
 			}
 		});
