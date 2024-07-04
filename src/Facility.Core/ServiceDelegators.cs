@@ -3,6 +3,7 @@ namespace Facility.Core;
 /// <summary>
 /// Common service delegators.
 /// </summary>
+[Obsolete("Use ServiceDelegates.")]
 public static class ServiceDelegators
 {
 	/// <summary>

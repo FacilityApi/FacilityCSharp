@@ -45,6 +45,7 @@ namespace Facility.ConformanceApi.Http
 				await AdaptTask(TryHandleBodyTypesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckPathAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleCheckQueryAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleFibonacciAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorBytesAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorFieldsAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleMirrorHeadersAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
@@ -120,6 +121,9 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<HttpResponseMessage?> TryHandleBodyTypesAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(ConformanceApiHttpMapping.BodyTypesMapping, httpRequest, GetService(httpRequest).BodyTypesAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleFibonacciAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceEventAsync(ConformanceApiHttpMapping.FibonacciMapping, httpRequest, GetService(httpRequest).FibonacciAsync, cancellationToken);
 
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.

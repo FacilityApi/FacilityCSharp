@@ -3,6 +3,7 @@
 // </auto-generated>
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
@@ -62,5 +63,7 @@ namespace Facility.ConformanceApi
 		Task<ServiceResult<MirrorTextResponseDto>> MirrorTextAsync(MirrorTextRequestDto request, CancellationToken cancellationToken = default);
 
 		Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default);
+
+		Task<ServiceResult<IAsyncEnumerable<ServiceResult<FibonacciResponseDto>>>> FibonacciAsync(FibonacciRequestDto request, CancellationToken cancellationToken = default);
 	}
 }

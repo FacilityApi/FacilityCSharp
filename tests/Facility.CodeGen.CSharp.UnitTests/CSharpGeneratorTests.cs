@@ -51,7 +51,7 @@ public sealed class CSharpGeneratorTests
 	public void UnspecifiedServiceNamespace()
 	{
 		var definition = "service TestApi { method do {}: {} }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 		var output = generator.GenerateOutput(service);
@@ -65,7 +65,7 @@ public sealed class CSharpGeneratorTests
 	public void DefaultServiceNamespace()
 	{
 		var definition = "service TestApi { method do {}: {} }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), DefaultNamespaceName = "DefaultNamespace" };
 		var output = generator.GenerateOutput(service);
@@ -79,7 +79,7 @@ public sealed class CSharpGeneratorTests
 	public void NoOverrideDefaultServiceNamespace()
 	{
 		var definition = "[csharp(namespace: DefinitionNamespace)] service TestApi { method do {}: {} }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), DefaultNamespaceName = "OverrideNamespace" };
 		var output = generator.GenerateOutput(service);
@@ -94,7 +94,7 @@ public sealed class CSharpGeneratorTests
 	public void OverrideServiceNamespace()
 	{
 		var definition = "[csharp(namespace: DefinitionNamespace)] service TestApi { method do {}: {} }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), NamespaceName = "OverrideNamespace" };
 		var output = generator.GenerateOutput(service);
@@ -109,7 +109,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateEnumStringConstants()
 	{
 		const string definition = "service TestApi { enum Answer { yes, no, maybe } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -126,7 +126,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalDtoPropertyWithNamespace()
 	{
 		const string definition = "service TestApi { [csharp(name: \"ExternThingDto\", namespace: \"Some.Name.Space\")] extern data Thing; data Test { thing: Thing; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -141,7 +141,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalDtoPropertyWithoutNamespace()
 	{
 		const string definition = "service TestApi { [csharp(name: \"ExternThingDto\")] extern data Thing; data Test { thing: Thing; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -156,7 +156,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalDtoPropertyWithoutTypeName()
 	{
 		const string definition = "service TestApi { extern data Thing; data Test { thing: Thing; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -171,7 +171,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalEnumPropertyWithNamespace()
 	{
 		const string definition = "service TestApi { [csharp(name: \"ExternSomeEnum\", namespace: \"Some.Name.Space\")] extern enum SomeEnum; data Test { thing: SomeEnum; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -186,7 +186,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalEnumPropertyWithoutNamespace()
 	{
 		const string definition = "service TestApi { [csharp(name: \"ExternSomeEnum\")] extern enum SomeEnum; data Test { thing: SomeEnum; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -201,7 +201,7 @@ public sealed class CSharpGeneratorTests
 	public void GenerateExternalEnumPropertyWithoutTypeName()
 	{
 		const string definition = "service TestApi { extern enum SomeEnum; data Test { thing: SomeEnum; } }";
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 
@@ -214,10 +214,12 @@ public sealed class CSharpGeneratorTests
 
 	private void ThrowsServiceDefinitionException(string definition, string message)
 	{
-		var parser = new FsdParser();
+		var parser = CreateParser();
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = "CodeGenTests" };
 		Action action = () => generator.GenerateOutput(service);
 		action.Should().Throw<ServiceDefinitionException>().WithMessage(message);
 	}
+
+	private static FsdParser CreateParser() => new FsdParser(new FsdParserSettings { SupportsEvents = true });
 }

@@ -25,6 +25,8 @@ namespace Facility.ConformanceApi
 	[JsonSerializable(typeof(CreateWidgetResponseDto))]
 	[JsonSerializable(typeof(DeleteWidgetRequestDto))]
 	[JsonSerializable(typeof(DeleteWidgetResponseDto))]
+	[JsonSerializable(typeof(FibonacciRequestDto))]
+	[JsonSerializable(typeof(FibonacciResponseDto))]
 	[JsonSerializable(typeof(GetApiInfoRequestDto))]
 	[JsonSerializable(typeof(GetApiInfoResponseDto))]
 	[JsonSerializable(typeof(GetWidgetBatchRequestDto))]

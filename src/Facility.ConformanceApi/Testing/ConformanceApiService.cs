@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
@@ -90,6 +91,36 @@ public sealed class ConformanceApiService : IConformanceApi
 	/// <inheritdoc />
 	public Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
 		Task.FromResult(Execute<BodyTypesResponseDto>(request));
+
+	/// <inheritdoc />
+	public async Task<ServiceResult<IAsyncEnumerable<ServiceResult<FibonacciResponseDto>>>> FibonacciAsync(FibonacciRequestDto request, CancellationToken cancellationToken = default)
+	{
+		if (request.Count is not { } count)
+			return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("count"));
+
+		return ServiceResult.Success(Enumerate(count, cancellationToken));
+
+		static async IAsyncEnumerable<ServiceResult<FibonacciResponseDto>> Enumerate(int count, [EnumeratorCancellation] CancellationToken cancellationToken)
+		{
+			if (count < 0)
+			{
+				yield return ServiceResult.Failure(ServiceErrors.CreateInvalidRequest("Count must not be negative."));
+				yield break;
+			}
+
+			var a = 0;
+			var b = 1;
+			for (var i = 0; i < count; i++)
+			{
+				await Task.Delay(500, cancellationToken).ConfigureAwait(false);
+				yield return ServiceResult.Success(new FibonacciResponseDto { Value = a });
+				cancellationToken.ThrowIfCancellationRequested();
+				var next = a + b;
+				a = b;
+				b = next;
+			}
+		}
+	}
 
 	private ServiceResult<T> Execute<T>(ServiceDto request)
 	{

@@ -742,5 +742,31 @@ namespace Facility.ConformanceApi.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<FibonacciRequestDto, FibonacciResponseDto> FibonacciMapping =
+			new HttpMethodMapping<FibonacciRequestDto, FibonacciResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Get,
+				Path = "/fibonacci",
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "count", request.Count == null ? null : request.Count.Value.ToString(CultureInfo.InvariantCulture) },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("count", out var queryParameterCount);
+					request.Count = ServiceDataUtility.TryParseInt32(queryParameterCount);
+					return request;
+				},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<FibonacciResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+						ResponseBodyType = typeof(FibonacciResponseDto),
+					}.Build(),
+				},
+			}.Build();
 	}
 }
