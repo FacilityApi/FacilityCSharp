@@ -2,7 +2,7 @@
 
 ## 2.29.0
 
-* Support events. (Must opt-in via `FsdParserSettings.SupportsEvents`.)
+* Support events.
 
 ## 2.28.2
 
