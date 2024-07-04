@@ -16,6 +16,7 @@ public sealed class ConformanceApiHttpHandler : ServiceHttpHandler
 | [TryHandleCheckQueryAsync](ConformanceApiHttpHandler/TryHandleCheckQueryAsync.md)(…) |  |
 | [TryHandleCreateWidgetAsync](ConformanceApiHttpHandler/TryHandleCreateWidgetAsync.md)(…) | Creates a new widget. |
 | [TryHandleDeleteWidgetAsync](ConformanceApiHttpHandler/TryHandleDeleteWidgetAsync.md)(…) | Deletes the specified widget. |
+| [TryHandleFibonacciAsync](ConformanceApiHttpHandler/TryHandleFibonacciAsync.md)(…) |  |
 | [TryHandleGetApiInfoAsync](ConformanceApiHttpHandler/TryHandleGetApiInfoAsync.md)(…) | Gets API information. |
 | [TryHandleGetWidgetAsync](ConformanceApiHttpHandler/TryHandleGetWidgetAsync.md)(…) | Gets the specified widget. |
 | [TryHandleGetWidgetBatchAsync](ConformanceApiHttpHandler/TryHandleGetWidgetBatchAsync.md)(…) | Gets the specified widgets. |

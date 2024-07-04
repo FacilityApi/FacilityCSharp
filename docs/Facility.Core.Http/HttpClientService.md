@@ -19,6 +19,7 @@ public abstract class HttpClientService
 | virtual [CreateErrorFromHttpResponseAsync](HttpClientService/CreateErrorFromHttpResponseAsync.md)(…) | Called to create an error object from an unhandled HTTP response. |
 | virtual [RequestReadyAsync](HttpClientService/RequestReadyAsync.md)(…) | Called right before the request is sent, before aspects are applied. |
 | virtual [ShouldCreateErrorFromException](HttpClientService/ShouldCreateErrorFromException.md)(…) | Called to determine if an error object should be created from an unexpected exception. |
+| [TrySendEventRequestAsync&lt;TRequest,TResponse&gt;](HttpClientService/TrySendEventRequestAsync.md)(…) | Sends an HTTP request for an event and processes the response. |
 | [TrySendRequestAsync&lt;TRequest,TResponse&gt;](HttpClientService/TrySendRequestAsync.md)(…) | Sends an HTTP request and processes the response. |
 
 ## See Also

@@ -23,6 +23,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 | override [SendAsync](ServiceHttpHandler/SendAsync.md)(…) | Handle or delegate the HTTP request. |
 | virtual [ShouldCreateErrorFromException](ServiceHttpHandler/ShouldCreateErrorFromException.md)(…) | Called to determine if an error object should be created from an unexpected exception. |
 | virtual [TryGetCustomHttpStatusCode](ServiceHttpHandler/TryGetCustomHttpStatusCode.md)(…) | Returns the HTTP status code for a custom error code. |
+| [TryHandleServiceEventAsync&lt;TRequest,TResponse&gt;](ServiceHttpHandler/TryHandleServiceEventAsync.md)(…) | Attempts to handle a service method. |
 | [TryHandleServiceMethodAsync&lt;TRequest,TResponse&gt;](ServiceHttpHandler/TryHandleServiceMethodAsync.md)(…) | Attempts to handle a service method. |
 
 ## See Also

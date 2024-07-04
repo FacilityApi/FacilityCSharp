@@ -16,6 +16,7 @@ public sealed class ConformanceApiService : IConformanceApi
 | [CheckQueryAsync](ConformanceApiService/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](ConformanceApiService/CreateWidgetAsync.md)(…) |  |
 | [DeleteWidgetAsync](ConformanceApiService/DeleteWidgetAsync.md)(…) |  |
+| [FibonacciAsync](ConformanceApiService/FibonacciAsync.md)(…) |  |
 | [GetApiInfoAsync](ConformanceApiService/GetApiInfoAsync.md)(…) |  |
 | [GetWidgetAsync](ConformanceApiService/GetWidgetAsync.md)(…) |  |
 | [GetWidgetBatchAsync](ConformanceApiService/GetWidgetBatchAsync.md)(…) |  |

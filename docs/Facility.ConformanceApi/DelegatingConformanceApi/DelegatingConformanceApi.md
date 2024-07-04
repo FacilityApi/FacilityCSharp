@@ -1,9 +1,9 @@
 # DelegatingConformanceApi constructor
 
-Creates an instance with the specified delegator.
+Creates an instance with the specified service delegate.
 
 ```csharp
-public DelegatingConformanceApi(ServiceDelegator delegator)
+public DelegatingConformanceApi(ServiceDelegate serviceDelegate)
 ```
 
 ## See Also

@@ -3,11 +3,12 @@
 Generates C#.
 
 ```csharp
-public static int GenerateCSharp(CSharpGeneratorSettings settings)
+public static int GenerateCSharp(ServiceParser parser, CSharpGeneratorSettings settings)
 ```
 
 | parameter | description |
 | --- | --- |
+| parser | The parser. |
 | settings | The settings. |
 
 ## Return Value

@@ -16,6 +16,7 @@ public sealed class HttpClientConformanceApi : HttpClientService, IConformanceAp
 | [CheckQueryAsync](HttpClientConformanceApi/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](HttpClientConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
 | [DeleteWidgetAsync](HttpClientConformanceApi/DeleteWidgetAsync.md)(…) | Deletes the specified widget. |
+| [FibonacciAsync](HttpClientConformanceApi/FibonacciAsync.md)(…) |  |
 | [GetApiInfoAsync](HttpClientConformanceApi/GetApiInfoAsync.md)(…) | Gets API information. |
 | [GetWidgetAsync](HttpClientConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | [GetWidgetBatchAsync](HttpClientConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |

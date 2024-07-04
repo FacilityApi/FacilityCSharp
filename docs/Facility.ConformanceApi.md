@@ -23,6 +23,8 @@
 | class [DelegatingConformanceApi](./Facility.ConformanceApi/DelegatingConformanceApi.md) | A delegating implementation of ConformanceApi. |
 | class [DeleteWidgetRequestDto](./Facility.ConformanceApi/DeleteWidgetRequestDto.md) | Request for DeleteWidget. |
 | class [DeleteWidgetResponseDto](./Facility.ConformanceApi/DeleteWidgetResponseDto.md) | Response for DeleteWidget. |
+| class [FibonacciRequestDto](./Facility.ConformanceApi/FibonacciRequestDto.md) | Request for Fibonacci. |
+| class [FibonacciResponseDto](./Facility.ConformanceApi/FibonacciResponseDto.md) | Response for Fibonacci. |
 | class [GetApiInfoRequestDto](./Facility.ConformanceApi/GetApiInfoRequestDto.md) | Request for GetApiInfo. |
 | class [GetApiInfoResponseDto](./Facility.ConformanceApi/GetApiInfoResponseDto.md) | Response for GetApiInfo. |
 | class [GetWidgetBatchRequestDto](./Facility.ConformanceApi/GetWidgetBatchRequestDto.md) | Request for GetWidgetBatch. |

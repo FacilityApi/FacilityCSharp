@@ -10,12 +10,13 @@ public class DelegatingConformanceApi : IConformanceApi
 
 | name | description |
 | --- | --- |
-| [DelegatingConformanceApi](DelegatingConformanceApi/DelegatingConformanceApi.md)(…) | Creates an instance with the specified delegator. |
+| [DelegatingConformanceApi](DelegatingConformanceApi/DelegatingConformanceApi.md)(…) | Creates an instance with the specified service delegate. |
 | virtual [BodyTypesAsync](DelegatingConformanceApi/BodyTypesAsync.md)(…) |  |
 | virtual [CheckPathAsync](DelegatingConformanceApi/CheckPathAsync.md)(…) |  |
 | virtual [CheckQueryAsync](DelegatingConformanceApi/CheckQueryAsync.md)(…) |  |
 | virtual [CreateWidgetAsync](DelegatingConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
 | virtual [DeleteWidgetAsync](DelegatingConformanceApi/DeleteWidgetAsync.md)(…) | Deletes the specified widget. |
+| virtual [FibonacciAsync](DelegatingConformanceApi/FibonacciAsync.md)(…) |  |
 | virtual [GetApiInfoAsync](DelegatingConformanceApi/GetApiInfoAsync.md)(…) | Gets API information. |
 | virtual [GetWidgetAsync](DelegatingConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | virtual [GetWidgetBatchAsync](DelegatingConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |

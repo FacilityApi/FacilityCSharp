@@ -4,12 +4,14 @@
 
 | public type | description |
 | --- | --- |
+| interface [IServiceEventInfo](./Facility.Core/IServiceEventInfo.md) | Information about a Facility service event. |
 | interface [IServiceMethodInfo](./Facility.Core/IServiceMethodInfo.md) | Information about a Facility service method. |
 | abstract class [JsonServiceSerializer](./Facility.Core/JsonServiceSerializer.md) | Serializes and deserializes values to and from JSON. |
 | class [NewtonsoftJsonServiceSerializer](./Facility.Core/NewtonsoftJsonServiceSerializer.md) | Serializes to and from JSON using JsonSerializer. |
 | static class [ServiceDataUtility](./Facility.Core/ServiceDataUtility.md) | Helper methods for service data. |
+| abstract class [ServiceDelegate](./Facility.Core/ServiceDelegate.md) | Used to delegate a service. |
+| static class [ServiceDelegates](./Facility.Core/ServiceDelegates.md) | Common service delegates. |
 | delegate [ServiceDelegator](./Facility.Core/ServiceDelegator.md) | Called when delegating a service method. |
-| static class [ServiceDelegators](./Facility.Core/ServiceDelegators.md) | Common service delegators. |
 | abstract class [ServiceDto&lt;T&gt;](./Facility.Core/ServiceDto-1.md) | Base class for data objects used by services. |
 | abstract class [ServiceDto](./Facility.Core/ServiceDto.md) | Base class for data objects used by services. |
 | abstract class [ServiceEnumJsonConverter&lt;T&gt;](./Facility.Core/ServiceEnumJsonConverter-1.md) | Used to JSON-serialize string-based enumerated types. |
@@ -17,6 +19,7 @@
 | class [ServiceErrorDto](./Facility.Core/ServiceErrorDto.md) | An error. |
 | static class [ServiceErrors](./Facility.Core/ServiceErrors.md) | Common service errors. |
 | static class [ServiceErrorUtility](./Facility.Core/ServiceErrorUtility.md) | Helper methods for service errors. |
+| static class [ServiceEventInfo](./Facility.Core/ServiceEventInfo.md) | Helpers for service event information. |
 | class [ServiceException](./Facility.Core/ServiceException.md) | An exception thrown by a service method. |
 | abstract class [ServiceJsonConverterBase&lt;T&gt;](./Facility.Core/ServiceJsonConverterBase-1.md) | Base class for simple JSON converters. |
 | static class [ServiceJsonUtility](./Facility.Core/ServiceJsonUtility.md) | Helper methods for working with Json.NET. |

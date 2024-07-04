@@ -15,6 +15,7 @@ public static class ConformanceApiHttpMapping
 | static readonly [CheckQueryMapping](ConformanceApiHttpMapping/CheckQueryMapping.md) |  |
 | static readonly [CreateWidgetMapping](ConformanceApiHttpMapping/CreateWidgetMapping.md) | Creates a new widget. |
 | static readonly [DeleteWidgetMapping](ConformanceApiHttpMapping/DeleteWidgetMapping.md) | Deletes the specified widget. |
+| static readonly [FibonacciMapping](ConformanceApiHttpMapping/FibonacciMapping.md) |  |
 | static readonly [GetApiInfoMapping](ConformanceApiHttpMapping/GetApiInfoMapping.md) | Gets API information. |
 | static readonly [GetWidgetBatchMapping](ConformanceApiHttpMapping/GetWidgetBatchMapping.md) | Gets the specified widgets. |
 | static readonly [GetWidgetMapping](ConformanceApiHttpMapping/GetWidgetMapping.md) | Gets the specified widget. |

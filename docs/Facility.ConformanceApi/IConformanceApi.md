@@ -15,6 +15,7 @@ public interface IConformanceApi
 | [CheckQueryAsync](IConformanceApi/CheckQueryAsync.md)(…) |  |
 | [CreateWidgetAsync](IConformanceApi/CreateWidgetAsync.md)(…) | Creates a new widget. |
 | [DeleteWidgetAsync](IConformanceApi/DeleteWidgetAsync.md)(…) | Deletes the specified widget. |
+| [FibonacciAsync](IConformanceApi/FibonacciAsync.md)(…) |  |
 | [GetApiInfoAsync](IConformanceApi/GetApiInfoAsync.md)(…) | Gets API information. |
 | [GetWidgetAsync](IConformanceApi/GetWidgetAsync.md)(…) | Gets the specified widget. |
 | [GetWidgetBatchAsync](IConformanceApi/GetWidgetBatchAsync.md)(…) | Gets the specified widgets. |
