@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.29.0
+
+* Support events. (Must opt-in via `FsdParserSettings.SupportsEvents`.)
+
 ## 2.28.2
 
 * Don't use `ToArray` unless needed for JSON source generation.
