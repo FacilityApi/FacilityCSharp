@@ -3,6 +3,7 @@
 // </auto-generated>
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Facility.Core;
@@ -86,6 +87,9 @@ namespace Facility.ConformanceApi.Http
 
 		public Task<ServiceResult<BodyTypesResponseDto>> BodyTypesAsync(BodyTypesRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(ConformanceApiHttpMapping.BodyTypesMapping, request, cancellationToken);
+
+		public Task<ServiceResult<IAsyncEnumerable<ServiceResult<FibonacciResponseDto>>>> FibonacciAsync(FibonacciRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendEventRequestAsync(ConformanceApiHttpMapping.FibonacciMapping, request, cancellationToken);
 
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{

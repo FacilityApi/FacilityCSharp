@@ -253,6 +253,15 @@ service ConformanceApi
 		[http(from: body, type: "application/x-output")] content: bytes;
 	}
 
+	[http(method: GET)]
+	event fibonacci
+	{
+		count: int32!;
+	}:
+	{
+		value: int32!;
+	}
+
 	data Any
 	{
 		string: string;

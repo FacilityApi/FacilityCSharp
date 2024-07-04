@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 
 namespace Facility.Core.Http;
@@ -41,10 +42,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 	{
 	}
 
-	/// <summary>
-	/// Attempts to handle a service method.
-	/// </summary>
-	protected async Task<HttpResponseMessage?> TryHandleServiceMethodAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, Func<TRequest, CancellationToken, Task<ServiceResult<TResponse>>> invokeMethodAsync, CancellationToken cancellationToken)
+	private async Task<(ServiceHttpContext? Context, HttpResponseMessage? Response)> StartHandleServiceMethodAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, CancellationToken cancellationToken)
 		where TRequest : ServiceDto, new()
 		where TResponse : ServiceDto, new()
 	{
@@ -52,24 +50,22 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			throw new ArgumentNullException(nameof(mapping));
 		if (httpRequest == null)
 			throw new ArgumentNullException(nameof(httpRequest));
-		if (invokeMethodAsync == null)
-			throw new ArgumentNullException(nameof(invokeMethodAsync));
 		if (httpRequest.RequestUri == null)
 			throw new ArgumentException("RequestUri must be specified.", nameof(httpRequest));
 
 		if (httpRequest.Method != mapping.HttpMethod)
-			return null;
+			return default;
 
 		var pathParameters = TryMatchHttpRoute(httpRequest.RequestUri, m_rootPath + mapping.Path);
 		if (pathParameters == null)
-			return null;
+			return default;
 
 		var context = new ServiceHttpContext();
 		ServiceHttpContext.SetContext(httpRequest, context);
 
 		var aspectHttpResponse = await AdaptTask(RequestReceivedAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		if (aspectHttpResponse != null)
-			return aspectHttpResponse;
+			return (Context: context, Response: aspectHttpResponse);
 
 		ServiceErrorDto? error = null;
 
@@ -95,7 +91,6 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			}
 		}
 
-		TResponse? response = null;
 		if (error == null)
 		{
 			var request = mapping.CreateRequest(requestBody);
@@ -111,32 +106,57 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			context.Request = request;
 
 			if (!m_skipRequestValidation && !request.Validate(out var requestErrorMessage))
-			{
 				error = ServiceErrors.CreateInvalidRequest(requestErrorMessage);
-			}
-			else
-			{
-				var methodResult = await invokeMethodAsync(request, cancellationToken).ConfigureAwait(true);
-				if (methodResult.IsFailure)
-				{
-					error = methodResult.Error;
-				}
-				else
-				{
-					response = methodResult.Value;
-
-					if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
-					{
-						error = ServiceErrors.CreateInvalidResponse(responseErrorMessage);
-						response = null;
-					}
-				}
-			}
-
-			context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response!);
 		}
 
-		HttpResponseMessage httpResponse;
+		if (error != null)
+		{
+			context.Result = ServiceResult.Failure(error);
+			var httpResponse = await CreateHttpResponseForErrorAsync(error, httpRequest).ConfigureAwait(false);
+			await AdaptTask(ResponseReadyAsync(httpResponse, cancellationToken)).ConfigureAwait(true);
+			return (context, httpResponse);
+		}
+
+		return (context, null);
+	}
+
+	/// <summary>
+	/// Attempts to handle a service method.
+	/// </summary>
+	protected async Task<HttpResponseMessage?> TryHandleServiceMethodAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, Func<TRequest, CancellationToken, Task<ServiceResult<TResponse>>> invokeMethodAsync, CancellationToken cancellationToken)
+		where TRequest : ServiceDto, new()
+		where TResponse : ServiceDto, new()
+	{
+		if (invokeMethodAsync == null)
+			throw new ArgumentNullException(nameof(invokeMethodAsync));
+
+		var (context, httpResponse) = await StartHandleServiceMethodAsync(mapping, httpRequest, cancellationToken).ConfigureAwait(true);
+		if (context == null)
+			return null;
+		if (httpResponse != null)
+			return httpResponse;
+
+		var request = (TRequest) context.Request!;
+		ServiceErrorDto? error = null;
+		TResponse? response = null;
+		var methodResult = await invokeMethodAsync(request, cancellationToken).ConfigureAwait(true);
+		if (methodResult.IsFailure)
+		{
+			error = methodResult.Error;
+		}
+		else
+		{
+			response = methodResult.Value;
+
+			if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
+			{
+				error = ServiceErrors.CreateInvalidResponse(responseErrorMessage);
+				response = null;
+			}
+		}
+
+		context.Result = error != null ? ServiceResult.Failure(error) : ServiceResult.Success<ServiceDto>(response!);
+
 		if (error == null)
 		{
 			var responseMappingGroups = mapping.ResponseMappings
@@ -167,8 +187,23 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			{
 				throw new InvalidOperationException($"Found {responseMappingGroups.Sum(x => x.Count())} valid HTTP responses for {typeof(TResponse).Name}: {response}");
 			}
+
+			httpResponse.RequestMessage = httpRequest;
 		}
 		else
+		{
+			httpResponse = await CreateHttpResponseForErrorAsync(error, httpRequest).ConfigureAwait(false);
+		}
+
+		await AdaptTask(ResponseReadyAsync(httpResponse, cancellationToken)).ConfigureAwait(true);
+
+		return httpResponse;
+	}
+
+	private async Task<HttpResponseMessage> CreateHttpResponseForErrorAsync(ServiceErrorDto error, HttpRequestMessage httpRequest)
+	{
+		HttpResponseMessage? httpResponse = null;
+		try
 		{
 			var statusCode = error.Code == null ? HttpStatusCode.InternalServerError :
 				(TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
@@ -180,12 +215,154 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 				if (m_disableChunkedTransfer)
 					await httpResponse.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 			}
+
+			httpResponse.RequestMessage = httpRequest;
+
+			var returnValue = httpResponse;
+			httpResponse = null;
+			return returnValue;
+		}
+		finally
+		{
+			httpResponse?.Dispose();
+		}
+	}
+
+	/// <summary>
+	/// Attempts to handle a service method.
+	/// </summary>
+	protected async Task<HttpResponseMessage?> TryHandleServiceEventAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, HttpRequestMessage httpRequest, Func<TRequest, CancellationToken, Task<ServiceResult<IAsyncEnumerable<ServiceResult<TResponse>>>>> invokeEventAsync, CancellationToken cancellationToken)
+		where TRequest : ServiceDto, new()
+		where TResponse : ServiceDto, new()
+	{
+		if (invokeEventAsync == null)
+			throw new ArgumentNullException(nameof(invokeEventAsync));
+
+		var (context, httpResponse) = await StartHandleServiceMethodAsync(mapping, httpRequest, cancellationToken).ConfigureAwait(true);
+		if (context == null)
+			return null;
+		if (httpResponse != null)
+			return httpResponse;
+
+		var request = (TRequest) context.Request!;
+		var eventResult = await invokeEventAsync(request, cancellationToken).ConfigureAwait(true);
+		if (eventResult.IsFailure)
+		{
+			var error = eventResult.Error!;
+			context.Result = ServiceResult.Failure(error);
+			httpResponse = await CreateHttpResponseForErrorAsync(error, httpRequest).ConfigureAwait(false);
+		}
+		else
+		{
+			if (mapping.ResponseMappings.Count != 1)
+				throw new InvalidOperationException($"Expected exactly one response mapping for {typeof(TResponse).Name}.");
+
+			var responseMapping = mapping.ResponseMappings[0];
+			httpResponse = new HttpResponseMessage(responseMapping.StatusCode)
+			{
+				Content = new EventStreamHttpContent<TResponse>(eventResult.Value, responseMapping, m_contentSerializer, m_skipResponseValidation),
+				RequestMessage = httpRequest,
+			};
 		}
 
-		httpResponse.RequestMessage = httpRequest;
 		await AdaptTask(ResponseReadyAsync(httpResponse, cancellationToken)).ConfigureAwait(true);
 
 		return httpResponse;
+	}
+
+	private sealed class EventStreamHttpContent<TResponse> : HttpContent
+		where TResponse : ServiceDto, new()
+	{
+		public EventStreamHttpContent(IAsyncEnumerable<ServiceResult<TResponse>> enumerable, HttpResponseMapping<TResponse> responseMapping, HttpContentSerializer contentSerializer, bool skipResponseValidation)
+		{
+			m_enumerable = enumerable;
+			m_responseMapping = responseMapping;
+			m_contentSerializer = contentSerializer;
+			m_skipResponseValidation = skipResponseValidation;
+
+			Headers.ContentType = new MediaTypeHeaderValue("text/event-stream");
+		}
+
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+			DoSerializeToStreamAsync(stream, CancellationToken.None);
+
+#if NET6_0_OR_GREATER
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken) =>
+			DoSerializeToStreamAsync(stream, cancellationToken);
+#endif
+
+		private async Task DoSerializeToStreamAsync(Stream stream, CancellationToken cancellationToken)
+		{
+			await foreach (var result in m_enumerable.WithCancellation(cancellationToken).ConfigureAwait(false))
+			{
+				object dto;
+				var isError = false;
+				var shouldStop = false;
+
+				if (result.IsSuccess)
+				{
+					var response = result.Value;
+					if (!m_skipResponseValidation && !response.Validate(out var responseErrorMessage))
+					{
+						dto = ServiceErrors.CreateInvalidResponse(responseErrorMessage);
+						isError = true;
+						shouldStop = true;
+					}
+					else
+					{
+						dto = m_responseMapping.GetResponseBody(response)!;
+					}
+				}
+				else
+				{
+					dto = result.Error!;
+					isError = true;
+				}
+
+				if (isError)
+				{
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+					await stream.WriteAsync(s_errorEventLine, cancellationToken).ConfigureAwait(false);
+#else
+					await stream.WriteAsync(s_errorEventLine.ToArray(), 0, s_errorEventLine.Length, cancellationToken).ConfigureAwait(false);
+#endif
+				}
+
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+				await stream.WriteAsync(s_dataPrefix, cancellationToken).ConfigureAwait(false);
+#else
+				await stream.WriteAsync(s_dataPrefix.ToArray(), 0, s_dataPrefix.Length, cancellationToken).ConfigureAwait(false);
+#endif
+
+#if NET6_0_OR_GREATER
+				using (var content = m_contentSerializer.CreateHttpContent(dto))
+					await content.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+#else
+				using (var content = m_contentSerializer.CreateHttpContent(dto))
+					await content.CopyToAsync(stream).ConfigureAwait(false);
+#endif
+
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+				await stream.WriteAsync(s_twoNewlines, cancellationToken).ConfigureAwait(false);
+#else
+				await stream.WriteAsync(s_twoNewlines.ToArray(), 0, s_twoNewlines.Length, cancellationToken).ConfigureAwait(false);
+#endif
+
+				if (shouldStop)
+					break;
+			}
+		}
+
+		protected override bool TryComputeLength(out long length)
+		{
+			length = -1;
+			return false;
+		}
+
+		private readonly IAsyncEnumerable<ServiceResult<TResponse>> m_enumerable;
+		private readonly HttpResponseMapping<TResponse> m_responseMapping;
+		private readonly HttpContentSerializer m_contentSerializer;
+		private readonly bool m_skipResponseValidation;
 	}
 
 	/// <summary>
@@ -333,6 +510,10 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 	private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
 	private static readonly Regex s_regexPathParameterRegex = new("""\{([a-zA-Z][a-zA-Z0-9]*)\}""", RegexOptions.CultureInvariant);
 	private static readonly char[] s_equalSign = ['='];
+
+	private static readonly ReadOnlyMemory<byte> s_dataPrefix = "data: "u8.ToArray();
+	private static readonly ReadOnlyMemory<byte> s_errorEventLine = "event: error\n"u8.ToArray();
+	private static readonly ReadOnlyMemory<byte> s_twoNewlines = "\n\n"u8.ToArray();
 
 	private readonly string m_rootPath;
 	private readonly bool m_synchronous;

@@ -77,7 +77,7 @@ public class ValidationTests
 
 	private CodeGenFile GetGeneratedFile(string definition, string fileName)
 	{
-		var parser = new FsdParser();
+		var parser = new FsdParser(new FsdParserSettings { SupportsEvents = true });
 		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
 		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests) };
 		var output = generator.GenerateOutput(service);

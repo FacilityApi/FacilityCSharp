@@ -51,8 +51,16 @@ internal sealed class StandardHttpContentSerializer : HttpContentSerializer
 			m_serializer = serializer;
 		}
 
-		protected override async Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
-			await m_serializer.ToStreamAsync(m_content, stream, CancellationToken.None).ConfigureAwait(false);
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+			DoSerializeToStreamAsync(stream, CancellationToken.None);
+
+#if NET6_0_OR_GREATER
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken) =>
+			DoSerializeToStreamAsync(stream, cancellationToken);
+#endif
+
+		private async Task DoSerializeToStreamAsync(Stream stream, CancellationToken cancellationToken) =>
+			await m_serializer.ToStreamAsync(m_content, stream, cancellationToken).ConfigureAwait(false);
 
 		protected override bool TryComputeLength(out long length)
 		{
