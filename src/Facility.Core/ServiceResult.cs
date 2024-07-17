@@ -29,11 +29,13 @@ public class ServiceResult
 	/// <summary>
 	/// True if the result has a value.
 	/// </summary>
+	[MemberNotNullWhen(false, nameof(Error))]
 	public bool IsSuccess => Error == null;
 
 	/// <summary>
 	/// True if the result has an error.
 	/// </summary>
+	[MemberNotNullWhen(true, nameof(Error))]
 	public bool IsFailure => Error != null;
 
 	/// <summary>
