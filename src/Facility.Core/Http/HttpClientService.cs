@@ -158,7 +158,7 @@ public abstract class HttpClientService
 					responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 				if (responseResult.IsFailure)
 				{
-					var error = responseResult.Error!;
+					var error = responseResult.Error;
 					error.Code = ServiceErrors.InvalidResponse;
 					return ServiceResult.Failure(error);
 				}
@@ -281,7 +281,7 @@ public abstract class HttpClientService
 						var responseResult = await contentSerializer.ReadHttpContentAsync(type, content, cancellationToken).ConfigureAwait(false);
 						if (responseResult.IsFailure)
 						{
-							var error = responseResult.Error!;
+							var error = responseResult.Error;
 							error.Code = ServiceErrors.InvalidResponse;
 							nextResult = ServiceResult.Failure(error);
 							stopStream = true;

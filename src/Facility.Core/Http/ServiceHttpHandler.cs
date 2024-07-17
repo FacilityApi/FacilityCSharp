@@ -172,7 +172,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 				var responseHeaders = mapping.GetResponseHeaders(response!);
 				var headersResult = HttpServiceUtility.TryAddNonContentHeaders(httpResponse.Headers, responseHeaders);
 				if (headersResult.IsFailure)
-					throw new InvalidOperationException(headersResult.Error!.Message);
+					throw new InvalidOperationException(headersResult.Error.Message);
 
 				if (responseMapping.ResponseBodyType != null)
 				{
@@ -248,7 +248,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		var eventResult = await invokeEventAsync(request, cancellationToken).ConfigureAwait(true);
 		if (eventResult.IsFailure)
 		{
-			var error = eventResult.Error!;
+			var error = eventResult.Error;
 			context.Result = ServiceResult.Failure(error);
 			httpResponse = await CreateHttpResponseForErrorAsync(error, httpRequest).ConfigureAwait(false);
 		}
@@ -315,7 +315,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 				}
 				else
 				{
-					dto = result.Error!;
+					dto = result.Error;
 					isError = true;
 				}
 
