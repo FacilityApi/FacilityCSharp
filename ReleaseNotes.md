@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.29.1
+
+* Improve nullable analysis of `ServiceResult.Error`.
+
 ## 2.29.0
 
 * Support events.
