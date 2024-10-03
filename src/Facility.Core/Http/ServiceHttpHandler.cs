@@ -75,7 +75,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 			try
 			{
 				var serializer = GetHttpContentSerializer(mapping.RequestBodyType);
-				var requestResult = await AdaptTask(serializer.ReadHttpContentAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
+				var requestResult = await AdaptTask(serializer.ReadHttpContentOrNullAsync(mapping.RequestBodyType, httpRequest.Content, cancellationToken)).ConfigureAwait(true);
 				if (requestResult.IsFailure)
 					error = requestResult.Error;
 				else

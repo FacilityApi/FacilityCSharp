@@ -58,19 +58,58 @@ public abstract class HttpContentSerializer
 	}
 
 	/// <summary>
+	/// Reads a DTO from the specified HTTP content, or null if the content is missing or empty.
+	/// </summary>
+	public async Task<ServiceResult<T?>> ReadHttpContentOrNullAsync<T>(HttpContent? content, CancellationToken cancellationToken = default)
+		where T : ServiceDto
+	{
+		return (await ReadHttpContentOrNullAsync(typeof(T), content, cancellationToken).ConfigureAwait(false)).Cast<T?>();
+	}
+
+	/// <summary>
 	/// Reads an object from the specified HTTP content.
 	/// </summary>
-	public async Task<ServiceResult<object>> ReadHttpContentAsync(Type objectType, HttpContent? content, CancellationToken cancellationToken = default)
+	public async Task<ServiceResult<object>> ReadHttpContentAsync(Type objectType, HttpContent? content, CancellationToken cancellationToken = default) =>
+		(await DoReadHttpContentAsync(objectType, content, nullIfMissingOrEmpty: false, cancellationToken).ConfigureAwait(false)).Cast<object>();
+
+	/// <summary>
+	/// Reads an object from the specified HTTP content, or null if the content is missing or empty.
+	/// </summary>
+	public Task<ServiceResult<object?>> ReadHttpContentOrNullAsync(Type objectType, HttpContent? content, CancellationToken cancellationToken = default) =>
+		DoReadHttpContentAsync(objectType, content, nullIfMissingOrEmpty: true, cancellationToken);
+
+	private async Task<ServiceResult<object?>> DoReadHttpContentAsync(Type objectType, HttpContent? content, bool nullIfMissingOrEmpty, CancellationToken cancellationToken)
 	{
 		var contentType = content?.Headers.ContentType;
 		if (contentType == null)
+		{
+			if (nullIfMissingOrEmpty)
+			{
+				// if the content is missing or empty, an older client or server with no fields may have uploaded it
+				if (content is null || content.Headers.ContentLength == 0)
+					return ServiceResult.Success<object?>(null);
+
+				if (content.Headers.ContentLength is null)
+				{
+#if NET6_0_OR_GREATER
+					var contentValue = await content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+#else
+					var contentValue = await content.ReadAsByteArrayAsync().ConfigureAwait(false);
+#endif
+					if (contentValue.Length == 0)
+						return ServiceResult.Success<object?>(null);
+				}
+			}
+
 			return ServiceResult.Failure(HttpServiceErrors.CreateMissingContentType());
+		}
 
 		var mediaType = contentType.MediaType ?? "";
 		if (!IsSupportedMediaType(mediaType))
 			return ServiceResult.Failure(HttpServiceErrors.CreateUnsupportedContentType(mediaType));
 
-		return await ReadHttpContentAsyncCore(objectType, content!, cancellationToken).ConfigureAwait(false);
+		var result = await ReadHttpContentAsyncCore(objectType, content!, cancellationToken).ConfigureAwait(false);
+		return result.Cast<object?>();
 	}
 
 	/// <summary>
