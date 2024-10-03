@@ -19,6 +19,8 @@ public abstract class HttpContentSerializer
 | [IsSupportedMediaType](HttpContentSerializer/IsSupportedMediaType.md)(…) | Determines if the specified media type can be read by this serializer. |
 | [ReadHttpContentAsync](HttpContentSerializer/ReadHttpContentAsync.md)(…) | Reads an object from the specified HTTP content. |
 | [ReadHttpContentAsync&lt;T&gt;](HttpContentSerializer/ReadHttpContentAsync.md)(…) | Reads a DTO from the specified HTTP content. |
+| [ReadHttpContentOrNullAsync](HttpContentSerializer/ReadHttpContentOrNullAsync.md)(…) | Reads an object from the specified HTTP content, or null if the content is missing or empty. |
+| [ReadHttpContentOrNullAsync&lt;T&gt;](HttpContentSerializer/ReadHttpContentOrNullAsync.md)(…) | Reads a DTO from the specified HTTP content, or null if the content is missing or empty. |
 
 ## Protected Members
 
