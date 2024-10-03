@@ -516,7 +516,7 @@ namespace Facility.ConformanceApi.Http
 				CreateRequest = body =>
 					new MixedRequestDto
 					{
-						Normal = ((MixedRequestDto) body!).Normal,
+						Normal = ((MixedRequestDto?) body)?.Normal,
 					},
 				ResponseMappings =
 				{
@@ -596,15 +596,15 @@ namespace Facility.ConformanceApi.Http
 				CreateRequest = body =>
 					new RequiredRequestDto
 					{
-						Normal = ((RequiredRequestDto) body!).Normal,
-						Widget = ((RequiredRequestDto) body!).Widget,
-						Widgets = ((RequiredRequestDto) body!).Widgets,
-						WidgetMatrix = ((RequiredRequestDto) body!).WidgetMatrix,
-						WidgetResult = ((RequiredRequestDto) body!).WidgetResult,
-						WidgetResults = ((RequiredRequestDto) body!).WidgetResults,
-						WidgetMap = ((RequiredRequestDto) body!).WidgetMap,
-						HasWidget = ((RequiredRequestDto) body!).HasWidget,
-						Point = ((RequiredRequestDto) body!).Point,
+						Normal = ((RequiredRequestDto?) body)?.Normal,
+						Widget = ((RequiredRequestDto?) body)?.Widget,
+						Widgets = ((RequiredRequestDto?) body)?.Widgets,
+						WidgetMatrix = ((RequiredRequestDto?) body)?.WidgetMatrix,
+						WidgetResult = ((RequiredRequestDto?) body)?.WidgetResult,
+						WidgetResults = ((RequiredRequestDto?) body)?.WidgetResults,
+						WidgetMap = ((RequiredRequestDto?) body)?.WidgetMap,
+						HasWidget = ((RequiredRequestDto?) body)?.HasWidget,
+						Point = ((RequiredRequestDto?) body)?.Point,
 					},
 				ResponseMappings =
 				{

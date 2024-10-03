@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.29.2
+## 2.29.3
 
 * Allow missing or empty HTTP content to be treated as an empty DTO for backward compatibility with method bodies that previously had no fields.
 

@@ -53,7 +53,7 @@ namespace EdgeCases.Http
 				CreateRequest = body =>
 					new CustomHttpRequestDto
 					{
-						Value = ((CustomHttpRequestDto) body!).Value,
+						Value = ((CustomHttpRequestDto?) body)?.Value,
 					},
 				ResponseMappings =
 				{
