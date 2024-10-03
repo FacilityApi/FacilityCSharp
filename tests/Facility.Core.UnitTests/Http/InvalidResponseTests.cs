@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
@@ -12,10 +13,33 @@ namespace Facility.Core.UnitTests.Http;
 public class InvalidResponseTests
 {
 	[Test]
+	public async Task MissingContent()
+	{
+		// missing content isn't actually invalid, but rather treated as an empty request
+		(await GetApiInfoResult(_ => new HttpResponseMessage(HttpStatusCode.OK))).Should().BeSuccess(new());
+		(await GetApiInfoResult(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([]) })).Should().BeSuccess(new());
+		(await GetApiInfoResult(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new NoLengthContent([]) })).Should().BeSuccess(new());
+	}
+
+	[Test]
+	public async Task ValidContent()
+	{
+		// check with Content-Length header and without
+		var contentWithLength = new ByteArrayContent([(byte) '{', (byte) '}']) { Headers = { ContentType = MediaTypeHeaderValue.Parse("application/json") } };
+		(await GetApiInfoResult(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = contentWithLength })).Should().BeSuccess(new());
+		var contentWithoutLength = new NoLengthContent([(byte) '{', (byte) '}']) { Headers = { ContentType = MediaTypeHeaderValue.Parse("application/json") } };
+		(await GetApiInfoResult(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = contentWithoutLength })).Should().BeSuccess(new());
+	}
+
+	[Test]
 	public async Task MissingContentType()
 	{
 		await GetApiInfoInvalidResponse(
-			_ => new HttpResponseMessage(HttpStatusCode.OK),
+			_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([(byte) '{', (byte) '}']) },
+			ServiceErrors.InvalidResponse, HttpServiceErrors.CreateMissingContentType().Message);
+
+		await GetApiInfoInvalidResponse(
+			_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new NoLengthContent([(byte) '{', (byte) '}']) },
 			ServiceErrors.InvalidResponse, HttpServiceErrors.CreateMissingContentType().Message);
 	}
 
@@ -99,12 +123,17 @@ public class InvalidResponseTests
 			ServiceErrors.Timeout, ServiceErrors.CreateTimeout().Message);
 	}
 
-	private async Task GetApiInfoInvalidResponse(Func<HttpRequestMessage, HttpResponseMessage> send, string code, string? message)
+	private async Task<ServiceResult<GetApiInfoResponseDto>> GetApiInfoResult(Func<HttpRequestMessage, HttpResponseMessage> send)
 	{
 		var handler = new FakeHttpHandler(send);
 		var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://example.com/") };
 		var clientApi = new HttpClientConformanceApi(new HttpClientServiceSettings { HttpClient = httpClient });
-		var result = await clientApi.GetApiInfoAsync(new GetApiInfoRequestDto());
+		return await clientApi.GetApiInfoAsync(new GetApiInfoRequestDto());
+	}
+
+	private async Task GetApiInfoInvalidResponse(Func<HttpRequestMessage, HttpResponseMessage> send, string code, string? message)
+	{
+		var result = await GetApiInfoResult(send);
 		result.Should().BeFailure(code);
 		result.Error!.Message.Should().StartWith(message);
 	}
@@ -117,5 +146,16 @@ public class InvalidResponseTests
 			Task.FromResult(m_send.Invoke(request));
 
 		private readonly Func<HttpRequestMessage, HttpResponseMessage> m_send;
+	}
+
+	private sealed class NoLengthContent(byte[] bytes) : HttpContent
+	{
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) => stream.WriteAsync(bytes, 0, bytes.Length);
+
+		protected override bool TryComputeLength(out long length)
+		{
+			length = 0;
+			return false;
+		}
 	}
 }

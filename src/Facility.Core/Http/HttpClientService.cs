@@ -154,7 +154,7 @@ public abstract class HttpClientService
 			if (responseMapping.ResponseBodyType != null)
 			{
 				var serializer = GetHttpContentSerializer(responseMapping.ResponseBodyType);
-				var responseResult = await serializer.ReadHttpContentAsync(
+				var responseResult = await serializer.ReadHttpContentOrNullAsync(
 					responseMapping.ResponseBodyType, httpResponse.Content, cancellationToken).ConfigureAwait(false);
 				if (responseResult.IsFailure)
 				{
@@ -345,9 +345,9 @@ public abstract class HttpClientService
 	/// </summary>
 	protected virtual async Task<ServiceErrorDto> CreateErrorFromHttpResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
 	{
-		var result = await ContentSerializer.ReadHttpContentAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
+		var result = await ContentSerializer.ReadHttpContentOrNullAsync<ServiceErrorDto>(response.Content, cancellationToken).ConfigureAwait(false);
 
-		if (result.IsFailure || string.IsNullOrWhiteSpace(result.Value.Code))
+		if (result.IsFailure || result.Value is null || string.IsNullOrWhiteSpace(result.Value.Code))
 			return HttpServiceErrors.CreateErrorForStatusCode(response.StatusCode, response.ReasonPhrase);
 
 		return result.Value;

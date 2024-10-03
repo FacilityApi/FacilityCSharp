@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.29.2
+
+* Allow missing or empty HTTP content to be treated as an empty DTO for backward compatibility with method bodies that previously had no fields.
+
 ## 2.29.1
 
 * Improve nullable analysis of `ServiceResult.Error`.
