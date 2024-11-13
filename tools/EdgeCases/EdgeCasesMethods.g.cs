@@ -22,5 +22,9 @@ namespace EdgeCases
 		public static readonly IServiceMethodInfo SnakeMethod =
 			ServiceMethodInfo.Create<IEdgeCases, SnakeMethodRequestDto, SnakeMethodResponseDto>(
 				"snake_method", "EdgeCases", x => x.SnakeMethodAsync);
+
+		public static readonly IServiceMethodInfo Misc =
+			ServiceMethodInfo.Create<IEdgeCases, MiscRequestDto, MiscResponseDto>(
+				"misc", "EdgeCases", x => x.MiscAsync);
 	}
 }

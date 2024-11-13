@@ -44,6 +44,9 @@ namespace EdgeCases
 		public virtual async Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			(await m_serviceDelegate.InvokeMethodAsync(EdgeCasesMethods.SnakeMethod, request, cancellationToken).ConfigureAwait(false)).Cast<SnakeMethodResponseDto>();
 
+		public virtual async Task<ServiceResult<MiscResponseDto>> MiscAsync(MiscRequestDto request, CancellationToken cancellationToken = default) =>
+			(await m_serviceDelegate.InvokeMethodAsync(EdgeCasesMethods.Misc, request, cancellationToken).ConfigureAwait(false)).Cast<MiscResponseDto>();
+
 		private readonly ServiceDelegate m_serviceDelegate;
 	}
 }

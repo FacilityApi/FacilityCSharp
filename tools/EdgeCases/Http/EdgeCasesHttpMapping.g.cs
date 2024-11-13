@@ -90,5 +90,41 @@ namespace EdgeCases.Http
 					}.Build(),
 				},
 			}.Build();
+
+		public static readonly HttpMethodMapping<MiscRequestDto, MiscResponseDto> MiscMapping =
+			new HttpMethodMapping<MiscRequestDto, MiscResponseDto>.Builder
+			{
+				HttpMethod = HttpMethod.Post,
+				Path = "/misc",
+				GetUriParameters = request =>
+					new Dictionary<string, string?>
+					{
+						{ "q", request.Q },
+					},
+				SetUriParameters = (request, parameters) =>
+				{
+					parameters.TryGetValue("q", out var queryParameterQ);
+					request.Q = queryParameterQ;
+					return request;
+				},
+				RequestBodyType = typeof(MiscRequestDto),
+				GetRequestBody = request =>
+					new MiscRequestDto
+					{
+						F = request.F,
+					},
+				CreateRequest = body =>
+					new MiscRequestDto
+					{
+						F = ((MiscRequestDto?) body)?.F ?? default,
+					},
+				ResponseMappings =
+				{
+					new HttpResponseMapping<MiscResponseDto>.Builder
+					{
+						StatusCode = (HttpStatusCode) 200,
+					}.Build(),
+				},
+			}.Build();
 	}
 }

@@ -106,4 +106,14 @@ service EdgeCases
 		foo: ExternalData;
 		bar: ExternalEnum;
 	}
+
+	method misc
+	{
+		[http(from: "query")]
+		q: string;
+
+		f: nullable<string>;
+	}:
+	{
+	}
 }

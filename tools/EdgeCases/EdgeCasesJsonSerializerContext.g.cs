@@ -14,6 +14,8 @@ namespace EdgeCases
 	[JsonSerializable(typeof(CustomHttpResponseDto))]
 	[JsonSerializable(typeof(DataDto))]
 	[JsonSerializable(typeof(DataWithExternalTypesDto))]
+	[JsonSerializable(typeof(MiscRequestDto))]
+	[JsonSerializable(typeof(MiscResponseDto))]
 	[JsonSerializable(typeof(OldDataDto))]
 	[JsonSerializable(typeof(OldEmptyDataDto))]
 	[JsonSerializable(typeof(OldMethodRequestDto))]
