@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.29.4
+
+* Bump `MessagePack` and `System.Text.Json` versions to address vulnerabilities.
+* Fix codegen bug when copying a nullable field.
+
 ## 2.29.3
 
 * Allow missing or empty HTTP content to be treated as an empty DTO for backward compatibility with method bodies that previously had no fields.
