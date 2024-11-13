@@ -41,6 +41,7 @@ namespace EdgeCases.Http
 		public override async Task<HttpResponseMessage?> TryHandleHttpRequestAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default)
 		{
 			return await AdaptTask(TryHandleCustomHttpAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
+				await AdaptTask(TryHandleMiscAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleOldMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true) ??
 				await AdaptTask(TryHandleSnakeMethodAsync(httpRequest, cancellationToken)).ConfigureAwait(true);
 		}
@@ -60,6 +61,9 @@ namespace EdgeCases.Http
 
 		public Task<HttpResponseMessage?> TryHandleSnakeMethodAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
 			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.SnakeMethodMapping, httpRequest, GetService(httpRequest).SnakeMethodAsync, cancellationToken);
+
+		public Task<HttpResponseMessage?> TryHandleMiscAsync(HttpRequestMessage httpRequest, CancellationToken cancellationToken = default) =>
+			TryHandleServiceMethodAsync(EdgeCasesHttpMapping.MiscMapping, httpRequest, GetService(httpRequest).MiscAsync, cancellationToken);
 
 		/// <summary>
 		/// Returns the HTTP status code for a custom error code.

@@ -910,7 +910,8 @@ public sealed class CSharpGenerator : CodeGenerator
 												foreach (var field in httpMethodInfo.RequestNormalFields)
 												{
 													var fieldName = context.GetFieldPropertyName(field.ServiceField);
-													code.WriteLine($"{fieldName} = (({requestTypeName}?) body)?.{fieldName},");
+													var fieldType = context.GetFieldType(field.ServiceField);
+													code.WriteLine($"{fieldName} = (({requestTypeName}?) body)?.{fieldName}{(fieldType.Kind == ServiceTypeKind.Nullable ? " ?? default" : "")},");
 												}
 											}
 										}

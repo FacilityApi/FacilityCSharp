@@ -37,6 +37,9 @@ namespace EdgeCases.Http
 		public Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default) =>
 			TrySendRequestAsync(EdgeCasesHttpMapping.SnakeMethodMapping, request, cancellationToken);
 
+		public Task<ServiceResult<MiscResponseDto>> MiscAsync(MiscRequestDto request, CancellationToken cancellationToken = default) =>
+			TrySendRequestAsync(EdgeCasesHttpMapping.MiscMapping, request, cancellationToken);
+
 		private static readonly HttpClientServiceDefaults s_defaults = new HttpClientServiceDefaults
 		{
 #if NET8_0_OR_GREATER

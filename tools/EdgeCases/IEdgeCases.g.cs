@@ -24,5 +24,7 @@ namespace EdgeCases
 		Task<ServiceResult<CustomHttpResponseDto>> CustomHttpAsync(CustomHttpRequestDto request, CancellationToken cancellationToken = default);
 
 		Task<ServiceResult<SnakeMethodResponseDto>> SnakeMethodAsync(SnakeMethodRequestDto request, CancellationToken cancellationToken = default);
+
+		Task<ServiceResult<MiscResponseDto>> MiscAsync(MiscRequestDto request, CancellationToken cancellationToken = default);
 	}
 }
