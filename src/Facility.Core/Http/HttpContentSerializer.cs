@@ -91,7 +91,7 @@ public abstract class HttpContentSerializer
 
 				if (content.Headers.ContentLength is null)
 				{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 					var contentValue = await content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
 #else
 					var contentValue = await content.ReadAsByteArrayAsync().ConfigureAwait(false);

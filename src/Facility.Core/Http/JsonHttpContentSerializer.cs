@@ -75,7 +75,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 			{
 				// read content into memory so that ASP.NET Core doesn't complain about synchronous I/O during JSON deserialization
 				using var stream = CreateMemoryStream();
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 				await content.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
 #else
 				await content.CopyToAsync(stream).ConfigureAwait(false);
@@ -85,7 +85,7 @@ public class JsonHttpContentSerializer : HttpContentSerializer
 			}
 			else
 			{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 				using var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 #else
 				using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);

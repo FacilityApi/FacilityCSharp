@@ -248,7 +248,7 @@ public abstract class HttpClientService
 		Stream? stream = null;
 		try
 		{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 			stream = await httpResponse.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 #else
 			stream = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -329,7 +329,7 @@ public abstract class HttpClientService
 		}
 		finally
 		{
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 			if (stream is not null)
 				await stream.DisposeAsync().ConfigureAwait(false);
 #else
@@ -426,7 +426,7 @@ public abstract class HttpClientService
 				var bracketedKeyIndex = url.IndexOf(bracketedKey, StringComparison.Ordinal);
 				if (bracketedKeyIndex != -1)
 				{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 					url = string.Concat(url.AsSpan(0, bracketedKeyIndex), Uri.EscapeDataString(parameter.Value), url.AsSpan(bracketedKeyIndex + bracketedKey.Length));
 #else
 					url = url.Substring(0, bracketedKeyIndex) + Uri.EscapeDataString(parameter.Value) + url.Substring(bracketedKeyIndex + bracketedKey.Length);

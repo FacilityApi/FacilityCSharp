@@ -286,7 +286,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
 			DoSerializeToStreamAsync(stream, CancellationToken.None);
 
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken) =>
 			DoSerializeToStreamAsync(stream, cancellationToken);
 #endif
@@ -321,20 +321,20 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 				if (isError)
 				{
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 					await stream.WriteAsync(s_errorEventLine, cancellationToken).ConfigureAwait(false);
 #else
 					await stream.WriteAsync(s_errorEventLine.ToArray(), 0, s_errorEventLine.Length, cancellationToken).ConfigureAwait(false);
 #endif
 				}
 
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 				await stream.WriteAsync(s_dataPrefix, cancellationToken).ConfigureAwait(false);
 #else
 				await stream.WriteAsync(s_dataPrefix.ToArray(), 0, s_dataPrefix.Length, cancellationToken).ConfigureAwait(false);
 #endif
 
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 				using (var content = m_contentSerializer.CreateHttpContent(dto))
 					await content.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
 #else
@@ -342,7 +342,7 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 					await content.CopyToAsync(stream).ConfigureAwait(false);
 #endif
 
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 				await stream.WriteAsync(s_twoNewlines, cancellationToken).ConfigureAwait(false);
 #else
 				await stream.WriteAsync(s_twoNewlines.ToArray(), 0, s_twoNewlines.Length, cancellationToken).ConfigureAwait(false);
