@@ -96,7 +96,7 @@ internal static class CSharpUtility
 		return builder.ToString();
 	}
 
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 	internal static bool ContainsOrdinal(this string text, char ch) => text.Contains(ch, StringComparison.Ordinal);
 #else
 	internal static bool ContainsOrdinal(this string text, char ch) => text.Contains(ch);

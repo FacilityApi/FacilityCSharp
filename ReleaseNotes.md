@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.30.0
+
+* Drop support for end-of-life frameworks.
+* Use roll forward with .NET tools.
+
 ## 2.29.4
 
 * Bump `MessagePack` and `System.Text.Json` versions to address vulnerabilities.

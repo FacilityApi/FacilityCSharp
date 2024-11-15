@@ -52,7 +52,7 @@ public class TextHttpContentSerializer : HttpContentSerializer
 	{
 		if (objectType == typeof(string))
 		{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 			var stringValue = await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
 			var stringValue = await content.ReadAsStringAsync().ConfigureAwait(false);

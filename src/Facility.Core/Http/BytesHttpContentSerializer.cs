@@ -51,7 +51,7 @@ public class BytesHttpContentSerializer : HttpContentSerializer
 	{
 		if (objectType == typeof(byte[]))
 		{
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 			var contentValue = await content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
 #else
 			var contentValue = await content.ReadAsByteArrayAsync().ConfigureAwait(false);

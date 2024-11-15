@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Description>A library for consuming/implementing Facility APIs.</Description>
     <PackageTags>Facility FSD Core</PackageTags>
     <IsPackable>true</IsPackable>
@@ -14,8 +14,8 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="System.Text.Json" VersionOverride="6.0.11" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Text.Json" VersionOverride="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
