@@ -911,7 +911,7 @@ public sealed class CSharpGenerator : CodeGenerator
 												{
 													var fieldName = context.GetFieldPropertyName(field.ServiceField);
 													var fieldType = context.GetFieldType(field.ServiceField);
-													code.WriteLine($"{fieldName} = (({requestTypeName}?) body)?.{fieldName}{(fieldType.Kind == ServiceTypeKind.Nullable ? " ?? default" : "")},");
+													code.WriteLine($"{fieldName} = (({NullableReference(requestTypeName)}) body)?.{fieldName}{(fieldType.Kind == ServiceTypeKind.Nullable ? " ?? default" : "")},");
 												}
 											}
 										}
