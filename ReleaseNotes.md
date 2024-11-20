@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.30.1
+
+* Fix codegen bug when copying a nullable field when nullable references are not enabled.
+
 ## 2.30.0
 
 * Drop support for end-of-life frameworks.
