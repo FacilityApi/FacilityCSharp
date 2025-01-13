@@ -26,6 +26,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("boolean")]
 		public ServiceResult<bool>? Boolean { get; set; }
 
+		[MessagePack.Key("float")]
+		public ServiceResult<float>? Float { get; set; }
+
 		[MessagePack.Key("double")]
 		public ServiceResult<double>? Double { get; set; }
 
@@ -81,6 +84,7 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				ServiceDataUtility.AreEquivalentResults(String, other.String) &&
 				ServiceDataUtility.AreEquivalentResults(Boolean, other.Boolean) &&
+				ServiceDataUtility.AreEquivalentResults(Float, other.Float) &&
 				ServiceDataUtility.AreEquivalentResults(Double, other.Double) &&
 				ServiceDataUtility.AreEquivalentResults(Int32, other.Int32) &&
 				ServiceDataUtility.AreEquivalentResults(Int64, other.Int64) &&

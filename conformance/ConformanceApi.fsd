@@ -145,6 +145,7 @@ service ConformanceApi
 	{
 		string: string;
 		boolean: boolean;
+		float: float;
 		double: double;
 		int32: int32;
 		int64: int64;
@@ -155,11 +156,12 @@ service ConformanceApi
 	{
 	}
 
-	[http(method: GET, path: "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}/{datetime}")]
+	[http(method: GET, path: "/checkPath/{string}/{boolean}/{float}/{double}/{int32}/{int64}/{decimal}/{enum}/{datetime}")]
 	method checkPath
 	{
 		string: string;
 		boolean: boolean;
+		float: float;
 		double: double;
 		int32: int32;
 		int64: int64;
@@ -175,6 +177,7 @@ service ConformanceApi
 	{
 		[http(from: header)] string: string;
 		[http(from: header)] boolean: boolean;
+		[http(from: header)] float: float;
 		[http(from: header)] double: double;
 		[http(from: header)] int32: int32;
 		[http(from: header)] int64: int64;
@@ -185,6 +188,7 @@ service ConformanceApi
 	{
 		[http(from: header)] string: string;
 		[http(from: header)] boolean: boolean;
+		[http(from: header)] float: float;
 		[http(from: header)] double: double;
 		[http(from: header)] int32: int32;
 		[http(from: header)] int64: int64;
@@ -266,6 +270,7 @@ service ConformanceApi
 	{
 		string: string;
 		boolean: boolean;
+		float: float;
 		double: double;
 		int32: int32;
 		int64: int64;
@@ -286,6 +291,7 @@ service ConformanceApi
 	{
 		string: string[];
 		boolean: boolean[];
+		float: float[];
 		double: double[];
 		int32: int32[];
 		int64: int64[];
@@ -306,6 +312,7 @@ service ConformanceApi
 	{
 		string: map<string>;
 		boolean: map<boolean>;
+		float: map<float>;
 		double: map<double>;
 		int32: map<int32>;
 		int64: map<int64>;
@@ -326,6 +333,7 @@ service ConformanceApi
 	{
 		string: result<string>;
 		boolean: result<boolean>;
+		float: result<float>;
 		double: result<double>;
 		int32: result<int32>;
 		int64: result<int64>;
@@ -346,6 +354,7 @@ service ConformanceApi
 	{
 		string: nullable<string>;
 		boolean: nullable<boolean>;
+		float: nullable<float>;
 		double: nullable<double>;
 		int32: nullable<int32>;
 		int64: nullable<int64>;

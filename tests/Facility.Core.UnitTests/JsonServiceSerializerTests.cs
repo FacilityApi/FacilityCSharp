@@ -175,6 +175,16 @@ public sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBase
 	}
 
 	[Test]
+	public void AllowReadingFloatFromString()
+	{
+		JsonSerializer.FromJson<ValueDto>("""{"floatValue":"42"}""").Should().BeDto(ValueDto.Create(42.0f));
+		JsonSerializer.FromJson<ValueDto>("""{"floatValue":"6.825"}""").Should().BeDto(ValueDto.Create(6.825f));
+		JsonSerializer.FromJson<ValueDto>("""{"floatValue":"Infinity"}""").Should().BeDto(ValueDto.Create(float.PositiveInfinity));
+		JsonSerializer.FromJson<ValueDto>("""{"floatValue":"-Infinity"}""").Should().BeDto(ValueDto.Create(float.NegativeInfinity));
+		JsonSerializer.FromJson<ValueDto>("""{"floatValue":"NaN"}""").Should().BeDto(ValueDto.Create(float.NaN));
+	}
+
+	[Test]
 	public void AllowReadingDoubleFromString()
 	{
 		JsonSerializer.FromJson<ValueDto>("""{"doubleValue":"42"}""").Should().BeDto(ValueDto.Create(42.0));

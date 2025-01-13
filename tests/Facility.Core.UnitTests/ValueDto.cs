@@ -17,6 +17,8 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 
 	public static ValueDto Create(int? value) => new ValueDto { IntegerValue = value };
 
+	public static ValueDto Create(float? value) => new ValueDto { FloatValue = value };
+
 	public static ValueDto Create(double? value) => new ValueDto { DoubleValue = value };
 
 	public static ValueDto Create(DateTime? value) => new ValueDto { DateTimeValue = value };
@@ -45,6 +47,9 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 	[Key(7)]
 	public DateTime? DateTimeValue { get; set; }
 
+	[Key(8)]
+	public float? FloatValue { get; set; }
+
 	public override bool IsEquivalentTo(ValueDto? other) =>
 		other != null &&
 		BooleanValue == other.BooleanValue &&
@@ -54,5 +59,6 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue) &&
 		IntegerValue == other.IntegerValue &&
 		DoubleValue.Equals(other.DoubleValue) &&
-		ServiceDataUtility.AreEquivalentDateTimes(DateTimeValue, other.DateTimeValue);
+		ServiceDataUtility.AreEquivalentDateTimes(DateTimeValue, other.DateTimeValue) &&
+		FloatValue.Equals(other.FloatValue);
 }

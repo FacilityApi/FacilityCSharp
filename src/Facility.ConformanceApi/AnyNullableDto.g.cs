@@ -33,6 +33,12 @@ namespace Facility.ConformanceApi
 		public ServiceNullable<bool?> Boolean { get; set; }
 
 		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
+		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<float?>))]
+		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+		[MessagePack.Key("float")]
+		public ServiceNullable<float?> Float { get; set; }
+
+		[Newtonsoft.Json.JsonProperty(DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore, NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
 		[ServiceNullableDefaultValueAttribute(typeof(ServiceNullable<double?>))]
 		[System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
 		[MessagePack.Key("double")]
@@ -123,6 +129,7 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				String == other.String &&
 				Boolean == other.Boolean &&
+				Float == other.Float &&
 				Double == other.Double &&
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&
