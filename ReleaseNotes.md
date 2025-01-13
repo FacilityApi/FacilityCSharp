@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.31.0
+
+* Support `float` data type.
+
 ## 2.30.1
 
 * Fix codegen bug when copying a nullable field when nullable references are not enabled.
