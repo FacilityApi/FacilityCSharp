@@ -16,6 +16,7 @@ public sealed class CheckPathRequestDto : ServiceDto<CheckPathRequestDto>
 | [Decimal](CheckPathRequestDto/Decimal.md) { get; set; } |  |
 | [Double](CheckPathRequestDto/Double.md) { get; set; } |  |
 | [Enum](CheckPathRequestDto/Enum.md) { get; set; } |  |
+| [Float](CheckPathRequestDto/Float.md) { get; set; } |  |
 | [Int32](CheckPathRequestDto/Int32.md) { get; set; } |  |
 | [Int64](CheckPathRequestDto/Int64.md) { get; set; } |  |
 | [String](CheckPathRequestDto/String.md) { get; set; } |  |

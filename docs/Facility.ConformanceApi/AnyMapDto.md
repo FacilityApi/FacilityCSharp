@@ -18,6 +18,7 @@ public sealed class AnyMapDto : ServiceDto<AnyMapDto>
 | [Double](AnyMapDto/Double.md) { get; set; } |  |
 | [Enum](AnyMapDto/Enum.md) { get; set; } |  |
 | [Error](AnyMapDto/Error.md) { get; set; } |  |
+| [Float](AnyMapDto/Float.md) { get; set; } |  |
 | [Int32](AnyMapDto/Int32.md) { get; set; } |  |
 | [Int64](AnyMapDto/Int64.md) { get; set; } |  |
 | [Map](AnyMapDto/Map.md) { get; set; } |  |

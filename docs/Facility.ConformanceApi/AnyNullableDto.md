@@ -18,6 +18,7 @@ public sealed class AnyNullableDto : ServiceDto<AnyNullableDto>
 | [Double](AnyNullableDto/Double.md) { get; set; } |  |
 | [Enum](AnyNullableDto/Enum.md) { get; set; } |  |
 | [Error](AnyNullableDto/Error.md) { get; set; } |  |
+| [Float](AnyNullableDto/Float.md) { get; set; } |  |
 | [Int32](AnyNullableDto/Int32.md) { get; set; } |  |
 | [Int64](AnyNullableDto/Int64.md) { get; set; } |  |
 | [Map](AnyNullableDto/Map.md) { get; set; } |  |

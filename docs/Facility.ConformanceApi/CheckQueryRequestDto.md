@@ -16,6 +16,7 @@ public sealed class CheckQueryRequestDto : ServiceDto<CheckQueryRequestDto>
 | [Decimal](CheckQueryRequestDto/Decimal.md) { get; set; } |  |
 | [Double](CheckQueryRequestDto/Double.md) { get; set; } |  |
 | [Enum](CheckQueryRequestDto/Enum.md) { get; set; } |  |
+| [Float](CheckQueryRequestDto/Float.md) { get; set; } |  |
 | [Int32](CheckQueryRequestDto/Int32.md) { get; set; } |  |
 | [Int64](CheckQueryRequestDto/Int64.md) { get; set; } |  |
 | [String](CheckQueryRequestDto/String.md) { get; set; } |  |

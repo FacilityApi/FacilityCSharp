@@ -18,6 +18,7 @@ public sealed class AnyArrayDto : ServiceDto<AnyArrayDto>
 | [Double](AnyArrayDto/Double.md) { get; set; } |  |
 | [Enum](AnyArrayDto/Enum.md) { get; set; } |  |
 | [Error](AnyArrayDto/Error.md) { get; set; } |  |
+| [Float](AnyArrayDto/Float.md) { get; set; } |  |
 | [Int32](AnyArrayDto/Int32.md) { get; set; } |  |
 | [Int64](AnyArrayDto/Int64.md) { get; set; } |  |
 | [Map](AnyArrayDto/Map.md) { get; set; } |  |

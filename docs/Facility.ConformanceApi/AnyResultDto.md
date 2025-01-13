@@ -18,6 +18,7 @@ public sealed class AnyResultDto : ServiceDto<AnyResultDto>
 | [Double](AnyResultDto/Double.md) { get; set; } |  |
 | [Enum](AnyResultDto/Enum.md) { get; set; } |  |
 | [Error](AnyResultDto/Error.md) { get; set; } |  |
+| [Float](AnyResultDto/Float.md) { get; set; } |  |
 | [Int32](AnyResultDto/Int32.md) { get; set; } |  |
 | [Int64](AnyResultDto/Int64.md) { get; set; } |  |
 | [Map](AnyResultDto/Map.md) { get; set; } |  |

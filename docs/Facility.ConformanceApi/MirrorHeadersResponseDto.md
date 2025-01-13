@@ -16,6 +16,7 @@ public sealed class MirrorHeadersResponseDto : ServiceDto<MirrorHeadersResponseD
 | [Decimal](MirrorHeadersResponseDto/Decimal.md) { get; set; } |  |
 | [Double](MirrorHeadersResponseDto/Double.md) { get; set; } |  |
 | [Enum](MirrorHeadersResponseDto/Enum.md) { get; set; } |  |
+| [Float](MirrorHeadersResponseDto/Float.md) { get; set; } |  |
 | [Int32](MirrorHeadersResponseDto/Int32.md) { get; set; } |  |
 | [Int64](MirrorHeadersResponseDto/Int64.md) { get; set; } |  |
 | [String](MirrorHeadersResponseDto/String.md) { get; set; } |  |

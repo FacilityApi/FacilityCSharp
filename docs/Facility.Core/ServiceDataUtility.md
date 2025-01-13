@@ -26,6 +26,7 @@ public static class ServiceDataUtility
 | static [TryParseDateTime](ServiceDataUtility/TryParseDateTime.md)(…) | Attempts to parse a Boolean. |
 | static [TryParseDecimal](ServiceDataUtility/TryParseDecimal.md)(…) | Attempts to parse a Decimal. |
 | static [TryParseDouble](ServiceDataUtility/TryParseDouble.md)(…) | Attempts to parse a Double. |
+| static [TryParseFloat](ServiceDataUtility/TryParseFloat.md)(…) | Attempts to parse a Float. |
 | static [TryParseInt32](ServiceDataUtility/TryParseInt32.md)(…) | Attempts to parse an Int32. |
 | static [TryParseInt64](ServiceDataUtility/TryParseInt64.md)(…) | Attempts to parse an Int64. |
 | static [ValidateFieldValue&lt;T&gt;](ServiceDataUtility/ValidateFieldValue.md)(…) | Validates the field value. (2 methods) |
