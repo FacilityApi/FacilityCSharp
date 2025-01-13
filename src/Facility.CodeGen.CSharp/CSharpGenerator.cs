@@ -447,7 +447,7 @@ public sealed class CSharpGenerator : CodeGenerator
 									var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
 									code.Write(areEquivalentMethodName != null ?
 										$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
-										fieldType.Kind == ServiceTypeKind.Double ?
+										fieldType.Kind is ServiceTypeKind.Float or ServiceTypeKind.Double ?
 											$"{propertyName}.Equals(other.{propertyName})" : // for NaN
 											$"{propertyName} == other.{propertyName}");
 									code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
@@ -542,6 +542,11 @@ public sealed class CSharpGenerator : CodeGenerator
 										case ServiceTypeKind.Int32:
 										{
 											GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!);
+											break;
+										}
+										case ServiceTypeKind.Float:
+										{
+											GenerateRangeCheck(code, propertyName, fieldInfo.Name, validation.ValueRange!, "F");
 											break;
 										}
 										case ServiceTypeKind.Double:
@@ -1038,6 +1043,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			case ServiceTypeKind.ExternalEnum:
 			case ServiceTypeKind.Boolean:
 				return $"{fieldCode} == null ? null : {fieldCode}.Value.ToString()";
+			case ServiceTypeKind.Float:
 			case ServiceTypeKind.Double:
 			case ServiceTypeKind.Int32:
 			case ServiceTypeKind.Int64:
@@ -1064,6 +1070,8 @@ public sealed class CSharpGenerator : CodeGenerator
 				return $"{fieldCode} == null ? default({externalEnumName}?) : new {externalEnumName}({fieldCode})";
 			case ServiceTypeKind.Boolean:
 				return $"ServiceDataUtility.TryParseBoolean({fieldCode})";
+			case ServiceTypeKind.Float:
+				return $"ServiceDataUtility.TryParseFloat({fieldCode})";
 			case ServiceTypeKind.Double:
 				return $"ServiceDataUtility.TryParseDouble({fieldCode})";
 			case ServiceTypeKind.Int32:
@@ -1701,6 +1709,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		{
 			ServiceTypeKind.String => ("string", false),
 			ServiceTypeKind.Boolean => ("bool", true),
+			ServiceTypeKind.Float => ("float", true),
 			ServiceTypeKind.Double => ("double", true),
 			ServiceTypeKind.Int32 => ("int", true),
 			ServiceTypeKind.Int64 => ("long", true),

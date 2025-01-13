@@ -26,6 +26,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("boolean")]
 		public bool? Boolean { get; set; }
 
+		[MessagePack.Key("float")]
+		public float? Float { get; set; }
+
 		[MessagePack.Key("double")]
 		public double? Double { get; set; }
 
@@ -81,6 +84,7 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				String == other.String &&
 				Boolean == other.Boolean &&
+				Float.Equals(other.Float) &&
 				Double.Equals(other.Double) &&
 				Int32 == other.Int32 &&
 				Int64 == other.Int64 &&

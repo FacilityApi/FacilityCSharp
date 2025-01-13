@@ -26,6 +26,9 @@ namespace Facility.ConformanceApi
 		[MessagePack.Key("boolean")]
 		public IReadOnlyDictionary<string, bool>? Boolean { get; set; }
 
+		[MessagePack.Key("float")]
+		public IReadOnlyDictionary<string, float>? Float { get; set; }
+
 		[MessagePack.Key("double")]
 		public IReadOnlyDictionary<string, double>? Double { get; set; }
 
@@ -81,6 +84,7 @@ namespace Facility.ConformanceApi
 			return other != null &&
 				ServiceDataUtility.AreEquivalentFieldValues(String, other.String) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Boolean, other.Boolean) &&
+				ServiceDataUtility.AreEquivalentFieldValues(Float, other.Float) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Double, other.Double) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Int32, other.Int32) &&
 				ServiceDataUtility.AreEquivalentFieldValues(Int64, other.Int64) &&

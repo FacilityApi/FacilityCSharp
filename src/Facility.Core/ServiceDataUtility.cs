@@ -139,6 +139,11 @@ public static class ServiceDataUtility
 	public static long? TryParseInt64(string? text) => long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : default(long?);
 
 	/// <summary>
+	/// Attempts to parse a Float.
+	/// </summary>
+	public static float? TryParseFloat(string? text) => float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(float?);
+
+	/// <summary>
 	/// Attempts to parse a Double.
 	/// </summary>
 	public static double? TryParseDouble(string? text) => double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : default(double?);

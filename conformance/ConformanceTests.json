@@ -6,6 +6,7 @@
       "request": {
         "string": "string",
         "boolean": true,
+        "float": 0.1875,
         "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
@@ -21,6 +22,7 @@
       "request": {
         "string": "string",
         "boolean": true,
+        "float": 0.1875,
         "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
@@ -203,6 +205,7 @@
           "array": {
             "string": ["string", "\n"],
             "boolean": [true, false],
+            "float": [0.1875, -0.75],
             "double": [0.375, -1.5],
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
@@ -226,6 +229,7 @@
           "array": {
             "string": ["string", "\n"],
             "boolean": [true, false],
+            "float": [0.1875, -0.75],
             "double": [0.375, -1.5],
             "int32": [42, 24],
             "int64": [12345678910, -987654321],
@@ -252,6 +256,7 @@
         "field": {
           "string": "string",
           "boolean": true,
+          "float": 0.1875,
           "double": 0.375,
           "int32": 42,
           "int64": 12345678910,
@@ -268,6 +273,7 @@
         "field": {
           "string": "string",
           "boolean": true,
+          "float": 0.1875,
           "double": 0.375,
           "int32": 42,
           "int64": 12345678910,
@@ -287,6 +293,7 @@
       "request": {
         "string": "string",
         "boolean": true,
+        "float": 0.1875,
         "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
@@ -297,6 +304,7 @@
       "response": {
         "string": "string",
         "boolean": true,
+        "float": 0.1875,
         "double": 0.375,
         "int32": 42,
         "int64": 12345678910,
@@ -319,6 +327,7 @@
           "map": {
             "string": { "": "string", " ": "\n" },
             "boolean": { "": true, " ": false },
+            "float": { "": 0.1875, " ": -0.75 },
             "double": { "": 0.375, " ": -1.5 },
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
@@ -341,6 +350,7 @@
           "map": {
             "string": { "": "string", " ": "\n" },
             "boolean": { "": true, " ": false },
+            "float": { "": 0.1875, " ": -0.75 },
             "double": { "": 0.375, " ": -1.5 },
             "int32": { "": 42, " ": 24 },
             "int64": { "": 12345678910, " ": -987654321 },
@@ -367,6 +377,7 @@
           "nullable": {
             "string": "string",
             "boolean": true,
+            "float": 0.1875,
             "double": 0.375,
             "int32": 42,
             "int64": 12345678910,
@@ -388,6 +399,7 @@
           "nullable": {
             "string": "string",
             "boolean": true,
+            "float": 0.1875,
             "double": 0.375,
             "int32": 42,
             "int64": 12345678910,
@@ -429,6 +441,7 @@
           "nullable": {
             "string": null,
             "boolean": null,
+            "float": null,
             "double": null,
             "int32": null,
             "int64": null,
@@ -450,6 +463,7 @@
           "nullable": {
             "string": null,
             "boolean": null,
+            "float": null,
             "double": null,
             "int32": null,
             "int64": null,
@@ -475,6 +489,7 @@
           "result": {
             "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "float": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -496,6 +511,7 @@
           "result": {
             "string": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "boolean": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
+            "float": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "double": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int32": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
             "int64": { "error": { "code": "code", "message": "message", "innerError": { "code": "code" }, "details": { "": null, " ": [null] } } },
@@ -521,6 +537,7 @@
           "result": {
             "string": { "value": "string" },
             "boolean": { "value": true },
+            "float": { "value": 0.1875 },
             "double": { "value": 0.375 },
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
@@ -543,6 +560,7 @@
           "result": {
             "string": { "value": "string" },
             "boolean": { "value": true },
+            "float": { "value": 0.1875 },
             "double": { "value": 0.375 },
             "int32": { "value": 42 },
             "int64": { "value": 12345678910 },
@@ -785,11 +803,12 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKPATH/pathCase/true/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
+        "path": "/CHECKPATH/pathCase/true/0.75/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "pathCase",
         "boolean": true,
+        "float": 0.75,
         "double": 1.5,
         "int32": 3,
         "int64": 4,
@@ -804,11 +823,12 @@
       "method": "checkPath",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkPath/booleanCase/TRUE/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
+        "path": "/checkPath/booleanCase/TRUE/0.75/1.5/3/4/0.625/yes/2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "booleanCase",
         "boolean": true,
+        "float": 0.75,
         "double": 1.5,
         "int32": 3,
         "int64": 4,
@@ -823,11 +843,12 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/CHECKQUERY?string=pathCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
+        "path": "/CHECKQUERY?string=pathCase&boolean=true&float=0.75&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "pathCase",
         "boolean": true,
+        "float": 0.75,
         "double": 1.5,
         "int32": 3,
         "int64": 4,
@@ -842,11 +863,12 @@
       "method": "checkQuery",
       "httpRequest": {
         "method": "GET",
-        "path": "/checkQuery?STRING=queryCase&boolean=true&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
+        "path": "/checkQuery?STRING=queryCase&boolean=true&float=0.75&double=1.5&int32=3&int64=4&decimal=0.625&enum=yes&datetime=2001-02-03T04:05:06Z"
       },
       "request": {
         "string": "queryCase",
         "boolean": true,
+        "float": 0.75,
         "double": 1.5,
         "int32": 3,
         "int64": 4,

@@ -291,6 +291,7 @@ namespace Facility.ConformanceApi.Http
 					{
 						{ "string", request.String },
 						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
+						{ "float", request.Float == null ? null : request.Float.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
@@ -304,6 +305,8 @@ namespace Facility.ConformanceApi.Http
 					request.String = queryParameterString;
 					parameters.TryGetValue("boolean", out var queryParameterBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
+					parameters.TryGetValue("float", out var queryParameterFloat);
+					request.Float = ServiceDataUtility.TryParseFloat(queryParameterFloat);
 					parameters.TryGetValue("double", out var queryParameterDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
 					parameters.TryGetValue("int32", out var queryParameterInt32);
@@ -331,13 +334,15 @@ namespace Facility.ConformanceApi.Http
 			new HttpMethodMapping<CheckPathRequestDto, CheckPathResponseDto>.Builder
 			{
 				HttpMethod = HttpMethod.Get,
-				Path = "/checkPath/{string}/{boolean}/{double}/{int32}/{int64}/{decimal}/{enum}/{datetime}",
+				Path = "/checkPath/{string}/{boolean}/{float}/{double}/{int32}/{int64}/{decimal}/{enum}/{datetime}",
 				ValidateRequest = request =>
 				{
 					if (string.IsNullOrEmpty(request.String))
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("string"));
 					if (request.Boolean == null)
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("boolean"));
+					if (request.Float == null)
+						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("float"));
 					if (request.Double == null)
 						return ServiceResult.Failure(ServiceErrors.CreateRequestFieldRequired("double"));
 					if (request.Int32 == null)
@@ -357,6 +362,7 @@ namespace Facility.ConformanceApi.Http
 					{
 						{ "string", request.String },
 						{ "boolean", request.Boolean == null ? null : request.Boolean.Value.ToString() },
+						{ "float", request.Float == null ? null : request.Float.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "double", request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "int32", request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture) },
 						{ "int64", request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture) },
@@ -370,6 +376,8 @@ namespace Facility.ConformanceApi.Http
 					request.String = queryParameterString;
 					parameters.TryGetValue("boolean", out var queryParameterBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(queryParameterBoolean);
+					parameters.TryGetValue("float", out var queryParameterFloat);
+					request.Float = ServiceDataUtility.TryParseFloat(queryParameterFloat);
 					parameters.TryGetValue("double", out var queryParameterDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(queryParameterDouble);
 					parameters.TryGetValue("int32", out var queryParameterInt32);
@@ -403,6 +411,7 @@ namespace Facility.ConformanceApi.Http
 					{
 						["string"] = request.String,
 						["boolean"] = request.Boolean == null ? null : request.Boolean.Value.ToString(),
+						["float"] = request.Float == null ? null : request.Float.Value.ToString(CultureInfo.InvariantCulture),
 						["double"] = request.Double == null ? null : request.Double.Value.ToString(CultureInfo.InvariantCulture),
 						["int32"] = request.Int32 == null ? null : request.Int32.Value.ToString(CultureInfo.InvariantCulture),
 						["int64"] = request.Int64 == null ? null : request.Int64.Value.ToString(CultureInfo.InvariantCulture),
@@ -416,6 +425,8 @@ namespace Facility.ConformanceApi.Http
 					request.String = headerString;
 					headers.TryGetValue("boolean", out var headerBoolean);
 					request.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
+					headers.TryGetValue("float", out var headerFloat);
+					request.Float = ServiceDataUtility.TryParseFloat(headerFloat);
 					headers.TryGetValue("double", out var headerDouble);
 					request.Double = ServiceDataUtility.TryParseDouble(headerDouble);
 					headers.TryGetValue("int32", out var headerInt32);
@@ -442,6 +453,7 @@ namespace Facility.ConformanceApi.Http
 					{
 						["string"] = response.String,
 						["boolean"] = response.Boolean == null ? null : response.Boolean.Value.ToString(),
+						["float"] = response.Float == null ? null : response.Float.Value.ToString(CultureInfo.InvariantCulture),
 						["double"] = response.Double == null ? null : response.Double.Value.ToString(CultureInfo.InvariantCulture),
 						["int32"] = response.Int32 == null ? null : response.Int32.Value.ToString(CultureInfo.InvariantCulture),
 						["int64"] = response.Int64 == null ? null : response.Int64.Value.ToString(CultureInfo.InvariantCulture),
@@ -455,6 +467,8 @@ namespace Facility.ConformanceApi.Http
 					response.String = headerString;
 					headers.TryGetValue("boolean", out var headerBoolean);
 					response.Boolean = ServiceDataUtility.TryParseBoolean(headerBoolean);
+					headers.TryGetValue("float", out var headerFloat);
+					response.Float = ServiceDataUtility.TryParseFloat(headerFloat);
 					headers.TryGetValue("double", out var headerDouble);
 					response.Double = ServiceDataUtility.TryParseDouble(headerDouble);
 					headers.TryGetValue("int32", out var headerInt32);
