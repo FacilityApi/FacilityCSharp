@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Headers;
@@ -8,7 +9,7 @@ namespace Facility.Core.Http;
 /// <summary>
 /// A service HTTP handler.
 /// </summary>
-public abstract class ServiceHttpHandler : DelegatingHandler
+public abstract partial class ServiceHttpHandler : DelegatingHandler
 {
 	/// <summary>
 	/// Attempts to handle the HTTP request.
@@ -427,14 +428,17 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 
 		if (routePath.IndexOfOrdinal('{') != -1)
 		{
-			// ReSharper disable once RedundantEnumerableCastCall (needed for .NET Standard 2.0)
-			var names = s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
-			var regexPattern = Regex.Escape(routePath);
-			foreach (var name in names)
-				regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
-			regexPattern = "^(?:" + regexPattern + ")$";
-			var match = new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).Match(requestPath);
-			return match.Success ? names.ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
+			var regex = s_routePathRegexes.GetOrAdd(routePath, path =>
+			{
+				var regexPattern = Regex.Escape(path);
+				foreach (var name in s_regexPathParameterRegex.Matches(path).Cast<Match>().Select(x => x.Groups[1].ToString()))
+					regexPattern = regexPattern.ReplaceOrdinal("\\{" + name + "}", "(?'" + name + "'[^/]+)");
+				regexPattern = "^(?:" + regexPattern + ")$";
+				return new Regex(regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+			});
+
+			var match = regex.Match(requestPath);
+			return match.Success ? regex.GetGroupNames().Skip(1).ToDictionary(name => name, name => Uri.UnescapeDataString(match.Groups[name].ToString())) : null;
 		}
 
 		if (string.Equals(requestPath, routePath, StringComparison.OrdinalIgnoreCase))
@@ -508,12 +512,24 @@ public abstract class ServiceHttpHandler : DelegatingHandler
 		m_contentSerializer;
 
 	private static readonly IReadOnlyDictionary<string, string> s_emptyDictionary = new Dictionary<string, string>();
-	private static readonly Regex s_regexPathParameterRegex = new("""\{([a-zA-Z][a-zA-Z0-9]*)\}""", RegexOptions.CultureInvariant);
 	private static readonly char[] s_equalSign = ['='];
 
 	private static readonly ReadOnlyMemory<byte> s_dataPrefix = "data: "u8.ToArray();
 	private static readonly ReadOnlyMemory<byte> s_errorEventLine = "event: error\n"u8.ToArray();
 	private static readonly ReadOnlyMemory<byte> s_twoNewlines = "\n\n"u8.ToArray();
+
+	private static readonly ConcurrentDictionary<string, Regex> s_routePathRegexes = new();
+
+	private const string c_pathParameterRegexPattern = """\{([a-zA-Z][a-zA-Z0-9]*)\}""";
+
+#if NETSTANDARD2_0
+	private static readonly Regex s_regexPathParameterRegex = new Regex(c_pathParameterRegexPattern);
+#else
+	[GeneratedRegex(c_pathParameterRegexPattern, RegexOptions.CultureInvariant)]
+	private static partial Regex PathParameterRegex();
+
+	private static readonly Regex s_regexPathParameterRegex = PathParameterRegex();
+#endif
 
 	private readonly string m_rootPath;
 	private readonly bool m_synchronous;

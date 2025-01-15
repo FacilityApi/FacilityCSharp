@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.31.1
+
+* Cache route path regexes.
+
 ## 2.31.0
 
 * Support `float` data type.
