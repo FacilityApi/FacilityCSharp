@@ -53,17 +53,36 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
-	public override Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken)
+	public override async Task ToStreamAsync(object? value, Stream stream, CancellationToken cancellationToken)
 	{
-		ToStream(value, stream);
-		return Task.CompletedTask;
+		// avoid sync I/O when async I/O is expected
+		using var memoryStream = new MemoryStream();
+		ToStream(value, memoryStream);
+		memoryStream.Position = 0;
+
+#if !NETSTANDARD2_0
+		await memoryStream.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+#else
+		await memoryStream.CopyToAsync(stream).ConfigureAwait(false);
+#endif
 	}
 
 	/// <summary>
 	/// Deserializes a value from JSON.
 	/// </summary>
-	public override Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken) =>
-		Task.FromResult(FromStream(stream, type));
+	public override async Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken)
+	{
+		// avoid sync I/O when async I/O is expected
+		using var memoryStream = new MemoryStream();
+#if !NETSTANDARD2_0
+		await stream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+#else
+		await stream.CopyToAsync(memoryStream).ConfigureAwait(false);
+#endif
+		memoryStream.Position = 0;
+
+		return FromStream(memoryStream, type);
+	}
 
 	/// <summary>
 	/// Serializes a value to JSON.
@@ -104,7 +123,9 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 
 	private static void ToJsonTextWriter(object? value, TextWriter textWriter)
 	{
-		using var jsonTextWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.None, CloseOutput = false };
+		using var jsonTextWriter = new JsonTextWriter(textWriter);
+		jsonTextWriter.Formatting = Formatting.None;
+		jsonTextWriter.CloseOutput = false;
 		ToJsonWriter(value, jsonTextWriter);
 	}
 
