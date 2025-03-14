@@ -123,7 +123,9 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 
 	private static void ToJsonTextWriter(object? value, TextWriter textWriter)
 	{
-		using var jsonTextWriter = new JsonTextWriter(textWriter) { Formatting = Formatting.None, CloseOutput = false };
+		using var jsonTextWriter = new JsonTextWriter(textWriter);
+		jsonTextWriter.Formatting = Formatting.None;
+		jsonTextWriter.CloseOutput = false;
 		ToJsonWriter(value, jsonTextWriter);
 	}
 
