@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.31.2
+
+* Avoid sync I/O when async I/O is expected in `NewtonsoftJsonServiceSerializer`. (Switching to `SystemTextJsonServiceSerializer` is highly recommended.)
+
 ## 2.31.1
 
 * Cache route path regexes.
