@@ -14,4 +14,9 @@ public sealed class HttpClientServiceDefaults
 	/// The default content serializer.
 	/// </summary>
 	public HttpContentSerializer? ContentSerializer { get; set; }
+
+	/// <summary>
+	/// True to compress all requests by default.
+	/// </summary>
+	public bool? CompressRequests { get; set; }
 }

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
@@ -20,6 +21,7 @@ public abstract class HttpClientService
 
 		m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 		m_aspects = settings.Aspects;
+		m_shouldCompressRequest = settings.ShouldCompressRequest ?? ((defaults.CompressRequests ?? false) ? (_ => true) : (_ => false));
 		m_synchronous = settings.Synchronous;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
@@ -101,8 +103,66 @@ public abstract class HttpClientService
 			{
 				var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 				httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
-				if (m_disableChunkedTransfer)
+				if (m_shouldCompressRequest(request))
+					httpRequest.Content = await CompressContentAsync(httpRequest.Content, cancellationToken).ConfigureAwait(false);
+				else if (m_disableChunkedTransfer)
 					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
+
+				async static Task<HttpContent> CompressContentAsync(HttpContent httpContent, CancellationToken cancellationToken)
+				{
+					Stream? contentStream = null;
+					Stream? compressedContentStream = null;
+
+					try
+					{
+						// copy the existing HTTP content into a memory stream
+						contentStream = new MemoryStream();
+#if NET5_0_OR_GREATER
+						await httpContent.CopyToAsync(contentStream, cancellationToken).ConfigureAwait(false);
+#else
+						await httpContent.CopyToAsync(contentStream).ConfigureAwait(false);
+#endif
+						contentStream.Position = 0;
+
+						// compress that memory stream with gzip
+						compressedContentStream = new MemoryStream();
+						using (var gzipStream = new GZipStream(compressedContentStream, CompressionLevel.Optimal, leaveOpen: true))
+						using (var bufferedStream = new BufferedStream(gzipStream, 8192))
+						{
+#pragma warning disable CA1849 // Deliberately using synchronous copy for CPU-bound operation
+							contentStream.CopyTo(bufferedStream);
+#pragma warning restore CA1849 // Call async methods when in an async method
+						}
+
+						contentStream.Position = 0;
+						compressedContentStream.Position = 0;
+
+						// use the compressed result if it's fewer bytes to send
+						var useCompressedContent = compressedContentStream.Length < contentStream.Length;
+
+						// always construct a new HttpContent object (because we consumed the Stream from the original one)
+						var newHttpContent = new StreamContent(useCompressedContent ? compressedContentStream : contentStream);
+						if (useCompressedContent)
+							compressedContentStream = null;
+						else
+							contentStream = null;
+
+						// copy the headers from the original HttpContent object, adding Content-Encoding if compressed
+						foreach (var header in httpContent.Headers)
+							newHttpContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
+						if (useCompressedContent)
+							newHttpContent.Headers.ContentEncoding.Add("gzip");
+
+						return newHttpContent;
+					}
+					finally
+					{
+#pragma warning disable CA1849 // No need to asynchronously dispose a MemoryStream
+						contentStream?.Dispose();
+						compressedContentStream?.Dispose();
+#pragma warning restore CA1849 // Call async methods when in an async method
+					}
+				}
 			}
 
 			// send the HTTP request and get the HTTP response
@@ -472,6 +532,7 @@ public abstract class HttpClientService
 
 	private readonly HttpClient m_httpClient;
 	private readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
+	private readonly Func<ServiceDto, bool> m_shouldCompressRequest;
 	private readonly bool m_synchronous;
 	private readonly bool m_skipRequestValidation;
 	private readonly bool m_skipResponseValidation;
