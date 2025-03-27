@@ -31,11 +31,11 @@ public sealed class HttpClientServiceSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
-	/// An optional callback function that determines if a request should be compressed.
+	/// True to compress HTTP request bodies (default false).
 	/// </summary>
-	/// <remarks>Request bodies will be compressed with <c>Content-Encoding: gzip</c>. Even when this callback
-	/// returns <c>true</c>, the request may be sent uncompressed if compressing would make it larger.</remarks>
-	public Func<ServiceDto, bool>? ShouldCompressRequest { get; set; }
+	/// <remarks>Request bodies will be compressed with <c>Content-Encoding: gzip</c>. Even when this property
+	/// has been set to <c>true</c>, the request may be sent uncompressed if compressing would make it larger.</remarks>
+	public bool? CompressRequests { get; set; }
 
 	/// <summary>
 	/// True to disable chunked transfer encoding (default false).

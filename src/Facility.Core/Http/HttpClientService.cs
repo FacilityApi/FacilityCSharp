@@ -21,7 +21,7 @@ public abstract class HttpClientService
 
 		m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 		m_aspects = settings.Aspects;
-		m_shouldCompressRequest = settings.ShouldCompressRequest ?? ((defaults.CompressRequests ?? false) ? (_ => true) : (_ => false));
+		m_enableRequestCompression = settings.CompressRequests ?? defaults.CompressRequests;
 		m_synchronous = settings.Synchronous;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
@@ -103,9 +103,9 @@ public abstract class HttpClientService
 			{
 				var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 				httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
-				if (m_shouldCompressRequest(request))
+				if (m_enableRequestCompression)
 					httpRequest.Content = await CompressContentAsync(httpRequest.Content, cancellationToken).ConfigureAwait(false);
-				else if (m_disableChunkedTransfer)
+				if (m_disableChunkedTransfer)
 					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 
 				async static Task<HttpContent> CompressContentAsync(HttpContent httpContent, CancellationToken cancellationToken)
@@ -115,7 +115,7 @@ public abstract class HttpClientService
 
 					try
 					{
-						// copy the existing HTTP content into a memory stream
+						// copy the existing HTTP content into a memory stream; we will use this MemoryStream as the request body if compressing fails
 						contentStream = new MemoryStream();
 #if NET5_0_OR_GREATER
 						await httpContent.CopyToAsync(contentStream, cancellationToken).ConfigureAwait(false);
@@ -161,6 +161,7 @@ public abstract class HttpClientService
 						contentStream?.Dispose();
 						compressedContentStream?.Dispose();
 #pragma warning restore CA1849 // Call async methods when in an async method
+						httpContent.Dispose();
 					}
 				}
 			}
@@ -532,7 +533,7 @@ public abstract class HttpClientService
 
 	private readonly HttpClient m_httpClient;
 	private readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
-	private readonly Func<ServiceDto, bool> m_shouldCompressRequest;
+	private readonly bool m_enableRequestCompression;
 	private readonly bool m_synchronous;
 	private readonly bool m_skipRequestValidation;
 	private readonly bool m_skipResponseValidation;

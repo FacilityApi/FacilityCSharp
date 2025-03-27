@@ -18,5 +18,5 @@ public sealed class HttpClientServiceDefaults
 	/// <summary>
 	/// True to compress all requests by default.
 	/// </summary>
-	public bool? CompressRequests { get; set; }
+	public bool CompressRequests { get; set; }
 }
