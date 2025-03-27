@@ -23,6 +23,11 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	public bool UseNullableReferences { get; set; }
 
 	/// <summary>
+	/// True if the code should compress HTTP requests.
+	/// </summary>
+	public bool CompressRequests { get; set; }
+
+	/// <summary>
 	/// True if C# names should automatically use PascalCase instead of snake case.
 	/// </summary>
 	public bool FixSnakeCase { get; set; }
