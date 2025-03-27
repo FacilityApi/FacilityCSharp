@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
@@ -104,66 +105,9 @@ public abstract class HttpClientService
 				var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 				httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
 				if (m_enableRequestCompression)
-					httpRequest.Content = await CompressContentAsync(httpRequest.Content, cancellationToken).ConfigureAwait(false);
+					httpRequest.Content = new CompressingHttpContent(httpRequest.Content);
 				if (m_disableChunkedTransfer)
 					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
-
-				async static Task<HttpContent> CompressContentAsync(HttpContent httpContent, CancellationToken cancellationToken)
-				{
-					Stream? contentStream = null;
-					Stream? compressedContentStream = null;
-
-					try
-					{
-						// copy the existing HTTP content into a memory stream; we will use this MemoryStream as the request body if compressing fails
-						contentStream = new MemoryStream();
-#if NET5_0_OR_GREATER
-						await httpContent.CopyToAsync(contentStream, cancellationToken).ConfigureAwait(false);
-#else
-						await httpContent.CopyToAsync(contentStream).ConfigureAwait(false);
-#endif
-						contentStream.Position = 0;
-
-						// compress that memory stream with gzip
-						compressedContentStream = new MemoryStream();
-						using (var gzipStream = new GZipStream(compressedContentStream, CompressionLevel.Optimal, leaveOpen: true))
-						using (var bufferedStream = new BufferedStream(gzipStream, 8192))
-						{
-#pragma warning disable CA1849 // Deliberately using synchronous copy for CPU-bound operation
-							contentStream.CopyTo(bufferedStream);
-#pragma warning restore CA1849 // Call async methods when in an async method
-						}
-
-						contentStream.Position = 0;
-						compressedContentStream.Position = 0;
-
-						// use the compressed result if it's fewer bytes to send
-						var useCompressedContent = compressedContentStream.Length < contentStream.Length;
-
-						// always construct a new HttpContent object (because we consumed the Stream from the original one)
-						var newHttpContent = new StreamContent(useCompressedContent ? compressedContentStream : contentStream);
-						if (useCompressedContent)
-							compressedContentStream = null;
-						else
-							contentStream = null;
-
-						// copy the headers from the original HttpContent object, adding Content-Encoding if compressed
-						foreach (var header in httpContent.Headers)
-							newHttpContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
-						if (useCompressedContent)
-							newHttpContent.Headers.ContentEncoding.Add("gzip");
-
-						return newHttpContent;
-					}
-					finally
-					{
-#pragma warning disable CA1849 // No need to asynchronously dispose a MemoryStream
-						contentStream?.Dispose();
-						compressedContentStream?.Dispose();
-#pragma warning restore CA1849 // Call async methods when in an async method
-						httpContent.Dispose();
-					}
-				}
 			}
 
 			// send the HTTP request and get the HTTP response
@@ -528,6 +472,62 @@ public abstract class HttpClientService
 		HttpServiceUtility.UsesBytesSerializer(objectType) ? BytesSerializer :
 		HttpServiceUtility.UsesTextSerializer(objectType) ? TextSerializer :
 		ContentSerializer;
+
+	private sealed class CompressingHttpContent : HttpContent
+	{
+		public CompressingHttpContent(HttpContent baseContent)
+		{
+			m_baseContent = baseContent;
+			foreach (var header in baseContent.Headers)
+				Headers.TryAddWithoutValidation(header.Key, header.Value);
+			Headers.ContentEncoding.Add("gzip");
+		}
+
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+			DoSerializeToStreamAsync(stream, CancellationToken.None);
+
+#if NET8_0_OR_GREATER
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken) =>
+			DoSerializeToStreamAsync(stream, cancellationToken);
+#endif
+
+		private async Task DoSerializeToStreamAsync(Stream stream, CancellationToken cancellationToken)
+		{
+#if NET5_0_OR_GREATER
+			using var baseContentStream = await m_baseContent.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+#else
+			using var baseContentStream = await m_baseContent.ReadAsStreamAsync().ConfigureAwait(false);
+#endif
+			using var gzipStream = new GZipStream(stream, CompressionLevel.Optimal, leaveOpen: true);
+			using var bufferedStream = new BufferedStream(gzipStream, 8192);
+#if NETCOREAPP2_1_OR_GREATER
+			await baseContentStream.CopyToAsync(bufferedStream, cancellationToken).ConfigureAwait(false);
+#else
+			await baseContentStream.CopyToAsync(bufferedStream, 8192, cancellationToken).ConfigureAwait(false);
+#endif
+		}
+
+		protected override bool TryComputeLength(out long length)
+		{
+			length = -1L;
+			return false;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			try
+			{
+				if (disposing)
+					m_baseContent.Dispose();
+			}
+			finally
+			{
+				base.Dispose(disposing);
+			}
+		}
+
+		private readonly HttpContent m_baseContent;
+	}
 
 	private static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
