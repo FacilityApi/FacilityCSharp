@@ -73,7 +73,7 @@ public sealed class HttpClientServiceSettings
 		ContentSerializer = ContentSerializer,
 		BytesSerializer = BytesSerializer,
 		TextSerializer = TextSerializer,
-		ShouldCompressRequest = ShouldCompressRequest,
+		CompressRequests = CompressRequests,
 		DisableChunkedTransfer = DisableChunkedTransfer,
 		Aspects = Aspects?.ToList(),
 		Synchronous = Synchronous,
