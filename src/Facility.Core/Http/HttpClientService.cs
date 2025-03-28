@@ -479,7 +479,13 @@ public abstract class HttpClientService
 		{
 			m_baseContent = baseContent;
 			foreach (var header in baseContent.Headers)
-				Headers.TryAddWithoutValidation(header.Key, header.Value);
+			{
+				// remove Content-Length header, if present, as it will change
+				if (!header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase))
+					Headers.TryAddWithoutValidation(header.Key, header.Value);
+			}
+
+			Headers.ContentEncoding.Clear();
 			Headers.ContentEncoding.Add("gzip");
 		}
 
