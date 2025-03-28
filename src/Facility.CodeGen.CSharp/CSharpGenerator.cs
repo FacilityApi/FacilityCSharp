@@ -45,6 +45,11 @@ public sealed class CSharpGenerator : CodeGenerator
 	public bool UseNullableReferences { get; set; }
 
 	/// <summary>
+	/// True if the code should compress HTTP requests.
+	/// </summary>
+	public bool CompressRequests { get; set; }
+
+	/// <summary>
 	/// True if C# names should automatically use PascalCase instead of snake case.
 	/// </summary>
 	public bool FixSnakeCase { get; set; }
@@ -132,6 +137,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		NamespaceName = csharpSettings.NamespaceName;
 		DefaultNamespaceName = csharpSettings.DefaultNamespaceName;
 		UseNullableReferences = csharpSettings.UseNullableReferences;
+		CompressRequests = csharpSettings.CompressRequests;
 		FixSnakeCase = csharpSettings.FixSnakeCase;
 		SupportMessagePack = csharpSettings.SupportMessagePack;
 		SupportJsonSourceGeneration = csharpSettings.SupportJsonSourceGeneration;
@@ -1159,6 +1165,9 @@ public sealed class CSharpGenerator : CodeGenerator
 							code.WriteLine($"BaseUri = new Uri({CSharpUtility.CreateString(url)}),");
 
 						WriteContentSerializerPropertyInitializer(code, fullServiceName);
+
+						if (CompressRequests)
+							code.WriteLine("CompressRequests = true,");
 					}
 				}
 			}

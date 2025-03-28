@@ -17,6 +17,7 @@ public class HttpClientServiceSettingsTests
 			ContentSerializer = HttpContentSerializer.Create(SystemTextJsonServiceSerializer.Instance),
 			BytesSerializer = BytesHttpContentSerializer.Instance,
 			TextSerializer = TextHttpContentSerializer.Instance,
+			CompressRequests = true,
 			DisableChunkedTransfer = true,
 			Aspects = [],
 			Synchronous = true,

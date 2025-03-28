@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Compression;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
@@ -20,6 +22,7 @@ public abstract class HttpClientService
 
 		m_httpClient = settings.HttpClient ?? s_defaultHttpClient;
 		m_aspects = settings.Aspects;
+		m_enableRequestCompression = settings.CompressRequests ?? defaults.CompressRequests;
 		m_synchronous = settings.Synchronous;
 		m_skipRequestValidation = settings.SkipRequestValidation;
 		m_skipResponseValidation = settings.SkipResponseValidation;
@@ -101,6 +104,8 @@ public abstract class HttpClientService
 			{
 				var contentType = mapping.RequestBodyContentType ?? requestHeaders?.GetContentType();
 				httpRequest.Content = GetHttpContentSerializer(requestBody.GetType()).CreateHttpContent(requestBody, contentType);
+				if (m_enableRequestCompression)
+					httpRequest.Content = new CompressingHttpContent(httpRequest.Content);
 				if (m_disableChunkedTransfer)
 					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
 			}
@@ -468,10 +473,73 @@ public abstract class HttpClientService
 		HttpServiceUtility.UsesTextSerializer(objectType) ? TextSerializer :
 		ContentSerializer;
 
+	private sealed class CompressingHttpContent : HttpContent
+	{
+		public CompressingHttpContent(HttpContent baseContent)
+		{
+			m_baseContent = baseContent;
+			foreach (var header in baseContent.Headers)
+			{
+				// remove Content-Length header, if present, as it will change
+				if (!header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase))
+					Headers.TryAddWithoutValidation(header.Key, header.Value);
+			}
+
+			Headers.ContentEncoding.Clear();
+			Headers.ContentEncoding.Add("gzip");
+		}
+
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+			DoSerializeToStreamAsync(stream, CancellationToken.None);
+
+#if NET8_0_OR_GREATER
+		protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken) =>
+			DoSerializeToStreamAsync(stream, cancellationToken);
+#endif
+
+		private async Task DoSerializeToStreamAsync(Stream stream, CancellationToken cancellationToken)
+		{
+#if NET5_0_OR_GREATER
+			using var baseContentStream = await m_baseContent.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+#else
+			using var baseContentStream = await m_baseContent.ReadAsStreamAsync().ConfigureAwait(false);
+#endif
+			using var gzipStream = new GZipStream(stream, CompressionLevel.Optimal, leaveOpen: true);
+			using var bufferedStream = new BufferedStream(gzipStream, 8192);
+#if NETCOREAPP2_1_OR_GREATER
+			await baseContentStream.CopyToAsync(bufferedStream, cancellationToken).ConfigureAwait(false);
+#else
+			await baseContentStream.CopyToAsync(bufferedStream, 8192, cancellationToken).ConfigureAwait(false);
+#endif
+		}
+
+		protected override bool TryComputeLength(out long length)
+		{
+			length = -1L;
+			return false;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			try
+			{
+				if (disposing)
+					m_baseContent.Dispose();
+			}
+			finally
+			{
+				base.Dispose(disposing);
+			}
+		}
+
+		private readonly HttpContent m_baseContent;
+	}
+
 	private static readonly HttpClient s_defaultHttpClient = HttpServiceUtility.CreateHttpClient();
 
 	private readonly HttpClient m_httpClient;
 	private readonly IReadOnlyList<HttpClientServiceAspect>? m_aspects;
+	private readonly bool m_enableRequestCompression;
 	private readonly bool m_synchronous;
 	private readonly bool m_skipRequestValidation;
 	private readonly bool m_skipResponseValidation;

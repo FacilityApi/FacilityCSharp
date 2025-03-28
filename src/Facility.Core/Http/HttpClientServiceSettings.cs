@@ -31,6 +31,12 @@ public sealed class HttpClientServiceSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
+	/// True to compress HTTP request bodies; false to not compress. The default is API-specific.
+	/// </summary>
+	/// <remarks>Request bodies will be compressed with <c>Content-Encoding: gzip</c>.</remarks>
+	public bool? CompressRequests { get; set; }
+
+	/// <summary>
 	/// True to disable chunked transfer encoding (default false).
 	/// </summary>
 	/// <remarks>If true, the response is serialized into memory before sending it to the service.</remarks>
@@ -66,6 +72,7 @@ public sealed class HttpClientServiceSettings
 		ContentSerializer = ContentSerializer,
 		BytesSerializer = BytesSerializer,
 		TextSerializer = TextSerializer,
+		CompressRequests = CompressRequests,
 		DisableChunkedTransfer = DisableChunkedTransfer,
 		Aspects = Aspects?.ToList(),
 		Synchronous = Synchronous,
