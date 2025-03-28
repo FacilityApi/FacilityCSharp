@@ -31,10 +31,9 @@ public sealed class HttpClientServiceSettings
 	public HttpContentSerializer? TextSerializer { get; set; }
 
 	/// <summary>
-	/// True to compress HTTP request bodies (default false).
+	/// True to compress HTTP request bodies; false to not compress. The default is API-specific.
 	/// </summary>
-	/// <remarks>Request bodies will be compressed with <c>Content-Encoding: gzip</c>. Even when this property
-	/// has been set to <c>true</c>, the request may be sent uncompressed if compressing would make it larger.</remarks>
+	/// <remarks>Request bodies will be compressed with <c>Content-Encoding: gzip</c>.</remarks>
 	public bool? CompressRequests { get; set; }
 
 	/// <summary>
