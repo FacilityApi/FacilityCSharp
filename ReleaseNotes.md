@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.32.0
+
+* Add setting to compress HTTP request bodies with `Content-Encoding: gzip`.
+* Add `--compress-requests` command-line option to `fsdgencsharp`.
+
 ## 2.31.2
 
 * Avoid sync I/O when async I/O is expected in `NewtonsoftJsonServiceSerializer`. (Switching to `SystemTextJsonServiceSerializer` is highly recommended.)
