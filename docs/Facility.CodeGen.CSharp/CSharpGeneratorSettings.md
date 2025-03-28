@@ -11,6 +11,7 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 | name | description |
 | --- | --- |
 | [CSharpGeneratorSettings](CSharpGeneratorSettings/CSharpGeneratorSettings.md)() | The default constructor. |
+| [CompressRequests](CSharpGeneratorSettings/CompressRequests.md) { get; set; } | True if the code should compress HTTP requests. |
 | [DefaultNamespaceName](CSharpGeneratorSettings/DefaultNamespaceName.md) { get; set; } | The default name of the namespace (optional). Does not override the csharp FSD attribute. |
 | [FixSnakeCase](CSharpGeneratorSettings/FixSnakeCase.md) { get; set; } | True if C# names should automatically use PascalCase instead of snake case. |
 | [JsonSourceGenerationCondition](CSharpGeneratorSettings/JsonSourceGenerationCondition.md) { get; set; } | The `#if` condition used around the source generated for `System.Text.Json`. |

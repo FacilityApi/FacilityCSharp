@@ -12,6 +12,7 @@ public sealed class HttpClientServiceDefaults
 | --- | --- |
 | [HttpClientServiceDefaults](HttpClientServiceDefaults/HttpClientServiceDefaults.md)() | The default constructor. |
 | [BaseUri](HttpClientServiceDefaults/BaseUri.md) { get; set; } | The default base URI of the service. |
+| [CompressRequests](HttpClientServiceDefaults/CompressRequests.md) { get; set; } | True to compress all requests by default. |
 | [ContentSerializer](HttpClientServiceDefaults/ContentSerializer.md) { get; set; } | The default content serializer. |
 
 ## See Also

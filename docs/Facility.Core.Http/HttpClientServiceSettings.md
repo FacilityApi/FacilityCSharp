@@ -14,6 +14,7 @@ public sealed class HttpClientServiceSettings
 | [Aspects](HttpClientServiceSettings/Aspects.md) { get; set; } | The aspects used when sending requests and receiving responses (optional). |
 | [BaseUri](HttpClientServiceSettings/BaseUri.md) { get; set; } | The base URI of the service (optional if the service has a default base URI). |
 | [BytesSerializer](HttpClientServiceSettings/BytesSerializer.md) { get; set; } | The content serializer used by requests and responses for bytes (optional). |
+| [CompressRequests](HttpClientServiceSettings/CompressRequests.md) { get; set; } | True to compress HTTP request bodies; false to not compress. The default is API-specific. |
 | [ContentSerializer](HttpClientServiceSettings/ContentSerializer.md) { get; set; } | The content serializer used by requests and responses (optional). |
 | [DisableChunkedTransfer](HttpClientServiceSettings/DisableChunkedTransfer.md) { get; set; } | True to disable chunked transfer encoding (default false). |
 | [HttpClient](HttpClientServiceSettings/HttpClient.md) { get; set; } | The HttpClient to use (optional). |
