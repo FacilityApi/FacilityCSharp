@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public sealed class ServiceObjectTests
+internal sealed class ServiceObjectTests
 {
 	[Test]
 	public void Equivalence([Values] bool legacy1, [Values] bool legacy2)

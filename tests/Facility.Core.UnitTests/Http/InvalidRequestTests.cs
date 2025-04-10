@@ -1,4 +1,7 @@
 using System.Net;
+#if NET472
+using System.Net.Http;
+#endif
 using System.Text;
 using Facility.ConformanceApi;
 using Facility.ConformanceApi.Http;
@@ -8,7 +11,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests.Http;
 
-public class InvalidRequestTests
+internal sealed class InvalidRequestTests
 {
 	[Test]
 	public async Task UriTooLong()

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace FacilityConformance;
 
-public sealed class FacilityConformanceApp
+internal sealed class FacilityConformanceApp
 {
 	public static async Task<int> Main(string[] args)
 	{
@@ -62,7 +62,7 @@ public sealed class FacilityConformanceApp
 
 		var serializerName = argsReader.ReadOption("serializer")?.ToLowerInvariant();
 		var serializers = serializerName?.Split(',').Select(GetServiceSerializer).ToArray() ?? s_defaultSerializers;
-		var contentSerializer = HttpContentSerializer.Combine(serializers.Select(HttpContentSerializer.Create).ToArray());
+		var contentSerializer = HttpContentSerializer.Combine([.. serializers.Select(HttpContentSerializer.Create)]);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 		if (serializerName is "obsoletejson")

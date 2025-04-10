@@ -12,7 +12,7 @@ namespace Facility.Benchmarks;
 
 [MinIterationCount(100), MaxIterationCount(10_000)]
 [MemoryDiagnoser]
-public class HttpBenchmarks
+internal sealed class HttpBenchmarks
 {
 	[ParamsSource(nameof(Serializers))]
 	public SerializerInfo Serializer { get; set; } = default!;

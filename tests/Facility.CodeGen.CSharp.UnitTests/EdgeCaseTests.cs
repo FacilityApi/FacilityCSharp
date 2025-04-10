@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.CodeGen.CSharp.UnitTests;
 
-public sealed class EdgeCaseTests
+internal sealed class EdgeCaseTests
 {
 	[Test]
 	public void GenerateEdgeCases()

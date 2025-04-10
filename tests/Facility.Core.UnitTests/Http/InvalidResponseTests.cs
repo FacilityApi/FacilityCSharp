@@ -1,4 +1,7 @@
 using System.Net;
+#if NET472
+using System.Net.Http;
+#endif
 using System.Net.Http.Headers;
 using System.Text;
 using Facility.ConformanceApi;
@@ -10,7 +13,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests.Http;
 
-public class InvalidResponseTests
+internal sealed class InvalidResponseTests
 {
 	[Test]
 	public async Task MissingContent()

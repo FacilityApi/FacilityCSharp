@@ -7,7 +7,7 @@ using Facility.Core.MessagePack;
 namespace Facility.Benchmarks;
 
 [MemoryDiagnoser]
-public class EquivalenceBenchmarks
+internal sealed class EquivalenceBenchmarks
 {
 	public EquivalenceBenchmarks()
 	{

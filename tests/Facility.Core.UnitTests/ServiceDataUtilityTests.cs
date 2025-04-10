@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Facility.Core.UnitTests;
 
 [TestFixtureSource(nameof(ServiceSerializers))]
-public sealed class ServiceDataUtilityTests : ServiceSerializerTestsBase
+internal sealed class ServiceDataUtilityTests : ServiceSerializerTestsBase
 {
 	public ServiceDataUtilityTests(ServiceSerializer serializer)
 		: base(serializer)

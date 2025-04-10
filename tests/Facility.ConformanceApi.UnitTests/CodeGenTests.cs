@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-public sealed class CodeGenTests
+internal sealed class CodeGenTests
 {
 	[Test]
 	public void GenerateConformanceApi()

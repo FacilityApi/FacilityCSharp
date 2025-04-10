@@ -6,7 +6,7 @@ using static FluentAssertions.FluentActions;
 
 namespace Facility.Core.UnitTests;
 
-public class ServiceResultTests
+internal sealed class ServiceResultTests
 {
 	[Test]
 	public void VoidSuccess()
@@ -115,20 +115,20 @@ public class ServiceResultTests
 	public void ReferenceCasts()
 	{
 		var result = ServiceResult.Success<ArgumentException>(new ArgumentNullException());
-		result.Value.GetType().Should().Be(typeof(ArgumentNullException));
-		result.Cast<ArgumentNullException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
-		result.Cast<ArgumentException>().Value.GetType().Should().Be(typeof(ArgumentNullException));
-		result.Cast<Exception>().Value.GetType().Should().Be(typeof(ArgumentNullException));
-		result.Cast<object>().Value.GetType().Should().Be(typeof(ArgumentNullException));
-		Assert.Throws<InvalidCastException>(() => result.Cast<InvalidOperationException>().Value.GetType().Should().Be(typeof(ArgumentNullException)));
+		result.Value.GetType().Should().Be<ArgumentNullException>();
+		result.Cast<ArgumentNullException>().Value.GetType().Should().Be<ArgumentNullException>();
+		result.Cast<ArgumentException>().Value.GetType().Should().Be<ArgumentNullException>();
+		result.Cast<Exception>().Value.GetType().Should().Be<ArgumentNullException>();
+		result.Cast<object>().Value.GetType().Should().Be<ArgumentNullException>();
+		Assert.Throws<InvalidCastException>(() => result.Cast<InvalidOperationException>().Value.GetType().Should().Be<ArgumentNullException>());
 	}
 
 	[Test]
 	public void ValueCasts()
 	{
 		var result = ServiceResult.Success(1L);
-		result.Value.GetType().Should().Be(typeof(long));
-		result.Cast<long>().Value.GetType().Should().Be(typeof(long));
+		result.Value.GetType().Should().Be<long>();
+		result.Cast<long>().Value.GetType().Should().Be<long>();
 		Assert.Throws<InvalidCastException>(() => result.Cast<int>().Value.Should().Be(1));
 	}
 

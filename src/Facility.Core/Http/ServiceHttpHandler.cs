@@ -181,7 +181,7 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 					var mediaType = responseMapping.ResponseBodyContentType ?? responseHeaders?.GetContentType() ?? GetAcceptedMediaType(httpRequest, serializer);
 					httpResponse.Content = serializer.CreateHttpContent(responseMapping.GetResponseBody(response!)!, mediaType);
 					if (m_disableChunkedTransfer)
-						await httpResponse.Content.LoadIntoBufferAsync().ConfigureAwait(false);
+						await httpResponse.Content.LoadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
 				}
 			}
 			else

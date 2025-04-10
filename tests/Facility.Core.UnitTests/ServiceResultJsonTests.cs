@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Facility.Core.UnitTests;
 
 [TestFixtureSource(nameof(JsonServiceSerializers))]
-public class ServiceResultJsonTests : JsonServiceSerializerTestsBase
+internal sealed class ServiceResultJsonTests : JsonServiceSerializerTestsBase
 {
 	public ServiceResultJsonTests(JsonServiceSerializer jsonSerializer)
 		: base(jsonSerializer)

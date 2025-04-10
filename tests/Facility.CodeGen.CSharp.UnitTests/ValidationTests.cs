@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Facility.CodeGen.CSharp.UnitTests;
 
-public class ValidationTests
+internal sealed class ValidationTests
 {
 	[Test]
 	public void RequestDtoGeneratesValidation()

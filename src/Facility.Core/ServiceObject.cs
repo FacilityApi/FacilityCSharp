@@ -84,7 +84,7 @@ public sealed class ServiceObject
 		m_object switch
 		{
 			JObject jObject => JToken.DeepEquals(jObject, (other.m_object as JObject) ?? other.ToJObject()),
-			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.ToJsonObject()),
+			JsonObject jsonObject => JsonNode.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.ToJsonObject()),
 			_ => throw new InvalidOperationException(),
 		};
 

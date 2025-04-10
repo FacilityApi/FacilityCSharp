@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 
 namespace Facility.Core.UnitTests;
 
 [MessagePackObject]
+[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Must be public for MessagePack.")]
 public sealed class ValueDto : ServiceDto<ValueDto>
 {
 	public static ValueDto Create(bool? value) => new ValueDto { BooleanValue = value };

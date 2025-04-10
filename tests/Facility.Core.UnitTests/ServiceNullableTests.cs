@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public class ServiceNullableTests
+internal sealed class ServiceNullableTests
 {
 	[Test]
 	public void StringField()

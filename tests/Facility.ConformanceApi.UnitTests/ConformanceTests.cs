@@ -17,7 +17,7 @@ using NUnit.Framework;
 namespace Facility.ConformanceApi.UnitTests;
 
 [TestFixtureSource(nameof(ServiceSerializers))]
-public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
+internal sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 {
 	public ConformanceTests(ServiceSerializer serializer)
 		: base(serializer)
@@ -80,7 +80,7 @@ public sealed class ConformanceTests : ServiceSerializerTestsBase, IDisposable
 			Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
 	}
 
-	private static IReadOnlyList<string> TestNames { get; } = CreateTestProvider().Select(x => x.Test!).ToList();
+	private static IReadOnlyList<string> TestNames { get; } = [.. CreateTestProvider().Select(x => x.Test!)];
 
 	private readonly IReadOnlyList<ConformanceTestInfo> m_tests;
 	private readonly HttpClient m_httpClient;

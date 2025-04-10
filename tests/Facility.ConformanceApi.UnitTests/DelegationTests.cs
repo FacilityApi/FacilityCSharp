@@ -9,7 +9,7 @@ using static FluentAssertions.FluentActions;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-public sealed class DelegationTests
+internal sealed class DelegationTests
 {
 	[Test]
 	public async Task NotImplemented()

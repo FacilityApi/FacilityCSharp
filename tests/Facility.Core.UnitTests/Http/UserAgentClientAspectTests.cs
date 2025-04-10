@@ -1,3 +1,6 @@
+#if NET472
+using System.Net.Http;
+#endif
 using Facility.Core.Http;
 using FluentAssertions;
 using NUnit.Framework;
@@ -6,7 +9,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests.Http;
 
-public class UserAgentClientAspectTests
+internal sealed class UserAgentClientAspectTests
 {
 	[Test]
 	public async Task UserAgentClientAspectWorks()

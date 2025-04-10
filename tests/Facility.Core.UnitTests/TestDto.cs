@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 
 namespace Facility.Core.UnitTests;
 
 [MessagePackObject]
-public class TestDto : ServiceDto<TestDto>
+[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Must be public for MessagePack.")]
+public sealed class TestDto : ServiceDto<TestDto>
 {
 	[Key(0)]
 	public int? Id { get; set; }

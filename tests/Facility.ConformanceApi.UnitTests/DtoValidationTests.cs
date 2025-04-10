@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace Facility.ConformanceApi.UnitTests;
 
 [TestFixtureSource(nameof(ServiceSerializers))]
-public sealed class DtoValidationTests : ServiceSerializerTestsBase
+internal sealed class DtoValidationTests : ServiceSerializerTestsBase
 {
 	public DtoValidationTests(ServiceSerializer serializer)
 		: base(serializer)

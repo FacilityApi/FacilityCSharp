@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Facility.CodeGen.CSharp.UnitTests;
 
-public sealed class CSharpGeneratorTests
+internal sealed class CSharpGeneratorTests
 {
 	[Test]
 	public void DuplicateType()

@@ -2,7 +2,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Facility.Core.UnitTests;
 
-public class LegacyObjectDto : ServiceDto<LegacyObjectDto>
+internal sealed class LegacyObjectDto : ServiceDto<LegacyObjectDto>
 {
 	public JObject? Extra { get; set; }
 
