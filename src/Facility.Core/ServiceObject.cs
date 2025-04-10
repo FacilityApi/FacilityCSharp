@@ -27,7 +27,7 @@ public sealed class ServiceObject
 	/// Creates an instance from a DTO.
 	/// </summary>
 	[return: NotNullIfNotNull(nameof(dto))]
-	public static ServiceObject? Create(ServiceDto? dto) => dto?.ToServiceObject();
+	public static ServiceObject? Create(ServiceDto? dto) => dto?.GetJsonSerializer().ToServiceObject(dto);
 
 	/// <summary>
 	/// Returns a <c>Newtonsoft.Json.Linq.JObject</c> that is temporarily associated with this <c>ServiceObject</c>.
@@ -84,7 +84,7 @@ public sealed class ServiceObject
 		m_object switch
 		{
 			JObject jObject => JToken.DeepEquals(jObject, (other.m_object as JObject) ?? other.ToJObject()),
-			JsonObject jsonObject => SystemTextJsonUtility.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.ToJsonObject()),
+			JsonObject jsonObject => JsonNode.DeepEquals(jsonObject, (other.m_object as JsonObject) ?? other.ToJsonObject()),
 			_ => throw new InvalidOperationException(),
 		};
 

@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-public sealed class EnumTests
+internal sealed class EnumTests
 {
 	[Test]
 	public void EnumPreservesCase()

@@ -1,6 +1,6 @@
 namespace Facility.Core.UnitTests;
 
-public abstract class JsonServiceSerializerTestsBase
+internal abstract class JsonServiceSerializerTestsBase
 {
 	public static IReadOnlyList<JsonServiceSerializer> JsonServiceSerializers =>
 	[

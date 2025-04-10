@@ -107,7 +107,7 @@ public abstract class HttpClientService
 				if (m_enableRequestCompression)
 					httpRequest.Content = new CompressingHttpContent(httpRequest.Content);
 				if (m_disableChunkedTransfer)
-					await httpRequest.Content.LoadIntoBufferAsync().ConfigureAwait(false);
+					await httpRequest.Content.LoadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
 			}
 
 			// send the HTTP request and get the HTTP response

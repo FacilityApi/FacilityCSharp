@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 
 namespace Facility.Core.UnitTests;
 
 [MessagePackObject]
-public sealed class ValueDto : ServiceDto<ValueDto>
+[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Must be public for MessagePack.")]
+public sealed class ValueDto : SystemTextJsonServiceDto<ValueDto>
 {
 	public static ValueDto Create(bool? value) => new ValueDto { BooleanValue = value };
 
@@ -49,16 +51,4 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 
 	[Key(8)]
 	public float? FloatValue { get; set; }
-
-	public override bool IsEquivalentTo(ValueDto? other) =>
-		other != null &&
-		BooleanValue == other.BooleanValue &&
-		StringValue == other.StringValue &&
-		ServiceDataUtility.AreEquivalentFieldValues(ErrorArrayValue, other.ErrorArrayValue) &&
-		ServiceDataUtility.AreEquivalentFieldValues(BooleanMapValue, other.BooleanMapValue) &&
-		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue) &&
-		IntegerValue == other.IntegerValue &&
-		DoubleValue.Equals(other.DoubleValue) &&
-		ServiceDataUtility.AreEquivalentDateTimes(DateTimeValue, other.DateTimeValue) &&
-		FloatValue.Equals(other.FloatValue);
 }

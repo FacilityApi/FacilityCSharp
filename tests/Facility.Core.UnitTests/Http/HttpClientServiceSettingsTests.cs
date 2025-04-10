@@ -1,11 +1,14 @@
 using System.Collections;
+#if NET472
+using System.Net.Http;
+#endif
 using Facility.Core.Http;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.Core.UnitTests.Http;
 
-public class HttpClientServiceSettingsTests
+internal sealed class HttpClientServiceSettingsTests
 {
 	[Test]
 	public async Task CloneSettings()

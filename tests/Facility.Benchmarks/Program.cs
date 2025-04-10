@@ -1,4 +1,3 @@
-﻿using BenchmarkDotNet.Running;
-using Facility.Benchmarks;
+using BenchmarkDotNet.Running;
 
-BenchmarkRunner.Run<HttpBenchmarks>();
+BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);

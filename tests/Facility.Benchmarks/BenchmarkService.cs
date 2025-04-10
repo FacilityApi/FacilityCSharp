@@ -2,7 +2,7 @@ using Facility.Core;
 
 namespace Facility.Benchmarks;
 
-public sealed class BenchmarkService : IBenchmarkService
+internal sealed class BenchmarkService : IBenchmarkService
 {
 	public BenchmarkService(UserRepository userRepository)
 	{
@@ -12,7 +12,7 @@ public sealed class BenchmarkService : IBenchmarkService
 	public async Task<ServiceResult<GetUsersResponseDto>> GetUsersAsync(GetUsersRequestDto request, CancellationToken cancellationToken = default)
 	{
 		var users = await m_userRepository.GetUsersAsync();
-		return ServiceResult.Success(new GetUsersResponseDto { Items = users.Take(request.Limit ?? 10).ToList() });
+		return ServiceResult.Success(new GetUsersResponseDto { Items = [.. users.Take(request.Limit ?? 10)] });
 	}
 
 	private readonly UserRepository m_userRepository;

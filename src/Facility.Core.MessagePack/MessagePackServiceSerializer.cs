@@ -62,6 +62,27 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Checks two values for equality by comparing serialized representations.
+	/// </summary>
+	public override bool AreEquivalent(object? value1, object? value2)
+	{
+		if (value1 is null || value2 is null)
+			return value1 == value2;
+
+		var type = value1.GetType();
+		if (type != value2.GetType())
+			return false;
+
+		using var stream1 = new MemoryStream();
+		MessagePackSerializer.Serialize(stream1, value1, s_serializerOptions);
+		stream1.TryGetBuffer(out var buffer1);
+
+		using var stream2 = ServiceDataEquivalenceStream.Create(buffer1.AsMemory());
+		MessagePackSerializer.Serialize(stream2, value2, s_serializerOptions);
+		return stream2.Equivalent;
+	}
+
 	private MessagePackServiceSerializer()
 	{
 	}

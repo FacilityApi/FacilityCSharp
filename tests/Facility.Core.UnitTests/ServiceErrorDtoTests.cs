@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public class ServiceErrorDtoTests
+internal sealed class ServiceErrorDtoTests
 {
 	[Test]
 	public void ToStringUsesJson()

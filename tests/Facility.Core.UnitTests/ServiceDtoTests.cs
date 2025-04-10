@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Facility.Core.UnitTests;
 
 [TestFixtureSource(nameof(ServiceSerializers))]
-public class ServiceDtoTests : ServiceSerializerTestsBase
+internal sealed class ServiceDtoTests : ServiceSerializerTestsBase
 {
 	public ServiceDtoTests(ServiceSerializer serializer)
 		: base(serializer)
@@ -46,6 +46,18 @@ public class ServiceDtoTests : ServiceSerializerTestsBase
 	{
 		var first = new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null };
 		var second = Serializer.Clone(first);
+		ReferenceEquals(first, second).Should().Be(false);
+		first.IsEquivalentTo(second).Should().Be(true);
+		second.Id += 1;
+		first.IsEquivalentTo(second).Should().Be(false);
+	}
+
+	[Test]
+	public void DeepClone()
+	{
+		var first = new TestDto { Id = 3, Name = "Three", Children = [new TestDto { Name = "child" }], Ternary = null };
+		var second = first.DeepClone();
+		ReferenceEquals(first, second).Should().Be(false);
 		first.IsEquivalentTo(second).Should().Be(true);
 		second.Id += 1;
 		first.IsEquivalentTo(second).Should().Be(false);

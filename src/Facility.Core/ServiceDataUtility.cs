@@ -206,6 +206,7 @@ public static class ServiceDataUtility
 	{
 		public static readonly IEqualityComparer<T> Instance = CreateInstance();
 
+		[SuppressMessage("Usage", "CA2263:Prefer generic overload when type is known", Justification = "Old overload works better for cast.")]
 		private static IEqualityComparer<T> CreateInstance()
 		{
 			var type = typeof(T);

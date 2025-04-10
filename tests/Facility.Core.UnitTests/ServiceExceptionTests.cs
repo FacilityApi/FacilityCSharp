@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public class ServiceExceptionTests
+internal sealed class ServiceExceptionTests
 {
 	[Test]
 	public void BasicTests()

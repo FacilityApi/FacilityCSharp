@@ -4,7 +4,7 @@ using Facility.Core.MessagePack;
 
 namespace Facility.ConformanceApi.UnitTests;
 
-public abstract class ServiceSerializerTestsBase
+internal abstract class ServiceSerializerTestsBase
 {
 	public static IReadOnlyList<ServiceSerializer> ServiceSerializers =>
 	[

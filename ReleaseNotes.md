@@ -1,5 +1,14 @@
 # Release Notes
 
+## 2.33.0
+
+* Add `DeepClone` to `ServiceDto<T>`. It uses JSON serialization to create a deep copy of the object, though it can be overidden (code-generated DTOs may eventually do so).
+* Add a default implementation of `IsEquivalentTo` to `ServiceDto<T>` that compares DTOs by their JSON equivalent. It is still overridden by code-generated DTOs for efficiency and accuracy.
+* `SystemTextJsonServiceDto<T>` can be used as a base class instead of `ServiceDto<T>` to use `System.Text.Json` rather than `Newtonsoft.Json` for the default implementations of `ToString`, `IsEquivalentTo`, and `DeepClone`. (Code-generated DTOs do this without `SystemTextJsonServiceDto<T>`.)
+* Use the latest `System.Text.Json` on all platforms, primarily for its implementation of `DeepEquals`.
+* Add `AreEquivalent` to `ServiceSerializer`.
+* Add .NET 9 targets.
+
 ## 2.32.0
 
 * Add setting to compress HTTP request bodies with `Content-Encoding: gzip`.

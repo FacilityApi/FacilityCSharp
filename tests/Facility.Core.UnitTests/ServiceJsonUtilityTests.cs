@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Facility.Core.UnitTests;
 
-public sealed class ServiceJsonUtilityTests
+internal sealed class ServiceJsonUtilityTests
 {
 	[Test]
 	public void CamelCase()

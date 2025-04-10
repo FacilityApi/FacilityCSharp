@@ -2,7 +2,7 @@ using Facility.Core.MessagePack;
 
 namespace Facility.Core.UnitTests;
 
-public abstract class ServiceSerializerTestsBase
+internal abstract class ServiceSerializerTestsBase
 {
 	public static IReadOnlyList<ServiceSerializer> ServiceSerializers =>
 	[

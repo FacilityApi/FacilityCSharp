@@ -5,14 +5,14 @@ using Facility.Core;
 namespace Facility.Benchmarks;
 
 [SuppressMessage("Security", "CA5394:Do not use insecure randomness", Justification = "Security not needed.")]
-public class UserRepository
+internal sealed class UserRepository
 {
 	public UserRepository(ServiceSerializer serializer)
 	{
 		m_serializer = serializer;
 	}
 
-	public async Task<IReadOnlyList<UserDto>> GetUsersAsync() => m_users.Select(x => m_serializer.Clone(x)).ToList();
+	public async Task<IReadOnlyList<UserDto>> GetUsersAsync() => [.. m_users.Select(x => m_serializer.Clone(x))];
 
 	private static List<UserDto> CreateUsers()
 	{
@@ -33,7 +33,7 @@ public class UserRepository
 		return users;
 	}
 
-	private static string GenerateString(char min, char max, int length) => new string(Enumerable.Range(0, length).Select(_ => (char) Random.Shared.Next(min, max + 1)).ToArray());
+	private static string GenerateString(char min, char max, int length) => new string([.. Enumerable.Range(0, length).Select(_ => (char) Random.Shared.Next(min, max + 1))]);
 
 	private static string GenerateName() => GenerateString('a', 'z', 1).ToUpper(CultureInfo.InvariantCulture) + GenerateWord();
 
