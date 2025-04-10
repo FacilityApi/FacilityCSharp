@@ -11,6 +11,7 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 | name | description |
 | --- | --- |
 | static readonly [Instance](SystemTextJsonServiceSerializer/Instance.md) | The serializer instance. |
+| override [AreEquivalent](SystemTextJsonServiceSerializer/AreEquivalent.md)(…) | Checks two values for equality by comparing serialized representations. |
 | override [Clone&lt;T&gt;](SystemTextJsonServiceSerializer/Clone.md)(…) | Clones a value by serializing and deserializing. |
 | override [FromJson](SystemTextJsonServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |
 | override [FromJson&lt;T&gt;](SystemTextJsonServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |

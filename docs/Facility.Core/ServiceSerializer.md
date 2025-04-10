@@ -11,6 +11,7 @@ public abstract class ServiceSerializer
 | name | description |
 | --- | --- |
 | abstract [DefaultMediaType](ServiceSerializer/DefaultMediaType.md) { get; } | The media type used by default. |
+| virtual [AreEquivalent](ServiceSerializer/AreEquivalent.md)(…) | Checks two values for equality by comparing serialized representations. |
 | abstract [Clone&lt;T&gt;](ServiceSerializer/Clone.md)(…) | Clones a value by serializing and deserializing. |
 | abstract [FromStreamAsync](ServiceSerializer/FromStreamAsync.md)(…) | Deserializes a value. |
 | abstract [ToStreamAsync](ServiceSerializer/ToStreamAsync.md)(…) | Serializes a value. |

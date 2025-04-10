@@ -11,6 +11,7 @@ public class SystemTextJsonContextServiceSerializer : JsonServiceSerializer
 | name | description |
 | --- | --- |
 | [SystemTextJsonContextServiceSerializer](SystemTextJsonContextServiceSerializer/SystemTextJsonContextServiceSerializer.md)(…) | Creates an instance that uses the specified serializer context. |
+| override [AreEquivalent](SystemTextJsonContextServiceSerializer/AreEquivalent.md)(…) | Checks two values for equality by comparing serialized representations. |
 | override [Clone&lt;T&gt;](SystemTextJsonContextServiceSerializer/Clone.md)(…) | Clones a value by serializing and deserializing. |
 | override [FromJson](SystemTextJsonContextServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |
 | override [FromJson&lt;T&gt;](SystemTextJsonContextServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |

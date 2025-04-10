@@ -8,6 +8,7 @@
 | interface [IServiceMethodInfo](./Facility.Core/IServiceMethodInfo.md) | Information about a Facility service method. |
 | abstract class [JsonServiceSerializer](./Facility.Core/JsonServiceSerializer.md) | Serializes and deserializes values to and from JSON. |
 | class [NewtonsoftJsonServiceSerializer](./Facility.Core/NewtonsoftJsonServiceSerializer.md) | Serializes to and from JSON using JsonSerializer. |
+| abstract class [ServiceDataEquivalenceStream](./Facility.Core/ServiceDataEquivalenceStream.md) |  |
 | static class [ServiceDataUtility](./Facility.Core/ServiceDataUtility.md) | Helper methods for service data. |
 | abstract class [ServiceDelegate](./Facility.Core/ServiceDelegate.md) | Used to delegate a service. |
 | static class [ServiceDelegates](./Facility.Core/ServiceDelegates.md) | Common service delegates. |
@@ -41,6 +42,7 @@
 | class [ServiceSerializationException](./Facility.Core/ServiceSerializationException.md) | Thrown when JSON deserialization fails. |
 | abstract class [ServiceSerializer](./Facility.Core/ServiceSerializer.md) | Serializes and deserializes values. |
 | class [SystemTextJsonContextServiceSerializer](./Facility.Core/SystemTextJsonContextServiceSerializer.md) | Serializes and deserializes values to and from JSON using a `System.Text.Json` serializer context. |
+| abstract class [SystemTextJsonServiceDto&lt;T&gt;](./Facility.Core/SystemTextJsonServiceDto-1.md) | Base class for data objects that use System.Text.Json for serialization. |
 | class [SystemTextJsonServiceSerializer](./Facility.Core/SystemTextJsonServiceSerializer.md) | Serializes and deserializes values to and from JSON using `System.Text.Json`. |
 
 ## Facility.Core.Http namespace

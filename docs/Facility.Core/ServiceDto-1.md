@@ -11,8 +11,9 @@ public abstract class ServiceDto<T> : ServiceDto
 
 | name | description |
 | --- | --- |
+| virtual [DeepClone](ServiceDto-1/DeepClone.md)() | Deep clones the DTO. |
 | [IsEquivalentTo](ServiceDto-1/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
-| abstract [IsEquivalentTo](ServiceDto-1/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
+| virtual [IsEquivalentTo](ServiceDto-1/IsEquivalentTo.md)(…) | Determines if two DTOs are equivalent. |
 
 ## Protected Members
 

@@ -12,6 +12,7 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 | --- | --- |
 | static readonly [Instance](MessagePackServiceSerializer/Instance.md) | The serializer instance. |
 | override [DefaultMediaType](MessagePackServiceSerializer/DefaultMediaType.md) { get; } | The default media type. |
+| override [AreEquivalent](MessagePackServiceSerializer/AreEquivalent.md)(…) | Checks two values for equality by comparing serialized representations. |
 | override [Clone&lt;T&gt;](MessagePackServiceSerializer/Clone.md)(…) |  |
 | override [FromStreamAsync](MessagePackServiceSerializer/FromStreamAsync.md)(…) | Deserializes a value from the serialization format. |
 | override [ToStreamAsync](MessagePackServiceSerializer/ToStreamAsync.md)(…) | Serializes a value to the serialization format. |

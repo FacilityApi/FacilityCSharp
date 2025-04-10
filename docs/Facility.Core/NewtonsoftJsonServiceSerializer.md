@@ -11,6 +11,7 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 | name | description |
 | --- | --- |
 | static readonly [Instance](NewtonsoftJsonServiceSerializer/Instance.md) | The serializer instance. |
+| override [AreEquivalent](NewtonsoftJsonServiceSerializer/AreEquivalent.md)(…) | Checks two values for equality by comparing serialized representations. |
 | override [Clone&lt;T&gt;](NewtonsoftJsonServiceSerializer/Clone.md)(…) | Clones a value by serializing and deserializing. |
 | override [FromJson](NewtonsoftJsonServiceSerializer/FromJson.md)(…) | Deserializes a value from JSON. |
 | override [FromServiceObject](NewtonsoftJsonServiceSerializer/FromServiceObject.md)(…) | Deserializes a value from a [`ServiceObject`](./ServiceObject.md) representation of the serialization format. |
