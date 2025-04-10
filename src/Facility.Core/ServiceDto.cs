@@ -51,7 +51,7 @@ public abstract class ServiceDto<T> : ServiceDto
 	/// <summary>
 	/// Determines if two DTOs are equivalent.
 	/// </summary>
-	public abstract bool IsEquivalentTo(T? other);
+	public virtual bool IsEquivalentTo(T? other) => JsonSerializer.AreEquivalent(this, other);
 
 	/// <summary>
 	/// Deep clones the DTO.

@@ -51,16 +51,4 @@ public sealed class ValueDto : ServiceDto<ValueDto>
 
 	[Key(8)]
 	public float? FloatValue { get; set; }
-
-	public override bool IsEquivalentTo(ValueDto? other) =>
-		other != null &&
-		BooleanValue == other.BooleanValue &&
-		StringValue == other.StringValue &&
-		ServiceDataUtility.AreEquivalentFieldValues(ErrorArrayValue, other.ErrorArrayValue) &&
-		ServiceDataUtility.AreEquivalentFieldValues(BooleanMapValue, other.BooleanMapValue) &&
-		ServiceDataUtility.AreEquivalentFieldValues(ErrorMapValue, other.ErrorMapValue) &&
-		IntegerValue == other.IntegerValue &&
-		DoubleValue.Equals(other.DoubleValue) &&
-		ServiceDataUtility.AreEquivalentDateTimes(DateTimeValue, other.DateTimeValue) &&
-		FloatValue.Equals(other.FloatValue);
 }
