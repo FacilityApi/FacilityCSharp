@@ -27,7 +27,7 @@ public sealed class ServiceObject
 	/// Creates an instance from a DTO.
 	/// </summary>
 	[return: NotNullIfNotNull(nameof(dto))]
-	public static ServiceObject? Create(ServiceDto? dto) => dto?.ToServiceObject();
+	public static ServiceObject? Create(ServiceDto? dto) => dto?.GetJsonSerializer().ToServiceObject(dto);
 
 	/// <summary>
 	/// Returns a <c>Newtonsoft.Json.Linq.JObject</c> that is temporarily associated with this <c>ServiceObject</c>.
