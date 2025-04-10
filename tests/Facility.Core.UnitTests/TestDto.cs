@@ -5,7 +5,7 @@ namespace Facility.Core.UnitTests;
 
 [MessagePackObject]
 [SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Must be public for MessagePack.")]
-public sealed class TestDto : ServiceDto<TestDto>
+public sealed class TestDto : SystemTextJsonServiceDto<TestDto>
 {
 	[Key(0)]
 	public int? Id { get; set; }

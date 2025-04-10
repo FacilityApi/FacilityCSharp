@@ -5,7 +5,7 @@ namespace Facility.Core.UnitTests;
 
 [MessagePackObject]
 [SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Must be public for MessagePack.")]
-public sealed class ValueDto : ServiceDto<ValueDto>
+public sealed class ValueDto : SystemTextJsonServiceDto<ValueDto>
 {
 	public static ValueDto Create(bool? value) => new ValueDto { BooleanValue = value };
 
