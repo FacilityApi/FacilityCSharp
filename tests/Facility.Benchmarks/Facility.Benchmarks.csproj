@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.Core.MessagePack\Facility.Core.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\Facility.ConformanceApi\Facility.ConformanceApi.csproj" />
   </ItemGroup>
 
 </Project>

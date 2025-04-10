@@ -27,4 +27,9 @@ public abstract class ServiceSerializer
 	/// </summary>
 	[return: NotNullIfNotNull(nameof(value))]
 	public abstract T Clone<T>(T value);
+
+	/// <summary>
+	/// Checks two values for equality by comparing serialized representations.
+	/// </summary>
+	public virtual bool AreEquivalent(object? value1, object? value2) => throw new NotImplementedException("AreEquivalent is not implemented for this serializer.");
 }

@@ -117,6 +117,21 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Checks two values for equality by comparing serialized representations.
+	/// </summary>
+	public override bool AreEquivalent(object? value1, object? value2)
+	{
+		if (value1 is null || value2 is null)
+			return value1 == value2;
+
+		var type = value1.GetType();
+		if (type != value2.GetType())
+			return false;
+
+		return ToJson(value1) == ToJson(value2);
+	}
+
+	/// <summary>
 	/// Creates a JSON serializer with standard settings.
 	/// </summary>
 	public static JsonSerializer CreateJsonSerializer() => JsonSerializer.Create(s_jsonSerializerSettings);
