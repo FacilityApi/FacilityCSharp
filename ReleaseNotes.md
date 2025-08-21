@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.34.0
+
+* Add `--no-http` command-line option to `fsdgencsharp` to omit HTTP code generation.
+
 ## 2.33.0
 
 * Add `DeepClone` to `ServiceDto<T>`. It uses JSON serialization to create a deep copy of the object, though it can be overidden (code-generated DTOs may eventually do so).
