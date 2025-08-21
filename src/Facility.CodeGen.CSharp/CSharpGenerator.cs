@@ -73,6 +73,11 @@ public sealed class CSharpGenerator : CodeGenerator
 	public string? JsonSourceGenerationCondition { get; set; }
 
 	/// <summary>
+	/// True if HTTP documentation should be omitted.
+	/// </summary>
+	public bool NoHttp { get; set; }
+
+	/// <summary>
 	/// Generates the C# output.
 	/// </summary>
 	public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -103,28 +108,32 @@ public sealed class CSharpGenerator : CodeGenerator
 
 		var httpServiceInfo = HttpServiceInfo.Create(service);
 
-		foreach (var httpErrorSetInfo in httpServiceInfo.ErrorSets)
-			outputFiles.Add(GenerateHttpErrors(httpErrorSetInfo, context));
-
-		if (httpServiceInfo.AllMethods.Count != 0)
+		if (!NoHttp)
 		{
-			outputFiles.Add(GenerateHttpMapping(httpServiceInfo, context));
-			outputFiles.Add(GenerateHttpClient(httpServiceInfo, context));
-			outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
+			foreach (var httpErrorSetInfo in httpServiceInfo.ErrorSets)
+				outputFiles.Add(GenerateHttpErrors(httpErrorSetInfo, context));
 
-			if (ShouldGenerateJsonSource)
+			if (httpServiceInfo.AllMethods.Count != 0)
 			{
-				outputFiles.Add(GenerateJsonSerializerContext(service, httpServiceInfo, context));
-				outputFiles.Add(GenerateJsonSerializer(service, context));
+				outputFiles.Add(GenerateHttpMapping(httpServiceInfo, context));
+				outputFiles.Add(GenerateHttpClient(httpServiceInfo, context));
+				outputFiles.Add(GenerateHttpHandler(httpServiceInfo, context));
+
+				if (ShouldGenerateJsonSource)
+				{
+					outputFiles.Add(GenerateJsonSerializerContext(service, httpServiceInfo, context));
+					outputFiles.Add(GenerateJsonSerializer(service, context));
+				}
 			}
 		}
 
 		var codeGenComment = CodeGenUtility.GetCodeGenComment(context.GeneratorName);
-		var patternsToClean = new[]
+		var patternsToClean = new List<CodeGenPattern>
 		{
 			new CodeGenPattern("*.g.cs", codeGenComment),
-			new CodeGenPattern("Http/*.g.cs", codeGenComment),
 		};
+		if (!NoHttp)
+			patternsToClean.Add(new CodeGenPattern("Http/*.g.cs", codeGenComment));
 		return new CodeGenOutput(outputFiles, patternsToClean);
 	}
 
@@ -142,6 +151,7 @@ public sealed class CSharpGenerator : CodeGenerator
 		SupportMessagePack = csharpSettings.SupportMessagePack;
 		SupportJsonSourceGeneration = csharpSettings.SupportJsonSourceGeneration;
 		JsonSourceGenerationCondition = csharpSettings.JsonSourceGenerationCondition;
+		NoHttp = csharpSettings.NoHttp;
 	}
 
 	/// <summary>

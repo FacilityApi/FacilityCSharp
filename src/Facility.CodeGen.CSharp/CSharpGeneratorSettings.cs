@@ -49,4 +49,9 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 	/// </summary>
 	/// <remarks>Use <c>true</c> to omit the <c>#if</c>.</remarks>
 	public string? JsonSourceGenerationCondition { get; set; }
+
+	/// <summary>
+	/// True if HTTP documentation should be omitted.
+	/// </summary>
+	public bool NoHttp { get; set; }
 }
