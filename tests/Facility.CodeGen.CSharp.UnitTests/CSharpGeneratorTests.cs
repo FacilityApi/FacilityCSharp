@@ -122,8 +122,21 @@ internal sealed class CSharpGeneratorTests
 			"Http/TestApiHttpMapping.g.cs",
 		};
 
+		var expectedFiles = new List<string>
+		{
+			"BarDto.g.cs",
+			"ITestApi.g.cs",
+			"FooRequestDto.g.cs",
+			"FooResponseDto.g.cs",
+			"TestApiMethods.g.cs",
+			"DelegatingTestApi.g.cs",
+		};
+
 		foreach (var httpRelatedFile in httpRelatedFiles)
 			Assert.That(generatedFiles, Does.Not.Contain(httpRelatedFile));
+
+		foreach (var expectedFile in expectedFiles)
+			Assert.That(generatedFiles, Does.Contain(expectedFile));
 	}
 
 	[Test]
