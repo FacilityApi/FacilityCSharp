@@ -16,6 +16,7 @@ public sealed class CSharpGeneratorSettings : FileGeneratorSettings
 | [FixSnakeCase](CSharpGeneratorSettings/FixSnakeCase.md) { get; set; } | True if C# names should automatically use PascalCase instead of snake case. |
 | [JsonSourceGenerationCondition](CSharpGeneratorSettings/JsonSourceGenerationCondition.md) { get; set; } | The `#if` condition used around the source generated for `System.Text.Json`. |
 | [NamespaceName](CSharpGeneratorSettings/NamespaceName.md) { get; set; } | The name of the namespace (optional). Overrides the csharp FSD attribute. |
+| [NoHttp](CSharpGeneratorSettings/NoHttp.md) { get; set; } | True if HTTP documentation should be omitted. |
 | [SupportJsonSourceGeneration](CSharpGeneratorSettings/SupportJsonSourceGeneration.md) { get; set; } | True to support `System.Text.Json` source generation. |
 | [SupportMessagePack](CSharpGeneratorSettings/SupportMessagePack.md) { get; set; } | True to support MessagePack serialization. |
 | [UseNullableReferences](CSharpGeneratorSettings/UseNullableReferences.md) { get; set; } | True if the code should use nullable reference syntax. |
