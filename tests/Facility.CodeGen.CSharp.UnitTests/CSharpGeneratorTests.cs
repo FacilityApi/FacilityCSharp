@@ -106,6 +106,40 @@ internal sealed class CSharpGeneratorTests
 	}
 
 	[Test]
+	public void RespectsNoHttpOption()
+	{
+		var definition = "service TestApi { method foo {}: {} data Bar { prop: string; } }";
+		var parser = CreateParser();
+		var service = parser.ParseDefinition(new ServiceDefinitionText("TestApi.fsd", definition));
+		var generator = new CSharpGenerator { GeneratorName = nameof(CSharpGeneratorTests), NoHttp = true };
+		var output = generator.GenerateOutput(service);
+
+		var generatedFiles = output.Files.Select(x => x.Name).ToList();
+		var httpRelatedFiles = new List<string>
+		{
+			"Http/HttpClientTestApi.g.cs",
+			"Http/TestApiHttpHandler.g.cs",
+			"Http/TestApiHttpMapping.g.cs",
+		};
+
+		var expectedFiles = new List<string>
+		{
+			"BarDto.g.cs",
+			"ITestApi.g.cs",
+			"FooRequestDto.g.cs",
+			"FooResponseDto.g.cs",
+			"TestApiMethods.g.cs",
+			"DelegatingTestApi.g.cs",
+		};
+
+		foreach (var httpRelatedFile in httpRelatedFiles)
+			Assert.That(generatedFiles, Does.Not.Contain(httpRelatedFile));
+
+		foreach (var expectedFile in expectedFiles)
+			Assert.That(generatedFiles, Does.Contain(expectedFile));
+	}
+
+	[Test]
 	public void GenerateEnumStringConstants()
 	{
 		const string definition = "service TestApi { enum Answer { yes, no, maybe } }";

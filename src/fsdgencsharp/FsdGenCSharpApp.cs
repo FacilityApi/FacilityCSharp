@@ -33,6 +33,8 @@ internal sealed class FsdGenCSharpApp : CodeGeneratorApp
 		"      Support JSON source generation.",
 		"   --json-source-gen-if <condition>",
 		"      The #if condition to use around generated JSON source.",
+		"   --no-http",
+		"      Omit HTTP code generation.",
 	];
 
 	protected override ServiceParser CreateParser() => new FsdParser(new FsdParserSettings { SupportsEvents = true });
@@ -50,5 +52,6 @@ internal sealed class FsdGenCSharpApp : CodeGeneratorApp
 			SupportMessagePack = args.ReadFlag("msgpack"),
 			SupportJsonSourceGeneration = args.ReadFlag("json-source-gen"),
 			JsonSourceGenerationCondition = args.ReadOption("json-source-gen-if"),
+			NoHttp = args.ReadFlag("no-http"),
 		};
 }
