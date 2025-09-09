@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.34.1
+
+* Optimize `ServiceObject.ToJsonObject`.
+
 ## 2.34.0
 
 * Add `--no-http` command-line option to `fsdgencsharp` to omit HTTP code generation.
