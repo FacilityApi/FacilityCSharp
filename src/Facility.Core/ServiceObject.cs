@@ -63,7 +63,10 @@ public sealed class ServiceObject
 	/// <summary>
 	/// Returns a new <c>System.Text.Json.Nodes.JsonObject</c> equivalent to this <c>ServiceObject</c>.
 	/// </summary>
-	public JsonObject ToJsonObject() => SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
+	public JsonObject ToJsonObject() =>
+		m_object is JsonObject jsonObject
+			? (JsonObject) jsonObject.DeepClone()
+			: SystemTextJsonServiceSerializer.Instance.FromJson<JsonObject>(ToString())!;
 
 	/// <summary>
 	/// Returns a new DTO instance whose properties are read from this <c>ServiceObject</c>.
