@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.35.0
+
+* Use `System.Net.ServerSentEvents` NuGet package.
+
 ## 2.34.1
 
 * Optimize `ServiceObject.ToJsonObject`.
