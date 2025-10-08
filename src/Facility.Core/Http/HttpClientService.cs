@@ -66,6 +66,11 @@ public abstract class HttpClientService
 	/// </summary>
 	protected Uri? BaseUri { get; }
 
+	/// <summary>
+	/// The underlying <see cref="HttpClient"/>.
+	/// </summary>
+	protected HttpClient HttpClient => m_httpClient;
+
 	private async Task<ServiceResult<(HttpRequestMessage HttpRequest, HttpResponseMessage HttpResponse, HttpResponseMapping<TResponse> ResponseMapping)>> TryStartRequestAsync<TRequest, TResponse>(HttpMethodMapping<TRequest, TResponse> mapping, TRequest request, CancellationToken cancellationToken)
 		where TRequest : ServiceDto, new()
 		where TResponse : ServiceDto, new()
