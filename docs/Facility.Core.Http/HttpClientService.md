@@ -14,6 +14,7 @@ public abstract class HttpClientService
 | [BaseUri](HttpClientService/BaseUri.md) { get; } | The base URI. |
 | [BytesSerializer](HttpClientService/BytesSerializer.md) { get; } | The HTTP content serializer for bytes. |
 | [ContentSerializer](HttpClientService/ContentSerializer.md) { get; } | The HTTP content serializer. |
+| [HttpClient](HttpClientService/HttpClient.md) { get; } | The underlying [`HttpClient`](./HttpClientService/HttpClient.md). |
 | [TextSerializer](HttpClientService/TextSerializer.md) { get; } | The HTTP content serializer for text. |
 | virtual [CreateErrorFromException](HttpClientService/CreateErrorFromException.md)(…) | Called to create an error object from an unexpected exception. |
 | virtual [CreateErrorFromHttpResponseAsync](HttpClientService/CreateErrorFromHttpResponseAsync.md)(…) | Called to create an error object from an unhandled HTTP response. |
