@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.36.0
+
+* Allow generated http clients that inherit from HttpClientService to access the underlying HttpClient.
+
 ## 2.35.0
 
 * Use `System.Net.ServerSentEvents` NuGet package.
