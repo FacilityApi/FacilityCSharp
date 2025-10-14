@@ -388,7 +388,7 @@ public abstract class HttpClientService
 	/// </summary>
 	protected virtual Task RequestReadyAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken) => Task.CompletedTask;
 
-	private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
+	protected async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 	{
 		await AdaptTask(RequestReadyAsync(httpRequest, requestDto, cancellationToken)).ConfigureAwait(true);
 
