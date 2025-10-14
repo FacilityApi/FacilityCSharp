@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.37.0
+
+* Allow generated http clients that inherit from HttpClientService to call SendRequestAsync.
+
 ## 2.36.0
 
 * Allow generated http clients that inherit from HttpClientService to access the underlying HttpClient.
