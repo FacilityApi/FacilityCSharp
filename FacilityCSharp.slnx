@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".github/workflows/build.yaml" />
+    <File Path=".gitignore" />
+    <File Path="build.ps1" />
+    <File Path="conformance/ConformanceApi.fsd" />
+    <File Path="conformance/ConformanceTests.json" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="fsd/FacilityCore.fsd" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="ReleaseNotes.md" />
+    <File Path="tools/EdgeCases.fsd" />
+  </Folder>
+  <Project Path="src/Facility.CodeGen.CSharp/Facility.CodeGen.CSharp.csproj" />
+  <Project Path="src/Facility.ConformanceApi/Facility.ConformanceApi.csproj" />
+  <Project Path="src/Facility.Core.Assertions/Facility.Core.Assertions.csproj" />
+  <Project Path="src/Facility.Core.MessagePack/Facility.Core.MessagePack.csproj" />
+  <Project Path="src/Facility.Core/Facility.Core.csproj" />
+  <Project Path="src/FacilityConformance/FacilityConformance.csproj" />
+  <Project Path="src/fsdgencsharp/fsdgencsharp.csproj" />
+  <Project Path="tests/Facility.Benchmarks/Facility.Benchmarks.csproj" />
+  <Project Path="tests/Facility.CodeGen.CSharp.UnitTests/Facility.CodeGen.CSharp.UnitTests.csproj" />
+  <Project Path="tests/Facility.ConformanceApi.UnitTests/Facility.ConformanceApi.UnitTests.csproj" />
+  <Project Path="tests/Facility.Core.UnitTests/Facility.Core.UnitTests.csproj" />
+  <Project Path="tools/Build/Build.csproj" />
+  <Project Path="tools/EdgeCases.ExternTypes/EdgeCases.ExternTypes.csproj" />
+  <Project Path="tools/EdgeCases/EdgeCases.csproj" />
+  <Project Path="tools/XmlDocGen/XmlDocGen.csproj" />
+</Solution>
