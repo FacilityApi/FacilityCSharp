@@ -86,12 +86,12 @@ internal sealed class FacilityConformanceApp
 					JsonSerializer = jsonSerializer,
 				});
 
-			await new WebHostBuilder()
-				.UseKestrel(options => options.AllowSynchronousIO = serializerName is "newtonsoftjson")
-				.UseUrls(url)
-				.Configure(app => app.Run(httpContext => HostAsync(httpContext, service, contentSerializer)))
-				.Build()
-				.RunAsync();
+			var webAppBuilder = WebApplication.CreateSlimBuilder();
+			webAppBuilder.WebHost.ConfigureKestrel(options => options.AllowSynchronousIO = serializerName is "newtonsoftjson");
+			webAppBuilder.WebHost.UseUrls(url);
+			var webApp = webAppBuilder.Build();
+			webApp.Run(httpContext => HostAsync(httpContext, service, contentSerializer));
+			await webApp.RunAsync();
 
 			return 0;
 		}

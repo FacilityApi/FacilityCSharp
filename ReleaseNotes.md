@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.38.0
+
+* Add .NET 10 targets.
+
 ## 2.37.0
 
 * Allow generated http clients that inherit from HttpClientService to call SendRequestAsync.

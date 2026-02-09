@@ -32,27 +32,21 @@ internal sealed class HttpBenchmarks
 	public async Task Setup()
 	{
 		var baseUrl = "http://localhost:5987";
-		m_webHost = new WebHostBuilder()
-			.UseKestrel(options => options.AllowSynchronousIO = true)
-			.UseUrls(baseUrl)
-			.ConfigureServices(services =>
-			{
-				services.AddSingleton(Serializer.ServiceSerializer);
-				services.AddSingleton<UserRepository>();
-				services.AddSingleton<IBenchmarkService, BenchmarkService>();
-				services.AddSingleton(x => new BenchmarkServiceHttpHandler(x.GetRequiredService<IBenchmarkService>(), new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(x.GetRequiredService<ServiceSerializer>()) }));
-				services.AddControllers(options =>
-				{
-					options.Filters.Add<FacilityActionFilter>();
-				});
-			})
-			.Configure(app =>
-			{
-				app.UseMiddleware<FacilityAspNetCoreMiddleware<BenchmarkServiceHttpHandler>>();
-			})
-			.Build();
+		var webAppBuilder = WebApplication.CreateSlimBuilder();
+		webAppBuilder.WebHost.ConfigureKestrel(options => options.AllowSynchronousIO = true);
+		webAppBuilder.WebHost.UseUrls(baseUrl);
+		webAppBuilder.Services.AddSingleton(Serializer.ServiceSerializer);
+		webAppBuilder.Services.AddSingleton<UserRepository>();
+		webAppBuilder.Services.AddSingleton<IBenchmarkService, BenchmarkService>();
+		webAppBuilder.Services.AddSingleton(x => new BenchmarkServiceHttpHandler(x.GetRequiredService<IBenchmarkService>(), new ServiceHttpHandlerSettings { ContentSerializer = HttpContentSerializer.Create(x.GetRequiredService<ServiceSerializer>()) }));
+		webAppBuilder.Services.AddControllers(options =>
+		{
+			options.Filters.Add<FacilityActionFilter>();
+		});
+		m_webApp = webAppBuilder.Build();
+		m_webApp.UseMiddleware<FacilityAspNetCoreMiddleware<BenchmarkServiceHttpHandler>>();
 
-		await m_webHost.StartAsync();
+		await m_webApp.StartAsync();
 
 		m_client = new HttpClientBenchmarkService(
 			new HttpClientServiceSettings
@@ -67,9 +61,9 @@ internal sealed class HttpBenchmarks
 	{
 		m_client = null;
 
-		await m_webHost!.StopAsync();
-		m_webHost.Dispose();
-		m_webHost = null;
+		await m_webApp!.StopAsync();
+		await m_webApp.DisposeAsync();
+		m_webApp = null;
 	}
 
 	[Benchmark]
@@ -79,6 +73,6 @@ internal sealed class HttpBenchmarks
 		return result.Value;
 	}
 
-	private IWebHost? m_webHost;
+	private WebApplication? m_webApp;
 	private HttpClientBenchmarkService? m_client;
 }
