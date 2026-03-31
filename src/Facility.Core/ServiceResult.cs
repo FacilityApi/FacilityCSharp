@@ -69,7 +69,7 @@ public class ServiceResult
 	/// <summary>
 	/// The service result as a failure; null if it is a success.
 	/// </summary>
-	public ServiceResultFailure? AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(Error!) : null);
+	public ServiceResultFailure? AsFailure() => this as ServiceResultFailure ?? (IsFailure ? Failure(Error) : null);
 
 	/// <summary>
 	/// The service result as a failure; throws if it is a success.

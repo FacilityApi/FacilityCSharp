@@ -38,7 +38,7 @@ public sealed class ServiceNullableSystemTextJsonConverter<T> : JsonConverter<Se
 	/// Reads the JSON representation of the object.
 	/// </summary>
 	public override ServiceNullable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-		reader.TokenType is JsonTokenType.Null ? new ServiceNullable<T>(default!) : JsonSerializer.Deserialize<T>(ref reader, options)!;
+		reader.TokenType is JsonTokenType.Null ? new ServiceNullable<T>(default) : JsonSerializer.Deserialize<T>(ref reader, options);
 
 	/// <summary>
 	/// Writes the JSON representation of the object.
@@ -53,7 +53,7 @@ public sealed class ServiceNullableSystemTextJsonConverter<T> : JsonConverter<Se
 		}
 
 		if (value.Value is { } fieldValue)
-			JsonSerializer.Serialize<T>(writer, fieldValue, options);
+			JsonSerializer.Serialize(writer, fieldValue, options);
 		else
 			writer.WriteNullValue();
 	}
