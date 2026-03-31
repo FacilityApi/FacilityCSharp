@@ -31,4 +31,9 @@
     <DisablePackageBaselineValidation Condition=" $(PackageValidationBaselineVersion) == $(VersionPrefix) or $(PackageValidationBaselineVersion) == '0.0.0' ">true</DisablePackageBaselineValidation>
   </PropertyGroup>
 
+  <!-- Ignore "Suppression is unnecessary" warnings from TFMs lacking the latest nullability annotations -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net472' ">
+    <NoWarn>$(NoWarn);IDE0370</NoWarn>
+  </PropertyGroup>
+
 </Project>

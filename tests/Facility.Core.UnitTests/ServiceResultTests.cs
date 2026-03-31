@@ -14,7 +14,7 @@ internal sealed class ServiceResultTests
 		var result = ServiceResult.Success();
 		result.IsSuccess.Should().BeTrue();
 		result.IsFailure.Should().BeFalse();
-		result.Error!.Should().BeNull();
+		result.Error.Should().BeNull();
 		result.Verify();
 		ServiceResultUtility.TryGetValue(result, out _).Should().BeFalse();
 	}
@@ -25,7 +25,7 @@ internal sealed class ServiceResultTests
 		var result = ServiceResult.Success(1);
 		result.IsSuccess.Should().BeTrue();
 		result.IsFailure.Should().BeFalse();
-		result.Error!.Should().BeNull();
+		result.Error.Should().BeNull();
 		result.Verify();
 		result.Value.Should().Be(1);
 		result.GetValueOrDefault().Should().Be(1);
@@ -39,7 +39,7 @@ internal sealed class ServiceResultTests
 		var result = ServiceResult.Success((string?) null);
 		result.IsSuccess.Should().BeTrue();
 		result.IsFailure.Should().BeFalse();
-		result.Error!.Should().BeNull();
+		result.Error.Should().BeNull();
 		result.Verify();
 		result.Value.Should().BeNull();
 		result.GetValueOrDefault().Should().BeNull();
@@ -59,7 +59,7 @@ internal sealed class ServiceResultTests
 		var result = ServiceResult.Failure(new ServiceErrorDto());
 		result.IsSuccess.Should().BeFalse();
 		result.IsFailure.Should().BeTrue();
-		result.Error!.Should().BeDto(new ServiceErrorDto());
+		result.Error.Should().BeDto(new ServiceErrorDto());
 		try
 		{
 			result.Verify();
@@ -78,7 +78,7 @@ internal sealed class ServiceResultTests
 		ServiceResult<int> result = ServiceResult.Failure(new ServiceErrorDto("Int32Failure"));
 		result.IsSuccess.Should().BeFalse();
 		result.IsFailure.Should().BeTrue();
-		result.Error!.Should().BeDto(new ServiceErrorDto("Int32Failure"));
+		result.Error.Should().BeDto(new ServiceErrorDto("Int32Failure"));
 		try
 		{
 			result.Verify();
@@ -104,11 +104,11 @@ internal sealed class ServiceResultTests
 	public void AlwaysCastFailure()
 	{
 		var failure = ServiceResult.Failure(new ServiceErrorDto("Failure"));
-		failure.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("Failure"));
+		failure.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("Failure"));
 		ServiceResult noValue = ServiceResult.Failure(new ServiceErrorDto("NoValue"));
-		noValue.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("NoValue"));
+		noValue.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("NoValue"));
 		ServiceResult<string> stringValue = ServiceResult.Failure(new ServiceErrorDto("StringValue"));
-		stringValue.Cast<int>().Error!.Should().BeDto(new ServiceErrorDto("StringValue"));
+		stringValue.Cast<int>().Error.Should().BeDto(new ServiceErrorDto("StringValue"));
 	}
 
 	[Test]
@@ -173,11 +173,11 @@ internal sealed class ServiceResultTests
 	{
 		var error = new ServiceErrorDto("Error");
 		var failure = ServiceResult.Failure(error);
-		failure.ToFailure().Error!.Should().BeDto(error);
+		failure.ToFailure().Error.Should().BeDto(error);
 		ServiceResult failedResult = ServiceResult.Failure(error);
-		failedResult.ToFailure().Error!.Should().BeDto(error);
+		failedResult.ToFailure().Error.Should().BeDto(error);
 		ServiceResult<int> failedValue = ServiceResult.Failure(error);
-		failedValue.ToFailure().Error!.Should().BeDto(error);
+		failedValue.ToFailure().Error.Should().BeDto(error);
 	}
 
 	[Test]

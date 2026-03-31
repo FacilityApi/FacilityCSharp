@@ -1787,7 +1787,7 @@ public sealed class CSharpGenerator : CodeGenerator
 			type.ValueType != null && NeedsValidation(type.ValueType!);
 
 		private static ServiceDtoInfo? TryGetDtoInfo(ServiceTypeInfo? type) =>
-			type is null ? null : type.Kind == ServiceTypeKind.Dto ? type.Dto! : TryGetDtoInfo(type.ValueType);
+			type is null ? null : type.Kind == ServiceTypeKind.Dto ? type.Dto : TryGetDtoInfo(type.ValueType);
 
 		private static HashSet<ServiceDtoInfo> FindDtosNeedingValidation(ServiceInfo service)
 		{
