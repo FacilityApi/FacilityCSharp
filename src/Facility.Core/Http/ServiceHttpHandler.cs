@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text.RegularExpressions;
 
 namespace Facility.Core.Http;
@@ -105,7 +106,8 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 			request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers, httpRequest.Content?.Headers)!);
 
 			context.Request = request;
-			context.PathTemplate = m_rootPath + mapping.Path;
+			context.PathTemplate = mapping.Path;
+			context.RootPath = m_rootPath;
 			context.HttpMethod = mapping.HttpMethod;
 
 			if (!m_skipRequestValidation && !request.Validate(out var requestErrorMessage))
