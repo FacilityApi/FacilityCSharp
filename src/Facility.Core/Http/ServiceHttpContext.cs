@@ -15,6 +15,10 @@ public sealed class ServiceHttpContext
 	/// </summary>
 	public ServiceResult<ServiceDto>? Result { get; internal set; }
 
+	public string? PathTemplate { get; internal set; }
+
+	public HttpMethod? HttpMethod { get; internal set; }
+
 	/// <summary>
 	/// Attempts to get the context from the specified HTTP request.
 	/// </summary>

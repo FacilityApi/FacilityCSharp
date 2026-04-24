@@ -105,6 +105,8 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 			request = mapping.SetRequestHeaders(request, HttpServiceUtility.CreateDictionaryFromHeaders(httpRequest.Headers, httpRequest.Content?.Headers)!);
 
 			context.Request = request;
+			context.PathTemplate = m_rootPath + mapping.Path;
+			context.HttpMethod = mapping.HttpMethod;
 
 			if (!m_skipRequestValidation && !request.Validate(out var requestErrorMessage))
 				error = ServiceErrors.CreateInvalidRequest(requestErrorMessage);
