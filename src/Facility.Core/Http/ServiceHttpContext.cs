@@ -15,8 +15,19 @@ public sealed class ServiceHttpContext
 	/// </summary>
 	public ServiceResult<ServiceDto>? Result { get; internal set; }
 
+	/// <summary>
+	/// The path template for the route.
+	/// </summary>
 	public string? PathTemplate { get; internal set; }
 
+	/// <summary>
+	/// The base path for the API.
+	/// </summary>
+	public string? RootPath { get; internal set; }
+
+	/// <summary>
+	/// The HTTP method for the request.
+	/// </summary>
 	public HttpMethod? HttpMethod { get; internal set; }
 
 	/// <summary>
