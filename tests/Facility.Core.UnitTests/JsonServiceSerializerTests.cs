@@ -164,8 +164,8 @@ internal sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBas
 	{
 		Assert.That(JsonSerializer.FromJson<JObject>(JsonSerializer.ToJson(new JObject()))!, Has.Count.EqualTo(0));
 		Assert.That(JsonSerializer.FromJson<JArray>(JsonSerializer.ToJson(new JArray()))!, Has.Count.EqualTo(0));
-		Assert.That((string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson((JValue) "hi"))!, Is.EqualTo("hi"));
-		Assert.That((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson((JToken) true))!);
+		Assert.That((string) JsonSerializer.FromJson<JValue>(JsonSerializer.ToJson(new JValue("hi")))!, Is.EqualTo("hi"));
+		Assert.That((bool) JsonSerializer.FromJson<JToken>(JsonSerializer.ToJson(new JValue(true)))!);
 	}
 
 	[Test]

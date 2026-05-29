@@ -6,6 +6,7 @@
     <PackageTags>Facility server testing</PackageTags>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RewritePackageReadmeLinks>true</RewritePackageReadmeLinks>
     <NoWarn>$(NoWarn);CA1510;CA2016</NoWarn>
   </PropertyGroup>
 

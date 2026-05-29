@@ -2,8 +2,6 @@
 
 [C# support](https://facilityapi.github.io/generate/csharp) for the [Facility API Framework](https://facilityapi.github.io/).
 
-[![Build](https://github.com/FacilityApi/FacilityCSharp/workflows/Build/badge.svg)](https://github.com/FacilityApi/FacilityCSharp/actions?query=workflow%3ABuild)
-
 Name | Description | NuGet
 --- | --- | ---
 Facility.Core | A library for consuming/implementing Facility APIs. | [![NuGet](https://img.shields.io/nuget/v/Facility.Core.svg)](https://www.nuget.org/packages/Facility.Core)
@@ -21,13 +19,13 @@ Facility.ConformanceApi | A .NET client for the standard Facility test server. |
 To run conformance tests, first start the conformance server:
 
 ```powershell
-dotnet run --project .\src\FacilityConformance --framework net6.0 -- host
+dotnet run --project .\src\FacilityConformance --framework net8.0 -- host
 ```
 
 Then run the conformance tool against the running service.
 
 ```powershell
-dotnet run --project .\src\FacilityConformance --framework net6.0 -- test
+dotnet run --project .\src\FacilityConformance --framework net8.0 -- test
 ```
 
 The `System.Text.Json` serializer is used by default. To use Json.NET or MessagePack, run with `--serializer newtonsoftjson` or  `--serializer messagepack`.
