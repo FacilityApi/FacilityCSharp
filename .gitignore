@@ -6,12 +6,16 @@ obj/
 release/
 
 *.cache
-*.log
 *.ncrunchproject
 *.ncrunchsolution
 *.user
 launchSettings.json
 nCrunchTemp*
 _ReSharper*
-.DS_Store
 BenchmarkDotNet.Artifacts/
+
+# DO NOT EDIT: gitignore-common convention
+.DS_Store
+Thumbs.db
+*.log
+# END DO NOT EDIT
