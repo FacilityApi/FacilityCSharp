@@ -7,5 +7,4 @@ conventions:
           version: update-minor
 
 pull-request:
-  reviewers:
-    - ejball
+  reviewers: [ejball]
