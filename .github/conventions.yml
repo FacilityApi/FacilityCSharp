@@ -1,6 +1,10 @@
 conventions:
-  - path: FacilityApi/Facility/conventions/facility-dotnet-package
   - path: FacilityApi/Facility/conventions/facility-dotnet-package-workflows
+  - path: FacilityApi/Facility/conventions/facility-dotnet-package
+    settings:
+      nuget-rules:
+        - packages: [MessagePack]
+          version: update-minor
 
 pull-request:
   reviewers:
