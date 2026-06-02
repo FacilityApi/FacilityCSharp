@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.38.2
+
+* Update dependencies.
+
 ## 2.38.1
 
 * Update NuGet package README.
