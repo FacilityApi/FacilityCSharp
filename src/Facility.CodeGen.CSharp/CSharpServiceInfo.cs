@@ -27,8 +27,8 @@ public sealed class CSharpServiceInfo
 	/// </summary>
 	/// <returns>True if there are no errors.</returns>
 	/// <remarks>Even if there are errors, an invalid HTTP mapping will be returned.</remarks>
-	public static bool TryCreate(ServiceInfo serviceInfo, out CSharpServiceInfo csharpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
-		=> TryCreate(serviceInfo, settings: null, out csharpServiceInfo, out errors);
+	public static bool TryCreate(ServiceInfo serviceInfo, out CSharpServiceInfo csharpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors) =>
+		TryCreate(serviceInfo, settings: null, out csharpServiceInfo, out errors);
 
 	/// <summary>
 	/// Attempts to create C# info for a service.
