@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageVersion Include="ArgsReading" Version="2.3.3" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="Facility.AspNetCore" Version="3.13.4" />
+    <PackageVersion Include="Facility.AspNetCore" Version="3.13.5" />
     <PackageVersion Include="Facility.Definition" Version="2.19.0" />
     <PackageVersion Include="Facility.CodeGen.Console" Version="2.19.0" />
     <PackageVersion Include="FluentAssertions" Version="7.2.2" />

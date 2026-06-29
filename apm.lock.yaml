@@ -1,10 +1,10 @@
 lockfile_version: '1'
-generated_at: '2026-06-12T16:32:00.767113+00:00'
+generated_at: '2026-06-29T16:46:14.179104+00:00'
 apm_version: 0.14.0
 dependencies:
 - repo_url: Faithlife/RepoConventions
   host: github.com
-  resolved_commit: 7f58c0678f9efefb2453908032e0ee28a42d7097
+  resolved_commit: eeb9301ff6daf3039ef23cbc999914508b82dc28
   virtual_path: skills/repo-conventions
   is_virtual: true
   package_type: claude_skill
@@ -13,10 +13,10 @@ dependencies:
   content_hash: sha256:6e4dc45d96d7adc8f1d3e3300d9ee90eef9c2d0231ea83ad86fed64fca105034
 - repo_url: richlander/dotnet-inspect
   host: github.com
-  resolved_commit: 5893fe87d9eda18cf84ee641bc4c36b2f184e235
+  resolved_commit: 77dbcf900ae78d8f977179ce368eb69c3aaffb20
   virtual_path: skills/dotnet-inspect
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/dotnet-inspect
-  content_hash: sha256:f9e476244dc5a9c58782afbd7ed8fc3c2ff5850b946fc5152a7f1a6ce5c91819
+  content_hash: sha256:ac7e3f9ed53d5bb058a6b3d509ef670c8dcc71f1890a7aba0ad477667626efa9
