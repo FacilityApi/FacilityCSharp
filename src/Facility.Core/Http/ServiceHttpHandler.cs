@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Headers;
@@ -61,10 +62,8 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 		if (pathParameters == null)
 			return default;
 
-#if NETCOREAPP2_0_OR_GREATER
-		// for .NET targets, use Activity to pass the Facility route using the same tag as ASP.NET Core
-		System.Diagnostics.Activity.Current?.SetTag("http.route", m_rootPath + mapping.Path);
-#endif
+		// use Activity to pass the Facility route using the same tag as ASP.NET Core
+		Activity.Current?.SetTag("http.route", m_rootPath + mapping.Path);
 
 		var context = new ServiceHttpContext();
 		ServiceHttpContext.SetContext(httpRequest, context);
