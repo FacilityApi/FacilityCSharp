@@ -63,7 +63,7 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 
 #if NETCOREAPP2_0_OR_GREATER
 		// for .NET targets, use Activity to pass the Facility route using the same tag as ASP.NET Core
-		System.Diagnostics.Activity.Current?.SetTag("http.route", mapping.Path);
+		System.Diagnostics.Activity.Current?.SetTag("http.route", m_rootPath + mapping.Path);
 #endif
 
 		var context = new ServiceHttpContext();
