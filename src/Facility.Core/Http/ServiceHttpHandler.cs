@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Headers;
@@ -60,6 +61,9 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 		var pathParameters = TryMatchHttpRoute(httpRequest.RequestUri, m_rootPath + mapping.Path);
 		if (pathParameters == null)
 			return default;
+
+		// use Activity to pass the Facility route using the same tag as ASP.NET Core
+		Activity.Current?.SetTag("http.route", m_rootPath + mapping.Path);
 
 		var context = new ServiceHttpContext();
 		ServiceHttpContext.SetContext(httpRequest, context);
