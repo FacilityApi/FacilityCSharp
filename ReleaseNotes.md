@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.38.4
+
+* Set `http.route` tag on the current `Activity` for improved telemetry support.
+
 ## 2.38.3
 
 * Update dependencies.
