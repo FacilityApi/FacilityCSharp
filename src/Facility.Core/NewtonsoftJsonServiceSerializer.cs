@@ -105,6 +105,11 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public T? FromStream<T>(Stream stream) => (T?) FromStream(stream, typeof(T));
+
+	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	public override T Clone<T>(T value)

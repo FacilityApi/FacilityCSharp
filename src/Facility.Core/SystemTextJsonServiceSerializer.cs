@@ -170,6 +170,21 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public T? FromStream<T>(Stream stream)
+	{
+		try
+		{
+			return JsonSerializer.Deserialize<T>(stream, s_jsonSerializerOptions);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	public override T Clone<T>(T value)
