@@ -85,24 +85,6 @@ public sealed class NewtonsoftJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
-	/// Deserializes a value from JSON.
-	/// </summary>
-	public override async Task<T?> FromStreamAsync<T>(Stream stream, CancellationToken cancellationToken)
-		where T : default
-	{
-		// avoid sync I/O when async I/O is expected
-		using var memoryStream = new MemoryStream();
-#if !NETSTANDARD2_0
-		await stream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
-#else
-		await stream.CopyToAsync(memoryStream).ConfigureAwait(false);
-#endif
-		memoryStream.Position = 0;
-
-		return (T?) FromStream(memoryStream, typeof(T));
-	}
-
-	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
 	public void ToStream(object? value, Stream stream)
