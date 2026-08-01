@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.39.0
+
+* Add generic `FromStreamAsync<T>` overloads to `ServiceSerializer`.
+
 ## 2.38.4
 
 * Set `http.route` tag on the current `Activity` for improved telemetry support.
