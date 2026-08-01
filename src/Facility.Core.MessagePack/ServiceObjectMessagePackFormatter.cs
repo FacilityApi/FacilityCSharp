@@ -29,6 +29,6 @@ internal sealed class ServiceObjectMessagePackFormatter : IMessagePackFormatter<
 			return null!;
 
 		using var stream = new MemoryStream(jsonBytes.Value.ToArray());
-		return SystemTextJsonServiceSerializer.Instance.FromStream<ServiceObject>(stream)!;
+		return (ServiceObject) SystemTextJsonServiceSerializer.Instance.FromStream(stream, typeof(ServiceObject))!;
 	}
 }

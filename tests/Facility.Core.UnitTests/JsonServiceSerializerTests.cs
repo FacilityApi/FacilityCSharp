@@ -25,22 +25,6 @@ internal sealed class JsonServiceSerializerTests : JsonServiceSerializerTestsBas
 	}
 
 	[Test]
-	public void FromStreamGeneric()
-	{
-		var dto = ValueDto.Create(true);
-		using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.ToJson(dto)));
-
-		var result = JsonSerializer switch
-		{
-			NewtonsoftJsonServiceSerializer serializer => serializer.FromStream<ValueDto>(stream),
-			SystemTextJsonServiceSerializer serializer => serializer.FromStream<ValueDto>(stream),
-			_ => throw new InvalidOperationException(),
-		};
-
-		result.Should().BeDto(dto);
-	}
-
-	[Test]
 	public void CamelCaseExceptDictionaryKeys()
 	{
 		var dto = ValueDto.Create(new Dictionary<string, bool> { ["Key"] = true });

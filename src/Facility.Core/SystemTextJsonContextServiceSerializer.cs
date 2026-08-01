@@ -129,6 +129,22 @@ public class SystemTextJsonContextServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public override async Task<T?> FromStreamAsync<T>(Stream stream, CancellationToken cancellationToken)
+		where T : default
+	{
+		try
+		{
+			return (T?) await JsonSerializer.DeserializeAsync(stream, typeof(T), m_serializerContext, cancellationToken).ConfigureAwait(false);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	public override T Clone<T>(T value)
