@@ -140,6 +140,22 @@ public sealed class SystemTextJsonServiceSerializer : JsonServiceSerializer
 	}
 
 	/// <summary>
+	/// Deserializes a value from JSON.
+	/// </summary>
+	public override async Task<T?> FromStreamAsync<T>(Stream stream, CancellationToken cancellationToken)
+		where T : default
+	{
+		try
+		{
+			return await JsonSerializer.DeserializeAsync<T>(stream, s_jsonSerializerOptions, cancellationToken).ConfigureAwait(false);
+		}
+		catch (JsonException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
+	/// <summary>
 	/// Serializes a value to JSON.
 	/// </summary>
 	public void ToStream(object? value, Stream stream)

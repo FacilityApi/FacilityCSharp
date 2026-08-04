@@ -95,7 +95,7 @@ internal sealed class ServiceDtoTests : ServiceSerializerTestsBase
 		using var stream = new MemoryStream();
 		await Serializer.ToStreamAsync(input, stream, CancellationToken.None);
 		stream.Position = 0;
-		var output = (ValueDto) (await Serializer.FromStreamAsync(stream, typeof(ValueDto), CancellationToken.None))!;
-		return output.DateTimeValue;
+		var output = await Serializer.FromStreamAsync<ValueDto>(stream, CancellationToken.None);
+		return output!.DateTimeValue;
 	}
 }

@@ -47,6 +47,22 @@ public sealed class MessagePackServiceSerializer : ServiceSerializer
 		}
 	}
 
+	/// <summary>
+	/// Deserializes a value from the serialization format.
+	/// </summary>
+	public override async Task<T?> FromStreamAsync<T>(Stream stream, CancellationToken cancellationToken)
+		where T : default
+	{
+		try
+		{
+			return await MessagePackSerializer.DeserializeAsync<T>(stream, s_serializerOptions, cancellationToken).ConfigureAwait(false);
+		}
+		catch (MessagePackSerializationException exception)
+		{
+			throw new ServiceSerializationException(exception);
+		}
+	}
+
 	public override T Clone<T>(T value)
 	{
 		if (value is null)

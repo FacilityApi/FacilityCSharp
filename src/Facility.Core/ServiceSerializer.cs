@@ -23,6 +23,12 @@ public abstract class ServiceSerializer
 	public abstract Task<object?> FromStreamAsync(Stream stream, Type type, CancellationToken cancellationToken);
 
 	/// <summary>
+	/// Deserializes a value.
+	/// </summary>
+	public virtual async Task<T?> FromStreamAsync<T>(Stream stream, CancellationToken cancellationToken) =>
+		(T?) await FromStreamAsync(stream, typeof(T), cancellationToken).ConfigureAwait(false);
+
+	/// <summary>
 	/// Clones a value by serializing and deserializing.
 	/// </summary>
 	[return: NotNullIfNotNull(nameof(value))]
