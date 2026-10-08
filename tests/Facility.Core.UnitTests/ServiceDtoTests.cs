@@ -85,7 +85,7 @@ internal sealed class ServiceDtoTests : ServiceSerializerTestsBase
 	{
 		var input = ValueDto.Create(new DateTime(2001, 2, 3, 4, 5, 6, kind));
 		using var stream = new MemoryStream();
-		Assert.ThrowsAsync<ServiceSerializationException>(
+		await Assert.ThrowsAsync<ServiceSerializationException>(
 			async () => await Serializer.ToStreamAsync(input, stream, CancellationToken.None));
 	}
 
