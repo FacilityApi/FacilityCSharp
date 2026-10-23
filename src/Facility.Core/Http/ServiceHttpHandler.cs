@@ -210,8 +210,9 @@ public abstract partial class ServiceHttpHandler : DelegatingHandler
 		HttpResponseMessage? httpResponse = null;
 		try
 		{
-			var statusCode = error.Code == null ? HttpStatusCode.InternalServerError :
-				(TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
+			var statusCode = error.Code == null
+				? HttpStatusCode.InternalServerError
+				: (TryGetCustomHttpStatusCode(error.Code) ?? HttpServiceErrors.TryGetHttpStatusCode(error.Code) ?? HttpStatusCode.InternalServerError);
 			httpResponse = new HttpResponseMessage(statusCode);
 			if (statusCode != HttpStatusCode.NoContent && statusCode != HttpStatusCode.NotModified)
 			{

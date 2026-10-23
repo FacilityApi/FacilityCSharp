@@ -1,8 +1,5 @@
 namespace Facility.Core;
 
-/// <summary>
-/// Common service errors.
-/// </summary>
 public static partial class ServiceErrors
 {
 	/// <summary>

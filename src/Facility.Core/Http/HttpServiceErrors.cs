@@ -3,9 +3,6 @@ using System.Net;
 
 namespace Facility.Core.Http;
 
-/// <summary>
-/// Common service errors.
-/// </summary>
 public static partial class HttpServiceErrors
 {
 	/// <summary>

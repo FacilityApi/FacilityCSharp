@@ -47,9 +47,9 @@ public static class CommonClientAspects
 			m_action = action ?? throw new ArgumentNullException(nameof(action));
 		}
 
-		protected override Task RequestReadyAsyncCore(HttpRequestMessage request, ServiceDto requestDto, CancellationToken cancellationToken)
+		protected override Task RequestReadyAsyncCore(HttpRequestMessage httpRequest, ServiceDto requestDto, CancellationToken cancellationToken)
 		{
-			m_action(request);
+			m_action(httpRequest);
 			return Task.CompletedTask;
 		}
 
