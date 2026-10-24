@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.39.1
+
+* Update dependencies.
+
 ## 2.39.0
 
 * Add generic `FromStreamAsync<T>` overloads to `ServiceSerializer`.
