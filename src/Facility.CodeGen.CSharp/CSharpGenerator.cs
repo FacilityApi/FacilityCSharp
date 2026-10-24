@@ -461,11 +461,11 @@ public sealed class CSharpGenerator : CodeGenerator
 									var propertyName = context.GetFieldPropertyName(fieldInfo);
 									var fieldType = context.GetFieldType(fieldInfo);
 									var areEquivalentMethodName = TryGetAreEquivalentMethodName(fieldType.Kind);
-									code.Write(areEquivalentMethodName != null ?
-										$"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})" :
-										fieldType.Kind is ServiceTypeKind.Float or ServiceTypeKind.Double ?
-											$"{propertyName}.Equals(other.{propertyName})" : // for NaN
-											$"{propertyName} == other.{propertyName}");
+									code.Write(areEquivalentMethodName != null
+										? $"ServiceDataUtility.{areEquivalentMethodName}({propertyName}, other.{propertyName})"
+										: fieldType.Kind is ServiceTypeKind.Float or ServiceTypeKind.Double
+											? $"{propertyName}.Equals(other.{propertyName})" // for NaN
+											: $"{propertyName} == other.{propertyName}");
 									code.WriteLine(fieldIndex == fieldInfos.Count - 1 ? ";" : " &&");
 								}
 							}

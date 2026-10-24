@@ -2,9 +2,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Facility.Core;
 
-/// <summary>
-/// An error.
-/// </summary>
 public sealed partial class ServiceErrorDto
 {
 	/// <summary>

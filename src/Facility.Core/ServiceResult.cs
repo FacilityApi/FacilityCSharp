@@ -305,9 +305,9 @@ public sealed class ServiceResult<T> : ServiceResult
 
 	internal override object? InternalValue => m_value;
 
-	internal override bool IsInternalValueEquivalent(ServiceResult other)
+	internal override bool IsInternalValueEquivalent(ServiceResult result)
 	{
-		var otherOfT = other as ServiceResult<T>;
+		var otherOfT = result as ServiceResult<T>;
 		if (otherOfT == null)
 			return false;
 
